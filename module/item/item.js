@@ -248,17 +248,24 @@ export class CyberpunkItem extends Item {
           attackSkill: system.attackSkill
         }
       },
-      targets: (targetTokens || []).map(target => ({
-        id: target.id,
-        tokenUuid: target.tokenUuid || target.uuid,
-        actorUuid: target.actorUuid,
-        name: target.name
-      })),
+      targets: (targetTokens || []).map(target => this.__buildCombatTargetContext(target)),
       legacy: {
         mode: "fallback",
         fallback: () => this.__legacyWeaponRoll(attackMods, targetTokens)
       }
     };
+  }
+
+  __buildCombatTargetContext(target) {
+    return this.__compactResolverData({
+      id: target.id,
+      tokenUuid: target.tokenUuid || target.uuid,
+      actorUuid: target.actorUuid,
+      name: target.name,
+      snapshot: this.__cloneResolverData(target.snapshot),
+      manualResolution: this.__cloneResolverData(target.manualResolution),
+      warnings: this.__cloneResolverData(target.warnings)
+    });
   }
 
   __cloneResolverData(data) {
@@ -271,6 +278,12 @@ export class CyberpunkItem extends Item {
     catch {
       return undefined;
     }
+  }
+
+  __compactResolverData(data) {
+    return Object.fromEntries(
+      Object.entries(data).filter(([, value]) => value !== undefined)
+    );
   }
 
   __legacyWeaponRoll(attackMods, targetTokens) {

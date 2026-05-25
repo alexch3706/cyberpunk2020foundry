@@ -2,6 +2,7 @@ import { martialOptions, meleeAttackTypes, meleeBonkOptions, rangedModifiers, we
 import { localize, localizeParam } from "../utils.js"
 import { ModifiersDialog } from "../dialog/modifiers.js"
 import { SortOrders } from "./skill-sort.js";
+import { normalizeSelectedTargets } from "../combat/target-normalizer.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -229,13 +230,8 @@ export class CyberpunkActorSheet extends ActorSheet {
 
       let modifierGroups = undefined;
       let onConfirm = undefined;
-      let targetTokens = Array.from(game.users.current.targets.values().map(target => {
-        return {
-          name: target.document.name,
-          id: target.id }
-      }));
+      let targetTokens = normalizeSelectedTargets(game.users.current.targets.values());
       if(isRanged) {
-        // For now just look at the names.
         // We have to get the values as an iterator; else if multiple targets share names, it'd turn a set with size 2 to one with size 1
         modifierGroups = rangedModifiers(item, targetTokens);
       }

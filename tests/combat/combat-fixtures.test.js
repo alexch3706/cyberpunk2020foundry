@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
+import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url)
@@ -11,6 +12,8 @@ const FIXTURE_URLS = [
 
 export async function runCombatFixtures() {
   const results = [];
+
+  assertTargetNormalization();
 
   for(const fixtureUrl of FIXTURE_URLS) {
     const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
@@ -146,6 +149,201 @@ function buildSingleShotOutcome(context, roller, fixture) {
     },
     warnings: []
   };
+}
+
+function assertTargetNormalization() {
+  const normalized = normalizeSelectedTargets([
+    {
+      id: "token-actor",
+      document: {
+        uuid: "Scene.test.Token.actor",
+        name: "Armored Target"
+      },
+      actor: {
+        uuid: "Actor.target",
+        name: "Target Actor",
+        system: {
+          stats: {
+            body: {
+              total: 6
+            }
+          },
+          damage: 2,
+          hitLocations: {
+            torso: {
+              label: "Torso"
+            }
+          }
+        },
+        itemTypes: {
+          armor: [
+            {
+              id: "armor-vest",
+              name: "Kevlar Vest",
+              type: "armor",
+              system: {
+                equipped: true,
+                coverage: {
+                  torso: {
+                    stoppingPower: 12,
+                    ablation: 0
+                  }
+                }
+              }
+            },
+            {
+              id: "stored-vest",
+              name: "Stored Vest",
+              type: "armor",
+              system: {
+                equipped: false,
+                coverage: {
+                  torso: {
+                    stoppingPower: 20,
+                    ablation: 0
+                  }
+                }
+              }
+            }
+          ],
+          cyberware: [
+            {
+              id: "subdermal-armor",
+              name: "Subdermal Armor",
+              type: "cyberware",
+              system: {
+                equipped: true,
+                stoppingPower: 2
+              }
+            },
+            {
+              id: "stored-subdermal-armor",
+              name: "Stored Subdermal Armor",
+              type: "cyberware",
+              system: {
+                equipped: false,
+                stoppingPower: 4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      id: "token-actorless",
+      document: {
+        uuid: "Scene.test.Token.actorless",
+        name: "Actorless Target"
+      }
+    },
+    {
+      id: "plain-target",
+      tokenUuid: "Scene.test.Token.plain",
+      actorUuid: "Actor.plain",
+      name: "Plain Target",
+      snapshot: {
+        stats: {
+          body: {
+            total: 5
+          }
+        },
+        damage: 0,
+        hitLocations: {
+          head: {
+            label: "Head"
+          }
+        }
+      }
+    }
+  ]);
+
+  assert.deepEqual(normalized[0], {
+    id: "token-actor",
+    tokenUuid: "Scene.test.Token.actor",
+    actorUuid: "Actor.target",
+    name: "Armored Target",
+    snapshot: {
+      stats: {
+        body: {
+          total: 6
+        }
+      },
+      damage: 2,
+      hitLocations: {
+        torso: {
+          label: "Torso"
+        }
+      },
+      equippedArmor: [
+        {
+          id: "armor-vest",
+          name: "Kevlar Vest",
+          type: "armor",
+          system: {
+            equipped: true,
+            coverage: {
+              torso: {
+                stoppingPower: 12,
+                ablation: 0
+              }
+            }
+          }
+        }
+      ],
+      equippedCyberware: [
+        {
+          id: "subdermal-armor",
+          name: "Subdermal Armor",
+          type: "cyberware",
+          system: {
+            equipped: true,
+            stoppingPower: 2
+          }
+        }
+      ]
+    }
+  }, "actor-backed target normalization");
+
+  assert.deepEqual(normalized[1], {
+    id: "token-actorless",
+    tokenUuid: "Scene.test.Token.actorless",
+    name: "Actorless Target",
+    manualResolution: {
+      required: true,
+      reason: "missing-target-actor",
+      message: "Target Actor is unavailable; resolve target damage, armor, and saves manually.",
+      blockedUpdateCategories: ["target-damage", "target-armor", "target-saves"]
+    },
+    warnings: [
+      {
+        code: "missing-target-actor",
+        severity: "warning",
+        message: "Target Actor is unavailable; resolve target damage, armor, and saves manually."
+      }
+    ]
+  }, "actorless target normalization");
+
+  assert.deepEqual(normalized[2], {
+    id: "plain-target",
+    tokenUuid: "Scene.test.Token.plain",
+    actorUuid: "Actor.plain",
+    name: "Plain Target",
+    snapshot: {
+      stats: {
+        body: {
+          total: 5
+        }
+      },
+      damage: 0,
+      hitLocations: {
+        head: {
+          label: "Head"
+        }
+      }
+    }
+  }, "plain target normalization");
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized)), normalized, "normalized targets are JSON-safe");
 }
 
 function assertOutcomeShape(outcome, expected) {

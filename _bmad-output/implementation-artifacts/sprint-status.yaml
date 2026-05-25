@@ -49,8 +49,8 @@ development_status:
   1-4-add-deterministic-fixture-baseline: done
   1-5-add-outcome-derived-chat-contract: done
   epic-1-retrospective: optional
-  epic-2: backlog
-  2-1-normalize-selected-targets-to-actor-aware-references: backlog
+  epic-2: in-progress
+  2-1-normalize-selected-targets-to-actor-aware-references: done
   2-2-resolve-single-shot-ranged-attack-outcome: backlog
   2-3-preserve-ammo-planning-and-legacy-entry-behavior: backlog
   2-4-preview-and-confirm-single-shot-state-application: backlog
