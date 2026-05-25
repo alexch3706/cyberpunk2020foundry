@@ -2,6 +2,7 @@ import { weaponTypes, rangedAttackTypes, meleeAttackTypes, fireModes, ranges, ra
 import { Multiroll, makeD10Roll }  from "../dice.js"
 import { clamp, deepLookup, localize, localizeParam, rollLocation } from "../utils.js"
 import { CyberpunkActor } from "../actor/actor.js";
+import { resolveCombatAction } from "../combat/combat-resolver.js";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -200,10 +201,80 @@ export class CyberpunkItem extends Item {
   // Look into `modifiers.js` for the modifier obect
   __weaponRoll(attackMods, targetTokens) {
     let owner = this.actor;
-    let system = this.system;
     if (owner === null) {
       throw new Error("This item isn't owned by anyone.");
     }
+
+    return resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens));
+  }
+
+  __buildCombatResolverContext(attackMods, targetTokens) {
+    let owner = this.actor;
+    let system = this.system;
+    let isRanged = this.isRanged();
+
+    return {
+      action: {
+        type: isRanged ? "ranged" : (system.attackType === meleeAttackTypes.martial ? "martial" : "melee"),
+        fireMode: attackMods?.fireMode,
+        meleeAction: attackMods?.action,
+        range: attackMods?.range,
+        targetArea: attackMods?.targetArea,
+        options: this.__cloneResolverData(attackMods || {}),
+        source: "CyberpunkItem.__weaponRoll"
+      },
+      attacker: {
+        actorUuid: owner?.uuid,
+        name: owner?.name,
+        snapshot: {
+          stats: this.__cloneResolverData(owner?.system?.stats),
+          skills: this.__cloneResolverData(owner?.system?.skills),
+          damage: owner?.system?.damage,
+          hitLocations: this.__cloneResolverData(owner?.system?.hitLocations)
+        }
+      },
+      weapon: {
+        itemUuid: this.uuid,
+        name: this.name,
+        snapshot: {
+          damage: system.damage,
+          ap: system.ap,
+          shotsLeft: system.shotsLeft,
+          rof: system.rof,
+          reliability: system.reliability,
+          range: system.range,
+          accuracy: system.accuracy,
+          attackType: system.attackType,
+          attackSkill: system.attackSkill
+        }
+      },
+      targets: (targetTokens || []).map(target => ({
+        id: target.id,
+        tokenUuid: target.tokenUuid || target.uuid,
+        actorUuid: target.actorUuid,
+        name: target.name
+      })),
+      legacy: {
+        mode: "fallback",
+        fallback: () => this.__legacyWeaponRoll(attackMods, targetTokens)
+      }
+    };
+  }
+
+  __cloneResolverData(data) {
+    if(data === undefined || data === null) {
+      return data;
+    }
+    try {
+      return JSON.parse(JSON.stringify(data));
+    }
+    catch {
+      return undefined;
+    }
+  }
+
+  __legacyWeaponRoll(attackMods, targetTokens) {
+    let system = this.system;
     let isRanged = this.isRanged();
     if(!isRanged) {
       if(system.attackType === meleeAttackTypes.martial) {

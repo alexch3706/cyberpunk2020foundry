@@ -1,0 +1,96 @@
+# generated: 2026-05-24
+# last_updated: 2026-05-25
+# project: Cyberpunk2020VTT
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-05-24
+last_updated: 2026-05-25
+project: Cyberpunk2020VTT
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: done
+  1-1-define-combatoutcome-and-resolver-input-contracts: done
+  1-2-add-resolver-shell-and-cyberpunkitem-adapter: done
+  1-3-add-state-planner-contract: done
+  1-4-add-deterministic-fixture-baseline: done
+  1-5-add-outcome-derived-chat-contract: done
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-normalize-selected-targets-to-actor-aware-references: backlog
+  2-2-resolve-single-shot-ranged-attack-outcome: backlog
+  2-3-preserve-ammo-planning-and-legacy-entry-behavior: backlog
+  2-4-preview-and-confirm-single-shot-state-application: backlog
+  2-5-render-single-shot-combat-evidence-in-chat: backlog
+  2-6-add-single-shot-fixtures-and-foundry-manual-checks: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-add-armor-and-ap-snapshot-plumbing: backlog
+  3-2-resolve-effective-armor-sp-with-layering-and-cover: backlog
+  3-3-apply-armor-piercing-and-staged-penetration: backlog
+  3-4-resolve-btm-and-minimum-damage: backlog
+  3-5-apply-wound-state-and-special-damage-cases: backlog
+  3-6-generate-stun-and-death-save-prompts: backlog
+  3-7-add-damage-pipeline-fixtures-and-foundry-checks: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-migrate-three-round-burst-to-resolver-outcome: backlog
+  4-2-resolve-full-auto-against-one-target: backlog
+  4-3-resolve-full-auto-across-multiple-targets: backlog
+  4-4-implement-suppressive-fire-resolver: backlog
+  4-5-add-reliability-fumble-and-jam-handling: backlog
+  4-6-disable-or-mark-unsupported-automatic-modes-until-complete: backlog
+  4-7-add-automatic-fire-fixtures-and-foundry-checks: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-normalize-defender-context-for-melee-resolution: backlog
+  5-2-resolve-baseline-opposed-melee-attacks: backlog
+  5-3-apply-melee-body-type-damage-modifiers: backlog
+  5-4-add-martial-arts-data-module: backlog
+  5-5-resolve-martial-and-brawling-actions: backlog
+  5-6-enforce-grapple-family-prerequisites-and-pending-state: backlog
+  5-7-add-melee-and-martial-fixtures-and-foundry-checks: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-add-corebook-conformance-labels-or-derived-classification: backlog
+  6-2-surface-deferred-and-manual-mechanics-clearly: backlog
+  6-3-document-resolver-contracts-and-rule-reference-policy: backlog
+  6-4-close-direct-mutation-and-awaited-update-audit-findings: backlog
+  6-5-fix-cyberware-humanity-roll-persistence: backlog
+  6-6-complete-mvp-regression-fixture-suite: backlog
+  6-7-document-foundry-mvp-verification-checklist: backlog
+  6-8-remove-or-fence-legacy-combat-paths: backlog
+  epic-6-retrospective: optional
