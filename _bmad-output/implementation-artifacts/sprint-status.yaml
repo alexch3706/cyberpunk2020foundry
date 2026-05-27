@@ -52,7 +52,7 @@ development_status:
   epic-2: in-progress
   2-1-normalize-selected-targets-to-actor-aware-references: done
   2-2-resolve-single-shot-ranged-attack-outcome: done
-  2-3-preserve-ammo-planning-and-legacy-entry-behavior: backlog
+  2-3-preserve-ammo-planning-and-legacy-entry-behavior: done
   2-4-preview-and-confirm-single-shot-state-application: backlog
   2-5-render-single-shot-combat-evidence-in-chat: backlog
   2-6-add-single-shot-fixtures-and-foundry-manual-checks: backlog

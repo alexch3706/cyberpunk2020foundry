@@ -169,6 +169,9 @@ function assertSingleShotCases(fixture) {
     const outcome = resolveCombatAction(context, { structured: true }, roller);
     roller.assertComplete();
     assertObjectIncludes(outcome, singleShotCase.expected, `${fixture.name} ${singleShotCase.name} outcome`);
+    if(singleShotCase.expectedPlan) {
+      assertObjectIncludes(planCombatUpdates(outcome), singleShotCase.expectedPlan, `${fixture.name} ${singleShotCase.name} planned updates`);
+    }
   }
 }
 

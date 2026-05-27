@@ -300,9 +300,38 @@
         "manualResolution": {
           "required": false
         },
+        "ammo": {
+          "before": 10,
+          "delta": -1,
+          "after": 9,
+          "source": "weapon.snapshot.shotsLeft"
+        },
+        "plannedUpdates": {
+          "itemUpdates": [
+            {
+              "itemUuid": "Actor.attacker.Item.heavy-pistol",
+              "update": {
+                "system.shotsLeft": 9
+              }
+            }
+          ],
+          "chatStatus": "preview"
+        },
         "chat": {
           "status": "preview"
         },
+        "warnings": []
+      },
+      "expectedPlan": {
+        "itemUpdates": [
+          {
+            "itemUuid": "Actor.attacker.Item.heavy-pistol",
+            "update": {
+              "system.shotsLeft": 9
+            }
+          }
+        ],
+        "chatStatus": "preview",
         "warnings": []
       }
     },
@@ -486,6 +515,223 @@
           "reason": "missing-rule-data",
           "blockedUpdateCategories": ["hit-location", "target-damage", "target-armor", "target-saves"]
         }
+      }
+    },
+    {
+      "name": "structured outcome warns when ammo is insufficient",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__"
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": 0
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [3],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "ammo": {
+          "before": 0,
+          "delta": 0,
+          "after": 0,
+          "source": "weapon.snapshot.shotsLeft"
+        },
+        "plannedUpdates": {
+          "itemUpdates": [],
+          "chatStatus": "preview"
+        },
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "blockedUpdateCategories": ["attacker-ammo"]
+        },
+        "warnings": [
+          {
+            "code": "insufficient-ammo",
+            "severity": "warning"
+          }
+        ]
+      },
+      "expectedPlan": {
+        "itemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured outcome warns when ammo state is missing",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__"
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": null
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [3],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "ammo": {
+          "before": null,
+          "delta": 0,
+          "after": null,
+          "source": "weapon.snapshot.shotsLeft"
+        },
+        "plannedUpdates": {
+          "itemUpdates": [],
+          "chatStatus": "preview"
+        },
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "blockedUpdateCategories": ["attacker-ammo"]
+        },
+        "warnings": [
+          {
+            "code": "missing-ammo-state",
+            "severity": "warning"
+          }
+        ]
+      },
+      "expectedPlan": {
+        "itemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured outcome warns when ammo state is fractional",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__"
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": 0.5
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [3],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "ammo": {
+          "before": 0.5,
+          "delta": 0,
+          "after": 0.5,
+          "source": "weapon.snapshot.shotsLeft"
+        },
+        "plannedUpdates": {
+          "itemUpdates": [],
+          "chatStatus": "preview"
+        },
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "blockedUpdateCategories": ["attacker-ammo"]
+        },
+        "warnings": [
+          {
+            "code": "missing-ammo-state",
+            "severity": "warning"
+          }
+        ]
+      },
+      "expectedPlan": {
+        "itemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured outcome warns when ammo update target is missing",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__"
+        },
+        "weapon": {
+          "itemUuid": "__UNDEFINED__",
+          "snapshot": {
+            "shotsLeft": 10
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [3],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "ammo": {
+          "before": 10,
+          "delta": -1,
+          "after": 9,
+          "source": "weapon.snapshot.shotsLeft"
+        },
+        "plannedUpdates": {
+          "itemUpdates": [],
+          "chatStatus": "preview"
+        },
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "blockedUpdateCategories": ["attacker-ammo"]
+        },
+        "warnings": [
+          {
+            "code": "missing-ammo-update-target",
+            "severity": "warning"
+          }
+        ]
+      },
+      "expectedPlan": {
+        "itemUpdates": [],
+        "warnings": []
       }
     },
     {

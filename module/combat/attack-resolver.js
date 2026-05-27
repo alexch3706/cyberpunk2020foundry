@@ -17,6 +17,7 @@ const RANGED_MODIFIERS = Object.freeze([
 ]);
 
 const MISSING_LOCATION_BLOCKS = Object.freeze(["hit-location", "target-damage", "target-armor", "target-saves"]);
+const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
 
 export function resolveSingleShotRangedAttack(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
@@ -29,6 +30,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
 
   const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, roller));
   const manualTargets = targets.filter(target => target.manualResolution?.required);
+  const ammoPlanning = buildAmmoPlanning(context.weapon);
 
   return {
     action: {
@@ -40,24 +42,29 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
     weapon: clonePlainData(context.weapon || {}),
     targets,
     pendingDecisions: [],
-    manualResolution: buildOutcomeManualResolution(manualTargets),
+    manualResolution: buildOutcomeManualResolution([
+      ...manualTargets.map(target => target.manualResolution),
+      ammoPlanning.manualResolution
+    ].filter(Boolean)),
+    ammo: ammoPlanning.ammo,
+    plannedUpdates: ammoPlanning.plannedUpdates,
     chat: {
       status: COMBAT_CHAT_STATUS.preview
     },
-    warnings: []
+    warnings: ammoPlanning.warnings
   };
 }
 
-function buildOutcomeManualResolution(manualTargets) {
-  if(manualTargets.length === 0) {
+function buildOutcomeManualResolution(manualResolutions) {
+  if(manualResolutions.length === 0) {
     return {
       required: false
     };
   }
 
   const blockedUpdateCategories = new Set();
-  for(const target of manualTargets) {
-    for(const category of target.manualResolution.blockedUpdateCategories || []) {
+  for(const manualResolution of manualResolutions) {
+    for(const category of manualResolution.blockedUpdateCategories || []) {
       blockedUpdateCategories.add(category);
     }
   }
@@ -67,6 +74,132 @@ function buildOutcomeManualResolution(manualTargets) {
     reason: MANUAL_RESOLUTION_REASON.missingRuleData,
     message: "One or more targets require manual resolution before this outcome can be committed.",
     blockedUpdateCategories: [...blockedUpdateCategories]
+  };
+}
+
+function buildAmmoPlanning(weapon) {
+  const ammoState = normalizeAmmoState(weapon?.snapshot?.shotsLeft);
+  const plannedUpdates = {
+    itemUpdates: [],
+    chatStatus: COMBAT_CHAT_STATUS.preview
+  };
+
+  if(!ammoState.valid) {
+    return {
+      ammo: {
+        before: ammoState.evidence,
+        delta: 0,
+        after: ammoState.evidence,
+        source: "weapon.snapshot.shotsLeft"
+      },
+      plannedUpdates,
+      manualResolution: ammoManualResolution("Weapon ammo state is unavailable; resolve ammo manually."),
+      warnings: [
+        ammoWarning("missing-ammo-state", "Weapon ammo state is unavailable; resolve ammo manually.")
+      ]
+    };
+  }
+
+  const shotsLeft = ammoState.value;
+  if(shotsLeft <= 0) {
+    return {
+      ammo: {
+        before: shotsLeft,
+        delta: 0,
+        after: shotsLeft,
+        source: "weapon.snapshot.shotsLeft"
+      },
+      plannedUpdates,
+      manualResolution: ammoManualResolution("Weapon has insufficient ammo; resolve ammo manually."),
+      warnings: [
+        ammoWarning("insufficient-ammo", "Weapon has insufficient ammo; resolve ammo manually.")
+      ]
+    };
+  }
+
+  const after = shotsLeft - 1;
+  const ammo = {
+    before: shotsLeft,
+    delta: -1,
+    after,
+    source: "weapon.snapshot.shotsLeft"
+  };
+
+  if(!weapon?.itemUuid) {
+    return {
+      ammo,
+      plannedUpdates,
+      manualResolution: ammoManualResolution("Attacking weapon item UUID is unavailable; resolve ammo manually."),
+      warnings: [
+        ammoWarning("missing-ammo-update-target", "Attacking weapon item UUID is unavailable; resolve ammo manually.")
+      ]
+    };
+  }
+
+  plannedUpdates.itemUpdates.push({
+    itemUuid: weapon.itemUuid,
+    update: {
+      "system.shotsLeft": after
+    }
+  });
+
+  return {
+    ammo,
+    plannedUpdates,
+    warnings: []
+  };
+}
+
+function normalizeAmmoState(rawShotsLeft) {
+  if(rawShotsLeft === undefined || rawShotsLeft === null) {
+    return {
+      valid: false,
+      evidence: null
+    };
+  }
+
+  if(typeof rawShotsLeft === "string" && rawShotsLeft.trim() === "") {
+    return {
+      valid: false,
+      evidence: rawShotsLeft
+    };
+  }
+
+  if(typeof rawShotsLeft === "boolean") {
+    return {
+      valid: false,
+      evidence: rawShotsLeft
+    };
+  }
+
+  const value = Number(rawShotsLeft);
+  if(!Number.isFinite(value) || !Number.isInteger(value)) {
+    return {
+      valid: false,
+      evidence: rawShotsLeft
+    };
+  }
+
+  return {
+    valid: true,
+    value
+  };
+}
+
+function ammoManualResolution(message) {
+  return {
+    required: true,
+    reason: MANUAL_RESOLUTION_REASON.missingRuleData,
+    message,
+    blockedUpdateCategories: [...AMMO_BLOCKS]
+  };
+}
+
+function ammoWarning(code, message) {
+  return {
+    code,
+    severity: COMBAT_WARNING_SEVERITY.warning,
+    message
   };
 }
 
