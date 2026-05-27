@@ -59,7 +59,7 @@ development_status:
   epic-2-retrospective: optional
   epic-3: in-progress
   3-1-add-armor-and-ap-snapshot-plumbing: done
-  3-2-resolve-effective-armor-sp-with-layering-and-cover: backlog
+  3-2-resolve-effective-armor-sp-with-layering-and-cover: review
   3-3-apply-armor-piercing-and-staged-penetration: backlog
   3-4-resolve-btm-and-minimum-damage: backlog
   3-5-apply-wound-state-and-special-damage-cases: backlog

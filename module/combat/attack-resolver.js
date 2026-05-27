@@ -229,7 +229,9 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       const damageRoll = roller(damageRequest);
 
       const weaponAP = !!weapon?.snapshot?.ap;
-      const armor = resolveArmor(weaponAP, target.snapshot, hitDetail.location);
+      const armor = resolveArmor(weaponAP, target.snapshot, hitDetail.location, {
+        cover: action.cover || action.options?.cover
+      });
       const effectiveStoppingPower = armor.effectiveStoppingPower;
 
       const rawDamage = damageRoll.total;
@@ -261,6 +263,7 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       hitDetail.bodyTypeMitigation = bodyTypeMitigation;
       hitDetail.finalDamage = finalDamage;
       hitDetail.armor = armor;
+      hitDetail.warnings.push(...armor.warnings);
 
       hits = [hitDetail];
     }

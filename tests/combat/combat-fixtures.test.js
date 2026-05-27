@@ -575,6 +575,7 @@ function assertArmorResolver() {
   const skinweaveLayer = torsoLayers.find(l => l.id === "cyberware-skinweave");
   assert.ok(skinweaveLayer, "skinweave layer exists");
   assert.equal(skinweaveLayer.stoppingPower, 12, "skinweave SP is parsed from existing pack-style text");
+  assert.equal(skinweaveLayer.layer, "soft", "pack-style skinweave defaults to soft layer");
   assert.equal(skinweaveLayer.source, "Cyberpunk 2020 2nd ed. pg.85", "skinweave source is preserved");
   assert.ok(!torsoLayers.some(l => l.id === "cyberware-skull"), "skull-only subdermal armor does not cover torso");
 
@@ -588,17 +589,128 @@ function assertArmorResolver() {
   assert.ok(!torsoLayers.some(l => l.id === "cyberware-unequipped"), "unequipped cyberware is ignored");
 
   // 2. Test resolveArmor
-  // Max of (10, 25, 2) is 25.
+  // Inside-out proportional resolution combines cyberware, armor, then outer layers.
   const resolvedNonAP = resolveArmor(false, targetSnapshot, "torso");
-  assert.equal(resolvedNonAP.effectiveStoppingPower, 25, "non-AP effective stopping power is the max SP");
+  assert.equal(resolvedNonAP.effectiveStoppingPower, 29, "non-AP effective stopping power uses proportional layering");
   assert.equal(resolvedNonAP.armorPiercing, false, "armorPiercing flag is false");
 
-  // AP should halve SP (25 / 2 = 12.5 -> floor is 12)
+  // AP behavior is preserved from 3.1 until full AP semantics are handled in 3.3.
   const resolvedAP = resolveArmor(true, targetSnapshot, "torso");
-  assert.equal(resolvedAP.effectiveStoppingPower, 12, "AP effective stopping power is halved (floor)");
+  assert.equal(resolvedAP.effectiveStoppingPower, 14, "AP effective stopping power is halved after proportional layering");
   assert.equal(resolvedAP.armorPiercing, true, "armorPiercing flag is true");
+  assert.equal(resolvedAP.warnings.length, 2, "four active torso layers with multiple hard layers produce warnings");
+  assert.deepEqual(resolvedAP.warnings.map(warning => warning.code), ["armor-too-many-layers", "armor-multiple-hard-layers"]);
 
-  // Skinweave covers all locations, so rarm max SP is 12 and AP halves it to 6.
+  // Skinweave and generic subdermal armor cover all locations, so rarm has three proportional layers.
   const resolvedRarmAP = resolveArmor(true, targetSnapshot, "rarm");
-  assert.equal(resolvedRarmAP.effectiveStoppingPower, 6, "AP halves 12 SP to 6");
+  assert.equal(resolvedRarmAP.effectiveStoppingPower, 9, "AP halves proportional 18 SP to 9");
+
+  const layeredSnapshot = {
+    equippedArmor: [
+      {
+        id: "soft-jacket",
+        name: "Armor Jacket",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { stoppingPower: 10, layer: "soft" }
+          }
+        }
+      },
+      {
+        id: "hard-plate",
+        name: "Hard Plate",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { stoppingPower: 12, layer: "hard" }
+          }
+        }
+      }
+    ]
+  };
+
+  const layeredArmor = resolveArmor(false, layeredSnapshot, "torso");
+  assert.equal(layeredArmor.effectiveStoppingPower, 17, "0-4 SP difference adds +5 to larger SP");
+  assert.deepEqual(layeredArmor.layers.map(layer => layer.id), ["soft-jacket", "hard-plate"], "armor layers remain inspectable");
+
+  const coveredArmor = resolveArmor(false, layeredSnapshot, "torso", {
+    cover: {
+      name: "Concrete Barrier",
+      stoppingPower: 8,
+      layer: "hard",
+      source: "manual cover"
+    }
+  });
+  assert.equal(coveredArmor.effectiveStoppingPower, 20, "cover is combined as the outer protection layer");
+  assert.equal(coveredArmor.layers.at(-1).type, "cover", "manual cover is appended as a cover layer");
+  assert.equal(coveredArmor.layers.at(-1).source, "manual cover", "manual cover source is preserved");
+
+  const skinweaveAndHardArmor = resolveArmor(false, {
+    equippedArmor: [
+      {
+        id: "hard-plate",
+        name: "Hard Plate",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { stoppingPower: 12, layer: "hard" }
+          }
+        }
+      }
+    ],
+    equippedCyberware: [
+      {
+        id: "cyberware-skinweave",
+        name: "Skinweave SP12",
+        system: {
+          equipped: true,
+          cyberwareSubtype: "SKINWEAVE",
+          flavor: "12 SP"
+        }
+      }
+    ]
+  }, "torso");
+  assert.equal(skinweaveAndHardArmor.warnings.length, 0, "skinweave plus one hard layer is not a multi-hard violation");
+
+  const explicitSkinweaveLayer = getEquippedArmorForLocation({
+    equippedCyberware: [
+      {
+        id: "explicit-skinweave",
+        name: "Skinweave SP12",
+        system: {
+          equipped: true,
+          layer: "hard",
+          flavor: "12 SP"
+        }
+      }
+    ]
+  }, "torso")[0];
+  assert.equal(explicitSkinweaveLayer.layer, "hard", "explicit cyberware layer overrides Skinweave default");
+
+  const warningSnapshot = {
+    equippedArmor: [
+      ...layeredSnapshot.equippedArmor,
+      {
+        id: "second-hard-plate",
+        name: "Second Hard Plate",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { stoppingPower: 8, layer: "hard" }
+          }
+        }
+      }
+    ]
+  };
+  const warningArmor = resolveArmor(false, warningSnapshot, "torso", {
+    cover: {
+      name: "Concrete Barrier",
+      stoppingPower: 8,
+      layer: "hard",
+      source: "manual cover"
+    }
+  });
+  assert.equal(warningArmor.warnings.length, 2, "four layers with multiple hard layers produce warning evidence");
+  assert.deepEqual(warningArmor.warnings.map(warning => warning.code), ["armor-too-many-layers", "armor-multiple-hard-layers"]);
 }

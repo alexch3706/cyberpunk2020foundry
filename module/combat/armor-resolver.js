@@ -3,6 +3,13 @@
  * Calculates effective stopping power (SP) at hit locations from equipped items.
  */
 
+const ARMOR_WARNING_SEVERITY = "warning";
+const LAYER_ORDER = Object.freeze({
+  cyberware: 0,
+  armor: 1,
+  cover: 2
+});
+
 /**
  * Extract equipped armor and cyberware layers covering a specific hit location.
  *
@@ -59,7 +66,7 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
         type: "cyberware",
         stoppingPower: sp,
         ablation: Number(system.ablation || 0),
-        layer: system.layer || "hard",
+        layer: getCyberwareLayer(item, system),
         equipped: true,
         source: system.source || ""
       });
@@ -75,27 +82,127 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
  * @param {boolean} weaponAP Whether the attacking weapon is armor-piercing.
  * @param {Object} targetSnapshot Target actor snapshot.
  * @param {string} location Hit location name.
- * @returns {Object} Resolution details with layers and effectiveStoppingPower.
+ * @param {Object} [options] Armor resolution options.
+ * @param {Object} [options.cover] Manually supplied temporary cover layer.
+ * @returns {Object} Resolution details with layers, warnings, and effectiveStoppingPower.
  */
-export function resolveArmor(weaponAP, targetSnapshot, location) {
-  const layers = getEquippedArmorForLocation(targetSnapshot, location);
+export function resolveArmor(weaponAP, targetSnapshot, location, options = {}) {
+  const layers = orderArmorLayers([
+    ...getEquippedArmorForLocation(targetSnapshot, location),
+    ...getManualCoverLayers(options.cover)
+  ]);
+  const warnings = buildArmorWarnings(layers);
+  const rawSP = calculateProportionalStoppingPower(layers);
 
-  // Basic resolve: maximum SP of any active layer (layering logic will be completed in 3.2)
-  let rawSP = 0;
-  for (const layer of layers) {
-    if (layer.stoppingPower > rawSP) {
-      rawSP = layer.stoppingPower;
-    }
-  }
-
-  // Apply basic AP halving if weapon is armor-piercing
   const effectiveStoppingPower = weaponAP ? Math.floor(rawSP / 2) : rawSP;
 
   return {
     layers,
+    rawStoppingPower: rawSP,
     effectiveStoppingPower,
-    armorPiercing: !!weaponAP
+    armorPiercing: !!weaponAP,
+    warnings
   };
+}
+
+function calculateProportionalStoppingPower(layers) {
+  if(layers.length === 0) {
+    return 0;
+  }
+
+  let effectiveSP = normalizeStoppingPower(layers[0].stoppingPower);
+  for(const layer of layers.slice(1)) {
+    const layerSP = normalizeStoppingPower(layer.stoppingPower);
+    const largerSP = Math.max(effectiveSP, layerSP);
+    const smallerSP = Math.min(effectiveSP, layerSP);
+    effectiveSP = largerSP + getProportionalArmorBonus(largerSP - smallerSP);
+  }
+  return effectiveSP;
+}
+
+function getProportionalArmorBonus(difference) {
+  if(difference <= 4) {
+    return 5;
+  }
+  if(difference <= 8) {
+    return 4;
+  }
+  if(difference <= 14) {
+    return 3;
+  }
+  if(difference <= 20) {
+    return 2;
+  }
+  if(difference <= 26) {
+    return 1;
+  }
+  return 0;
+}
+
+function orderArmorLayers(layers) {
+  return layers
+    .map((layer, index) => ({ layer, index }))
+    .sort((left, right) => {
+      const leftOrder = LAYER_ORDER[left.layer.type] ?? LAYER_ORDER.armor;
+      const rightOrder = LAYER_ORDER[right.layer.type] ?? LAYER_ORDER.armor;
+      return leftOrder - rightOrder || left.index - right.index;
+    })
+    .map(entry => entry.layer);
+}
+
+function getManualCoverLayers(cover) {
+  const coverSP = normalizeStoppingPower(cover?.stoppingPower ?? cover?.sp);
+  if(coverSP <= 0) {
+    return [];
+  }
+  return [
+    {
+      id: cover.id || "cover",
+      name: cover.name || "Cover",
+      type: "cover",
+      stoppingPower: coverSP,
+      ablation: Number(cover.ablation || 0),
+      layer: cover.layer || "hard",
+      equipped: true,
+      source: cover.source || "manual cover",
+      manual: true
+    }
+  ];
+}
+
+function buildArmorWarnings(layers) {
+  const warnings = [];
+  if(layers.length > 3) {
+    warnings.push(armorWarning(
+      "armor-too-many-layers",
+      "More than three armor or cover layers protect this hit location; verify the referee-approved layers.",
+      "Cyberpunk 2020 core rules, Maximum Armor"
+    ));
+  }
+
+  const hardLayers = layers.filter(layer => String(layer.layer || "").toLowerCase() === "hard");
+  if(hardLayers.length > 1) {
+    warnings.push(armorWarning(
+      "armor-multiple-hard-layers",
+      "More than one hard armor or cover layer protects this hit location; verify hard armor layering.",
+      "Cyberpunk 2020 core rules, Maximum Armor"
+    ));
+  }
+  return warnings;
+}
+
+function armorWarning(code, message, source) {
+  return {
+    code,
+    severity: ARMOR_WARNING_SEVERITY,
+    message,
+    source
+  };
+}
+
+function normalizeStoppingPower(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 0;
 }
 
 /**
@@ -118,6 +225,17 @@ function getCyberwareStoppingPower(item, system) {
 
   const match = getCyberwareSearchText(item, system).match(/\bsp\s*([0-9]+)/i);
   return match ? Number(match[1]) : 0;
+}
+
+function getCyberwareLayer(item, system) {
+  if(system.layer) {
+    return system.layer;
+  }
+  const searchText = getCyberwareSearchText(item, system);
+  if (/\b(skin\s*weave|skinweave)\b/i.test(searchText)) {
+    return "soft";
+  }
+  return "hard";
 }
 
 function cyberwareCoversLocation(item, system, targetKey) {

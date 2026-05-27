@@ -395,6 +395,101 @@
       }
     },
     {
+      "name": "structured hit applies manual cover as armor layer",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "cover": {
+              "name": "Concrete Barrier",
+              "stoppingPower": 10,
+              "layer": "hard",
+              "source": "manual cover"
+            }
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [4]
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 20,
+          "die": {
+            "faces": 6,
+            "natural": 20,
+            "results": [5, 5, 5, 5]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 3
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 20,
+                "effectiveStoppingPower": 17,
+                "armorMitigation": 17,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 1,
+                "armor": {
+                  "effectiveStoppingPower": 17,
+                  "layers": [
+                    {
+                      "id": "armor-vest",
+                      "type": "armor",
+                      "stoppingPower": 12
+                    },
+                    {
+                      "id": "cover",
+                      "type": "cover",
+                      "name": "Concrete Barrier",
+                      "stoppingPower": 10,
+                      "source": "manual cover"
+                    }
+                  ],
+                  "warnings": []
+                },
+                "warnings": []
+              }
+            ],
+            "manualResolution": {
+              "required": false
+            }
+          }
+        ],
+        "manualResolution": {
+          "required": false
+        }
+      }
+    },
+    {
       "name": "structured hit uses options-only aimed location",
       "context": {
         "action": {
