@@ -49,16 +49,16 @@ development_status:
   1-4-add-deterministic-fixture-baseline: done
   1-5-add-outcome-derived-chat-contract: done
   epic-1-retrospective: optional
-  epic-2: in-progress
+  epic-2: done
   2-1-normalize-selected-targets-to-actor-aware-references: done
   2-2-resolve-single-shot-ranged-attack-outcome: done
   2-3-preserve-ammo-planning-and-legacy-entry-behavior: done
   2-4-preview-and-confirm-single-shot-state-application: done
-  2-5-render-single-shot-combat-evidence-in-chat: backlog
-  2-6-add-single-shot-fixtures-and-foundry-manual-checks: backlog
+  2-5-render-single-shot-combat-evidence-in-chat: done
+  2-6-add-single-shot-fixtures-and-foundry-manual-checks: done
   epic-2-retrospective: optional
-  epic-3: backlog
-  3-1-add-armor-and-ap-snapshot-plumbing: backlog
+  epic-3: in-progress
+  3-1-add-armor-and-ap-snapshot-plumbing: done
   3-2-resolve-effective-armor-sp-with-layering-and-cover: backlog
   3-3-apply-armor-piercing-and-staged-penetration: backlog
   3-4-resolve-btm-and-minimum-damage: backlog

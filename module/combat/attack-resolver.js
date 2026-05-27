@@ -1,5 +1,6 @@
-import { defaultAreaLookup, rangeDCs, ranges } from "../lookups.js";
+import { defaultAreaLookup, rangeDCs, ranges, btmFromBT } from "../lookups.js";
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
+import { resolveArmor } from "./armor-resolver.js";
 
 const RANGED_MODIFIERS = Object.freeze([
   { code: "aimRounds", label: "Aiming", term: "@modifier.aimRounds", value: options => Number(options.aimRounds || 0), include: value => value !== 0 },
@@ -28,7 +29,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   const attackRequest = buildAttackRollRequest(context, modifierEvidence);
   const attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
 
-  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, roller));
+  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller));
   const manualTargets = targets.filter(target => target.manualResolution?.required);
   const ammoPlanning = buildAmmoPlanning(context.weapon);
 
@@ -203,7 +204,7 @@ function ammoWarning(code, message) {
   };
 }
 
-function buildTargetOutcome(target, attackRoll, targetNumber, action, roller) {
+function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
   const targetWarnings = cloneArray(target.warnings);
@@ -219,7 +220,49 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, roller) {
     }
     targetWarnings.push(...locationResult.warnings);
     if(locationResult.hit) {
-      hits = [locationResult.hit];
+      const hitDetail = locationResult.hit;
+
+      const damageRequest = {
+        id: "damage",
+        formula: weapon?.snapshot?.damage || "1d6"
+      };
+      const damageRoll = roller(damageRequest);
+
+      const weaponAP = !!weapon?.snapshot?.ap;
+      const armor = resolveArmor(weaponAP, target.snapshot, hitDetail.location);
+      const effectiveStoppingPower = armor.effectiveStoppingPower;
+
+      const rawDamage = damageRoll.total;
+      const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+      let penetratingDamage = rawDamage - armorMitigation;
+
+      if(armor.armorPiercing && penetratingDamage > 0) {
+        penetratingDamage = Math.floor(penetratingDamage / 2);
+      }
+
+      const bodyTypeMitigation = btmFromBT(target.snapshot?.stats?.body?.total || 0);
+
+      let finalDamage = 0;
+      if (rawDamage > effectiveStoppingPower) {
+        finalDamage = Math.max(1, penetratingDamage - bodyTypeMitigation);
+      }
+
+      hitDetail.damageRoll = {
+        id: damageRoll.id,
+        formula: damageRoll.formula || damageRequest.formula,
+        total: damageRoll.total,
+        die: clonePlainData(damageRoll.die || {}),
+        seed: damageRoll.seed
+      };
+      hitDetail.rawDamage = rawDamage;
+      hitDetail.effectiveStoppingPower = effectiveStoppingPower;
+      hitDetail.armorPiercing = armor.armorPiercing;
+      hitDetail.armorMitigation = armorMitigation;
+      hitDetail.bodyTypeMitigation = bodyTypeMitigation;
+      hitDetail.finalDamage = finalDamage;
+      hitDetail.armor = armor;
+
+      hits = [hitDetail];
     }
   }
 

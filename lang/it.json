@@ -420,5 +420,15 @@
     "CYBERPUNK.LifepathEvents": "Eventi",
     "CYBERPUNK.LifepathEventsYear": "Anno",
     "CYBERPUNK.LifepathEventsDesc": "Evento",
-    "CYBERPUNK.LifepathNotes": "Note"
+    "CYBERPUNK.LifepathNotes": "Note",
+    "CYBERPUNK.AmmoDelta": "Munizioni Utilizzate",
+    "CYBERPUNK.Warnings": "Avvertimenti",
+    "CYBERPUNK.PreviewStatus": "[ANTEPRIMA]",
+    "CYBERPUNK.PreviewStatusDesc": "In attesa di conferma",
+    "CYBERPUNK.CommittedStatus": "[APPLICATO]",
+    "CYBERPUNK.CommittedStatusDesc": "Applicato al Personaggio(i)",
+    "CYBERPUNK.CanceledStatus": "[CANCELLATO]",
+    "CYBERPUNK.CanceledStatusDesc": "Scartato",
+    "CYBERPUNK.ManualStatus": "[MANUALE]",
+    "CYBERPUNK.ManualStatusDesc": "Richiede Risoluzione del GM"
 }

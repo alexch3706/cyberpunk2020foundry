@@ -44,45 +44,103 @@ export function buildCombatPreviewData(outcome = {}, plannedUpdates = undefined,
 export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
   const plan = options.plannedUpdates || planCombatUpdates(outcome);
   const preview = buildCombatPreviewData(outcome, plan, options);
+  const adapter = options.adapter || createFoundryCombatAdapter();
 
-  if(options.decision === "cancel") {
+  let messageId = options.messageId;
+  const warnings = [];
+
+  if (options.decision === "cancel") {
+    try {
+      messageId = await createOrUpdateCombatChatMessage(outcome, COMBAT_CHAT_STATUS.canceled, {
+        ...options,
+        messageId,
+        plannedUpdates: plan,
+        adapter
+      });
+    } catch (error) {
+      console.warn("Failed to create or update combat chat message:", error);
+      warnings.push(commitWarning("chat-update-failed", `Failed to update combat chat message: ${error.message}`));
+    }
     return {
       status: COMBAT_CHAT_STATUS.canceled,
       chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.canceled),
       preview,
+      messageId,
       applied: createEmptyCounts(),
       skipped: countPlanUpdates(plan),
-      warnings: []
+      warnings: warnings.concat(preview.warnings)
     };
   }
 
-  if(options.decision !== "confirm") {
+  if (options.decision === "confirm") {
+    if (!preview.canCommit) {
+      try {
+        messageId = await createOrUpdateCombatChatMessage(outcome, COMBAT_CHAT_STATUS.manual, {
+          ...options,
+          messageId,
+          plannedUpdates: plan,
+          adapter
+        });
+      } catch (error) {
+        console.warn("Failed to create or update combat chat message:", error);
+        warnings.push(commitWarning("chat-update-failed", `Failed to update combat chat message: ${error.message}`));
+      }
+      return {
+        status: COMBAT_CHAT_STATUS.manual,
+        chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
+        preview,
+        messageId,
+        applied: createEmptyCounts(),
+        skipped: countPlanUpdates(plan),
+        warnings: warnings.concat(preview.warnings)
+      };
+    }
+
+    const result = await applyCombatUpdates(plan, adapter);
+
+    try {
+      messageId = await createOrUpdateCombatChatMessage(outcome, result.status, {
+        ...options,
+        messageId,
+        plannedUpdates: plan,
+        adapter,
+        warnings: result.warnings
+      });
+    } catch (error) {
+      console.warn("Failed to create or update combat chat message:", error);
+      result.warnings.push(commitWarning("chat-update-failed", `Failed to update combat chat message: ${error.message}`));
+    }
+
     return {
-      status: preview.status,
-      chatData: buildFinalChatData(outcome, plan, preview.status),
+      ...result,
+      chatData: buildFinalChatData(outcome, plan, result.status),
       preview,
-      applied: createEmptyCounts(),
-      skipped: countPlanUpdates(plan),
-      warnings: preview.warnings
+      messageId
     };
   }
 
-  if(!preview.canCommit) {
-    return {
-      status: COMBAT_CHAT_STATUS.manual,
-      chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
-      preview,
-      applied: createEmptyCounts(),
-      skipped: countPlanUpdates(plan),
-      warnings: preview.warnings
-    };
+  // No decision provided: we are showing the preview
+  const initialStatus = preview.status;
+  try {
+    messageId = await createOrUpdateCombatChatMessage(outcome, initialStatus, {
+      ...options,
+      messageId,
+      plannedUpdates: plan,
+      adapter
+    });
+  } catch (error) {
+    console.warn("Failed to create or update combat chat message:", error);
+    warnings.push(commitWarning("chat-update-failed", `Failed to update combat chat message: ${error.message}`));
   }
 
-  const result = await applyCombatUpdates(plan, options.adapter || createFoundryCombatAdapter());
   return {
-    ...result,
-    chatData: buildFinalChatData(outcome, plan, result.status),
-    preview
+    status: preview.status,
+    chatData: buildFinalChatData(outcome, plan, preview.status),
+    preview,
+    messageId,
+    applied: createEmptyCounts(),
+    skipped: countPlanUpdates(plan),
+    warnings: warnings.concat(preview.warnings)
   };
 }
 
@@ -163,6 +221,30 @@ export function createFoundryCombatAdapter() {
     },
     async resolveActor(actorUuid) {
       return resolveFoundryDocument(actorUuid);
+    },
+    async renderTemplate(templatePath, data) {
+      if (typeof globalThis.renderTemplate !== "function") {
+        throw new Error("Foundry renderTemplate is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
+      }
+      return globalThis.renderTemplate(templatePath, data);
+    },
+    async createChatMessage(chatData) {
+      if (typeof globalThis.ChatMessage?.create !== "function") {
+        throw new Error("Foundry ChatMessage.create is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
+      }
+      const message = await globalThis.ChatMessage.create(chatData);
+      return message?.id;
+    },
+    async updateChatMessage(messageId, updateData) {
+      if (typeof globalThis.game?.messages?.get !== "function") {
+        throw new Error("Foundry game.messages.get is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
+      }
+      const message = globalThis.game.messages.get(messageId);
+      if (!message) {
+        console.warn(`ChatMessage ${messageId} could not be resolved for update (it may have been deleted).`);
+        return;
+      }
+      await message.update(updateData);
     }
   };
 }
@@ -395,4 +477,55 @@ async function resolveFoundryDocument(uuid) {
     throw new Error("Foundry fromUuid is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
   }
   return globalThis.fromUuid(uuid);
+}
+
+export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus, options = {}) {
+  const adapter = options.adapter || createFoundryCombatAdapter();
+  const plan = {
+    ...(options.plannedUpdates || planCombatUpdates(outcome)),
+    chatStatus: resultStatus
+  };
+  const chatData = buildCombatChatData(outcome, plan, { status: resultStatus });
+  if (options.warnings && options.warnings.length > 0) {
+    chatData.warnings = [
+      ...chatData.warnings,
+      ...options.warnings
+    ];
+  }
+
+  const templatePath = "systems/cyberpunk2020/templates/chat/combat-outcome.hbs";
+  const htmlContent = await adapter.renderTemplate(templatePath, chatData);
+
+  const messageId = options.messageId;
+  if (messageId) {
+    await adapter.updateChatMessage(messageId, { content: htmlContent });
+    return messageId;
+  } else {
+    let speaker = options.speaker;
+    if(!speaker && typeof globalThis.ChatMessage?.getSpeaker === "function") {
+      let actor;
+      if (outcome.attacker?.actorUuid) {
+        actor = await adapter.resolveActor(outcome.attacker.actorUuid).catch(() => undefined);
+      }
+      if (actor) {
+        speaker = globalThis.ChatMessage.getSpeaker({ actor });
+      } else {
+        speaker = {};
+      }
+    }
+    const chatMessageData = {
+      content: htmlContent
+    };
+    const userId = options.userId || (typeof globalThis.game?.user?.id === "string" ? globalThis.game.user.id : undefined);
+    if (userId) chatMessageData.user = userId;
+    if (speaker && Object.keys(speaker).length > 0) chatMessageData.speaker = speaker;
+    const msgType = typeof globalThis.CONST?.CHAT_MESSAGE_TYPES?.OTHER !== "undefined" ? globalThis.CONST.CHAT_MESSAGE_TYPES.OTHER : undefined;
+    if (msgType !== undefined) chatMessageData.type = msgType;
+
+    const createdId = await adapter.createChatMessage(chatMessageData);
+    if (!createdId) {
+      throw new Error("ChatMessage creation resolved to empty or undefined message ID.");
+    }
+    return createdId;
+  }
 }

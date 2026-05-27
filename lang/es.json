@@ -380,5 +380,15 @@
 
     "SETTINGS.SysMigration": "Versión del Sistema Migrado",
     "SETTINGS.TrainedSkillsFirst": "Habilidades Entrenadas Primero",
-    "SETTINGS.TrainedSkillsFirstHint": "Si las habilidades entrenadas han de aparecer las primeras de la lista."
+    "SETTINGS.TrainedSkillsFirstHint": "Si las habilidades entrenadas han de aparecer las primeras de la lista.",
+    "CYBERPUNK.AmmoDelta": "Munición Gastada",
+    "CYBERPUNK.Warnings": "Advertencias",
+    "CYBERPUNK.PreviewStatus": "[VISTA PREVIA]",
+    "CYBERPUNK.PreviewStatusDesc": "Confirmación Pendiente",
+    "CYBERPUNK.CommittedStatus": "[APLICADO]",
+    "CYBERPUNK.CommittedStatusDesc": "Aplicado al Personaje(s)",
+    "CYBERPUNK.CanceledStatus": "[CANCELADO]",
+    "CYBERPUNK.CanceledStatusDesc": "Descartado",
+    "CYBERPUNK.ManualStatus": "[MANUAL]",
+    "CYBERPUNK.ManualStatusDesc": "Requiere Resolución del DJ"
 }

@@ -18,6 +18,7 @@ export async function runCombatCommitTests() {
   await assertResolverRejectionBlocksCommit();
   await assertEmbeddedUpdateWithoutIdBlocksCommit();
   await assertWriteRejectionReturnsPartialFailure();
+  await assertChatOutcomeLifecycle();
 
   return {
     name: "combat-commit"
@@ -112,7 +113,8 @@ async function assertCancelDoesNotApplyUpdates() {
     decision: "cancel"
   });
 
-  assert.deepEqual(adapter.calls, [], "cancel should not mutate documents");
+  const mutations = adapter.calls.filter(c => c.type !== "renderTemplate" && !c.type.startsWith("chatMessage"));
+  assert.deepEqual(mutations, [], "cancel should not mutate documents");
   assert.equal(result.status, COMBAT_CHAT_STATUS.canceled, "cancel status");
   assert.equal(result.chatData.status, COMBAT_CHAT_STATUS.canceled, "cancel chat status");
   assert.equal(result.preview.canCommit, true, "cancel still exposes valid preview");
@@ -132,7 +134,8 @@ async function assertManualResolutionBlocksCommit() {
     decision: "confirm"
   });
 
-  assert.deepEqual(adapter.calls, [], "manual resolution should not mutate documents");
+  const mutations = adapter.calls.filter(c => c.type !== "renderTemplate" && !c.type.startsWith("chatMessage"));
+  assert.deepEqual(mutations, [], "manual resolution should not mutate documents");
   assert.equal(result.status, COMBAT_CHAT_STATUS.manual, "manual block status");
   assert.equal(result.chatData.status, COMBAT_CHAT_STATUS.manual, "manual chat status");
   assert.equal(result.preview.canCommit, false, "manual preview cannot commit");
@@ -338,6 +341,7 @@ function buildOutcome(overrides = {}) {
 
 function createFakeAdapter(options = {}) {
   const calls = [];
+  let nextMessageId = 1;
 
   return {
     calls,
@@ -388,8 +392,114 @@ function createFakeAdapter(options = {}) {
           });
         }
       };
+    },
+    async renderTemplate(templatePath, data) {
+      calls.push({
+        type: "renderTemplate",
+        templatePath,
+        data
+      });
+      return `<mock-rendered-template-for-${data.status}>`;
+    },
+    async createChatMessage(chatData) {
+      const messageId = `msg-${nextMessageId++}`;
+      calls.push({
+        type: "chatMessage.create",
+        messageId,
+        chatData
+      });
+      return messageId;
+    },
+    async updateChatMessage(messageId, updateData) {
+      calls.push({
+        type: "chatMessage.update",
+        messageId,
+        updateData
+      });
     }
   };
+}
+
+async function assertChatOutcomeLifecycle() {
+  const outcome = buildOutcome();
+  const adapter = createFakeAdapter();
+
+  // 1. Initial preview
+  const previewResult = await previewAndApplyCombatOutcome(outcome, {
+    adapter
+  });
+
+  assert.equal(previewResult.status, COMBAT_CHAT_STATUS.preview, "status should be preview");
+  assert.ok(previewResult.messageId, "should return a messageId");
+
+  const previewCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
+  assert.deepEqual(previewCalls, [
+    {
+      type: "renderTemplate",
+      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      data: previewResult.chatData
+    },
+    {
+      type: "chatMessage.create",
+      messageId: "msg-1",
+      chatData: {
+        content: "<mock-rendered-template-for-preview>"
+      }
+    }
+  ], "preview chat calls");
+
+  // 2. Confirm the preview
+  adapter.calls.length = 0;
+  const confirmResult = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "confirm",
+    messageId: previewResult.messageId
+  });
+
+  assert.equal(confirmResult.status, COMBAT_CHAT_STATUS.committed, "status should be committed");
+  assert.equal(confirmResult.messageId, previewResult.messageId, "should reuse messageId");
+
+  const confirmCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
+  assert.deepEqual(confirmCalls, [
+    {
+      type: "renderTemplate",
+      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      data: confirmResult.chatData
+    },
+    {
+      type: "chatMessage.update",
+      messageId: "msg-1",
+      updateData: {
+        content: "<mock-rendered-template-for-committed>"
+      }
+    }
+  ], "confirm chat calls");
+
+  // 3. Cancel a preview
+  adapter.calls.length = 0;
+  const cancelResult = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "cancel",
+    messageId: previewResult.messageId
+  });
+
+  assert.equal(cancelResult.status, COMBAT_CHAT_STATUS.canceled, "status should be canceled");
+
+  const cancelCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
+  assert.deepEqual(cancelCalls, [
+    {
+      type: "renderTemplate",
+      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      data: cancelResult.chatData
+    },
+    {
+      type: "chatMessage.update",
+      messageId: "msg-1",
+      updateData: {
+        content: "<mock-rendered-template-for-canceled>"
+      }
+    }
+  ], "cancel chat calls");
 }
 
 function buildExpectedChatStatus(status) {

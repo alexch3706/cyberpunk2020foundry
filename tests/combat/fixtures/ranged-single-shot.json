@@ -207,6 +207,16 @@
             "natural": 4,
             "results": [4]
           }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 15,
+          "die": {
+            "faces": 6,
+            "natural": 15,
+            "results": [4, 4, 4, 3]
+          }
         }
       ],
       "expected": {
@@ -288,6 +298,12 @@
                   },
                   "location": "torso"
                 },
+                "rawDamage": 15,
+                "effectiveStoppingPower": 12,
+                "armorPiercing": false,
+                "armorMitigation": 12,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 1,
                 "warnings": []
               }
             ],
@@ -400,6 +416,16 @@
             "results": [7],
             "exploded": false
           }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 10,
+          "die": {
+            "faces": 6,
+            "natural": 10,
+            "results": [4, 3, 2, 1]
+          }
         }
       ],
       "expected": {
@@ -438,7 +464,13 @@
                 "locationRoll": {
                   "formula": "aimed location",
                   "location": "Head"
-                }
+                },
+                "rawDamage": 10,
+                "effectiveStoppingPower": 0,
+                "armorPiercing": false,
+                "armorMitigation": 0,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 8
               }
             ],
             "manualResolution": {

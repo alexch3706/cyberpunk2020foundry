@@ -1,0 +1,118 @@
+<div class="cyberpunk cyberpunk-card flexcol">
+    <h2>{{#if action.name}}{{action.name}}{{else}}{{CPLocal "Attack"}}{{/if}}</h2>
+    <div class="field-list one-col">
+        <div class="field">
+            <span>{{CPLocal "Attacker"}}: </span>
+            <span class="flex-pad">{{attacker.name}}</span>
+        </div>
+        {{#if weapon.name}}
+        <div class="field">
+            <span>{{CPLocal "Weapon"}}: </span>
+            <span class="flex-pad">{{weapon.name}}</span>
+        </div>
+        {{/if}}
+        {{#if action.fireMode}}
+        <div class="field">
+            <span>{{CPLocal "FireMode"}}: </span>
+            <span class="flex-pad">{{CPLocal action.fireMode}}</span>
+        </div>
+        {{/if}}
+    </div>
+
+    {{#if action.modifiers.length}}
+    <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+        <div class="field">
+            <strong>{{CPLocal "AttackModifiers"}}:</strong>
+        </div>
+        {{#each action.modifiers as |mod|}}
+        <div class="field">
+            <span>{{CPLocal mod.label}}: </span>
+            <span class="flex-pad">{{mod.value}}</span>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{#each targets as |targetOutcome|}}
+        <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+            <div class="field">
+                <span>{{CPLocal "Target"}}: </span>
+                <span class="flex-pad">{{targetOutcome.target.name}}</span>
+            </div>
+            {{#if (hasProperty targetOutcome.attack "total")}}
+                <div class="field">
+                    <span>{{CPLocal "Attack"}}: </span>
+                    <span>{{targetOutcome.attack.total}}</span>
+                    {{#if targetOutcome.attack.formula}}
+                        <span class="formula" style="font-size: 0.85em; color: #888; margin-left: 5px;">({{targetOutcome.attack.formula}})</span>
+                    {{/if}}
+                    <span class="flex-pad"></span>
+                    <span class="roll-results">
+                        {{#each targetOutcome.attack.die.subrolls as |subroll|}}
+                            <span class="roll-result roll die {{subroll.classes}}">{{subroll.result}}</span>
+                        {{/each}}
+                    </span>
+                </div>
+                {{#if targetOutcome.attack.targetNumber}}
+                <div class="field">
+                    <span>{{CPLocal "ToHit"}} (DC): </span>
+                    <span class="flex-pad">{{targetOutcome.attack.targetNumber}}</span>
+                </div>
+                {{/if}}
+                <div class="field">
+                    <span>{{CPLocal "Result"}}: </span>
+                    <span class="flex-pad">
+                        {{#if targetOutcome.attack.hit}}
+                            <strong style="color: #0f0; text-transform: uppercase;">{{CPLocal "Hit"}}</strong>
+                        {{else}}
+                            <strong style="color: #f00; text-transform: uppercase;">{{CPLocal "Miss"}}</strong>
+                        {{/if}}
+                    </span>
+                </div>
+                {{#if targetOutcome.attack.hit}}
+                    {{#each targetOutcome.hits as |hit|}}
+                        <div class="field">
+                            <span>{{CPLocal "HitLocation"}}: </span>
+                            <span class="flex-pad">{{CPLocal hit.location}}</span>
+                        </div>
+                    {{/each}}
+                {{/if}}
+            {{/if}}
+        </div>
+    {{/each}}
+
+    {{#if ammo.delta}}
+    <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+        <div class="field">
+            <span>{{CPLocal "AmmoDelta"}}: </span>
+            <span class="flex-pad">{{ammo.delta}} ({{ammo.after}} / {{ammo.before}})</span>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if warnings.length}}
+        <div class="warnings" style="color: #ffaa00; margin-top: 5px; font-size: 0.9em; border-top: 1px solid #ffaa00; padding-top: 5px;">
+            <strong>{{CPLocal "Warnings"}}:</strong>
+            <ul style="margin: 3px 0; padding-left: 15px;">
+                {{#each warnings as |warning|}}
+                    <li>{{warning.message}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+
+    <div class="status-banner status-{{status}}" style="margin-top: 10px; padding: 5px; text-align: center; font-weight: bold; border: 1px solid; {{#if isPreview}}color: #3498db; border-color: #3498db;{{/if}}{{#if isCommitted}}color: #2ecc71; border-color: #2ecc71;{{/if}}{{#if isCanceled}}color: #e74c3c; border-color: #e74c3c;{{/if}}{{#if isManual}}color: #f1c40f; border-color: #f1c40f;{{/if}}">
+        {{#if isPreview}}
+            <span>{{CPLocal "PreviewStatus"}} - {{CPLocal "PreviewStatusDesc"}}</span>
+        {{/if}}
+        {{#if isCommitted}}
+            <span>{{CPLocal "CommittedStatus"}} - {{CPLocal "CommittedStatusDesc"}}</span>
+        {{/if}}
+        {{#if isCanceled}}
+            <span>{{CPLocal "CanceledStatus"}} - {{CPLocal "CanceledStatusDesc"}}</span>
+        {{/if}}
+        {{#if isManual}}
+            <span>{{CPLocal "ManualStatus"}} - {{CPLocal "ManualStatusDesc"}}</span>
+        {{/if}}
+    </div>
+</div>

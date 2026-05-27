@@ -5,6 +5,7 @@ import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
+import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url)
@@ -14,6 +15,7 @@ export async function runCombatFixtures() {
   const results = [];
 
   assertTargetNormalization();
+  assertArmorResolver();
 
   for(const fixtureUrl of FIXTURE_URLS) {
     const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
@@ -450,4 +452,153 @@ function reviveFixtureSentinels(data) {
     return undefined;
   }
   return data;
+}
+
+function assertArmorResolver() {
+  // Test target snapshot structure with a mix of equipped/unequipped armor and cyberware
+  const targetSnapshot = {
+    stats: {
+      body: { total: 6 }
+    },
+    hitLocations: {
+      torso: { stoppingPower: 99, label: "Torso" } // Pre-summed SP that must be ignored!
+    },
+    equippedArmor: [
+      {
+        id: "armor-torso-1",
+        name: "Light Kevlar Vest",
+        type: "armor",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { stoppingPower: 10, ablation: 0, layer: "soft" },
+            rarm: { stoppingPower: 6, ablation: 1, layer: "soft" }
+          }
+        }
+      },
+      {
+        id: "armor-torso-2",
+        name: "MetalGear",
+        type: "armor",
+        system: {
+          equipped: true,
+          coverage: {
+            torso: { sp: 25, ablation: 2, layer: "hard" }
+          }
+        }
+      },
+      {
+        id: "armor-unequipped",
+        name: "Unequipped Vest",
+        type: "armor",
+        system: {
+          equipped: false,
+          coverage: {
+            torso: { stoppingPower: 12, ablation: 0 }
+          }
+        }
+      }
+    ],
+    equippedCyberware: [
+      {
+        id: "cyberware-subdermal",
+        name: "Subdermal Armor",
+        type: "cyberware",
+        system: {
+          equipped: true,
+          stoppingPower: 2,
+          ablation: 0,
+          layer: "hard"
+        }
+      },
+      {
+        id: "cyberware-skinweave",
+        name: "Skinweave SP12",
+        type: "cyberware",
+        system: {
+          equipped: true,
+          cyberwareType: "BIOWARE",
+          cyberwareSubtype: "SKINWEAVE",
+          flavor: "12 SP;50% chance-1 ATTR loss",
+          source: "Cyberpunk 2020 2nd ed. pg.85"
+        }
+      },
+      {
+        id: "cyberware-skull",
+        name: "Subdermal Skull Armor SP6",
+        type: "cyberware",
+        system: {
+          equipped: true,
+          cyberwareType: "IMPLANT",
+          cyberwareSubtype: "SUBDERMAL ARMOR",
+          flavor: "6SP; DIFF 30 to spot"
+        }
+      },
+      {
+        id: "cyberware-unequipped",
+        name: "Unequipped Skin Weave",
+        type: "cyberware",
+        system: {
+          equipped: false,
+          stoppingPower: 4,
+          ablation: 0
+        }
+      }
+    ]
+  };
+
+  // 1. Test getEquippedArmorForLocation with Torso (case-insensitive)
+  const torsoLayers = getEquippedArmorForLocation(targetSnapshot, "Torso");
+  assert.equal(torsoLayers.length, 4, "should extract 4 layers for Torso (2 armor, 2 cyberware)");
+
+  // Verify details of armor-torso-1
+  const layer1 = torsoLayers.find(l => l.id === "armor-torso-1");
+  assert.ok(layer1, "layer 1 exists");
+  assert.equal(layer1.stoppingPower, 10, "layer 1 SP");
+  assert.equal(layer1.type, "armor", "layer 1 type");
+  assert.equal(layer1.layer, "soft", "layer 1 material");
+
+  // Verify details of MetalGear (uses alternative 'sp' property)
+  const layer2 = torsoLayers.find(l => l.id === "armor-torso-2");
+  assert.ok(layer2, "layer 2 exists");
+  assert.equal(layer2.stoppingPower, 25, "layer 2 SP");
+  assert.equal(layer2.type, "armor", "layer 2 type");
+  assert.equal(layer2.layer, "hard", "layer 2 material");
+
+  // Verify details of subdermal armor
+  const cyberLayer = torsoLayers.find(l => l.id === "cyberware-subdermal");
+  assert.ok(cyberLayer, "cyberware layer exists");
+  assert.equal(cyberLayer.stoppingPower, 2, "cyberware SP");
+  assert.equal(cyberLayer.type, "cyberware", "cyberware type");
+  assert.equal(cyberLayer.layer, "hard", "cyberware material");
+
+  const skinweaveLayer = torsoLayers.find(l => l.id === "cyberware-skinweave");
+  assert.ok(skinweaveLayer, "skinweave layer exists");
+  assert.equal(skinweaveLayer.stoppingPower, 12, "skinweave SP is parsed from existing pack-style text");
+  assert.equal(skinweaveLayer.source, "Cyberpunk 2020 2nd ed. pg.85", "skinweave source is preserved");
+  assert.ok(!torsoLayers.some(l => l.id === "cyberware-skull"), "skull-only subdermal armor does not cover torso");
+
+  const headLayers = getEquippedArmorForLocation(targetSnapshot, "Head");
+  const skullLayer = headLayers.find(l => l.id === "cyberware-skull");
+  assert.ok(skullLayer, "skull subdermal armor covers head");
+  assert.equal(skullLayer.stoppingPower, 6, "skull subdermal SP is parsed from name/flavor");
+
+  // Verify that unequipped layers are ignored
+  assert.ok(!torsoLayers.some(l => l.id === "armor-unequipped"), "unequipped armor is ignored");
+  assert.ok(!torsoLayers.some(l => l.id === "cyberware-unequipped"), "unequipped cyberware is ignored");
+
+  // 2. Test resolveArmor
+  // Max of (10, 25, 2) is 25.
+  const resolvedNonAP = resolveArmor(false, targetSnapshot, "torso");
+  assert.equal(resolvedNonAP.effectiveStoppingPower, 25, "non-AP effective stopping power is the max SP");
+  assert.equal(resolvedNonAP.armorPiercing, false, "armorPiercing flag is false");
+
+  // AP should halve SP (25 / 2 = 12.5 -> floor is 12)
+  const resolvedAP = resolveArmor(true, targetSnapshot, "torso");
+  assert.equal(resolvedAP.effectiveStoppingPower, 12, "AP effective stopping power is halved (floor)");
+  assert.equal(resolvedAP.armorPiercing, true, "armorPiercing flag is true");
+
+  // Skinweave covers all locations, so rarm max SP is 12 and AP halves it to 6.
+  const resolvedRarmAP = resolveArmor(true, targetSnapshot, "rarm");
+  assert.equal(resolvedRarmAP.effectiveStoppingPower, 6, "AP halves 12 SP to 6");
 }
