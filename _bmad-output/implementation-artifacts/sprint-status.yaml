@@ -1,5 +1,5 @@
 # generated: 2026-05-24
-# last_updated: 2026-05-25
+# last_updated: 2026-05-27
 # project: Cyberpunk2020VTT
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-24
-last_updated: 2026-05-25
+last_updated: 2026-05-27
 project: Cyberpunk2020VTT
 project_key: NOKEY
 tracking_system: file-system
@@ -51,7 +51,7 @@ development_status:
   epic-1-retrospective: optional
   epic-2: in-progress
   2-1-normalize-selected-targets-to-actor-aware-references: done
-  2-2-resolve-single-shot-ranged-attack-outcome: backlog
+  2-2-resolve-single-shot-ranged-attack-outcome: done
   2-3-preserve-ammo-planning-and-legacy-entry-behavior: backlog
   2-4-preview-and-confirm-single-shot-state-application: backlog
   2-5-render-single-shot-combat-evidence-in-chat: backlog

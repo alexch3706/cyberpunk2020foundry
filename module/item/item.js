@@ -228,7 +228,7 @@ export class CyberpunkItem extends Item {
         name: owner?.name,
         snapshot: {
           stats: this.__cloneResolverData(owner?.system?.stats),
-          skills: this.__cloneResolverData(owner?.system?.skills),
+          skills: this.__buildCombatSkillSnapshot(owner),
           damage: owner?.system?.damage,
           hitLocations: this.__cloneResolverData(owner?.system?.hitLocations)
         }
@@ -254,6 +254,19 @@ export class CyberpunkItem extends Item {
         fallback: () => this.__legacyWeaponRoll(attackMods, targetTokens)
       }
     };
+  }
+
+  __buildCombatSkillSnapshot(actor) {
+    const skills = this.__cloneResolverData(actor?.system?.skills?.skills || actor?.system?.skills || {}) || {};
+
+    for(const skill of actor?.itemTypes?.skill || []) {
+      skills[skill.name] = {
+        ...(this.__cloneResolverData(skill.system || {}) || {}),
+        level: actor.getSkillVal(skill.name)
+      };
+    }
+
+    return skills;
   }
 
   __buildCombatTargetContext(target) {

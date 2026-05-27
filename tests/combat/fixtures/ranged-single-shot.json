@@ -160,6 +160,354 @@
       }
     }
   ],
+  "singleShotCases": [
+    {
+      "name": "structured hit with ranged modifier evidence",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeMedium",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "aimRounds": 2,
+            "blinded": true,
+            "targetsCount": 1,
+            "extraMod": -1
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "expectedRequest": {
+            "rollData": {
+              "stats": {
+                "ref": {
+                  "total": 8
+                }
+              },
+              "skill": {
+                "handgun": 6
+              }
+            }
+          },
+          "total": 21,
+          "die": {
+            "faces": 10,
+            "natural": 9,
+            "results": [9],
+            "exploded": false
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [4]
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SemiAuto",
+          "range": "RangeMedium",
+          "modifiers": [
+            {
+              "code": "range",
+              "label": "Range",
+              "value": "RangeMedium",
+              "targetNumber": 20
+            },
+            {
+              "code": "fireMode",
+              "label": "Fire Mode",
+              "value": "SemiAuto"
+            },
+            {
+              "code": "aimRounds",
+              "label": "Aiming",
+              "value": 2
+            },
+            {
+              "code": "targetsCount",
+              "label": "Targets Count",
+              "value": 1
+            },
+            {
+              "code": "blinded",
+              "label": "Blinded",
+              "value": -3
+            },
+            {
+              "code": "extraMod",
+              "label": "Extra Modifier",
+              "value": -1
+            },
+            {
+              "code": "weaponAccuracy",
+              "label": "Weapon Accuracy",
+              "value": 0
+            }
+          ]
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "formula": "1d10x10 + @stats.ref.total + @skill.handgun + @modifier.aimRounds + @modifier.targetsCount + @modifier.blinded + @modifier.extraMod + @weapon.accuracy",
+                "terms": ["1d10x10", "@stats.ref.total", "@skill.handgun", "@modifier.aimRounds", "@modifier.targetsCount", "@modifier.blinded", "@modifier.extraMod", "@weapon.accuracy"],
+                "total": 21,
+                "die": {
+                  "faces": 10,
+                  "natural": 9,
+                  "results": [9],
+                  "exploded": false
+                },
+                "isCritical": false,
+                "isFumble": false
+              },
+              "targetNumber": 20,
+              "hit": true,
+              "margin": 1,
+              "warnings": []
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "id": "location",
+                  "formula": "1d10 hit location",
+                  "total": 4,
+                  "die": {
+                    "faces": 10,
+                    "natural": 4,
+                    "results": [4]
+                  },
+                  "location": "torso"
+                },
+                "warnings": []
+              }
+            ],
+            "manualResolution": {
+              "required": false
+            },
+            "warnings": []
+          }
+        ],
+        "manualResolution": {
+          "required": false
+        },
+        "chat": {
+          "status": "preview"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured miss skips location",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "extraMod": -5
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [3],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": false,
+              "margin": -3,
+              "warnings": []
+            },
+            "hits": [],
+            "manualResolution": {
+              "required": false
+            },
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured hit uses options-only aimed location",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "Head"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 7,
+            "results": [7],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "targetArea": "Head",
+          "modifiers": [
+            {
+              "code": "range",
+              "targetNumber": 15
+            },
+            {
+              "code": "fireMode",
+              "value": "SemiAuto"
+            },
+            {
+              "code": "targetArea",
+              "label": "Aimed Location",
+              "value": -4
+            },
+            {
+              "code": "weaponAccuracy",
+              "value": 0
+            }
+          ]
+        },
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 3
+            },
+            "hits": [
+              {
+                "location": "Head",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "Head"
+                }
+              }
+            ],
+            "manualResolution": {
+              "required": false
+            }
+          }
+        ],
+        "manualResolution": {
+          "required": false
+        }
+      }
+    },
+    {
+      "name": "structured hit without location model is manual",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__"
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "body": {
+                  "total": 6
+                }
+              },
+              "damage": 0
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 3
+            },
+            "hits": [],
+            "manualResolution": {
+              "required": true,
+              "reason": "missing-rule-data",
+              "blockedUpdateCategories": ["hit-location", "target-damage", "target-armor", "target-saves"]
+            },
+            "warnings": [
+              {
+                "code": "missing-hit-location-model",
+                "severity": "warning"
+              }
+            ]
+          }
+        ]
+      ,
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "blockedUpdateCategories": ["hit-location", "target-damage", "target-armor", "target-saves"]
+        }
+      }
+    },
+    {
+      "name": "structured path falls back when range data is missing",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "unknown",
+          "targetNumber": "__UNDEFINED__"
+        }
+      },
+      "rolls": [],
+      "legacyExpected": {
+        "legacy": true,
+        "reason": "fallback"
+      },
+      "expected": {
+        "legacy": true,
+        "reason": "fallback"
+      }
+    }
+  ],
   "invalidPlanCases": [
     {
       "name": "unsafe actor update payload",

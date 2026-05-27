@@ -42,6 +42,8 @@ function runFixture(fixture) {
   const previewChatData = buildCombatChatData(outcome, plannedUpdates);
   assert.deepEqual(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
 
+  assertSingleShotCases(fixture);
+
   for(const statusCase of fixture.chatStatusCases || []) {
     const caseOutcome = reviveFixtureSentinels(mergePlainData(outcome, statusCase.outcome || {}));
     const casePlan = reviveFixtureSentinels(mergePlainData(plannedUpdates, statusCase.plannedUpdates || {}));
@@ -73,6 +75,9 @@ function createScriptedRoller(rolls = []) {
     }
     if(request.id && scriptedRoll.id !== request.id) {
       throw new Error(`Expected scripted roll ${scriptedRoll.id}, received ${request.id}.`);
+    }
+    if(scriptedRoll.expectedRequest) {
+      assertObjectIncludes(request, scriptedRoll.expectedRequest, `${request.id || "roll"} request`);
     }
 
     nextRollIndex += 1;
@@ -149,6 +154,22 @@ function buildSingleShotOutcome(context, roller, fixture) {
     },
     warnings: []
   };
+}
+
+function assertSingleShotCases(fixture) {
+  for(const singleShotCase of fixture.singleShotCases || []) {
+    const roller = createScriptedRoller(singleShotCase.rolls);
+    const context = reviveFixtureSentinels(mergePlainData(fixture.context, singleShotCase.context || {}));
+    if(singleShotCase.legacyExpected) {
+      context.legacy = {
+        mode: "fixture",
+        fallback: () => clonePlainData(singleShotCase.legacyExpected)
+      };
+    }
+    const outcome = resolveCombatAction(context, { structured: true }, roller);
+    roller.assertComplete();
+    assertObjectIncludes(outcome, singleShotCase.expected, `${fixture.name} ${singleShotCase.name} outcome`);
+  }
 }
 
 function assertTargetNormalization() {
@@ -388,8 +409,22 @@ function isPlainObject(value) {
 }
 
 function assertObjectIncludes(actual, expected, message) {
+  if(Array.isArray(expected)) {
+    assert.ok(Array.isArray(actual), `${message} should be an array`);
+    assert.equal(actual.length, expected.length, `${message} length`);
+    expected.forEach((expectedValue, index) => {
+      if(isPlainObject(expectedValue) || Array.isArray(expectedValue)) {
+        assertObjectIncludes(actual[index], expectedValue, `${message}[${index}]`);
+      }
+      else {
+        assert.deepEqual(actual[index], expectedValue, `${message}[${index}]`);
+      }
+    });
+    return;
+  }
+
   for(const [key, expectedValue] of Object.entries(expected)) {
-    if(isPlainObject(expectedValue)) {
+    if(isPlainObject(expectedValue) || Array.isArray(expectedValue)) {
       assertObjectIncludes(actual?.[key], expectedValue, `${message}.${key}`);
     }
     else {

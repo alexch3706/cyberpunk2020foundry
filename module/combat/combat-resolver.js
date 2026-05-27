@@ -1,3 +1,6 @@
+import { rangeDCs, ranges } from "../lookups.js";
+import { resolveSingleShotRangedAttack } from "./attack-resolver.js";
+
 /**
  * Top-level combat resolver shell.
  *
@@ -15,6 +18,10 @@
  * @returns {*} The legacy fallback result for current combat paths.
  */
 export function resolveCombatAction(context, options = {}, roller = undefined) {
+  if(options.structured === true && canResolveSingleShotRangedContext(context, roller)) {
+    return resolveSingleShotRangedAttack(context, options, roller);
+  }
+
   if (typeof context?.legacy?.fallback !== "function") {
     throw new Error("Combat resolver requires a legacy fallback during migration.");
   }
@@ -24,4 +31,31 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
     options,
     roller
   });
+}
+
+function isSupportedSingleShotRangedContext(context) {
+  const fireMode = String(context?.action?.fireMode || "");
+  return context?.action?.type === "ranged"
+    && fireMode.toLowerCase() === "semiauto";
+}
+
+function canResolveSingleShotRangedContext(context, roller) {
+  if(!isSupportedSingleShotRangedContext(context) || typeof roller !== "function") {
+    return false;
+  }
+
+  const range = normalizeRange(context.action?.range);
+  const targetNumber = rangeDCs[range] || context.action?.targetNumber;
+  return Number.isFinite(Number(targetNumber))
+    && !!context.attacker?.snapshot?.stats
+    && !!context.weapon?.snapshot?.attackSkill
+    && Array.isArray(context.targets)
+    && context.targets.length > 0;
+}
+
+function normalizeRange(range) {
+  if(rangeDCs[range]) {
+    return range;
+  }
+  return ranges[range] || range;
 }
