@@ -17,6 +17,7 @@ export async function runCombatFixtures() {
 
   assertTargetNormalization();
   assertBodyTypeDamageResolver();
+  assertWoundPlanning();
   assertArmorResolver();
 
   for(const fixtureUrl of FIXTURE_URLS) {
@@ -175,12 +176,12 @@ function assertSingleShotCases(fixture) {
     }
     const outcome = resolveCombatAction(context, { structured: true }, roller);
     roller.assertComplete();
+    const plan = planCombatUpdates(outcome);
     assertObjectIncludes(outcome, singleShotCase.expected, `${fixture.name} ${singleShotCase.name} outcome`);
     if(singleShotCase.expectedPlan) {
-      assertObjectIncludes(planCombatUpdates(outcome), singleShotCase.expectedPlan, `${fixture.name} ${singleShotCase.name} planned updates`);
+      assertObjectIncludes(plan, singleShotCase.expectedPlan, `${fixture.name} ${singleShotCase.name} planned updates`);
     }
     if(singleShotCase.expectedChat) {
-      const plan = planCombatUpdates(outcome);
       const chatData = buildCombatChatData(outcome, plan);
       assertObjectIncludes(chatData, singleShotCase.expectedChat, `${fixture.name} ${singleShotCase.name} chat data`);
     }
@@ -414,6 +415,208 @@ function assertBodyTypeDamageResolver() {
     finalDamage: 5,
     minimumDamageApplied: false
   }, "invalid Body Type does not become maximum BTM");
+}
+
+function assertWoundPlanning() {
+  const torsoOutcome = buildWoundOutcome({
+    currentDamage: 3,
+    location: "torso",
+    finalDamage: 2
+  });
+  const torsoPlan = planCombatUpdates(torsoOutcome);
+  assert.deepEqual(torsoPlan.actorUpdates, [
+    {
+      actorUuid: "Actor.target",
+      update: {
+        "system.damage": 5
+      }
+    }
+  ], "wound planning advances target damage");
+  assert.deepEqual(torsoOutcome.targets[0].hits[0].woundTransition, {
+    previousDamage: 3,
+    damageDelta: 2,
+    nextDamage: 5,
+    previousWoundState: {
+      level: 1,
+      label: "Light"
+    },
+    nextWoundState: {
+      level: 2,
+      label: "Serious"
+    },
+    crossedThreshold: true
+  }, "wound planning records wound transition evidence");
+
+  const criticalOutcome = buildWoundOutcome({
+    currentDamage: 7,
+    location: "torso",
+    finalDamage: 2
+  });
+  planCombatUpdates(criticalOutcome);
+  assert.deepEqual(criticalOutcome.targets[0].damage.nextWoundState, {
+    level: 3,
+    label: "Critical"
+  }, "wound planning records Critical transition");
+
+  const mortalOutcome = buildWoundOutcome({
+    currentDamage: 11,
+    location: "torso",
+    finalDamage: 2
+  });
+  planCombatUpdates(mortalOutcome);
+  assert.deepEqual(mortalOutcome.targets[0].damage.nextWoundState, {
+    level: 4,
+    label: "Mortal 1"
+  }, "wound planning records Mortal transition");
+
+  const headOutcome = buildWoundOutcome({
+    currentDamage: 0,
+    location: "Head",
+    finalDamage: 5
+  });
+  const headPlan = planCombatUpdates(headOutcome);
+  assert.deepEqual(headPlan.actorUpdates[0].update, {
+    "system.damage": 10
+  }, "head hit doubles wound damage");
+  assert.equal(headOutcome.targets[0].hits[0].woundDamage, 10, "head hit exposes wound damage");
+  assert.deepEqual(headOutcome.targets[0].hits[0].specialCases, [
+    {
+      code: "head-hit-double-damage",
+      damageMultiplier: 2,
+      damageBeforeMultiplier: 5,
+      damageAfterMultiplier: 10
+    },
+    {
+      code: "head-critical-injury",
+      threshold: 8,
+      woundDamage: 10
+    }
+  ], "head hit exposes special cases without save prompts");
+  assert.deepEqual(headOutcome.targets[0].hits[0].warnings, [
+    {
+      code: "head-critical-injury",
+      severity: "warning",
+      message: "Head hit exceeded 8 damage in one attack; target is killed automatically unless the referee overrides the special case."
+    }
+  ], "head threshold surfaces automatic-death warning");
+
+  const labeledHeadOutcome = buildWoundOutcome({
+    currentDamage: 0,
+    location: "skull",
+    locationLabel: "Head",
+    finalDamage: 2
+  });
+  planCombatUpdates(labeledHeadOutcome);
+  assert.equal(labeledHeadOutcome.targets[0].hits[0].woundDamage, 4, "head label doubles wound damage even when key differs");
+
+  const limbOutcome = buildWoundOutcome({
+    currentDamage: 0,
+    location: "rArm",
+    finalDamage: 9
+  });
+  planCombatUpdates(limbOutcome);
+  assert.deepEqual(limbOutcome.targets[0].hits[0].warnings, [
+    {
+      code: "limb-loss-threshold",
+      severity: "warning",
+      message: "Limb hit exceeded 8 damage in one attack; limb is severed or crushed and requires follow-up resolution."
+    }
+  ], "limb threshold surfaces warning");
+
+  const stoppedOutcome = buildWoundOutcome({
+    currentDamage: 4,
+    location: "torso",
+    finalDamage: 0
+  });
+  const stoppedPlan = planCombatUpdates(stoppedOutcome);
+  assert.deepEqual(stoppedPlan.actorUpdates, [], "full stop does not plan target damage");
+  assert.equal(stoppedOutcome.targets[0].hits[0].woundTransition, undefined, "full stop does not add wound transition");
+
+  stoppedOutcome.targets[0].hits[0].woundDamage = 9;
+  stoppedOutcome.targets[0].hits[0].woundTransition = { stale: true };
+  stoppedOutcome.targets[0].hits[0].specialCases = [{ code: "head-critical-injury" }];
+  planCombatUpdates(stoppedOutcome);
+  assert.equal(stoppedOutcome.targets[0].hits[0].woundDamage, undefined, "replanning clears stale wound damage");
+  assert.equal(stoppedOutcome.targets[0].hits[0].woundTransition, undefined, "replanning clears stale wound transition");
+  assert.equal(stoppedOutcome.targets[0].hits[0].specialCases, undefined, "replanning clears stale special cases");
+
+  const missingDamageOutcome = buildWoundOutcome({
+    currentDamage: undefined,
+    location: "torso",
+    finalDamage: 2
+  });
+  const missingDamagePlan = planCombatUpdates(missingDamageOutcome);
+  assert.deepEqual(missingDamagePlan.actorUpdates, [], "missing damage snapshot does not plan target damage");
+  assert.deepEqual(missingDamagePlan.warnings, [
+    {
+      code: "missing-target-damage-state",
+      severity: "warning",
+      message: "Target damage state is unavailable; resolve target damage manually before committing wound updates."
+    }
+  ], "missing damage snapshot produces unsafe plan warning");
+
+  const fractionalDamageOutcome = buildWoundOutcome({
+    currentDamage: 0,
+    location: "torso",
+    finalDamage: 1.5
+  });
+  const fractionalDamagePlan = planCombatUpdates(fractionalDamageOutcome);
+  assert.deepEqual(fractionalDamagePlan.actorUpdates, [], "fractional final damage does not plan target damage");
+  assert.deepEqual(fractionalDamagePlan.warnings, [
+    {
+      code: "invalid-wound-damage",
+      severity: "warning",
+      message: "Wound damage must be a non-negative integer before it can be planned."
+    }
+  ], "fractional final damage produces unsafe plan warning");
+
+  const existingSpecialCaseOutcome = buildWoundOutcome({
+    currentDamage: 0,
+    location: "rArm",
+    finalDamage: 9,
+    specialCases: [{ code: "existing-special-case" }]
+  });
+  planCombatUpdates(existingSpecialCaseOutcome);
+  assert.deepEqual(existingSpecialCaseOutcome.targets[0].hits[0].specialCases, [
+    {
+      code: "existing-special-case"
+    },
+    {
+      code: "limb-loss-threshold",
+      threshold: 8,
+      woundDamage: 9
+    }
+  ], "wound planning preserves existing special cases");
+}
+
+function buildWoundOutcome({ currentDamage, location, locationLabel = undefined, finalDamage, specialCases = undefined }) {
+  return {
+    targets: [
+      {
+        target: {
+          actorUuid: "Actor.target",
+          snapshot: {
+            damage: currentDamage
+          }
+        },
+        manualResolution: {
+          required: false
+        },
+        hits: [
+          {
+            location,
+            locationLabel,
+            finalDamage,
+            specialCases,
+            warnings: []
+          }
+        ]
+      }
+    ],
+    plannedUpdates: {
+      chatStatus: "preview"
+    }
+  };
 }
 
 function assertOutcomeShape(outcome, expected) {

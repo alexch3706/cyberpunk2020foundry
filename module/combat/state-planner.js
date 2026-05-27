@@ -5,6 +5,19 @@ export const STATE_PLAN_WARNING_SEVERITY = Object.freeze({
   error: "error"
 });
 
+const WOUND_STATE_LABELS = Object.freeze([
+  "Uninjured",
+  "Light",
+  "Serious",
+  "Critical"
+]);
+const LIMB_LOCATION_KEYS = Object.freeze(["larm", "rarm", "lleg", "rleg", "leftarm", "rightarm", "leftleg", "rightleg", "arm", "leg"]);
+const WOUND_SPECIAL_CASE_CODES = Object.freeze([
+  "head-hit-double-damage",
+  "head-critical-injury",
+  "limb-loss-threshold"
+]);
+
 /**
  * Normalize planned combat state changes without committing them.
  *
@@ -22,6 +35,7 @@ export function planCombatUpdates(outcome = {}, options = {}) {
   for(const targetOutcome of outcome?.targets || []) {
     collectPlannedUpdates(plan, targetOutcome?.plannedUpdates);
     collectDeltaUpdates(plan, targetOutcome);
+    collectWoundUpdates(plan, targetOutcome);
   }
 
   if(options.chatStatus) {
@@ -29,6 +43,244 @@ export function planCombatUpdates(outcome = {}, options = {}) {
   }
 
   return plan;
+}
+
+function collectWoundUpdates(plan, targetOutcome) {
+  if(targetOutcome?.manualResolution?.required) {
+    return;
+  }
+
+  for(const hit of targetOutcome?.hits || []) {
+    clearDerivedWoundFields(hit);
+  }
+
+  const actorUuid = targetOutcome?.target?.actorUuid;
+  const currentDamage = normalizeDamageValue(targetOutcome?.target?.snapshot?.damage);
+  if(!actorUuid || currentDamage === undefined) {
+    warnForUnplannedWoundHits(plan, targetOutcome?.hits);
+    return;
+  }
+
+  let runningDamage = currentDamage;
+  let totalDamageDelta = 0;
+  for(const hit of targetOutcome?.hits || []) {
+    const woundApplication = buildHitWoundApplication(hit, runningDamage, plan);
+    if(!woundApplication) {
+      continue;
+    }
+
+    hit.woundDamage = woundApplication.damageDelta;
+    if(woundApplication.specialCases.length > 0) {
+      hit.specialCases = mergeSpecialCases(hit.specialCases, woundApplication.specialCases);
+    }
+    hit.woundTransition = buildWoundTransition(runningDamage, woundApplication.nextDamage, woundApplication.damageDelta);
+    if(woundApplication.warning) {
+      hit.warnings = addUniqueWarning(hit.warnings, woundApplication.warning);
+    }
+
+    runningDamage = woundApplication.nextDamage;
+    totalDamageDelta += woundApplication.damageDelta;
+  }
+
+  if(totalDamageDelta <= 0) {
+    return;
+  }
+
+  targetOutcome.damage = buildWoundTransition(currentDamage, runningDamage, totalDamageDelta);
+  addActorUpdates(plan, [
+    {
+      actorUuid,
+      update: {
+        "system.damage": runningDamage
+      }
+    }
+  ]);
+}
+
+function clearDerivedWoundFields(hit) {
+  if(!hit) {
+    return;
+  }
+  delete hit.woundDamage;
+  delete hit.woundTransition;
+  if(Array.isArray(hit.specialCases)) {
+    const retainedCases = hit.specialCases.filter(specialCase => !WOUND_SPECIAL_CASE_CODES.includes(specialCase?.code));
+    if(retainedCases.length > 0) {
+      hit.specialCases = retainedCases;
+    }
+    else {
+      delete hit.specialCases;
+    }
+  }
+  if(Array.isArray(hit.warnings)) {
+    const retainedWarnings = hit.warnings.filter(warning => !WOUND_SPECIAL_CASE_CODES.includes(warning?.code));
+    hit.warnings = retainedWarnings;
+  }
+}
+
+function warnForUnplannedWoundHits(plan, hits = []) {
+  let hasPositiveWoundDamage = false;
+  for(const hit of hits) {
+    const damage = readWoundDamage(hit);
+    if(damage.invalid) {
+      addWarning(plan, "invalid-wound-damage", "Wound damage must be a non-negative integer before it can be planned.");
+      continue;
+    }
+    if(damage.value > 0) {
+      hasPositiveWoundDamage = true;
+    }
+  }
+  if(hasPositiveWoundDamage) {
+    addWarning(plan, "missing-target-damage-state", "Target damage state is unavailable; resolve target damage manually before committing wound updates.");
+  }
+}
+
+function addUniqueWarning(warnings = [], warning) {
+  if(warnings.some(existing => existing?.code === warning.code)) {
+    return warnings;
+  }
+  return [...warnings, warning];
+}
+
+function buildHitWoundApplication(hit, currentDamage, plan) {
+  const finalDamage = readWoundDamage(hit);
+  if(finalDamage.invalid) {
+    addWarning(plan, "invalid-wound-damage", "Wound damage must be a non-negative integer before it can be planned.");
+    return undefined;
+  }
+  if(!finalDamage.value || finalDamage.value <= 0) {
+    return undefined;
+  }
+
+  const specialCases = [];
+  let damageDelta = finalDamage.value;
+  if(isHeadHit(hit)) {
+    damageDelta = finalDamage.value * 2;
+    specialCases.push({
+      code: "head-hit-double-damage",
+      damageMultiplier: 2,
+      damageBeforeMultiplier: finalDamage.value,
+      damageAfterMultiplier: damageDelta
+    });
+  }
+
+  const warning = buildSpecialDamageWarning(hit, damageDelta, specialCases);
+  return {
+    damageDelta,
+    nextDamage: currentDamage + damageDelta,
+    specialCases,
+    warning
+  };
+}
+
+function readWoundDamage(hit) {
+  if(hit?.finalDamage === undefined || hit?.finalDamage === null || hit?.finalDamage === "") {
+    return { value: 0 };
+  }
+  const numericValue = Number(hit.finalDamage);
+  if(!Number.isFinite(numericValue) || numericValue < 0 || !Number.isInteger(numericValue)) {
+    return { invalid: true };
+  }
+  return { value: numericValue };
+}
+
+function buildSpecialDamageWarning(hit, woundDamage, specialCases) {
+  if(woundDamage <= 8) {
+    return undefined;
+  }
+
+  if(isHeadHit(hit)) {
+    specialCases.push({
+      code: "head-critical-injury",
+      threshold: 8,
+      woundDamage
+    });
+    return {
+      code: "head-critical-injury",
+      severity: STATE_PLAN_WARNING_SEVERITY.warning,
+      message: "Head hit exceeded 8 damage in one attack; target is killed automatically unless the referee overrides the special case."
+    };
+  }
+
+  if(isLimbHit(hit)) {
+    specialCases.push({
+      code: "limb-loss-threshold",
+      threshold: 8,
+      woundDamage
+    });
+    return {
+      code: "limb-loss-threshold",
+      severity: STATE_PLAN_WARNING_SEVERITY.warning,
+      message: "Limb hit exceeded 8 damage in one attack; limb is severed or crushed and requires follow-up resolution."
+    };
+  }
+
+  return undefined;
+}
+
+function mergeSpecialCases(existingCases = [], woundCases = []) {
+  const mergedCases = Array.isArray(existingCases) ? [...existingCases] : [];
+  for(const woundCase of woundCases) {
+    if(!mergedCases.some(existingCase => existingCase?.code === woundCase.code)) {
+      mergedCases.push(woundCase);
+    }
+  }
+  return mergedCases;
+}
+
+function buildWoundTransition(previousDamage, nextDamage, damageDelta) {
+  const previousWoundState = buildWoundState(previousDamage);
+  const nextWoundState = buildWoundState(nextDamage);
+  return {
+    previousDamage,
+    damageDelta,
+    nextDamage,
+    previousWoundState,
+    nextWoundState,
+    crossedThreshold: previousWoundState.level !== nextWoundState.level
+  };
+}
+
+function buildWoundState(damage) {
+  const level = damage <= 0 ? 0 : Math.ceil(damage / 4);
+  return {
+    level,
+    label: woundStateLabel(level)
+  };
+}
+
+function woundStateLabel(level) {
+  if(level < WOUND_STATE_LABELS.length) {
+    return WOUND_STATE_LABELS[level];
+  }
+  return `Mortal ${level - 3}`;
+}
+
+function normalizeDamageValue(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : undefined;
+}
+
+function normalizeLocationKey(location) {
+  return String(location || "").toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function locationKeysForHit(hit) {
+  return [
+    hit?.location,
+    hit?.locationLabel,
+    hit?.locationKey,
+    hit?.location?.key,
+    hit?.location?.label
+  ].map(normalizeLocationKey).filter(Boolean);
+}
+
+function isHeadHit(hit) {
+  return locationKeysForHit(hit).includes("head");
+}
+
+function isLimbHit(hit) {
+  return locationKeysForHit(hit).some(location => LIMB_LOCATION_KEYS.includes(location));
 }
 
 function createEmptyPlan(chatStatus = COMBAT_CHAT_STATUS.preview) {
@@ -195,6 +447,9 @@ function stripEmbeddedId(update) {
 }
 
 function addWarning(plan, code, message) {
+  if(plan.warnings.some(warning => warning.code === code && warning.message === message)) {
+    return;
+  }
   plan.warnings.push({
     code,
     severity: STATE_PLAN_WARNING_SEVERITY.warning,

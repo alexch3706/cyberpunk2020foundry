@@ -87,6 +87,7 @@ function buildTargetChatData(targetOutcome, inheritedStatus) {
     status: targetStatus,
     attack: buildAttackChatData(targetOutcome?.attack),
     hits: (targetOutcome?.hits || []).map(buildHitChatData),
+    damage: clonePlainData(targetOutcome?.damage),
     saves: cloneArray(targetOutcome?.saves),
     plannedUpdates: summarizePlannedUpdates(targetOutcome?.plannedUpdates),
     manualResolution: normalizeManualResolution(targetOutcome?.manualResolution),
@@ -110,6 +111,7 @@ function buildAttackChatData(attack = {}) {
 function buildHitChatData(hit = {}) {
   return compactPlainObject({
     location: hit.location,
+    locationLabel: hit.locationLabel,
     rawDamage: hit.rawDamage,
     effectiveStoppingPower: hit.effectiveStoppingPower,
     armorPiercing: hit.armorPiercing,
@@ -122,7 +124,9 @@ function buildHitChatData(hit = {}) {
     bodyTypeMitigation: hit.bodyTypeMitigation,
     minimumDamageApplied: hit.minimumDamageApplied,
     finalDamage: hit.finalDamage,
+    woundDamage: hit.woundDamage,
     woundTransition: clonePlainData(hit.woundTransition),
+    specialCases: clonePlainData(hit.specialCases),
     damageRoll: clonePlainData(hit.damageRoll),
     locationRoll: clonePlainData(hit.locationRoll),
     warnings: cloneArray(hit.warnings)

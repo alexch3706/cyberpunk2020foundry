@@ -133,6 +133,7 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
 /**
  * @typedef {Object} CombatHitRecord
  * @property {string=} location Hit location label or key.
+ * @property {string=} locationLabel Display label from the target hit-location model when available.
  * @property {RollMetadata=} locationRoll Hit-location roll evidence.
  * @property {RollMetadata=} damageRoll Raw damage roll evidence.
  * @property {number=} rawDamage Raw damage before mitigation.
@@ -147,7 +148,9 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
  * @property {number=} bodyTypeMitigation Damage removed by BTM.
  * @property {boolean=} minimumDamageApplied Whether BTM minimum damage enforcement forced final damage to 1.
  * @property {number=} finalDamage Damage planned for application after all mitigation.
+ * @property {number=} woundDamage Damage boxes applied after special damage cases such as head-hit doubling.
  * @property {Object<string, *>=} woundTransition Previous and next wound state evidence.
+ * @property {Array<Object<string, *>>=} specialCases Head-hit, limb-loss, or other special damage evidence.
  * @property {Array<CombatWarning>=} warnings Hit-specific warnings.
  */
 

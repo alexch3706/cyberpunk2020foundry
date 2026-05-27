@@ -1013,6 +1013,266 @@
       }
     },
     {
+      "name": "structured head hit doubles wound damage",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "Head",
+            "stagedPenetration": false
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "head": {
+                  "label": "Head"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 7,
+          "die": {
+            "faces": 6,
+            "natural": 7,
+            "results": [2, 2, 2, 1]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "Head",
+                "finalDamage": 5,
+                "woundDamage": 10,
+                "specialCases": [
+                  {
+                    "code": "head-hit-double-damage",
+                    "damageMultiplier": 2,
+                    "damageBeforeMultiplier": 5,
+                    "damageAfterMultiplier": 10
+                  },
+                  {
+                    "code": "head-critical-injury",
+                    "threshold": 8,
+                    "woundDamage": 10
+                  }
+                ],
+                "warnings": [
+                  {
+                    "code": "head-critical-injury",
+                    "severity": "warning",
+                    "message": "Head hit exceeded 8 damage in one attack; target is killed automatically unless the referee overrides the special case."
+                  }
+                ],
+                "woundTransition": {
+                  "previousDamage": 0,
+                  "damageDelta": 10,
+                  "nextDamage": 10,
+                  "nextWoundState": {
+                    "level": 3,
+                    "label": "Critical"
+                  },
+                  "crossedThreshold": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "woundDamage": 10,
+                "specialCases": [
+                  {
+                    "code": "head-hit-double-damage"
+                  },
+                  {
+                    "code": "head-critical-injury"
+                  }
+                ],
+                "warnings": [
+                  {
+                    "code": "head-critical-injury",
+                    "severity": "warning",
+                    "message": "Head hit exceeded 8 damage in one attack; target is killed automatically unless the referee overrides the special case."
+                  }
+                ]
+              }
+            ],
+            "damage": {
+              "nextDamage": 10,
+              "nextWoundState": {
+                "level": 3,
+                "label": "Critical"
+              }
+            }
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 10
+            }
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured limb hit over threshold surfaces severing warning",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "rArm",
+            "stagedPenetration": false
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "rArm": {
+                  "label": "Right Arm"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 11,
+          "die": {
+            "faces": 6,
+            "natural": 11,
+            "results": [3, 3, 3, 2]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "rArm",
+                "finalDamage": 9,
+                "woundDamage": 9,
+                "specialCases": [
+                  {
+                    "code": "limb-loss-threshold",
+                    "threshold": 8,
+                    "woundDamage": 9
+                  }
+                ],
+                "warnings": [
+                  {
+                    "code": "limb-loss-threshold",
+                    "severity": "warning"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "woundDamage": 9,
+                "specialCases": [
+                  {
+                    "code": "limb-loss-threshold"
+                  }
+                ],
+                "warnings": [
+                  {
+                    "code": "limb-loss-threshold",
+                    "severity": "warning"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 9
+            }
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
       "name": "structured manual cover penetration has no staged armor target",
       "context": {
         "action": {
@@ -1749,6 +2009,21 @@
                 "bodyTypeMitigation": 2,
                 "minimumDamageApplied": false,
                 "finalDamage": 1,
+                "woundDamage": 1,
+                "woundTransition": {
+                  "previousDamage": 0,
+                  "damageDelta": 1,
+                  "nextDamage": 1,
+                  "previousWoundState": {
+                    "level": 0,
+                    "label": "Uninjured"
+                  },
+                  "nextWoundState": {
+                    "level": 1,
+                    "label": "Light"
+                  },
+                  "crossedThreshold": true
+                },
                 "damageRoll": {
                   "id": "damage",
                   "formula": "4d6",
@@ -1775,6 +2050,20 @@
                 "warnings": []
               }
             ],
+            "damage": {
+              "previousDamage": 0,
+              "damageDelta": 1,
+              "nextDamage": 1,
+              "previousWoundState": {
+                "level": 0,
+                "label": "Uninjured"
+              },
+              "nextWoundState": {
+                "level": 1,
+                "label": "Light"
+              },
+              "crossedThreshold": true
+            },
             "saves": [],
             "plannedUpdates": {
               "actorUpdateCount": 1,

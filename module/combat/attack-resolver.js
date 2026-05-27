@@ -450,10 +450,13 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
 }
 
 function resolveHitLocation(target, action, roller) {
+  const hitLocations = target.snapshot?.hitLocations;
   if(action.targetArea) {
+    const locationEntry = findHitLocationEntry(action.targetArea, hitLocations);
     return {
       hit: {
         location: action.targetArea,
+        locationLabel: locationEntry?.label,
         locationRoll: {
           formula: "aimed location",
           location: action.targetArea
@@ -464,7 +467,6 @@ function resolveHitLocation(target, action, roller) {
     };
   }
 
-  const hitLocations = target.snapshot?.hitLocations;
   if(!hitLocations || Object.keys(hitLocations).length === 0) {
     return missingHitLocationResult();
   }
@@ -483,6 +485,7 @@ function resolveHitLocation(target, action, roller) {
   return {
     hit: {
       location,
+      locationLabel: hitLocations[location]?.label,
       locationRoll: {
         ...locationRoll,
         location
@@ -615,14 +618,25 @@ function normalizeLocationRoll(rollResult, request) {
 
 function mapLocation(locationRoll, hitLocations) {
   const requestedLocation = locationRoll.location || defaultAreaLookup[locationRoll.die?.natural] || defaultAreaLookup[locationRoll.total];
+  return findHitLocationEntry(requestedLocation, hitLocations)?.key;
+}
+
+function findHitLocationEntry(requestedLocation, hitLocations = {}) {
   if(!requestedLocation) {
     return undefined;
   }
 
   const requested = String(requestedLocation).toLowerCase();
-  return Object.entries(hitLocations).find(([key, value]) => {
+  const entry = Object.entries(hitLocations).find(([key, value]) => {
     return key.toLowerCase() === requested || String(value?.label || "").toLowerCase() === requested;
-  })?.[0];
+  });
+  if(!entry) {
+    return undefined;
+  }
+  return {
+    key: entry[0],
+    label: entry[1]?.label
+  };
 }
 
 function roll(roller, request) {

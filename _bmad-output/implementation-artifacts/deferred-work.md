@@ -18,3 +18,7 @@ This file tracks technical debt and deferred items from code reviews.
 
 - **Multiple penetrations against the same armor item can collapse to one ablation**: Future multi-hit outcomes should plan cumulative armor ablation instead of repeated absolute `before + 1` updates from one snapshot.
 - **Stale preview can overwrite newer armor ablation on confirm**: Broader preview/confirm concurrency needs a current-value check, version guard, or delta-style update for armor ablation.
+
+## Deferred from: code review of 3-5-apply-wound-state-and-special-damage-cases.md (2026-05-27)
+
+- **Stale preview can overwrite newer target damage on confirm**: Broader preview/confirm concurrency needs a current-value check, version guard, or delta-style update before absolute `system.damage` updates are applied.
