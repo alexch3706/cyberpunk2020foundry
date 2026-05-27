@@ -56,6 +56,49 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   };
 }
 
+export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
+  const normalizedPenetratingDamage = normalizeDamageAmount(penetratingDamage);
+  const bodyTypeModifier = btmFromBT(normalizeBodyType(bodyType));
+  if(normalizedPenetratingDamage <= 0) {
+    return {
+      penetratingDamage: 0,
+      bodyTypeModifier,
+      bodyTypeMitigation: 0,
+      finalDamage: 0,
+      minimumDamageApplied: false
+    };
+  }
+
+  const reducedDamage = normalizedPenetratingDamage - bodyTypeModifier;
+  if(reducedDamage <= 0) {
+    return {
+      penetratingDamage: normalizedPenetratingDamage,
+      bodyTypeModifier,
+      bodyTypeMitigation: Math.max(0, normalizedPenetratingDamage - 1),
+      finalDamage: 1,
+      minimumDamageApplied: true
+    };
+  }
+
+  return {
+    penetratingDamage: normalizedPenetratingDamage,
+    bodyTypeModifier,
+    bodyTypeMitigation: bodyTypeModifier,
+    finalDamage: reducedDamage,
+    minimumDamageApplied: false
+  };
+}
+
+function normalizeDamageAmount(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 0;
+}
+
+function normalizeBodyType(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 0;
+}
+
 function buildOutcomeManualResolution(manualResolutions) {
   if(manualResolutions.length === 0) {
     return {
@@ -247,12 +290,7 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
         penetratingDamage = Math.floor(penetratingDamage / 2);
       }
 
-      const bodyTypeMitigation = btmFromBT(target.snapshot?.stats?.body?.total || 0);
-
-      let finalDamage = 0;
-      if (rawDamage > effectiveStoppingPower) {
-        finalDamage = Math.max(1, penetratingDamage - bodyTypeMitigation);
-      }
+      const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
 
       const stagedPenetration = buildStagedPenetrationEvidence({
         enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
@@ -284,8 +322,10 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
         penetratingDamageBeforeAP,
         penetratingDamageAfterAP: penetratingDamage
       };
-      hitDetail.bodyTypeMitigation = bodyTypeMitigation;
-      hitDetail.finalDamage = finalDamage;
+      hitDetail.bodyTypeModifier = bodyTypeDamage.bodyTypeModifier;
+      hitDetail.bodyTypeMitigation = bodyTypeDamage.bodyTypeMitigation;
+      hitDetail.minimumDamageApplied = bodyTypeDamage.minimumDamageApplied;
+      hitDetail.finalDamage = bodyTypeDamage.finalDamage;
       hitDetail.armor = armor;
       hitDetail.stagedPenetration = stagedPenetration.evidence;
       hitDetail.warnings.push(...armor.warnings);
@@ -309,6 +349,10 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
     manualResolution,
     warnings: targetWarnings
   };
+}
+
+function resolveTargetBodyType(target) {
+  return target.snapshot?.stats?.bt?.total ?? target.snapshot?.stats?.body?.total ?? 0;
 }
 
 function resolveStagedPenetrationEnabled(action, resolverOptions) {

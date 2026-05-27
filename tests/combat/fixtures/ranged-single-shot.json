@@ -52,7 +52,7 @@
         "name": "Target",
         "snapshot": {
           "stats": {
-            "body": {
+            "bt": {
               "total": 6
             }
           },
@@ -87,7 +87,10 @@
       "effectiveStoppingPower": 12,
       "armorPiercing": false,
       "armorMitigation": 12,
+      "penetratingDamage": 3,
+      "bodyTypeModifier": 2,
       "bodyTypeMitigation": 2,
+      "minimumDamageApplied": false,
       "finalDamage": 1
     },
     "plannedUpdates": {
@@ -302,7 +305,10 @@
                 "effectiveStoppingPower": 12,
                 "armorPiercing": false,
                 "armorMitigation": 12,
+                "penetratingDamage": 3,
+                "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 1,
                 "warnings": []
               }
@@ -456,7 +462,10 @@
                 "rawDamage": 20,
                 "effectiveStoppingPower": 17,
                 "armorMitigation": 17,
+                "penetratingDamage": 3,
+                "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 1,
                 "armor": {
                   "effectiveStoppingPower": 17,
@@ -515,7 +524,7 @@
             "name": "Target",
             "snapshot": {
               "stats": {
-                "body": {
+                "bt": {
                   "total": 6
                 }
               },
@@ -575,7 +584,9 @@
                 "effectiveStoppingPower": 8,
                 "armorPiercing": true,
                 "armorMitigation": 8,
+                "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 3,
                 "penetratingDamage": 5,
                 "armor": {
@@ -701,6 +712,9 @@
                 "effectiveStoppingPower": 6,
                 "armorPiercing": true,
                 "penetratingDamage": 6,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 4,
                 "stagedPenetration": {
                   "enabled": false,
@@ -736,7 +750,7 @@
             "name": "Target",
             "snapshot": {
               "stats": {
-                "body": {
+                "bt": {
                   "total": 6
                 }
               },
@@ -806,6 +820,11 @@
                 "location": "torso",
                 "rawDamage": 20,
                 "effectiveStoppingPower": 16,
+                "penetratingDamage": 4,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
+                "finalDamage": 2,
                 "stagedPenetration": {
                   "enabled": true,
                   "applied": true,
@@ -894,12 +913,95 @@
                 "location": "torso",
                 "rawDamage": 10,
                 "effectiveStoppingPower": 12,
+                "penetratingDamage": 0,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 0,
+                "minimumDamageApplied": false,
                 "finalDamage": 0,
                 "stagedPenetration": {
                   "enabled": true,
                   "applied": false,
                   "reason": "no-penetration"
                 }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured penetrating hit applies minimum damage after BTM",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": false
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 13,
+          "die": {
+            "faces": 6,
+            "natural": 13,
+            "results": [4, 4, 3, 2]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 13,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 12,
+                "penetratingDamage": 1,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 0,
+                "minimumDamageApplied": true,
+                "finalDamage": 1,
+                "stagedPenetration": {
+                  "enabled": false,
+                  "applied": false,
+                  "reason": "disabled"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "penetratingDamage": 1,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 0,
+                "minimumDamageApplied": true,
+                "finalDamage": 1
               }
             ]
           }
@@ -935,7 +1037,7 @@
             "name": "Target",
             "snapshot": {
               "stats": {
-                "body": {
+                "bt": {
                   "total": 6
                 }
               },
@@ -980,6 +1082,11 @@
                 "location": "torso",
                 "rawDamage": 10,
                 "effectiveStoppingPower": 5,
+                "penetratingDamage": 5,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
+                "finalDamage": 3,
                 "stagedPenetration": {
                   "enabled": true,
                   "applied": false,
@@ -1076,7 +1183,10 @@
                 "effectiveStoppingPower": 0,
                 "armorPiercing": false,
                 "armorMitigation": 0,
+                "penetratingDamage": 10,
+                "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 8
               }
             ],
@@ -1105,7 +1215,7 @@
             "name": "Target",
             "snapshot": {
               "stats": {
-                "body": {
+                "bt": {
                   "total": 6
                 }
               },
@@ -1492,7 +1602,10 @@
       "rawDamage": 15,
       "effectiveStoppingPower": 12,
       "armorMitigation": 12,
+      "penetratingDamage": 3,
+      "bodyTypeModifier": 2,
       "bodyTypeMitigation": 2,
+      "minimumDamageApplied": false,
       "finalDamage": 1,
       "chatStatus": "preview",
       "rolls": {
@@ -1631,7 +1744,10 @@
                 "effectiveStoppingPower": 12,
                 "armorPiercing": false,
                 "armorMitigation": 12,
+                "penetratingDamage": 3,
+                "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
                 "finalDamage": 1,
                 "damageRoll": {
                   "id": "damage",

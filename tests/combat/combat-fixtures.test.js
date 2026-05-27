@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
+import { resolveBodyTypeDamage } from "../../module/combat/attack-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
@@ -15,6 +16,7 @@ export async function runCombatFixtures() {
   const results = [];
 
   assertTargetNormalization();
+  assertBodyTypeDamageResolver();
   assertArmorResolver();
 
   for(const fixtureUrl of FIXTURE_URLS) {
@@ -134,7 +136,10 @@ function buildSingleShotOutcome(context, roller, fixture) {
             effectiveStoppingPower: hitEvidence.effectiveStoppingPower,
             armorPiercing: hitEvidence.armorPiercing,
             armorMitigation: hitEvidence.armorMitigation,
+            penetratingDamage: hitEvidence.penetratingDamage,
+            bodyTypeModifier: hitEvidence.bodyTypeModifier,
             bodyTypeMitigation: hitEvidence.bodyTypeMitigation,
+            minimumDamageApplied: hitEvidence.minimumDamageApplied,
             finalDamage: hitEvidence.finalDamage,
             warnings: []
           }
@@ -173,6 +178,11 @@ function assertSingleShotCases(fixture) {
     assertObjectIncludes(outcome, singleShotCase.expected, `${fixture.name} ${singleShotCase.name} outcome`);
     if(singleShotCase.expectedPlan) {
       assertObjectIncludes(planCombatUpdates(outcome), singleShotCase.expectedPlan, `${fixture.name} ${singleShotCase.name} planned updates`);
+    }
+    if(singleShotCase.expectedChat) {
+      const plan = planCombatUpdates(outcome);
+      const chatData = buildCombatChatData(outcome, plan);
+      assertObjectIncludes(chatData, singleShotCase.expectedChat, `${fixture.name} ${singleShotCase.name} chat data`);
     }
   }
 }
@@ -372,6 +382,40 @@ function assertTargetNormalization() {
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), normalized, "normalized targets are JSON-safe");
 }
 
+function assertBodyTypeDamageResolver() {
+  assert.deepEqual(resolveBodyTypeDamage(0, 6), {
+    penetratingDamage: 0,
+    bodyTypeModifier: 2,
+    bodyTypeMitigation: 0,
+    finalDamage: 0,
+    minimumDamageApplied: false
+  }, "full armor stop skips BTM and minimum damage");
+
+  assert.deepEqual(resolveBodyTypeDamage(5, 6), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 2,
+    bodyTypeMitigation: 2,
+    finalDamage: 3,
+    minimumDamageApplied: false
+  }, "BTM partially reduces penetrating damage");
+
+  assert.deepEqual(resolveBodyTypeDamage(1, 6), {
+    penetratingDamage: 1,
+    bodyTypeModifier: 2,
+    bodyTypeMitigation: 0,
+    finalDamage: 1,
+    minimumDamageApplied: true
+  }, "BTM cannot reduce penetrating damage below minimum 1");
+
+  assert.deepEqual(resolveBodyTypeDamage(5, "not-a-number"), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 0,
+    bodyTypeMitigation: 0,
+    finalDamage: 5,
+    minimumDamageApplied: false
+  }, "invalid Body Type does not become maximum BTM");
+}
+
 function assertOutcomeShape(outcome, expected) {
   assert.equal(outcome.action.type, expected.actionType, "outcome action type");
   assert.equal(outcome.action.fireMode, expected.fireMode, "outcome fire mode");
@@ -385,7 +429,16 @@ function assertOutcomeShape(outcome, expected) {
   assert.equal(outcome.targets[0].hits[0].rawDamage, expected.rawDamage, "outcome raw damage");
   assert.equal(outcome.targets[0].hits[0].effectiveStoppingPower, expected.effectiveStoppingPower, "outcome armor evidence");
   assert.equal(outcome.targets[0].hits[0].armorMitigation, expected.armorMitigation, "outcome armor mitigation");
+  if("penetratingDamage" in expected) {
+    assert.equal(outcome.targets[0].hits[0].penetratingDamage, expected.penetratingDamage, "outcome penetrating damage");
+  }
+  if("bodyTypeModifier" in expected) {
+    assert.equal(outcome.targets[0].hits[0].bodyTypeModifier, expected.bodyTypeModifier, "outcome body type modifier");
+  }
   assert.equal(outcome.targets[0].hits[0].bodyTypeMitigation, expected.bodyTypeMitigation, "outcome body type mitigation");
+  if("minimumDamageApplied" in expected) {
+    assert.equal(outcome.targets[0].hits[0].minimumDamageApplied, expected.minimumDamageApplied, "outcome minimum damage evidence");
+  }
   assert.equal(outcome.targets[0].hits[0].finalDamage, expected.finalDamage, "outcome final damage");
   assert.deepEqual(outcome.targets[0].attack.roll, expected.rolls.attack, "outcome attack roll metadata");
   assert.deepEqual(outcome.targets[0].hits[0].locationRoll, expected.rolls.location, "outcome location roll metadata");
