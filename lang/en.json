@@ -384,6 +384,8 @@
     "SETTINGS.SysMigration": "System Migration Version",
     "SETTINGS.TrainedSkillsFirst": "Trained Skills First",
     "SETTINGS.TrainedSkillsFirstHint": "Whether trained skills always come first in the skills list",
+    "SETTINGS.StagedPenetration": "Staged Penetration",
+    "SETTINGS.StagedPenetrationHint": "Increase affected armor ablation by one when damage penetrates armor.",
     
     "CYBERPUNK.NoCombatError": "There's currently no combat encounter present; you'll need to start one",
     "CYBERPUNK.AmmoDelta": "Ammo Spent",

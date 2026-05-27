@@ -31,16 +31,22 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
     if (system.equipped === false || item.equipped === false) {
       continue;
     }
-    const coverage = getArmorCoverageForLocation(system, targetKey);
-    if (coverage) {
-      const sp = Number(coverage.stoppingPower !== undefined ? coverage.stoppingPower : coverage.sp || 0);
+    const coverageMatch = getArmorCoverageForLocation(system, targetKey);
+    if (coverageMatch) {
+      const { key: coverageKey, value: coverage } = coverageMatch;
+      const baseSP = Number(coverage.stoppingPower !== undefined ? coverage.stoppingPower : coverage.sp || 0);
+      const ablation = normalizeAblation(coverage.ablation);
+      const sp = Math.max(0, baseSP - ablation);
       if (sp > 0) {
         layers.push({
           id: item.id,
           name: item.name,
           type: "armor",
           stoppingPower: sp,
-          ablation: Number(coverage.ablation || 0),
+          baseStoppingPower: baseSP,
+          ablation,
+          coverageKey,
+          updatePath: `system.coverage.${coverageKey}.ablation`,
           layer: coverage.layer || "soft",
           equipped: true,
           source: system.source || ""
@@ -58,14 +64,17 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
     if (!cyberwareCoversLocation(item, system, targetKey)) {
       continue;
     }
-    const sp = getCyberwareStoppingPower(item, system);
+    const baseSP = getCyberwareStoppingPower(item, system);
+    const ablation = normalizeAblation(system.ablation);
+    const sp = Math.max(0, baseSP - ablation);
     if (sp > 0) {
       layers.push({
         id: item.id,
         name: item.name,
         type: "cyberware",
         stoppingPower: sp,
-        ablation: Number(system.ablation || 0),
+        baseStoppingPower: baseSP,
+        ablation,
         layer: getCyberwareLayer(item, system),
         equipped: true,
         source: system.source || ""
@@ -101,7 +110,18 @@ export function resolveArmor(weaponAP, targetSnapshot, location, options = {}) {
     rawStoppingPower: rawSP,
     effectiveStoppingPower,
     armorPiercing: !!weaponAP,
+    armorPiercingEvidence: buildArmorPiercingEvidence(weaponAP, rawSP, effectiveStoppingPower),
     warnings
+  };
+}
+
+function buildArmorPiercingEvidence(weaponAP, rawStoppingPower, effectiveStoppingPower) {
+  return {
+    applied: !!weaponAP,
+    rawStoppingPower,
+    effectiveStoppingPower,
+    armorDivisor: weaponAP ? 2 : 1,
+    penetratingDamageDivisor: weaponAP ? 2 : 1
   };
 }
 
@@ -205,6 +225,11 @@ function normalizeStoppingPower(value) {
   return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 0;
 }
 
+function normalizeAblation(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 0;
+}
+
 /**
  * Find the coverage entry in the armor's system block matching the target location case-insensitively.
  */
@@ -213,7 +238,7 @@ function getArmorCoverageForLocation(armorSystem, targetKey) {
     return null;
   }
   const entry = Object.entries(armorSystem.coverage).find(([key]) => key.toLowerCase() === targetKey);
-  return entry ? entry[1] : null;
+  return entry ? { key: entry[0], value: entry[1] } : null;
 }
 
 function getCyberwareStoppingPower(item, system) {

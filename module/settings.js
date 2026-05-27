@@ -18,4 +18,13 @@ export function registerSystemSettings() {
     type: Boolean,
     default: true
   });
+
+  game.settings.register("cyberpunk2020", "stagedPenetration", {
+    name: "SETTINGS.StagedPenetration",
+    hint: "SETTINGS.StagedPenetrationHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 }

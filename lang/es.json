@@ -381,6 +381,8 @@
     "SETTINGS.SysMigration": "Versión del Sistema Migrado",
     "SETTINGS.TrainedSkillsFirst": "Habilidades Entrenadas Primero",
     "SETTINGS.TrainedSkillsFirstHint": "Si las habilidades entrenadas han de aparecer las primeras de la lista.",
+    "SETTINGS.StagedPenetration": "Penetración Escalonada",
+    "SETTINGS.StagedPenetrationHint": "Aumenta en uno la ablación de la armadura afectada cuando el daño penetra la armadura.",
     "CYBERPUNK.AmmoDelta": "Munición Gastada",
     "CYBERPUNK.Warnings": "Advertencias",
     "CYBERPUNK.PreviewStatus": "[VISTA PREVIA]",

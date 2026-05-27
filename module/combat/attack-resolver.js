@@ -29,7 +29,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   const attackRequest = buildAttackRollRequest(context, modifierEvidence);
   const attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
 
-  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller));
+  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller, options));
   const manualTargets = targets.filter(target => target.manualResolution?.required);
   const ammoPlanning = buildAmmoPlanning(context.weapon);
 
@@ -204,7 +204,7 @@ function ammoWarning(code, message) {
   };
 }
 
-function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller) {
+function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
   const targetWarnings = cloneArray(target.warnings);
@@ -212,6 +212,10 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
     ? clonePlainData(target.manualResolution)
     : { required: false };
   let hits = [];
+  const plannedUpdates = {
+    embeddedItemUpdates: [],
+    chatStatus: COMBAT_CHAT_STATUS.preview
+  };
 
   if(hit && !manualResolution.required) {
     const locationResult = resolveHitLocation(target, action, roller);
@@ -236,7 +240,8 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
 
       const rawDamage = damageRoll.total;
       const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
-      let penetratingDamage = rawDamage - armorMitigation;
+      const penetratingDamageBeforeAP = rawDamage - armorMitigation;
+      let penetratingDamage = penetratingDamageBeforeAP;
 
       if(armor.armorPiercing && penetratingDamage > 0) {
         penetratingDamage = Math.floor(penetratingDamage / 2);
@@ -247,6 +252,19 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       let finalDamage = 0;
       if (rawDamage > effectiveStoppingPower) {
         finalDamage = Math.max(1, penetratingDamage - bodyTypeMitigation);
+      }
+
+      const stagedPenetration = buildStagedPenetrationEvidence({
+        enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
+        penetrated: rawDamage > effectiveStoppingPower,
+        armor,
+        target
+      });
+      if(stagedPenetration.plannedUpdate) {
+        plannedUpdates.embeddedItemUpdates.push(stagedPenetration.plannedUpdate);
+      }
+      if(stagedPenetration.warning) {
+        hitDetail.warnings.push(stagedPenetration.warning);
       }
 
       hitDetail.damageRoll = {
@@ -260,9 +278,16 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       hitDetail.effectiveStoppingPower = effectiveStoppingPower;
       hitDetail.armorPiercing = armor.armorPiercing;
       hitDetail.armorMitigation = armorMitigation;
+      hitDetail.penetratingDamage = penetratingDamage;
+      hitDetail.armorPiercingEvidence = {
+        ...(armor.armorPiercingEvidence || {}),
+        penetratingDamageBeforeAP,
+        penetratingDamageAfterAP: penetratingDamage
+      };
       hitDetail.bodyTypeMitigation = bodyTypeMitigation;
       hitDetail.finalDamage = finalDamage;
       hitDetail.armor = armor;
+      hitDetail.stagedPenetration = stagedPenetration.evidence;
       hitDetail.warnings.push(...armor.warnings);
 
       hits = [hitDetail];
@@ -280,8 +305,103 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
     },
     hits,
     saves: [],
+    plannedUpdates,
     manualResolution,
     warnings: targetWarnings
+  };
+}
+
+function resolveStagedPenetrationEnabled(action, resolverOptions) {
+  const configured = action.options?.stagedPenetration ?? action.stagedPenetration ?? resolverOptions.stagedPenetration;
+  if(configured !== undefined) {
+    return !!configured;
+  }
+  return true;
+}
+
+function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) {
+  if(!enabled) {
+    return {
+      evidence: {
+        enabled: false,
+        applied: false,
+        reason: "disabled"
+      }
+    };
+  }
+
+  if(!penetrated) {
+    return {
+      evidence: {
+        enabled: true,
+        applied: false,
+        reason: "no-penetration"
+      }
+    };
+  }
+
+  const affectedLayer = [...(armor.layers || [])].reverse().find(layer => {
+    return layer.type === "armor" && layer.id && layer.updatePath;
+  });
+
+  if(!affectedLayer) {
+    const message = "Staged penetration penetrated armor, but no item-backed armor coverage update path was available.";
+    return {
+      evidence: {
+        enabled: true,
+        applied: false,
+        reason: "no-item-backed-armor"
+      },
+      warning: {
+        code: "staged-penetration-no-update-target",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message
+      }
+    };
+  }
+
+  if(!target.actorUuid) {
+    const message = "Staged penetration penetrated armor, but target actor UUID is unavailable for an embedded item update.";
+    return {
+      evidence: {
+        enabled: true,
+        applied: false,
+        reason: "missing-target-actor-uuid",
+        itemId: affectedLayer.id,
+        coverageKey: affectedLayer.coverageKey,
+        updatePath: affectedLayer.updatePath
+      },
+      warning: {
+        code: "staged-penetration-missing-actor-uuid",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message
+      }
+    };
+  }
+
+  const before = Number(affectedLayer.ablation || 0);
+  const after = before + 1;
+  const update = {
+    _id: affectedLayer.id,
+    [affectedLayer.updatePath]: after
+  };
+
+  return {
+    evidence: {
+      enabled: true,
+      applied: true,
+      reason: "penetrated-item-backed-armor",
+      itemId: affectedLayer.id,
+      coverageKey: affectedLayer.coverageKey,
+      updatePath: affectedLayer.updatePath,
+      before,
+      after
+    },
+    plannedUpdate: {
+      actorUuid: target.actorUuid,
+      type: "Item",
+      updates: [update]
+    }
   };
 }
 

@@ -561,7 +561,7 @@ function assertArmorResolver() {
   // Verify details of MetalGear (uses alternative 'sp' property)
   const layer2 = torsoLayers.find(l => l.id === "armor-torso-2");
   assert.ok(layer2, "layer 2 exists");
-  assert.equal(layer2.stoppingPower, 25, "layer 2 SP");
+  assert.equal(layer2.stoppingPower, 23, "layer 2 usable SP accounts for ablation");
   assert.equal(layer2.type, "armor", "layer 2 type");
   assert.equal(layer2.layer, "hard", "layer 2 material");
 
@@ -591,15 +591,31 @@ function assertArmorResolver() {
   // 2. Test resolveArmor
   // Inside-out proportional resolution combines cyberware, armor, then outer layers.
   const resolvedNonAP = resolveArmor(false, targetSnapshot, "torso");
-  assert.equal(resolvedNonAP.effectiveStoppingPower, 29, "non-AP effective stopping power uses proportional layering");
+  assert.equal(resolvedNonAP.effectiveStoppingPower, 28, "non-AP effective stopping power uses proportional layering with ablation");
   assert.equal(resolvedNonAP.armorPiercing, false, "armorPiercing flag is false");
+  assert.equal(resolvedNonAP.rawStoppingPower, 28, "raw stopping power reflects ablated layers before AP");
 
   // AP behavior is preserved from 3.1 until full AP semantics are handled in 3.3.
   const resolvedAP = resolveArmor(true, targetSnapshot, "torso");
   assert.equal(resolvedAP.effectiveStoppingPower, 14, "AP effective stopping power is halved after proportional layering");
   assert.equal(resolvedAP.armorPiercing, true, "armorPiercing flag is true");
+  assert.deepEqual(resolvedAP.armorPiercingEvidence, {
+    applied: true,
+    rawStoppingPower: 28,
+    effectiveStoppingPower: 14,
+    armorDivisor: 2,
+    penetratingDamageDivisor: 2
+  }, "AP evidence describes both armor and penetrating-damage divisors");
   assert.equal(resolvedAP.warnings.length, 2, "four active torso layers with multiple hard layers produce warnings");
   assert.deepEqual(resolvedAP.warnings.map(warning => warning.code), ["armor-too-many-layers", "armor-multiple-hard-layers"]);
+
+  assert.equal(layer1.baseStoppingPower, 10, "armor layer preserves base SP");
+  assert.equal(layer1.coverageKey, "torso", "armor layer preserves original coverage key");
+  assert.equal(layer1.ablation, 0, "armor layer preserves current ablation");
+  assert.equal(layer1.updatePath, "system.coverage.torso.ablation", "armor layer exposes ablation update path");
+  assert.equal(layer2.baseStoppingPower, 25, "ablated armor layer preserves base SP");
+  assert.equal(layer2.stoppingPower, 23, "ablated armor layer reduces usable SP");
+  assert.equal(layer2.coverageKey, "torso", "alternative sp coverage preserves original key");
 
   // Skinweave and generic subdermal armor cover all locations, so rarm has three proportional layers.
   const resolvedRarmAP = resolveArmor(true, targetSnapshot, "rarm");
@@ -713,4 +729,22 @@ function assertArmorResolver() {
   });
   assert.equal(warningArmor.warnings.length, 2, "four layers with multiple hard layers produce warning evidence");
   assert.deepEqual(warningArmor.warnings.map(warning => warning.code), ["armor-too-many-layers", "armor-multiple-hard-layers"]);
+
+  const casePreservingArmor = resolveArmor(false, {
+    equippedArmor: [
+      {
+        id: "case-vest",
+        name: "Case Vest",
+        system: {
+          equipped: true,
+          coverage: {
+            Torso: { stoppingPower: 10, ablation: 3, layer: "soft" }
+          }
+        }
+      }
+    ]
+  }, "torso");
+  assert.equal(casePreservingArmor.layers[0].coverageKey, "Torso", "original coverage key case is preserved");
+  assert.equal(casePreservingArmor.layers[0].stoppingPower, 7, "existing ablation reduces usable stopping power");
+  assert.equal(casePreservingArmor.layers[0].updatePath, "system.coverage.Torso.ablation", "update path preserves original coverage key");
 }

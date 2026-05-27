@@ -490,6 +490,518 @@
       }
     },
     {
+      "name": "structured AP penetration plans staged armor ablation",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "Torso",
+            "stagedPenetration": true
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "ap": true,
+            "damage": "4d6",
+            "shotsLeft": 10
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "body": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "armor-vest",
+                  "name": "Kevlar Vest",
+                  "equipped": true,
+                  "coverage": {
+                    "Torso": {
+                      "stoppingPower": 18,
+                      "ablation": 1,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "faces": 10,
+            "natural": 8,
+            "results": [8],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 18,
+          "die": {
+            "faces": 6,
+            "natural": 18,
+            "results": [6, 5, 4, 3]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "Torso",
+                "rawDamage": 18,
+                "effectiveStoppingPower": 8,
+                "armorPiercing": true,
+                "armorMitigation": 8,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 3,
+                "penetratingDamage": 5,
+                "armor": {
+                  "rawStoppingPower": 17,
+                  "effectiveStoppingPower": 8,
+                  "armorPiercing": true,
+                  "armorPiercingEvidence": {
+                    "applied": true,
+                    "rawStoppingPower": 17,
+                    "effectiveStoppingPower": 8,
+                    "armorDivisor": 2,
+                    "penetratingDamageDivisor": 2
+                  },
+                  "layers": [
+                    {
+                      "id": "armor-vest",
+                      "stoppingPower": 17,
+                      "baseStoppingPower": 18,
+                      "ablation": 1,
+                      "coverageKey": "Torso",
+                      "updatePath": "system.coverage.Torso.ablation"
+                    }
+                  ]
+                },
+                "armorPiercingEvidence": {
+                  "applied": true,
+                  "penetratingDamageBeforeAP": 10,
+                  "penetratingDamageAfterAP": 5
+                },
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-item-backed-armor",
+                  "itemId": "armor-vest",
+                  "coverageKey": "Torso",
+                  "updatePath": "system.coverage.Torso.ablation",
+                  "before": 1,
+                  "after": 2
+                }
+              }
+            ],
+            "plannedUpdates": {
+              "embeddedItemUpdates": [
+                {
+                  "actorUuid": "Actor.target",
+                  "type": "Item",
+                  "updates": [
+                    {
+                      "_id": "armor-vest",
+                      "system.coverage.Torso.ablation": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "armor-vest",
+                "system.coverage.Torso.ablation": 2
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured AP penetration respects staged penetration disabled",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": false
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "ap": true,
+            "damage": "4d6",
+            "shotsLeft": 10
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "faces": 10,
+            "natural": 8,
+            "results": [8],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 18,
+          "die": {
+            "faces": 6,
+            "natural": 18,
+            "results": [6, 5, 4, 3]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "effectiveStoppingPower": 6,
+                "armorPiercing": true,
+                "penetratingDamage": 6,
+                "finalDamage": 4,
+                "stagedPenetration": {
+                  "enabled": false,
+                  "applied": false,
+                  "reason": "disabled"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured layered armor ablates outer item-backed layer",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "body": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "inner-vest",
+                  "name": "Inner Vest",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "stoppingPower": 8,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "outer-jacket",
+                  "name": "Outer Jacket",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "stoppingPower": 12,
+                      "ablation": 1,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 20,
+          "die": {
+            "faces": 6,
+            "natural": 20,
+            "results": [5, 5, 5, 5]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 20,
+                "effectiveStoppingPower": 16,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-item-backed-armor",
+                  "itemId": "outer-jacket",
+                  "coverageKey": "torso",
+                  "updatePath": "system.coverage.torso.ablation",
+                  "before": 1,
+                  "after": 2
+                }
+              }
+            ],
+            "plannedUpdates": {
+              "embeddedItemUpdates": [
+                {
+                  "actorUuid": "Actor.target",
+                  "type": "Item",
+                  "updates": [
+                    {
+                      "_id": "outer-jacket",
+                      "system.coverage.torso.ablation": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "outer-jacket",
+                "system.coverage.torso.ablation": 2
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured stopped hit does not plan staged armor ablation",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 10,
+          "die": {
+            "faces": 6,
+            "natural": 10,
+            "results": [4, 3, 2, 1]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "finalDamage": 0,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": false,
+                  "reason": "no-penetration"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured manual cover penetration has no staged armor target",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true,
+            "cover": {
+              "name": "Office Door",
+              "stoppingPower": 5,
+              "layer": "hard",
+              "source": "manual cover"
+            }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "body": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [6],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 10,
+          "die": {
+            "faces": 6,
+            "natural": 10,
+            "results": [4, 3, 2, 1]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 5,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": false,
+                  "reason": "no-item-backed-armor"
+                },
+                "warnings": [
+                  {
+                    "code": "staged-penetration-no-update-target",
+                    "severity": "warning"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
       "name": "structured hit uses options-only aimed location",
       "context": {
         "action": {
@@ -1117,6 +1629,7 @@
                 "location": "torso",
                 "rawDamage": 15,
                 "effectiveStoppingPower": 12,
+                "armorPiercing": false,
                 "armorMitigation": 12,
                 "bodyTypeMitigation": 2,
                 "finalDamage": 1,

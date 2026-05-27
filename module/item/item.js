@@ -220,7 +220,7 @@ export class CyberpunkItem extends Item {
         meleeAction: attackMods?.action,
         range: attackMods?.range,
         targetArea: attackMods?.targetArea,
-        options: this.__cloneResolverData(attackMods || {}),
+        options: this.__buildCombatActionOptions(attackMods || {}),
         source: "CyberpunkItem.__weaponRoll"
       },
       attacker: {
@@ -254,6 +254,25 @@ export class CyberpunkItem extends Item {
         fallback: () => this.__legacyWeaponRoll(attackMods, targetTokens)
       }
     };
+  }
+
+  __buildCombatActionOptions(attackMods) {
+    return this.__compactResolverData({
+      ...(this.__cloneResolverData(attackMods) || {}),
+      stagedPenetration: this.__getStagedPenetrationSetting()
+    });
+  }
+
+  __getStagedPenetrationSetting() {
+    try {
+      if(typeof game?.settings?.get === "function") {
+        return !!game.settings.get("cyberpunk2020", "stagedPenetration");
+      }
+    }
+    catch {
+      return true;
+    }
+    return true;
   }
 
   __buildCombatSkillSnapshot(actor) {
