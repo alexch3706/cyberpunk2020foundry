@@ -106,7 +106,8 @@ function buildAttackChatData(attack = {}) {
     margin: attack?.margin,
     warnings: cloneArray(attack?.warnings),
     burstHitsRoll: clonePlainData(attack?.burstHitsRoll),
-    save: attack?.save ? clonePlainData(attack.save) : undefined
+    save: attack?.save ? clonePlainData(attack.save) : undefined,
+    isJam: attack?.roll?.isJam
   });
 }
 

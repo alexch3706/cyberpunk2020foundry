@@ -1,0 +1,564 @@
+{
+  "name": "reliability-jam-baseline",
+  "context": {
+    "action": {
+      "type": "ranged",
+      "fireMode": "FullAuto",
+      "range": "close",
+      "targetNumber": 15,
+      "source": "tests/combat/fixtures/reliability-jam.json"
+    },
+    "attacker": {
+      "actorUuid": "Actor.attacker",
+      "name": "Solo",
+      "snapshot": {
+        "stats": {
+          "ref": {
+            "total": 8
+          }
+        },
+        "skills": {
+          "rifle": {
+            "level": 6
+          }
+        },
+        "damage": 0,
+        "hitLocations": {
+          "torso": {
+            "label": "Torso"
+          }
+        }
+      }
+    },
+    "weapon": {
+      "itemUuid": "Actor.attacker.Item.auto-rifle",
+      "name": "Assault Rifle",
+      "snapshot": {
+        "damage": "4d6",
+        "ap": false,
+        "shotsLeft": 30,
+        "rof": 30,
+        "reliability": "standard",
+        "range": 400,
+        "accuracy": 0,
+        "attackType": "Auto",
+        "attackSkill": "rifle"
+      }
+    },
+    "targets": [
+      {
+        "actorUuid": "Actor.target",
+        "tokenUuid": "Scene.test.Token.target",
+        "name": "Target",
+        "snapshot": {
+          "stats": {
+            "bt": {
+              "total": 6
+            }
+          },
+          "damage": 0,
+          "hitLocations": {
+            "torso": {
+              "label": "Torso"
+            }
+          },
+          "equippedArmor": []
+        }
+      }
+    ]
+  },
+  "outcomeEvidence": {
+    "hit": {
+      "location": "torso",
+      "rawDamage": 15,
+      "effectiveStoppingPower": 0,
+      "armorPiercing": false,
+      "armorMitigation": 0,
+      "penetratingDamage": 15,
+      "bodyTypeModifier": 2,
+      "bodyTypeMitigation": 2,
+      "minimumDamageApplied": false,
+      "finalDamage": 13
+    },
+    "plannedUpdates": {
+      "actorUpdates": [],
+      "embeddedItemUpdates": [],
+      "chatStatus": "preview"
+    },
+    "ammo": {
+      "before": 30,
+      "delta": -30,
+      "after": 0,
+      "source": "weapon.snapshot.shotsLeft"
+    },
+    "itemUpdates": [
+      {
+        "itemUuid": "Actor.attacker.Item.auto-rifle",
+        "update": {
+          "system.shotsLeft": 0
+        }
+      }
+    ]
+  },
+  "singleShotCases": [
+    {
+      "name": "full-auto-fumble-standard",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning",
+            "message": "\"Assault Rifle\" jammed; clear stoppage before next shot."
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "standard",
+            "message": "Clear \"Assault Rifle\" stoppage (weapon skill check or referee action)."
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      },
+      "expectedPlan": {
+        "itemUpdates": [
+          {
+            "itemUuid": "Actor.attacker.Item.auto-rifle",
+            "update": {
+              "system.shotsLeft": 0
+            }
+          }
+        ],
+        "actorUpdates": [],
+        "embeddedItemUpdates": []
+      }
+    },
+    {
+      "name": "full-auto-fumble-unreliable",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto"
+        },
+        "weapon": {
+          "snapshot": {
+            "reliability": "Unreliable"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning",
+            "message": "\"Assault Rifle\" jammed and damaged; repair required before next shot."
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "unreliable",
+            "message": "\"Assault Rifle\" damaged and requires repair (repair skill or gunsmith)."
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "full-auto-fumble-very-reliable",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto"
+        },
+        "weapon": {
+          "snapshot": {
+            "reliability": "VeryReliable"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [],
+        "pendingDecisions": [],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "burst-fumble-standard",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "ThreeRoundBurst"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning",
+            "message": "\"Assault Rifle\" jammed; clear stoppage before next shot."
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "standard",
+            "message": "Clear \"Assault Rifle\" stoppage (weapon skill check or referee action)."
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -3,
+          "after": 27
+        }
+      }
+    },
+    {
+      "name": "semi-auto-fumble-standard",
+      "context": {
+        "action": {
+          "fireMode": "semiAuto"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "semiAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [],
+        "pendingDecisions": [],
+        "ammo": {
+          "before": 30,
+          "delta": -1,
+          "after": 29
+        }
+      }
+    },
+    {
+      "name": "full-auto-hit-no-fumble",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 16,
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
+        },
+        {
+          "id": "damage",
+          "total": 12,
+          "die": {
+            "natural": 12
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": false
+              },
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 1,
+              "warnings": []
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 12,
+                "effectiveStoppingPower": 0,
+                "armorPiercing": false,
+                "armorMitigation": 0,
+                "penetratingDamage": 12,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 2,
+                "minimumDamageApplied": false,
+                "finalDamage": 10
+              }
+            ]
+          }
+        ],
+        "warnings": [],
+        "pendingDecisions": [],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "full-auto-fumble-missing-reliability",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto"
+        },
+        "weapon": {
+          "snapshot": {
+            "reliability": null
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto"
+        },
+        "targets": [
+          {
+            "attack": {
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              },
+              "targetNumber": 15,
+              "hit": false,
+              "margin": 0,
+              "warnings": []
+            },
+            "hits": []
+          }
+        ],
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning",
+            "message": "\"Assault Rifle\" jammed; clear stoppage before next shot."
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "standard",
+            "message": "Clear \"Assault Rifle\" stoppage (weapon skill check or referee action)."
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    }
+  ],
+  "rolls": [
+    {
+      "id": "attack",
+      "formula": "1d10",
+      "total": 10,
+      "die": {
+        "faces": 10,
+        "natural": 3
+      }
+    }
+  ],
+  "expected": {
+    "outcome": {
+      "actionType": "ranged",
+      "fireMode": "FullAuto",
+      "chatStatus": "preview"
+    },
+    "plannedUpdates": {
+      "itemUpdates": [
+        {
+          "itemUuid": "Actor.attacker.Item.auto-rifle",
+          "update": {
+            "system.shotsLeft": 0
+          }
+        }
+      ],
+      "actorUpdates": [],
+      "embeddedItemUpdates": [],
+      "chatStatus": "preview"
+    },
+    "chatData": {
+      "preview": {
+        "status": "preview"
+      }
+    }
+  },
+  "useStructured": true
+}

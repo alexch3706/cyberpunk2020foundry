@@ -13,7 +13,8 @@ const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
   new URL("./fixtures/three-round-burst.json", import.meta.url),
   new URL("./fixtures/ranged-full-auto.json", import.meta.url),
-  new URL("./fixtures/suppressive-fire.json", import.meta.url)
+  new URL("./fixtures/suppressive-fire.json", import.meta.url),
+  new URL("./fixtures/reliability-jam.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
@@ -38,12 +39,13 @@ function runFixture(fixture) {
   const roller = createScriptedRoller(fixture.rolls);
   const context = clonePlainData(fixture.context);
   const isSuppressiveFire = (String(context?.action?.fireMode || "").toLowerCase() === "suppressivefire");
+  const useStructured = isSuppressiveFire || fixture.useStructured;
 
   context.legacy = {
     mode: "fixture",
     fallback: ({ context: resolverContext, roller }) => {
-      if(isSuppressiveFire) {
-        // Suppressive fire is resolved through the structured resolver, not legacy.
+      if(useStructured) {
+        // These fixture types are resolved through the structured resolver, not legacy.
         // This fallback is bypassed when options.structured=true is passed.
         return { manualResolution: { required: true }, targets: [] };
       }
@@ -51,12 +53,12 @@ function runFixture(fixture) {
     }
   };
 
-  const options = isSuppressiveFire ? { structured: true } : {};
+  const options = useStructured ? { structured: true } : {};
   const outcome = resolveCombatAction(context, options, roller);
   roller.assertComplete();
 
-  if(isSuppressiveFire) {
-    // Suppressive fire uses a different outcome structure (saves, not attack rolls).
+  if(useStructured) {
+    // Structured-resolved fixtures may use different outcome structures (e.g., saves or jam).
     // Skip standard assertOutcomeShape which expects attack roll fields.
     assert.equal(outcome.action.type, fixture.context.action.type, `${fixture.name} action type`);
     assert.equal(outcome.action.fireMode, fixture.context.action.fireMode, `${fixture.name} fire mode`);
@@ -72,8 +74,8 @@ function runFixture(fixture) {
 
   const plannedUpdates = planCombatUpdates(outcome);
 
-  if(isSuppressiveFire) {
-    // Suppressive fire produces complex nested outcomes (armor, stagedPenetration, etc.)
+  if(useStructured) {
+    // Structured-resolved fixtures produce complex nested outcomes.
     // Use partial matching (assertObjectIncludes) instead of exact deep equality.
     assertObjectIncludes(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
 

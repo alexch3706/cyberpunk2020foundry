@@ -20,6 +20,55 @@ const RANGED_MODIFIERS = Object.freeze([
 const MISSING_LOCATION_BLOCKS = Object.freeze(["hit-location", "target-damage", "target-armor", "target-saves"]);
 const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
 
+export function resolveJamOutcome(isFumble, fireMode, reliability, weaponName = "Weapon") {
+  if (!isFumble) {
+    return { isJam: false };
+  }
+
+  const lowerFireMode = String(fireMode || "").toLowerCase();
+  if (lowerFireMode !== "fullauto" && lowerFireMode !== "threeroundburst") {
+    return { isJam: false };
+  }
+
+  const rel = String(reliability || "").toLowerCase();
+  if (rel === "veryreliable") {
+    return { isJam: false };
+  }
+
+  if (rel === "unreliable") {
+    return {
+      isJam: true,
+      jamSeverity: "unreliable",
+      warnings: [{
+        code: "weapon-jam",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message: `"${weaponName}" jammed and damaged; repair required before next shot.`
+      }],
+      pendingDecisions: [{
+        type: "jam",
+        severity: "unreliable",
+        message: `"${weaponName}" damaged and requires repair (repair skill or gunsmith).`
+      }]
+    };
+  }
+
+  // Default to Standard (also handles missing/unknown reliability)
+  return {
+    isJam: true,
+    jamSeverity: "standard",
+    warnings: [{
+      code: "weapon-jam",
+      severity: COMBAT_WARNING_SEVERITY.warning,
+      message: `"${weaponName}" jammed; clear stoppage before next shot.`
+    }],
+    pendingDecisions: [{
+      type: "jam",
+      severity: "standard",
+      message: `Clear "${weaponName}" stoppage (weapon skill check or referee action).`
+    }]
+  };
+}
+
 export function resolveSingleShotRangedAttack(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
   action.targetArea = action.targetArea || action.options?.targetArea;
@@ -55,9 +104,27 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   let targets = [];
   let modifierEvidence;
   let attackRoll;
+  let actionWarnings = [];
+  let actionPendingDecisions = [];
 
   if (fireMode === "fullauto" && targetCount > 1) {
+    let jamAborted = false;
     targets = (context.targets || []).map((target, idx) => {
+      if (jamAborted) {
+        return {
+          target: clonePlainData(target),
+          attack: {
+            hit: false,
+            warnings: []
+          },
+          hits: [],
+          saves: [],
+          plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
+          manualResolution: { required: false },
+          warnings: cloneArray(target.warnings)
+        };
+      }
+
       const targetAction = {
         ...action,
         roundsFiredPerTarget
@@ -86,6 +153,46 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
         attackRoll = targetAttackRoll;
       }
 
+      // Jam check after each attack roll in multi-target full auto
+      const isFumble = !!targetAttackRoll.isFumble;
+      const jamResult = resolveJamOutcome(
+        isFumble,
+        fireMode,
+        context.weapon?.snapshot?.reliability,
+        context.weapon?.name || "Weapon"
+      );
+
+      let forceMiss = false;
+
+      if (jamResult.isJam) {
+        targetAttackRoll.isJam = true;
+        actionWarnings = [...actionWarnings, ...jamResult.warnings];
+        actionPendingDecisions = [...actionPendingDecisions, ...jamResult.pendingDecisions];
+        jamAborted = true;
+        forceMiss = true;
+      } else if (isFumble) {
+        // Natural 1 is an automatic miss regardless of modifiers
+        forceMiss = true;
+      }
+
+      if (forceMiss || jamAborted) {
+        return {
+          target: clonePlainData(target),
+          attack: {
+            roll: clonePlainData(targetAttackRoll),
+            targetNumber,
+            hit: false,
+            margin: 0,
+            warnings: []
+          },
+          hits: [],
+          saves: [],
+          plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
+          manualResolution: { required: false },
+          warnings: cloneArray(target.warnings)
+        };
+      }
+
       return buildTargetOutcome(
         target,
         targetAttackRoll,
@@ -102,8 +209,46 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
     const attackRequest = buildAttackRollRequest(context, modifierEvidence);
     attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
 
-    targets = (context.targets || []).map(target =>
-      buildTargetOutcome(
+    // Jam check after attack roll (single-target or shared-roll modes)
+    const isFumble = !!attackRoll.isFumble;
+    const jamResult = resolveJamOutcome(
+      isFumble,
+      fireMode,
+      context.weapon?.snapshot?.reliability,
+      context.weapon?.name || "Weapon"
+    );
+
+    let forceMiss = false;
+
+    if (jamResult.isJam) {
+      attackRoll.isJam = true;
+      actionWarnings = [...actionWarnings, ...jamResult.warnings];
+      actionPendingDecisions = [...actionPendingDecisions, ...jamResult.pendingDecisions];
+      forceMiss = true;
+    } else if (isFumble) {
+      // Natural 1 is an automatic miss regardless of modifiers
+      forceMiss = true;
+    }
+
+    targets = (context.targets || []).map(target => {
+      if (forceMiss) {
+        return {
+          target: clonePlainData(target),
+          attack: {
+            roll: clonePlainData(attackRoll),
+            targetNumber,
+            hit: false,
+            margin: 0,
+            warnings: []
+          },
+          hits: [],
+          saves: [],
+          plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
+          manualResolution: { required: false },
+          warnings: cloneArray(target.warnings)
+        };
+      }
+      return buildTargetOutcome(
         target,
         attackRoll,
         targetNumber,
@@ -112,8 +257,8 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
         roller,
         options,
         roundsFired
-      )
-    );
+      );
+    });
   }
 
   const manualTargets = targets.filter(target => target.manualResolution?.required);
@@ -129,7 +274,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
     attacker: clonePlainData(context.attacker || {}),
     weapon: clonePlainData(context.weapon || {}),
     targets,
-    pendingDecisions: [],
+    pendingDecisions: actionPendingDecisions,
     manualResolution: buildOutcomeManualResolution([
       ...manualTargets.map(target => target.manualResolution),
       ammoPlanning.manualResolution
@@ -139,7 +284,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
     chat: {
       status: COMBAT_CHAT_STATUS.preview
     },
-    warnings: ammoPlanning.warnings
+    warnings: [...ammoPlanning.warnings, ...actionWarnings]
   };
 }
 

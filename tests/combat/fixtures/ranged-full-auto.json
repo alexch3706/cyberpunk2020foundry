@@ -423,7 +423,7 @@
           "total": 18,
           "die": {
             "faces": 10,
-            "natural": 1
+            "natural": 8
           }
         },
         {
@@ -839,11 +839,31 @@
               "margin": 6
             },
             "hits": [
-              { "location": "torso", "rawDamage": 10, "finalDamage": 0 },
-              { "location": "torso", "rawDamage": 10, "finalDamage": 0 },
-              { "location": "torso", "rawDamage": 10, "finalDamage": 0 },
-              { "location": "torso", "rawDamage": 10, "finalDamage": 0 },
-              { "location": "torso", "rawDamage": 10, "finalDamage": 0 }
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "finalDamage": 0
+              }
             ]
           }
         ],
