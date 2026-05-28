@@ -36,7 +36,7 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
 function isSupportedSingleShotRangedContext(context) {
   const fireMode = String(context?.action?.fireMode || "").toLowerCase();
   return context?.action?.type === "ranged"
-    && (fireMode === "semiauto" || fireMode === "threeroundburst");
+    && (fireMode === "semiauto" || fireMode === "threeroundburst" || fireMode === "fullauto");
 }
 
 function canResolveSingleShotRangedContext(context, roller) {
@@ -45,8 +45,8 @@ function canResolveSingleShotRangedContext(context, roller) {
   }
 
   const fireMode = String(context.action?.fireMode || "").toLowerCase();
-  if (fireMode === "threeroundburst") {
-    // 3-round burst is only against a single target
+  if (fireMode === "threeroundburst" || fireMode === "fullauto") {
+    // 3-round burst and fullauto are only against a single target
     if (context.targets && context.targets.length > 1) {
       return false;
     }

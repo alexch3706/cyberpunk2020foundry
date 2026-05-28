@@ -11,7 +11,8 @@ import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/a
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
-  new URL("./fixtures/three-round-burst.json", import.meta.url)
+  new URL("./fixtures/three-round-burst.json", import.meta.url),
+  new URL("./fixtures/ranged-full-auto.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
@@ -22,6 +23,7 @@ export async function runCombatFixtures() {
   assertWoundPlanning();
   assertSavePromptResolution();
   assertArmorResolver();
+  assertCombatResolverRouting();
 
   for(const fixtureUrl of FIXTURE_URLS) {
     const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
@@ -1177,4 +1179,52 @@ function assertArmorResolver() {
   assert.equal(casePreservingArmor.layers[0].coverageKey, "Torso", "original coverage key case is preserved");
   assert.equal(casePreservingArmor.layers[0].stoppingPower, 7, "existing ablation reduces usable stopping power");
   assert.equal(casePreservingArmor.layers[0].updatePath, "system.coverage.Torso.ablation", "update path preserves original coverage key");
+}
+
+function assertCombatResolverRouting() {
+  const roller = (request) => {
+    if (request.id === "attack") {
+      return { id: "attack", total: 20, die: { natural: 8 } };
+    }
+    if (request.id === "location") {
+      return { id: "location", total: 4, die: { natural: 4 }, location: "torso" };
+    }
+    if (request.id === "damage") {
+      return { id: "damage", total: 10, die: { natural: 10 } };
+    }
+    return { total: 10 };
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "close",
+      targetNumber: 15
+    },
+    attacker: {
+      snapshot: {
+        stats: { ref: { total: 8 } }
+      }
+    },
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 10
+      }
+    },
+    targets: [
+      {
+        snapshot: {
+          stats: { bt: { total: 6 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      }
+    ],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+
+  const result = resolveCombatAction(context, { structured: true }, roller);
+  assert.notEqual(result, "fallback-called", "FullAuto should be routed to structured resolver");
 }

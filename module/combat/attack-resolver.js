@@ -37,6 +37,13 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
     if (roundsFired <= 0 && rawShotsLeft.valid) {
       roundsFired = 0;
     }
+  } else if (fireMode === "fullauto") {
+    const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+    const rof = Math.max(0, Number(context.weapon?.snapshot?.rof) || 0);
+    roundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
+    if (roundsFired <= 0 && rawShotsLeft.valid) {
+      roundsFired = 0;
+    }
   }
 
   const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller, options, roundsFired));
@@ -285,6 +292,8 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       };
       burstHitsRoll = roller(burstHitsRequest);
       numHits = Math.min(burstHitsRoll.total, roundsFired);
+    } else if (fireMode === "fullauto") {
+      numHits = Number.isFinite(roundsFired) && roundsFired > 0 ? Math.max(1, Math.min(roundsFired, margin)) : 0;
     }
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
@@ -679,6 +688,28 @@ function buildModifierEvidence(action, weapon) {
       label: "Three-Round Burst",
       value: 3,
       term: "@modifier.threeRoundBurst"
+    });
+  } else if (fireMode === "fullauto") {
+    const rawShotsLeft = normalizeAmmoState(weapon?.snapshot?.shotsLeft);
+    const rof = Math.max(0, Number(weapon?.snapshot?.rof) || 0);
+    const shotsLeft = rawShotsLeft.valid ? rawShotsLeft.value : rof;
+    const bullets = Math.max(0, Math.min(shotsLeft, rof));
+
+    let multiplier = 0;
+    if (range === ranges.close) {
+      multiplier = 1;
+    } else if (range === ranges.pointBlank) {
+      multiplier = 0;
+    } else {
+      multiplier = -1;
+    }
+
+    const value = multiplier * Math.floor(bullets / 10);
+    evidence.push({
+      code: "fullAuto",
+      label: "Full Auto",
+      value,
+      term: "@modifier.fullAuto"
     });
   }
 
