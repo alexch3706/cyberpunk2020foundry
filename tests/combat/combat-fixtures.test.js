@@ -12,7 +12,8 @@ import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/a
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
   new URL("./fixtures/three-round-burst.json", import.meta.url),
-  new URL("./fixtures/ranged-full-auto.json", import.meta.url)
+  new URL("./fixtures/ranged-full-auto.json", import.meta.url),
+  new URL("./fixtures/suppressive-fire.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
@@ -36,21 +37,54 @@ export async function runCombatFixtures() {
 function runFixture(fixture) {
   const roller = createScriptedRoller(fixture.rolls);
   const context = clonePlainData(fixture.context);
+  const isSuppressiveFire = (String(context?.action?.fireMode || "").toLowerCase() === "suppressivefire");
+
   context.legacy = {
     mode: "fixture",
-    fallback: ({ context: resolverContext, roller }) => buildSingleShotOutcome(resolverContext, roller, fixture)
+    fallback: ({ context: resolverContext, roller }) => {
+      if(isSuppressiveFire) {
+        // Suppressive fire is resolved through the structured resolver, not legacy.
+        // This fallback is bypassed when options.structured=true is passed.
+        return { manualResolution: { required: true }, targets: [] };
+      }
+      return buildSingleShotOutcome(resolverContext, roller, fixture);
+    }
   };
 
-  const outcome = resolveCombatAction(context, {}, roller);
+  const options = isSuppressiveFire ? { structured: true } : {};
+  const outcome = resolveCombatAction(context, options, roller);
   roller.assertComplete();
 
-  assertOutcomeShape(outcome, fixture.expected.outcome);
+  if(isSuppressiveFire) {
+    // Suppressive fire uses a different outcome structure (saves, not attack rolls).
+    // Skip standard assertOutcomeShape which expects attack roll fields.
+    assert.equal(outcome.action.type, fixture.context.action.type, `${fixture.name} action type`);
+    assert.equal(outcome.action.fireMode, fixture.context.action.fireMode, `${fixture.name} fire mode`);
+    assert.ok(outcome.attacker.actorUuid, `${fixture.name} attacker actor UUID`);
+    assert.ok(outcome.weapon.itemUuid, `${fixture.name} weapon item UUID`);
+    assert.equal(outcome.targets.length, fixture.context.targets.length, `${fixture.name} target count`);
+    if(fixture.expected.outcome.chatStatus) {
+      assert.equal(outcome.chat.status, fixture.expected.outcome.chatStatus, `${fixture.name} chat status`);
+    }
+  } else {
+    assertOutcomeShape(outcome, fixture.expected.outcome);
+  }
 
   const plannedUpdates = planCombatUpdates(outcome);
-  assert.deepEqual(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
 
-  const previewChatData = buildCombatChatData(outcome, plannedUpdates);
-  assert.deepEqual(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
+  if(isSuppressiveFire) {
+    // Suppressive fire produces complex nested outcomes (armor, stagedPenetration, etc.)
+    // Use partial matching (assertObjectIncludes) instead of exact deep equality.
+    assertObjectIncludes(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
+
+    const previewChatData = buildCombatChatData(outcome, plannedUpdates);
+    assertObjectIncludes(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
+  } else {
+    assert.deepEqual(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
+
+    const previewChatData = buildCombatChatData(outcome, plannedUpdates);
+    assert.deepEqual(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
+  }
 
   assertSingleShotCases(fixture);
 

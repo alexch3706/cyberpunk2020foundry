@@ -143,6 +143,312 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   };
 }
 
+export function resolveSuppressiveFire(context, options = {}, roller = undefined) {
+  const action = clonePlainData(context.action || {});
+  const fireZoneWidth = action.fireZoneWidth ?? action.options?.fireZoneWidth;
+  const roundsFired = action.roundsFired ?? action.options?.roundsFired;
+
+  // Validate required inputs
+  if(fireZoneWidth === undefined || fireZoneWidth === null || roundsFired === undefined || roundsFired === null) {
+    return buildSuppressiveFireManual("Suppressive fire requires fireZoneWidth and roundsFired; resolve manually.");
+  }
+
+  const zoneWidth = Number(fireZoneWidth);
+  const totalRounds = Number(roundsFired);
+
+  if(!Number.isFinite(zoneWidth) || zoneWidth <= 0 || !Number.isFinite(totalRounds) || totalRounds <= 0) {
+    return buildSuppressiveFireManual("Suppressive fire requires positive numeric fireZoneWidth and roundsFired; resolve manually.");
+  }
+
+  // Cap rounds fired by Rate of Fire (rof) and remaining ammo
+  const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+  const rof = Math.max(0, Number(context.weapon?.snapshot?.rof) || 0);
+  let finalRoundsFired = totalRounds;
+  if (rof > 0) {
+    finalRoundsFired = Math.min(finalRoundsFired, rof);
+  }
+  if (rawShotsLeft.valid) {
+    finalRoundsFired = Math.min(finalRoundsFired, rawShotsLeft.value);
+  }
+  finalRoundsFired = Math.max(0, finalRoundsFired);
+
+  // Save DC: Math.max(2, Math.floor(finalRoundsFired / fireZoneWidth))
+  const saveDC = Math.max(2, Math.floor(finalRoundsFired / zoneWidth));
+
+  const targets = (context.targets || []).map(target =>
+    resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options)
+  );
+
+  const manualTargets = targets.filter(t => t.manualResolution?.required);
+
+  const ammoPlanning = buildAmmoPlanning(context.weapon, finalRoundsFired);
+
+  return {
+    action: {
+      ...action,
+      fireMode: action.fireMode || "suppressivefire",
+      fireZoneWidth: zoneWidth,
+      roundsFired: finalRoundsFired
+    },
+    attacker: clonePlainData(context.attacker || {}),
+    weapon: clonePlainData(context.weapon || {}),
+    targets,
+    pendingDecisions: [],
+    manualResolution: buildOutcomeManualResolution([
+      ...manualTargets.map(t => t.manualResolution),
+      ammoPlanning.manualResolution
+    ].filter(Boolean)),
+    ammo: ammoPlanning.ammo,
+    plannedUpdates: ammoPlanning.plannedUpdates,
+    chat: {
+      status: COMBAT_CHAT_STATUS.preview
+    },
+    warnings: ammoPlanning.warnings
+  };
+}
+
+function buildSuppressiveFireManual(message) {
+  return {
+    action: {},
+    attacker: {},
+    weapon: {},
+    targets: [],
+    pendingDecisions: [],
+    manualResolution: {
+      required: true,
+      reason: MANUAL_RESOLUTION_REASON.missingRuleData,
+      message,
+      blockedUpdateCategories: ["hit-location", "target-damage", "target-armor", "target-saves", "attacker-ammo"]
+    },
+    ammo: {},
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.manual
+    },
+    chat: {
+      status: COMBAT_CHAT_STATUS.manual
+    },
+    warnings: []
+  };
+}
+
+function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, resolverOptions = {}) {
+  const targetWarnings = cloneArray(target.warnings);
+  let manualResolution = target.manualResolution
+    ? clonePlainData(target.manualResolution)
+    : { required: false };
+
+  if(manualResolution.required) {
+    return {
+      target: clonePlainData(target),
+      attack: {},
+      hits: [],
+      saves: [],
+      plannedUpdates: {
+        embeddedItemUpdates: [],
+        chatStatus: COMBAT_CHAT_STATUS.preview
+      },
+      manualResolution,
+      warnings: targetWarnings
+    };
+  }
+
+  // Resolve save: REF + Athletics + 1d10 >= saveDC
+  const targetRef = target.snapshot?.stats?.ref?.total ?? 0;
+  const targetAthletics = getSkillValue(target.snapshot?.skills?.athletics);
+
+  const saveRollRequest = {
+    id: "save",
+    formula: "@stats.ref.total + @skill.athletics + 1d10",
+    terms: ["@stats.ref.total", "@skill.athletics", "1d10"],
+    rollData: {
+      stats: {
+        ref: {
+          total: targetRef
+        }
+      },
+      skill: {
+        athletics: targetAthletics
+      }
+    }
+  };
+  const saveRoll = roll(roller, saveRollRequest);
+  const savePassed = saveRoll.total >= saveDC;
+  const saveMargin = saveRoll.total - saveDC;
+
+  let hits = [];
+  const plannedUpdates = {
+    embeddedItemUpdates: [],
+    chatStatus: COMBAT_CHAT_STATUS.preview
+  };
+
+  if(!savePassed) {
+    // Failed save: calculate hits = Math.ceil(1d6 / 2)
+    const hitCountRequest = {
+      id: "hitCount",
+      formula: "1d6"
+    };
+    const hitCountRoll = roll(roller, hitCountRequest);
+    const numHits = Math.ceil(hitCountRoll.total / 2);
+
+    const targetSnapshotCopy = clonePlainData(target.snapshot || {});
+    const accumulatedAblations = {};
+
+    for(let i = 0; i < numHits; i++) {
+      const locationResult = resolveHitLocation(target, { ...action, targetArea: undefined }, roller);
+      if(locationResult.manualResolution) {
+        if(!manualResolution.required) {
+          manualResolution = clonePlainData(locationResult.manualResolution);
+        } else {
+          const categories = new Set([
+            ...(manualResolution.blockedUpdateCategories || []),
+            ...(locationResult.manualResolution.blockedUpdateCategories || [])
+          ]);
+          manualResolution.blockedUpdateCategories = [...categories];
+        }
+      }
+      targetWarnings.push(...locationResult.warnings);
+
+      if(locationResult.hit) {
+        const hitDetail = locationResult.hit;
+
+        const weaponDamage = weapon?.snapshot?.damage || "1d6";
+        const damageRequest = {
+          id: "damage",
+          formula: weaponDamage
+        };
+        const damageRoll = roll(roller, damageRequest);
+
+        const weaponAP = !!weapon?.snapshot?.ap;
+        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
+          cover: action?.cover || action?.options?.cover
+        });
+        const effectiveStoppingPower = armor.effectiveStoppingPower;
+
+        const rawDamage = damageRoll.total;
+        const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+        const penetratingDamageBeforeAP = rawDamage - armorMitigation;
+        let penetratingDamage = penetratingDamageBeforeAP;
+
+        if(armor.armorPiercing && penetratingDamage > 0) {
+          penetratingDamage = Math.floor(penetratingDamage / 2);
+        }
+
+        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
+
+        const stagedPenetration = buildStagedPenetrationEvidence({
+          enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
+          penetrated: rawDamage > effectiveStoppingPower,
+          armor,
+          target
+        });
+
+        if(stagedPenetration.plannedUpdate) {
+          const update = stagedPenetration.plannedUpdate.updates[0];
+          const armorId = update._id;
+          const updatePath = Object.keys(update).find(k => k !== "_id");
+
+          const ablationKey = `${armorId}-${updatePath}`;
+          accumulatedAblations[ablationKey] = {
+            actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+            type: "Item",
+            _id: armorId,
+            updatePath,
+            value: update[updatePath]
+          };
+
+          const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+          if(armorItem) {
+            const armorSystem = armorItem.system || armorItem;
+            const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+              k => k.toLowerCase() === hitDetail.location.toLowerCase()
+            );
+            if(coverageKey) {
+              if(!armorSystem.coverage[coverageKey]) {
+                armorSystem.coverage[coverageKey] = {};
+              }
+              armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
+            }
+          } else {
+            const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+            if(cyberwareItem) {
+              const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+              cyberwareSystem.ablation = stagedPenetration.evidence.after;
+            }
+          }
+        }
+
+        if(stagedPenetration.warning) {
+          hitDetail.warnings.push(stagedPenetration.warning);
+        }
+
+        hitDetail.damageRoll = {
+          id: damageRoll.id,
+          formula: damageRoll.formula || damageRequest.formula,
+          total: damageRoll.total,
+          die: clonePlainData(damageRoll.die || {}),
+          seed: damageRoll.seed
+        };
+        hitDetail.rawDamage = rawDamage;
+        hitDetail.effectiveStoppingPower = effectiveStoppingPower;
+        hitDetail.armorPiercing = armor.armorPiercing;
+        hitDetail.armorMitigation = armorMitigation;
+        hitDetail.penetratingDamage = penetratingDamage;
+        hitDetail.armorPiercingEvidence = {
+          ...(armor.armorPiercingEvidence || {}),
+          penetratingDamageBeforeAP,
+          penetratingDamageAfterAP: penetratingDamage
+        };
+        hitDetail.bodyTypeModifier = bodyTypeDamage.bodyTypeModifier;
+        hitDetail.bodyTypeMitigation = bodyTypeDamage.bodyTypeMitigation;
+        hitDetail.minimumDamageApplied = bodyTypeDamage.minimumDamageApplied;
+        hitDetail.finalDamage = bodyTypeDamage.finalDamage;
+        hitDetail.armor = armor;
+        hitDetail.stagedPenetration = stagedPenetration.evidence;
+        hitDetail.warnings.push(...armor.warnings);
+
+        hits.push(hitDetail);
+      }
+    }
+
+    for(const record of Object.values(accumulatedAblations)) {
+      plannedUpdates.embeddedItemUpdates.push({
+        actorUuid: record.actorUuid,
+        type: "Item",
+        updates: [
+          {
+            _id: record._id,
+            [record.updatePath]: record.value
+          }
+        ]
+      });
+    }
+  }
+
+  return {
+    target: clonePlainData(target),
+    attack: {
+      save: {
+        roll: {
+          id: saveRoll.id,
+          formula: saveRoll.formula || saveRollRequest.formula,
+          total: saveRoll.total,
+          die: clonePlainData(saveRoll.die || {}),
+          seed: saveRoll.seed
+        },
+        saveDC,
+        passed: savePassed,
+        margin: saveMargin
+      }
+    },
+    hits,
+    saves: [],
+    plannedUpdates,
+    manualResolution,
+    warnings: targetWarnings
+  };
+}
+
 export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
   const normalizedPenetratingDamage = normalizeDamageAmount(penetratingDamage);
   const bodyTypeModifier = btmFromBT(normalizeBodyType(bodyType));

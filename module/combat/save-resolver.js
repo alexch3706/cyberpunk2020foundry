@@ -18,6 +18,10 @@ export function resolveSavePromptsForTarget(targetOutcome = {}) {
     return emptyResult();
   }
 
+  if(targetOutcome?.attack?.save?.passed === true) {
+    return emptyResult();
+  }
+
   const damageEvidence = resolveDamageEvidence(targetOutcome);
   if(damageEvidence.warning) {
     return {

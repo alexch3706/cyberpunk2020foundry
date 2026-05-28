@@ -1,5 +1,5 @@
 # generated: 2026-05-24
-# last_updated: 2026-05-28
+# last_updated: 2026-06-28
 # project: Cyberpunk2020VTT
 # project_key: NOKEY
 # tracking_system: file-system
@@ -70,7 +70,7 @@ development_status:
   4-1-migrate-three-round-burst-to-resolver-outcome: done
   4-2-resolve-full-auto-against-one-target: done
   4-3-resolve-full-auto-across-multiple-targets: done
-  4-4-implement-suppressive-fire-resolver: backlog
+  4-4-implement-suppressive-fire-resolver: done
   4-5-add-reliability-fumble-and-jam-handling: backlog
   4-6-disable-or-mark-unsupported-automatic-modes-until-complete: backlog
   4-7-add-automatic-fire-fixtures-and-foundry-checks: backlog

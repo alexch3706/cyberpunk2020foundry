@@ -59,6 +59,7 @@ function buildTargetSnapshot(actor, existingSnapshot) {
 
   return compactPlainObject({
     stats: clonePlainData(actor.system.stats),
+    skills: clonePlainData(actor.system.skills),
     damage: clonePlainData(actor.system.damage),
     hitLocations: clonePlainData(actor.system.hitLocations),
     equippedArmor: normalizeItemSnapshots(actor.itemTypes?.armor || []),

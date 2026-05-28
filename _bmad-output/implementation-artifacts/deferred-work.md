@@ -49,3 +49,8 @@ This file tracks technical debt and deferred items from code reviews.
 - **Semiauto/Single fire modes multi-targeting**: `canResolveSingleShotRangedContext` only blocks multi-targeting if the fire mode is `"threeroundburst"`. Other modes like `"semiauto"` or `"standard"` (single shot) are not restricted, allowing them to resolve against multiple targets using one roll and one bullet. This is pre-existing legacy behavior.
 - **Zero targets consuming ammo**: If a full auto attack is resolved with 0 targets, it goes to the `else` branch: `roundsFired = finalMaxRoundsFired` (which is `Math.min(shotsLeft, rof)`). So it fires ROF rounds, even though there are no targets. This is pre-existing legacy behavior.
 - **Mutation of input parameter `action.targetArea`**: The function directly mutates `action.targetArea = action.targetArea || action.options?.targetArea`, modifying the caller-provided object. This is pre-existing legacy behavior.
+
+## Deferred from: code review of 4-4-implement-suppressive-fire-resolver.md (2026-05-28)
+
+- **Multi-target full-auto target-specific modifier evidence is lost**: For multi-target full auto attacks, target-specific modifier evidence and attack roll details are only saved for the first target in the top-level outcome, losing target-specific information for subsequent targets.
+

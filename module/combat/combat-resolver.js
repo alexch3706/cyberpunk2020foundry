@@ -1,5 +1,5 @@
 import { rangeDCs, ranges } from "../lookups.js";
-import { resolveSingleShotRangedAttack, normalizeAmmoState } from "./attack-resolver.js";
+import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState } from "./attack-resolver.js";
 
 /**
  * Top-level combat resolver shell.
@@ -18,8 +18,13 @@ import { resolveSingleShotRangedAttack, normalizeAmmoState } from "./attack-reso
  * @returns {*} The legacy fallback result for current combat paths.
  */
 export function resolveCombatAction(context, options = {}, roller = undefined) {
-  if(options.structured === true && canResolveSingleShotRangedContext(context, roller)) {
-    return resolveSingleShotRangedAttack(context, options, roller);
+  if(options.structured === true) {
+    if(canResolveSuppressiveFireContext(context, roller)) {
+      return resolveSuppressiveFire(context, options, roller);
+    }
+    if(canResolveSingleShotRangedContext(context, roller)) {
+      return resolveSingleShotRangedAttack(context, options, roller);
+    }
   }
 
   if (typeof context?.legacy?.fallback !== "function") {
@@ -37,6 +42,14 @@ function isSupportedSingleShotRangedContext(context) {
   const fireMode = String(context?.action?.fireMode || "").toLowerCase();
   return context?.action?.type === "ranged"
     && (fireMode === "semiauto" || fireMode === "threeroundburst" || fireMode === "fullauto");
+}
+
+function canResolveSuppressiveFireContext(context, roller) {
+  const fireMode = String(context?.action?.fireMode || "").toLowerCase();
+  return context?.action?.type === "ranged"
+    && (fireMode === "suppressive" || fireMode === "suppressivefire")
+    && Array.isArray(context.targets)
+    && typeof roller === "function";
 }
 
 function canResolveSingleShotRangedContext(context, roller) {
