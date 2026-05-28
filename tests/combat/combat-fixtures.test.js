@@ -468,7 +468,7 @@ function assertWoundPlanning() {
   planCombatUpdates(mortalOutcome);
   assert.deepEqual(mortalOutcome.targets[0].damage.nextWoundState, {
     level: 4,
-    label: "Mortal 1"
+    label: "Mortal 0"
   }, "wound planning records Mortal transition");
 
   const headOutcome = buildWoundOutcome({

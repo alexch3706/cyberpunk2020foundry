@@ -1,0 +1,214 @@
+diff --git a/_bmad-output/implementation-artifacts/2-6-add-single-shot-fixtures-and-foundry-manual-checks.md b/_bmad-output/implementation-artifacts/2-6-add-single-shot-fixtures-and-foundry-manual-checks.md
+new file mode 100644
+index 0000000..5f94280
+--- /dev/null
++++ b/_bmad-output/implementation-artifacts/2-6-add-single-shot-fixtures-and-foundry-manual-checks.md
+@@ -0,0 +1,71 @@
++# Story 2.6: Add Single-Shot Fixtures and Foundry Manual Checks
++
++Status: review
++
++<!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
++
++## Story
++
++As a maintainer,
++I want fixtures and documented manual checks for the first end-to-end firearm flow,
++so that future combat resolver changes do not break target context, hit resolution, ammo planning, preview/confirm, or chat evidence.
++
++## Acceptance Criteria
++
++1. Given deterministic fixtures from Epic 1, when single-shot fixtures are run, then they verify target normalization, hit/miss outcome shape, hit location, ammo planned update, and manual-resolution fallback.
++2. Given the end-to-end single-shot flow is complete, when verified manually, then a documented Foundry check covers actor sheet attack launch, target selection, preview dialog, confirm/cancel, and chat rendering.
++
++## Tasks / Subtasks
++
++- [x] Verify and ensure single-shot fixtures coverage. (AC: 1)
++  - [x] Assert target normalization verifies actor-backed, actorless, and plain target scenarios.
++  - [x] Assert hit/miss outcome shape verifies attack total, range DC, modifiers, and die metadata.
++  - [x] Assert hit location and ammo planned updates are verified against expected values.
++  - [x] Assert manual-resolution fallback is triggered when actor context is missing.
++- [x] Create a comprehensive manual testing guide for Foundry VTT. (AC: 2)
++  - [x] Create [docs/testing/foundry-manual-checks.md](file:///Users/alexanderchuprikov/Documents/Code/Tabletop/Cyberpunk2020VTT/docs/testing/foundry-manual-checks.md) markdown file.
++  - [x] Document step-by-step setup for a test scene (creating attacker/target actors and tokens, equipping weapons and armor).
++  - [x] Document actor sheet attack launch path (opening sheet, selecting weapon, clicking roll).
++  - [x] Document target selection (targeting tokens on scene).
++  - [x] Document preview dialog validation (checking values shown in preview card).
++  - [x] Document confirm flow (verifying ammo delta and damage application to target sheet, checking updated chat card).
++  - [x] Document cancel flow (verifying no state change occurs, checking updated chat card).
++  - [x] Document manual-resolution flows (missing target actor, insufficient ammo, and resolving manually).
++- [x] Perform validation checks. (AC: 1, 2)
++  - [x] Verify test suite `node tests/run-combat-fixtures.mjs` runs and passes successfully.
++
++## Dev Notes
++
++### Scope Boundary
++
++This story focuses on consolidating and documenting the test coverage for Epic 2. The code logic for single-shot firearms is already fully implemented, and the automated tests in `tests/combat/combat-fixtures.test.js` already parse and assert the `ranged-single-shot.json` fixture. 
++
++The primary deliverable of this story is ensuring that this automated fixture matches the full spec requirements, and authoring a high-quality manual testing guide `docs/testing/foundry-manual-checks.md` that walk GMs or developers through manually verifying all UI/UX details within Foundry VTT (since UI dialogs and Foundry document persistence cannot be fully mock-tested).
++
++### References
++
++- [Source: `_bmad-output/planning-artifacts/epics.md` - Story 2.6]
++- [Source: `tests/combat/combat-fixtures.test.js` - automated fixtures]
++- [Source: `tests/combat/fixtures/ranged-single-shot.json` - fixture data]
++- [Source: `module/combat/combat-commit.js` - commit logic]
++
++## Dev Agent Record
++
++### Agent Model Used
++
++Gemini 1.5 Pro (Antigravity)
++
++### Debug Log References
++
++- Executed `node tests/run-combat-fixtures.mjs` successfully verifying all unit tests and fixtures.
++
++### Completion Notes List
++
++- Verified automated single-shot fixtures coverage for target normalization, hit/miss outcome, hit location, and ammo updates.
++- Created `docs/testing/foundry-manual-checks.md` with structured manual checking instructions for Foundry VTT.
++- Both automated and manual testing baselines for Epic 2 are fully in place.
++
++### File List
++
++- `docs/testing/foundry-manual-checks.md`
++- `_bmad-output/implementation-artifacts/2-6-add-single-shot-fixtures-and-foundry-manual-checks.md`
+diff --git a/_bmad-output/implementation-artifacts/sprint-status.yaml b/_bmad-output/implementation-artifacts/sprint-status.yaml
+index 418bc95..1614145 100644
+--- a/_bmad-output/implementation-artifacts/sprint-status.yaml
++++ b/_bmad-output/implementation-artifacts/sprint-status.yaml
+@@ -54,8 +54,8 @@ development_status:
+   2-2-resolve-single-shot-ranged-attack-outcome: done
+   2-3-preserve-ammo-planning-and-legacy-entry-behavior: done
+   2-4-preview-and-confirm-single-shot-state-application: done
+-  2-5-render-single-shot-combat-evidence-in-chat: backlog
+-  2-6-add-single-shot-fixtures-and-foundry-manual-checks: backlog
++  2-5-render-single-shot-combat-evidence-in-chat: done
++  2-6-add-single-shot-fixtures-and-foundry-manual-checks: review
+   epic-2-retrospective: optional
+   epic-3: backlog
+   3-1-add-armor-and-ap-snapshot-plumbing: backlog
+diff --git a/docs/testing/foundry-manual-checks.md b/docs/testing/foundry-manual-checks.md
+new file mode 100644
+index 0000000..61a31f4
+--- /dev/null
++++ b/docs/testing/foundry-manual-checks.md
+@@ -0,0 +1,116 @@
++# Foundry VTT Manual Testing Guide: Single-Shot Firearm Resolution
++
++This guide outlines the step-by-step verification process for the Corebook Fidelity single-shot combat resolver path in **Foundry VTT**. Use this document to manually audit UI/UX flows, sheet updates, and chat log output.
++
++---
++
++## 1. Environment & Setup
++
++Ensure the system is loaded in a clean test world, and the following components are available on the active scene:
++
++### 1.1 Attacker Setup
++1. Create a new Actor named **Solo (Attacker)**.
++2. Open the actor sheet and navigate to the **Combat** tab.
++3. Add a Ranged Weapon:
++   - **Name**: Heavy Pistol
++   - **Damage**: `4d6`
++   - **Shots**: `10` / `10`
++   - **RoF**: `2`
++   - **Reliability**: `standard`
++   - **Range**: `50`m
++   - **Accuracy**: `0`
++4. Set attacker stats:
++   - **REF**: `8`
++   - **Handgun Skill**: `6`
++
++### 1.2 Target Setup
++1. Create a new Actor named **Target (Defender)**.
++2. Open the actor sheet, navigate to **Gear**, and add an Armor item:
++   - **Name**: Kevlar Vest
++   - **Equipped**: Yes
++   - **SP (Torso)**: `12`
++3. Set defender stats:
++   - **BODY**: `6` (BTM: `-2`)
++4. Create a token on the active scene for both the Attacker and the Target.
++
++---
++
++## 2. Standard Attack Flow (Confirm Path)
++
++Verify that a standard single-shot ranged attack resolves, prompts preview confirmation, mutates stats on confirm, and updates the chat card in-place.
++
++### 2.1 Target Selection
++1. Select the **Solo (Attacker)** token.
++2. Use Foundry's Target tool (or double right-click / Alt+click depending on config) to target the **Target (Defender)** token on the scene.
++3. Verify that the targeting reticle is visible on the Target token.
++
++### 2.2 Initiating the Roll
++1. Open the **Solo (Attacker)** actor sheet.
++2. In the **Combat** tab, find the **Heavy Pistol** and click the roll button (dice icon).
++3. The Ranged Attack Modifier Dialog should appear:
++   - Select **Semi-Auto** or **Single Shot** fire mode.
++   - Select the target range (e.g., **Medium**).
++   - Leave other modifiers default or specify aim rounds if desired.
++   - Click **Roll**.
++
++### 2.3 Preview Dialog Validation
++1. An in-progress combat preview dialog should appear on screen.
++2. Confirm the displayed values in the dialog:
++   - **Attacker**: "Solo" using "Heavy Pistol"
++   - **Target**: "Target"
++   - **Attack roll**: Verify the total (1d10 + REF 8 + Handgun 6 + Accuracy) against the Target Number (Medium DC: 20).
++   - **Hit/Miss status**: Confirm it correctly identifies a **Hit** if the total is >= 20, or **Miss** if < 20.
++   - **Ammo change**: Displays `-1` spent (Shots: `9 / 10`).
++   - **Wound Transition & Damage**: Summarizes final damage (if hit) taking into account Kevlar Vest SP (12) and BTM (-2).
++   - **Warnings**: Ensure no unexpected warnings are displayed.
++
++### 2.4 Committing the Outcome
++1. Click **Confirm** on the preview dialog.
++2. **Verify Sheet Mutations (Database changes)**:
++   - Open **Solo (Attacker)** sheet: verify ammo is decremented by 1 (Shots Left: `9`).
++   - Open **Target (Defender)** sheet (if a hit occurred): verify damage is increased by final damage value, and Kevlar Vest SP on Torso is ablated by 1 (SP: `11`).
++3. **Verify Chat Card**:
++   - Locate the generated chat card in the Foundry chat log.
++   - Confirm the banner status displays **[COMMITTED] - Applied to Actor(s)** in a green border.
++   - Confirm no duplicate chat cards were created (only one card exists for this attack).
++
++---
++
++## 3. Standard Attack Flow (Cancel Path)
++
++Verify that canceling a roll updates the chat card status in-place and leaves database stats untouched.
++
++### 3.1 Flow Execution
++1. Ensure the attacker has targets selected and initiate a weapon roll as in Section 2.
++2. When the preview dialog appears, inspect the values, then click **Cancel**.
++
++### 3.2 Verification
++1. **Verify Sheet State**:
++   - Open Attacker sheet: Ammo must **not** be decremented (remains at the pre-attack count).
++   - Open Target sheet: Damage and armor SP must **not** be mutated.
++2. **Verify Chat Card**:
++   - Locate the chat card in the log.
++   - Confirm the banner status is updated in-place to **[CANCELED] - Discarded** in a red border.
++   - Confirm no database changes were applied.
++
++---
++
++## 4. Manual Resolution Fallbacks
++
++Verify that missing actor context or state conflicts block the commit path and alert the referee.
++
++### 4.1 Missing Target Actor Context
++1. Place a token on the scene that is **not** linked to any Actor (e.g., an actorless token template).
++2. Select the Attacker and target this actorless token.
++3. Initiate an attack.
++4. Verify the preview Dialog pops up and:
++   - Displays a warning banner: **Target Actor is unavailable; resolve target damage, armor, and saves manually.**
++   - Disables the **Confirm** action, forcing manual GM resolution.
++5. Click **GM Resolution** (or the corresponding manual confirmation button).
++6. Verify the chat card updates in-place to **[MANUAL] - Requires GM Resolution** in a yellow/orange banner.
++
++### 4.2 Insufficient Ammo Warning
++1. Set the Attacker's weapon ammo count to `0` on the actor sheet.
++2. Target the Defender and initiate a roll.
++3. Verify the preview dialog displays a warning: **Insufficient ammo to perform attack.**
++4. Confirm the commit action is blocked or marked for manual resolution.

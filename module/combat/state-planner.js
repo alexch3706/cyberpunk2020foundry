@@ -277,7 +277,7 @@ function woundStateLabel(level) {
   if(level < WOUND_STATE_LABELS.length) {
     return WOUND_STATE_LABELS[level];
   }
-  return `Mortal ${level - 3}`;
+  return `Mortal ${level - 4}`;
 }
 
 function normalizeDamageValue(value) {

@@ -124,3 +124,53 @@ To execute the automated suite of deterministic combat fixtures (verifying norma
 1. Open a terminal in the project root directory.
 2. Run the command: `node tests/run-combat-fixtures.mjs`.
 3. Verify that the output displays `2 combat fixture(s) passed`.
+
+---
+
+## 6. Epic 3 Damage Pipeline & Save Resolution (Manual Checks)
+
+Verify that the core combat resolver faithfully applies the Cyberpunk 2020 damage pipeline rules, including armor penetration, layering, cover, head/limb criticals, BTM minimums, and save prompts.
+
+### 6.1 Armor Piercing (AP) & Staged Penetration
+1. Set up an Attacker with an AP weapon (e.g., Heavy Pistol with AP enabled in item snapshot: `weapon.snapshot.ap = true`).
+2. Target a Defender with **Kevlar Vest (SP 12)** on the Torso.
+3. Roll a hit:
+   - In the preview dialog, verify that the effective stopping power is halved to **6**.
+   - If raw damage is 8 (higher than effective SP 6), final damage penetrates.
+   - Verify that confirming the hit ablates the Kevlar Vest by 1 (SP becomes **11** on the actor sheet).
+4. If staged penetration is disabled (e.g., config/option `stagedPenetration: false`):
+   - Verify that the Kevlar Vest SP is **not** ablated on the actor sheet upon confirmation.
+
+### 6.2 Armor Layering & Cover
+1. Equip the Defender with multiple armor layers (e.g., **Skinweave SP 8** and **Kevlar Vest SP 12**).
+2. Set up a Ranged Attack option with cover (e.g., **Concrete Barrier SP 10**).
+3. Verify the effective stopping power calculation:
+   - The outer cover layer (Concrete Barrier, SP 10) resolves first.
+   - The armor layers combine using proportional layering rules.
+4. Roll a hit:
+   - Confirm that only the outermost penetrated layer (e.g., Cover, or Kevlar Vest if cover is bypassed) is ablated.
+   - Confirm that inner layers (like Skinweave) are left unablated on confirmation.
+
+### 6.3 Body Type Mitigation (BTM) & Minimum Damage
+1. Set Defender stats: **BODY 6** (BTM: `-2`).
+2. Roll a hit that results in **3** penetrating damage (after armor SP subtraction):
+   - Verify that the preview dialog applies BTM `-2` and lists the final damage as **1** (`3 - 2 = 1`).
+3. Roll a hit that results in **1** penetrating damage:
+   - Verify that the preview dialog lists the final damage as **1** (minimum damage rule applies instead of reducing it to `-1` or `0`).
+
+### 6.4 Head Hits & Limb Damage Thresholds
+1. Roll a hit to the **Head**:
+   - Verify that the final damage is doubled in the preview dialog.
+   - If the final damage exceeds 8 (e.g., 5 base x 2 = 10), verify that the preview displays a warning: **"Head hit exceeded 8 damage... target is killed automatically..."**.
+2. Roll a hit to a **Limb** (Arm/Leg):
+   - If the final damage exceeds 8, verify that the preview displays a warning: **"Limb hit exceeded 8 damage... limb is severed or crushed..."**.
+
+### 6.5 Stun/Shock & Death Save Prompts
+1. Roll an attack that inflicts damage, putting the target into a **Serious** or **Critical** wound state (damage <= 12):
+   - Verify that the preview lists a pending **Stun Save** prompt.
+   - Verify the save threshold/target number incorporates the wound penalty (Serious: `-1`, Critical: `-2`).
+2. Roll an attack that puts the target into a **Mortal** wound state (damage >= 13):
+   - Verify that the preview lists both a pending **Stun Save** (penalty `-3`) and a pending **Death Save** (penalty `0`).
+3. Target an already **Mortal** defender and roll a stopped hit (0 damage):
+   - Verify that the preview lists a pending **recurring Death Save reminder** (to remind the GM/player to roll death saves each turn).
+4. Verify that confirming these states persists the damage updates on the target sheet, and the pending saves are printed to the chat card for player/GM resolution.

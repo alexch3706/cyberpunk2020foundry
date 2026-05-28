@@ -1,0 +1,473 @@
+diff --git a/module/combat/combat-commit.js b/module/combat/combat-commit.js
+index f53931c..bd34589 100644
+--- a/module/combat/combat-commit.js
++++ b/module/combat/combat-commit.js
+@@ -44,45 +44,97 @@ export function buildCombatPreviewData(outcome = {}, plannedUpdates = undefined,
+ export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
+   const plan = options.plannedUpdates || planCombatUpdates(outcome);
+   const preview = buildCombatPreviewData(outcome, plan, options);
++  const adapter = options.adapter || createFoundryCombatAdapter();
+ 
+-  if(options.decision === "cancel") {
++  let messageId = options.messageId;
++
++  if (options.decision === "cancel") {
++    try {
++      messageId = await createOrUpdateCombatChatMessage(outcome, COMBAT_CHAT_STATUS.canceled, {
++        ...options,
++        messageId,
++        plannedUpdates: plan,
++        adapter
++      });
++    } catch (error) {
++      console.warn("Failed to create or update combat chat message:", error);
++    }
+     return {
+       status: COMBAT_CHAT_STATUS.canceled,
+       chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.canceled),
+       preview,
++      messageId,
+       applied: createEmptyCounts(),
+       skipped: countPlanUpdates(plan),
+       warnings: []
+     };
+   }
+ 
+-  if(options.decision !== "confirm") {
++  if (options.decision === "confirm") {
++    if (!preview.canCommit) {
++      try {
++        messageId = await createOrUpdateCombatChatMessage(outcome, COMBAT_CHAT_STATUS.manual, {
++          ...options,
++          messageId,
++          plannedUpdates: plan,
++          adapter
++        });
++      } catch (error) {
++        console.warn("Failed to create or update combat chat message:", error);
++      }
++      return {
++        status: COMBAT_CHAT_STATUS.manual,
++        chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
++        preview,
++        messageId,
++        applied: createEmptyCounts(),
++        skipped: countPlanUpdates(plan),
++        warnings: preview.warnings
++      };
++    }
++
++    const result = await applyCombatUpdates(plan, adapter);
++
++    try {
++      messageId = await createOrUpdateCombatChatMessage(outcome, result.status, {
++        ...options,
++        messageId,
++        plannedUpdates: plan,
++        adapter
++      });
++    } catch (error) {
++      console.warn("Failed to create or update combat chat message:", error);
++    }
++
+     return {
+-      status: preview.status,
+-      chatData: buildFinalChatData(outcome, plan, preview.status),
++      ...result,
++      chatData: buildFinalChatData(outcome, plan, result.status),
+       preview,
+-      applied: createEmptyCounts(),
+-      skipped: countPlanUpdates(plan),
+-      warnings: preview.warnings
++      messageId
+     };
+   }
+ 
+-  if(!preview.canCommit) {
+-    return {
+-      status: COMBAT_CHAT_STATUS.manual,
+-      chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
+-      preview,
+-      applied: createEmptyCounts(),
+-      skipped: countPlanUpdates(plan),
+-      warnings: preview.warnings
+-    };
++  // No decision provided: we are showing the preview
++  const initialStatus = preview.status;
++  try {
++    messageId = await createOrUpdateCombatChatMessage(outcome, initialStatus, {
++      ...options,
++      messageId,
++      plannedUpdates: plan,
++      adapter
++    });
++  } catch (error) {
++    console.warn("Failed to create or update combat chat message:", error);
+   }
+ 
+-  const result = await applyCombatUpdates(plan, options.adapter || createFoundryCombatAdapter());
+   return {
+-    ...result,
+-    chatData: buildFinalChatData(outcome, plan, result.status),
+-    preview
++    status: preview.status,
++    chatData: buildFinalChatData(outcome, plan, preview.status),
++    preview,
++    messageId,
++    applied: createEmptyCounts(),
++    skipped: countPlanUpdates(plan),
++    warnings: preview.warnings
+   };
+ }
+ 
+@@ -163,6 +215,29 @@ export function createFoundryCombatAdapter() {
+     },
+     async resolveActor(actorUuid) {
+       return resolveFoundryDocument(actorUuid);
++    },
++    async renderTemplate(templatePath, data) {
++      if (typeof globalThis.renderTemplate !== "function") {
++        throw new Error("Foundry renderTemplate is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
++      }
++      return globalThis.renderTemplate(templatePath, data);
++    },
++    async createChatMessage(chatData) {
++      if (typeof globalThis.ChatMessage?.create !== "function") {
++        throw new Error("Foundry ChatMessage.create is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
++      }
++      const message = await globalThis.ChatMessage.create(chatData);
++      return message?.id;
++    },
++    async updateChatMessage(messageId, updateData) {
++      if (typeof globalThis.game?.messages?.get !== "function") {
++        throw new Error("Foundry game.messages.get is unavailable; inject a combat commit adapter for tests or non-Foundry runtimes.");
++      }
++      const message = globalThis.game.messages.get(messageId);
++      if (!message) {
++        throw new Error(`ChatMessage ${messageId} could not be resolved for update.`);
++      }
++      await message.update(updateData);
+     }
+   };
+ }
+@@ -396,3 +471,41 @@ async function resolveFoundryDocument(uuid) {
+   }
+   return globalThis.fromUuid(uuid);
+ }
++
++export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus, options = {}) {
++  const adapter = options.adapter || createFoundryCombatAdapter();
++  const plan = {
++    ...(options.plannedUpdates || planCombatUpdates(outcome)),
++    chatStatus: resultStatus
++  };
++  const chatData = buildCombatChatData(outcome, plan, { status: resultStatus });
++
++  const templatePath = "systems/cyberpunk2020/templates/chat/combat-outcome.hbs";
++  const htmlContent = await adapter.renderTemplate(templatePath, chatData);
++
++  const messageId = options.messageId;
++  if (messageId) {
++    await adapter.updateChatMessage(messageId, { content: htmlContent });
++    return messageId;
++  } else {
++    let speaker = options.speaker;
++    if(!speaker && typeof globalThis.ChatMessage?.getSpeaker === "function") {
++      let actor;
++      if (outcome.attacker?.actorUuid) {
++        actor = await adapter.resolveActor(outcome.attacker.actorUuid).catch(() => undefined);
++      }
++      if (actor) {
++        speaker = globalThis.ChatMessage.getSpeaker({ actor });
++      } else {
++        speaker = globalThis.ChatMessage.getSpeaker();
++      }
++    }
++    const chatMessageData = {
++      user: options.userId || (typeof globalThis.game?.user?.id === "string" ? globalThis.game.user.id : undefined),
++      content: htmlContent,
++      speaker: speaker || undefined,
++      type: typeof globalThis.CONST?.CHAT_MESSAGE_TYPES?.OTHER !== "undefined" ? globalThis.CONST.CHAT_MESSAGE_TYPES.OTHER : undefined
++    };
++    return await adapter.createChatMessage(chatMessageData);
++  }
++}
+diff --git a/module/templates.js b/module/templates.js
+index def9523..298ba75 100644
+--- a/module/templates.js
++++ b/module/templates.js
+@@ -25,6 +25,7 @@ export const preloadHandlebarsTemplates = async function() {
+         "systems/cyberpunk2020/templates/chat/default-roll.hbs",
+         "systems/cyberpunk2020/templates/chat/weapon-roll.hbs",
+         "systems/cyberpunk2020/templates/chat/multi-hit.hbs",
++        "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+ 
+         // Item sheet
+         "systems/cyberpunk2020/templates/item/item-sheet.hbs",
+diff --git a/templates/chat/combat-outcome.hbs b/templates/chat/combat-outcome.hbs
+new file mode 100644
+index 0000000..201f85d
+--- /dev/null
++++ b/templates/chat/combat-outcome.hbs
+@@ -0,0 +1,101 @@
++<div class="cyberpunk cyberpunk-card flexcol">
++    <h2>{{#if action.name}}{{action.name}}{{else}}{{CPLocal "Attack"}}{{/if}}</h2>
++    <div class="field-list one-col">
++        <div class="field">
++            <span>{{CPLocal "Attacker"}}: </span>
++            <span class="flex-pad">{{attacker.name}}</span>
++        </div>
++        {{#if weapon.name}}
++        <div class="field">
++            <span>{{CPLocal "Weapon"}}: </span>
++            <span class="flex-pad">{{weapon.name}}</span>
++        </div>
++        {{/if}}
++        {{#if action.fireMode}}
++        <div class="field">
++            <span>{{CPLocal "FireMode"}}: </span>
++            <span class="flex-pad">{{CPLocal action.fireMode}}</span>
++        </div>
++        {{/if}}
++    </div>
++    
++    {{#each targets as |targetOutcome|}}
++        <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
++            <div class="field">
++                <span>{{CPLocal "Target"}}: </span>
++                <span class="flex-pad">{{targetOutcome.target.name}}</span>
++            </div>
++            {{#if targetOutcome.attack.total}}
++                <div class="field">
++                    <span>{{CPLocal "Attack"}}: </span>
++                    <span>{{targetOutcome.attack.total}}</span>
++                    <span class="flex-pad"></span>
++                    <span class="roll-results">
++                        {{#each targetOutcome.attack.die.subrolls as |subroll|}}
++                            <span class="roll-result roll die {{subroll.classes}}">{{subroll.result}}</span>
++                        {{/each}}
++                    </span>
++                </div>
++                {{#if targetOutcome.attack.targetNumber}}
++                <div class="field">
++                    <span>{{CPLocal "ToHit"}} (DC): </span>
++                    <span class="flex-pad">{{targetOutcome.attack.targetNumber}}</span>
++                </div>
++                {{/if}}
++                <div class="field">
++                    <span>{{CPLocal "Result"}}: </span>
++                    <span class="flex-pad">
++                        {{#if targetOutcome.attack.hit}}
++                            <strong style="color: #0f0; text-transform: uppercase;">{{CPLocal "Hit"}}</strong>
++                        {{else}}
++                            <strong style="color: #f00; text-transform: uppercase;">{{CPLocal "Miss"}}</strong>
++                        {{/if}}
++                    </span>
++                </div>
++                {{#if targetOutcome.attack.hit}}
++                    {{#each targetOutcome.hits as |hit|}}
++                        <div class="field">
++                            <span>{{CPLocal "HitLocation"}}: </span>
++                            <span class="flex-pad">{{CPLocal hit.location}}</span>
++                        </div>
++                    {{/each}}
++                {{/if}}
++            {{/if}}
++        </div>
++    {{/each}}
++    
++    {{#if ammo.delta}}
++    <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
++        <div class="field">
++            <span>{{CPLocal "Ammo"}} Delta: </span>
++            <span class="flex-pad">{{ammo.delta}} ({{ammo.after}} / {{ammo.before}})</span>
++        </div>
++    </div>
++    {{/if}}
++
++    {{#if warnings.length}}
++        <div class="warnings" style="color: #ffaa00; margin-top: 5px; font-size: 0.9em; border-top: 1px solid #ffaa00; padding-top: 5px;">
++            <strong>Warnings:</strong>
++            <ul style="margin: 3px 0; padding-left: 15px;">
++                {{#each warnings as |warning|}}
++                    <li>{{warning.message}}</li>
++                {{/each}}
++            </ul>
++        </div>
++    {{/if}}
++
++    <div class="status-banner status-{{status}}" style="margin-top: 10px; padding: 5px; text-align: center; font-weight: bold; border: 1px solid;">
++        {{#if isPreview}}
++            <span style="color: #3498db; border-color: #3498db;">[PREVIEW] - Pending Confirmation</span>
++        {{/if}}
++        {{#if isCommitted}}
++            <span style="color: #2ecc71; border-color: #2ecc71;">[COMMITTED] - Applied to Actor(s)</span>
++        {{/if}}
++        {{#if isCanceled}}
++            <span style="color: #e74c3c; border-color: #e74c3c;">[CANCELED] - Discarded</span>
++        {{/if}}
++        {{#if isManual}}
++            <span style="color: #f1c40f; border-color: #f1c40f;">[MANUAL] - Requires GM Resolution</span>
++        {{/if}}
++    </div>
++</div>
+diff --git a/tests/combat/combat-commit.test.js b/tests/combat/combat-commit.test.js
+index 5243e0b..75d05c6 100644
+--- a/tests/combat/combat-commit.test.js
++++ b/tests/combat/combat-commit.test.js
+@@ -18,6 +18,7 @@ export async function runCombatCommitTests() {
+   await assertResolverRejectionBlocksCommit();
+   await assertEmbeddedUpdateWithoutIdBlocksCommit();
+   await assertWriteRejectionReturnsPartialFailure();
++  await assertChatOutcomeLifecycle();
+ 
+   return {
+     name: "combat-commit"
+@@ -112,7 +113,8 @@ async function assertCancelDoesNotApplyUpdates() {
+     decision: "cancel"
+   });
+ 
+-  assert.deepEqual(adapter.calls, [], "cancel should not mutate documents");
++  const mutations = adapter.calls.filter(c => c.type !== "renderTemplate" && !c.type.startsWith("chatMessage"));
++  assert.deepEqual(mutations, [], "cancel should not mutate documents");
+   assert.equal(result.status, COMBAT_CHAT_STATUS.canceled, "cancel status");
+   assert.equal(result.chatData.status, COMBAT_CHAT_STATUS.canceled, "cancel chat status");
+   assert.equal(result.preview.canCommit, true, "cancel still exposes valid preview");
+@@ -132,7 +134,8 @@ async function assertManualResolutionBlocksCommit() {
+     decision: "confirm"
+   });
+ 
+-  assert.deepEqual(adapter.calls, [], "manual resolution should not mutate documents");
++  const mutations = adapter.calls.filter(c => c.type !== "renderTemplate" && !c.type.startsWith("chatMessage"));
++  assert.deepEqual(mutations, [], "manual resolution should not mutate documents");
+   assert.equal(result.status, COMBAT_CHAT_STATUS.manual, "manual block status");
+   assert.equal(result.chatData.status, COMBAT_CHAT_STATUS.manual, "manual chat status");
+   assert.equal(result.preview.canCommit, false, "manual preview cannot commit");
+@@ -338,6 +341,7 @@ function buildOutcome(overrides = {}) {
+ 
+ function createFakeAdapter(options = {}) {
+   const calls = [];
++  let nextMessageId = 1;
+ 
+   return {
+     calls,
+@@ -388,10 +392,119 @@ function createFakeAdapter(options = {}) {
+           });
+         }
+       };
++    },
++    async renderTemplate(templatePath, data) {
++      calls.push({
++        type: "renderTemplate",
++        templatePath,
++        data
++      });
++      return `<mock-rendered-template-for-${data.status}>`;
++    },
++    async createChatMessage(chatData) {
++      const messageId = `msg-${nextMessageId++}`;
++      calls.push({
++        type: "chatMessage.create",
++        messageId,
++        chatData
++      });
++      return messageId;
++    },
++    async updateChatMessage(messageId, updateData) {
++      calls.push({
++        type: "chatMessage.update",
++        messageId,
++        updateData
++      });
+     }
+   };
+ }
+ 
++async function assertChatOutcomeLifecycle() {
++  const outcome = buildOutcome();
++  const adapter = createFakeAdapter();
++
++  // 1. Initial preview
++  const previewResult = await previewAndApplyCombatOutcome(outcome, {
++    adapter
++  });
++
++  assert.equal(previewResult.status, COMBAT_CHAT_STATUS.preview, "status should be preview");
++  assert.ok(previewResult.messageId, "should return a messageId");
++
++  const previewCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
++  assert.deepEqual(previewCalls, [
++    {
++      type: "renderTemplate",
++      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
++      data: previewResult.chatData
++    },
++    {
++      type: "chatMessage.create",
++      messageId: "msg-1",
++      chatData: {
++        user: undefined,
++        content: "<mock-rendered-template-for-preview>",
++        speaker: undefined,
++        type: undefined
++      }
++    }
++  ], "preview chat calls");
++
++  // 2. Confirm the preview
++  adapter.calls.length = 0;
++  const confirmResult = await previewAndApplyCombatOutcome(outcome, {
++    adapter,
++    decision: "confirm",
++    messageId: previewResult.messageId
++  });
++
++  assert.equal(confirmResult.status, COMBAT_CHAT_STATUS.committed, "status should be committed");
++  assert.equal(confirmResult.messageId, previewResult.messageId, "should reuse messageId");
++
++  const confirmCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
++  assert.deepEqual(confirmCalls, [
++    {
++      type: "renderTemplate",
++      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
++      data: confirmResult.chatData
++    },
++    {
++      type: "chatMessage.update",
++      messageId: "msg-1",
++      updateData: {
++        content: "<mock-rendered-template-for-committed>"
++      }
++    }
++  ], "confirm chat calls");
++
++  // 3. Cancel a preview
++  adapter.calls.length = 0;
++  const cancelResult = await previewAndApplyCombatOutcome(outcome, {
++    adapter,
++    decision: "cancel",
++    messageId: previewResult.messageId
++  });
++
++  assert.equal(cancelResult.status, COMBAT_CHAT_STATUS.canceled, "status should be canceled");
++
++  const cancelCalls = adapter.calls.filter(c => c.type.startsWith("chatMessage") || c.type === "renderTemplate");
++  assert.deepEqual(cancelCalls, [
++    {
++      type: "renderTemplate",
++      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
++      data: cancelResult.chatData
++    },
++    {
++      type: "chatMessage.update",
++      messageId: "msg-1",
++      updateData: {
++        content: "<mock-rendered-template-for-canceled>"
++      }
++    }
++  ], "cancel chat calls");
++}
++
+ function buildExpectedChatStatus(status) {
+   return {
+     status,
