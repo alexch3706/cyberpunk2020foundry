@@ -157,10 +157,17 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
 /**
  * @typedef {Object} CombatSavePrompt
  * @property {string} type Save type, such as "stun" or "death".
- * @property {number=} targetNumber Save target number or threshold.
+ * @property {number=} threshold Save target threshold after Body Type and wound/mortality penalty.
+ * @property {number=} targetNumber Deprecated alias for threshold; do not use for new save prompts.
+ * @property {number=} bodyType Target Body Type value used for the save threshold.
+ * @property {number=} penalty Wound-state or mortality penalty applied to Body Type.
+ * @property {number=} mortalLevel Mortal severity for Death Saves, where Mortal 0 is zero.
+ * @property {Object<string, *>=} woundState Post-damage wound-state evidence.
  * @property {RollMetadata=} roll Save roll metadata when the save is rolled immediately.
  * @property {"pending"|"passed"|"failed"} status Save status.
  * @property {string=} reason Why the save is required.
+ * @property {Object<string, *>=} reminder Non-persisted reminder metadata for recurring Mortal saves.
+ * @property {Object<string, *>=} evidence Damage evidence used to derive this prompt.
  */
 
 /**

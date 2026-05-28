@@ -2064,7 +2064,26 @@
               },
               "crossedThreshold": true
             },
-            "saves": [],
+            "saves": [
+              {
+                "type": "stun",
+                "status": "pending",
+                "reason": "damage-taken",
+                "bodyType": 6,
+                "threshold": 6,
+                "targetNumber": 6,
+                "penalty": 0,
+                "woundState": {
+                  "level": 1,
+                  "label": "Light"
+                },
+                "evidence": {
+                  "previousDamage": 0,
+                  "nextDamage": 1,
+                  "damageDelta": 1
+                }
+              }
+            ],
             "plannedUpdates": {
               "actorUpdateCount": 1,
               "itemUpdateCount": 0,

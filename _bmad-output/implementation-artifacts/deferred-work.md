@@ -22,3 +22,8 @@ This file tracks technical debt and deferred items from code reviews.
 ## Deferred from: code review of 3-5-apply-wound-state-and-special-damage-cases.md (2026-05-27)
 
 - **Stale preview can overwrite newer target damage on confirm**: Broader preview/confirm concurrency needs a current-value check, version guard, or delta-style update before absolute `system.damage` updates are applied.
+
+## Deferred from: code review of 3-6-generate-stun-and-death-save-prompts.md (2026-05-28)
+
+- **Missing checks for deceased status**: Save resolution does not check if the target is already dead (deceased status or failed saves) before generating new Stun or Death save prompts.
+

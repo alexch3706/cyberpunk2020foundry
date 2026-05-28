@@ -1,5 +1,5 @@
 # generated: 2026-05-24
-# last_updated: 2026-05-27
+# last_updated: 2026-05-28
 # project: Cyberpunk2020VTT
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-24
-last_updated: 2026-05-27
+last_updated: 2026-05-28
 project: Cyberpunk2020VTT
 project_key: NOKEY
 tracking_system: file-system
@@ -63,7 +63,7 @@ development_status:
   3-3-apply-armor-piercing-and-staged-penetration: done
   3-4-resolve-btm-and-minimum-damage: done
   3-5-apply-wound-state-and-special-damage-cases: done
-  3-6-generate-stun-and-death-save-prompts: backlog
+  3-6-generate-stun-and-death-save-prompts: done
   3-7-add-damage-pipeline-fixtures-and-foundry-checks: backlog
   epic-3-retrospective: optional
   epic-4: backlog

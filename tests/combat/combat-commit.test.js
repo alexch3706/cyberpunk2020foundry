@@ -276,7 +276,15 @@ function buildOutcome(overrides = {}) {
         target: {
           actorUuid: "Actor.target",
           tokenUuid: "Scene.test.Token.target",
-          name: "Guard"
+          name: "Guard",
+          snapshot: {
+            stats: {
+              bt: {
+                total: 6
+              }
+            },
+            damage: 5
+          }
         },
         attack: {
           roll: {

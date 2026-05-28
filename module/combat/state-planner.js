@@ -1,4 +1,5 @@
 import { COMBAT_CHAT_STATUS } from "./combat-outcome.js";
+import { resolveSavePromptsForTarget } from "./save-resolver.js";
 
 export const STATE_PLAN_WARNING_SEVERITY = Object.freeze({
   warning: "warning",
@@ -36,6 +37,7 @@ export function planCombatUpdates(outcome = {}, options = {}) {
     collectPlannedUpdates(plan, targetOutcome?.plannedUpdates);
     collectDeltaUpdates(plan, targetOutcome);
     collectWoundUpdates(plan, targetOutcome);
+    collectSavePrompts(plan, targetOutcome);
   }
 
   if(options.chatStatus) {
@@ -95,6 +97,28 @@ function collectWoundUpdates(plan, targetOutcome) {
       }
     }
   ]);
+}
+
+function collectSavePrompts(plan, targetOutcome) {
+  if(!targetOutcome || !targetOutcome?.target?.actorUuid) {
+    return;
+  }
+  targetOutcome.saves = [];
+  if(cannotResolveTargetSaves(targetOutcome)) {
+    return;
+  }
+  const result = resolveSavePromptsForTarget(targetOutcome);
+  targetOutcome.saves = result.saves;
+  for(const warning of result.warnings) {
+    addWarning(plan, warning.code, warning.message);
+  }
+}
+
+function cannotResolveTargetSaves(targetOutcome) {
+  return !targetOutcome.damage && (
+    normalizeDamageValue(targetOutcome?.target?.snapshot?.damage) === undefined
+    || (Array.isArray(targetOutcome?.hits) && targetOutcome.hits.some(hit => readWoundDamage(hit).invalid))
+  );
 }
 
 function clearDerivedWoundFields(hit) {

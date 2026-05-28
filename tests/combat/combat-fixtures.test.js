@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
 import { resolveBodyTypeDamage } from "../../module/combat/attack-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
+import { resolveSavePromptsForTarget } from "../../module/combat/save-resolver.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
@@ -18,6 +19,7 @@ export async function runCombatFixtures() {
   assertTargetNormalization();
   assertBodyTypeDamageResolver();
   assertWoundPlanning();
+  assertSavePromptResolution();
   assertArmorResolver();
 
   for(const fixtureUrl of FIXTURE_URLS) {
@@ -589,13 +591,184 @@ function assertWoundPlanning() {
   ], "wound planning preserves existing special cases");
 }
 
-function buildWoundOutcome({ currentDamage, location, locationLabel = undefined, finalDamage, specialCases = undefined }) {
+function assertSavePromptResolution() {
+  assert.deepEqual(resolveSavePromptsForTarget(buildWoundOutcome({
+    currentDamage: 3,
+    location: "torso",
+    finalDamage: 2
+  }).targets[0]), {
+    saves: [
+      {
+        type: "stun",
+        status: "pending",
+        reason: "damage-taken",
+        bodyType: 6,
+        threshold: 5,
+        targetNumber: 5,
+        penalty: 1,
+        woundState: {
+          level: 2,
+          label: "Serious"
+        },
+        evidence: {
+          previousDamage: 3,
+          nextDamage: 5,
+          damageDelta: 2
+        }
+      }
+    ],
+    warnings: []
+  }, "Serious wound damage creates pending Stun/Shock prompt");
+
+  assert.deepEqual(resolveSavePromptsForTarget(buildWoundOutcome({
+    currentDamage: 11,
+    location: "torso",
+    finalDamage: 2
+  }).targets[0]), {
+    saves: [
+      {
+        type: "stun",
+        status: "pending",
+        reason: "damage-taken",
+        bodyType: 6,
+        threshold: 3,
+        targetNumber: 3,
+        penalty: 3,
+        woundState: {
+          level: 4,
+          label: "Mortal 0"
+        },
+        evidence: {
+          previousDamage: 11,
+          nextDamage: 13,
+          damageDelta: 2
+        }
+      },
+      {
+        type: "death",
+        status: "pending",
+        reason: "mortal-wound",
+        bodyType: 6,
+        threshold: 6,
+        targetNumber: 6,
+        penalty: 0,
+        mortalLevel: 0,
+        woundState: {
+          level: 4,
+          label: "Mortal 0"
+        },
+        evidence: {
+          previousDamage: 11,
+          nextDamage: 13,
+          damageDelta: 2
+        }
+      }
+    ],
+    warnings: []
+  }, "Mortal wound damage creates pending Stun/Shock and Death prompts");
+
+  assert.deepEqual(resolveSavePromptsForTarget(buildWoundOutcome({
+    currentDamage: 13,
+    location: "torso",
+    finalDamage: 0
+  }).targets[0]), {
+    saves: [
+      {
+        type: "death",
+        status: "pending",
+        reason: "recurring-mortal-save",
+        bodyType: 6,
+        threshold: 6,
+        targetNumber: 6,
+        penalty: 0,
+        mortalLevel: 0,
+        woundState: {
+          level: 4,
+          label: "Mortal 0"
+        },
+        reminder: {
+          recurring: true,
+          requiresStabilization: true
+        },
+        evidence: {
+          previousDamage: 13,
+          nextDamage: 13,
+          damageDelta: 0
+        }
+      }
+    ],
+    warnings: []
+  }, "Existing Mortal target receives recurring Death Save reminder");
+
+  const noDamageOutcome = buildWoundOutcome({
+    currentDamage: 4,
+    location: "torso",
+    finalDamage: 0
+  });
+  const noDamagePlan = planCombatUpdates(noDamageOutcome);
+  assert.deepEqual(noDamageOutcome.targets[0].saves, [], "no-damage non-Mortal target receives no save prompts");
+  assert.deepEqual(noDamagePlan.warnings, [], "no-damage non-Mortal target does not warn");
+
+  const missingBodyTypeOutcome = buildWoundOutcome({
+    currentDamage: 3,
+    location: "torso",
+    finalDamage: 2,
+    bodyType: null
+  });
+  const missingBodyTypePlan = planCombatUpdates(missingBodyTypeOutcome);
+  assert.deepEqual(missingBodyTypeOutcome.targets[0].saves, [], "missing Body Type blocks save prompts");
+  assert.deepEqual(missingBodyTypePlan.warnings, [
+    {
+      code: "missing-target-body-type",
+      severity: "warning",
+      message: "Target Body Type is unavailable; resolve Stun/Shock and Death Saves manually."
+    }
+  ], "missing Body Type produces manual save warning");
+
+  const criticalOutcome = buildWoundOutcome({
+    currentDamage: 7,
+    location: "torso",
+    finalDamage: 2
+  });
+  const criticalPlan = planCombatUpdates(criticalOutcome);
+  assert.deepEqual(criticalOutcome.targets[0].saves, [
+    {
+      type: "stun",
+      status: "pending",
+      reason: "damage-taken",
+      bodyType: 6,
+      threshold: 4,
+      targetNumber: 4,
+      penalty: 2,
+      woundState: {
+        level: 3,
+        label: "Critical"
+      },
+      evidence: {
+        previousDamage: 7,
+        nextDamage: 9,
+        damageDelta: 2
+      }
+    }
+  ], "planning attaches Critical Stun/Shock prompt to outcome");
+  assert.deepEqual(buildCombatChatData(criticalOutcome, criticalPlan).targets[0].saves, criticalOutcome.targets[0].saves, "chat data exposes save prompts");
+}
+
+function buildWoundOutcome({ currentDamage, location, locationLabel = undefined, finalDamage, specialCases = undefined, bodyType = 6 }) {
+  const stats = bodyType === undefined
+    ? {}
+    : {
+        bt: {
+          total: bodyType
+        }
+      };
   return {
     targets: [
       {
         target: {
           actorUuid: "Actor.target",
           snapshot: {
+            stats,
             damage: currentDamage
           }
         },
