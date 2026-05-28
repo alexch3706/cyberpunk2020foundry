@@ -46,8 +46,8 @@ function canResolveSingleShotRangedContext(context, roller) {
 
   const fireMode = String(context.action?.fireMode || "").toLowerCase();
   if (fireMode === "threeroundburst" || fireMode === "fullauto") {
-    // 3-round burst and fullauto are only against a single target
-    if (context.targets && context.targets.length > 1) {
+    // 3-round burst is only against a single target
+    if (fireMode === "threeroundburst" && context.targets && context.targets.length > 1) {
       return false;
     }
     // Must have at least one remaining round if ammo tracking is enabled

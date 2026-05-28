@@ -25,12 +25,13 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   action.targetArea = action.targetArea || action.options?.targetArea;
   const range = normalizeRange(action.range);
   const targetNumber = rangeDCs[range] || action.targetNumber;
-  const modifierEvidence = buildModifierEvidence(action, context.weapon);
-  const attackRequest = buildAttackRollRequest(context, modifierEvidence);
-  const attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
 
   const fireMode = String(action.fireMode || "").toLowerCase();
+  const targetCount = Array.isArray(context.targets) ? context.targets.length : 0;
+
   let roundsFired = 1;
+  let roundsFiredPerTarget = undefined;
+
   if (fireMode === "threeroundburst") {
     const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
     roundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, 3) : 3;
@@ -40,13 +41,75 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   } else if (fireMode === "fullauto") {
     const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
     const rof = Math.max(0, Number(context.weapon?.snapshot?.rof) || 0);
-    roundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
-    if (roundsFired <= 0 && rawShotsLeft.valid) {
-      roundsFired = 0;
+    const maxRoundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
+    const finalMaxRoundsFired = (maxRoundsFired <= 0 && rawShotsLeft.valid) ? 0 : maxRoundsFired;
+
+    if (targetCount > 1) {
+      roundsFiredPerTarget = Math.floor(finalMaxRoundsFired / targetCount);
+      roundsFired = roundsFiredPerTarget * targetCount;
+    } else {
+      roundsFired = finalMaxRoundsFired;
     }
   }
 
-  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller, options, roundsFired));
+  let targets = [];
+  let modifierEvidence;
+  let attackRoll;
+
+  if (fireMode === "fullauto" && targetCount > 1) {
+    targets = (context.targets || []).map((target, idx) => {
+      const targetAction = {
+        ...action,
+        roundsFiredPerTarget
+      };
+      if (idx > 0) {
+        targetAction.targetArea = undefined;
+      }
+      const targetModifierEvidence = buildModifierEvidence(targetAction, context.weapon);
+      const targetAttackRequest = buildAttackRollRequest(
+        { ...context, action: targetAction },
+        targetModifierEvidence
+      );
+      const targetAttackRoll = normalizeAttackRoll(
+        roll(roller, targetAttackRequest),
+        targetAttackRequest
+      );
+
+      if (idx === 0) {
+        modifierEvidence = targetModifierEvidence;
+        attackRoll = targetAttackRoll;
+      }
+
+      return buildTargetOutcome(
+        target,
+        targetAttackRoll,
+        targetNumber,
+        targetAction,
+        context.weapon,
+        roller,
+        options,
+        roundsFiredPerTarget
+      );
+    });
+  } else {
+    modifierEvidence = buildModifierEvidence(action, context.weapon);
+    const attackRequest = buildAttackRollRequest(context, modifierEvidence);
+    attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
+
+    targets = (context.targets || []).map(target =>
+      buildTargetOutcome(
+        target,
+        attackRoll,
+        targetNumber,
+        action,
+        context.weapon,
+        roller,
+        options,
+        roundsFired
+      )
+    );
+  }
+
   const manualTargets = targets.filter(target => target.manualResolution?.required);
 
   const ammoPlanning = buildAmmoPlanning(context.weapon, roundsFired);
@@ -693,7 +756,7 @@ function buildModifierEvidence(action, weapon) {
     const rawShotsLeft = normalizeAmmoState(weapon?.snapshot?.shotsLeft);
     const rof = Math.max(0, Number(weapon?.snapshot?.rof) || 0);
     const shotsLeft = rawShotsLeft.valid ? rawShotsLeft.value : rof;
-    const bullets = Math.max(0, Math.min(shotsLeft, rof));
+    const bullets = action.roundsFiredPerTarget !== undefined ? action.roundsFiredPerTarget : Math.max(0, Math.min(shotsLeft, rof));
 
     let multiplier = 0;
     if (range === ranges.close) {
