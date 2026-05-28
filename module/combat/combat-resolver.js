@@ -34,14 +34,30 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
 }
 
 function isSupportedSingleShotRangedContext(context) {
-  const fireMode = String(context?.action?.fireMode || "");
+  const fireMode = String(context?.action?.fireMode || "").toLowerCase();
   return context?.action?.type === "ranged"
-    && fireMode.toLowerCase() === "semiauto";
+    && (fireMode === "semiauto" || fireMode === "threeroundburst");
 }
 
 function canResolveSingleShotRangedContext(context, roller) {
   if(!isSupportedSingleShotRangedContext(context) || typeof roller !== "function") {
     return false;
+  }
+
+  const fireMode = String(context.action?.fireMode || "").toLowerCase();
+  if (fireMode === "threeroundburst") {
+    // 3-round burst is only against a single target
+    if (context.targets && context.targets.length > 1) {
+      return false;
+    }
+    // Must have at least one remaining round if ammo tracking is enabled
+    const shotsLeftVal = context.weapon?.snapshot?.shotsLeft;
+    if (shotsLeftVal !== undefined && shotsLeftVal !== null && shotsLeftVal !== "") {
+      const value = Number(shotsLeftVal);
+      if (Number.isFinite(value) && value <= 0) {
+        return false;
+      }
+    }
   }
 
   const range = normalizeRange(context.action?.range);

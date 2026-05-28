@@ -10,7 +10,8 @@ import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
 
 const FIXTURE_URLS = [
-  new URL("./fixtures/ranged-single-shot.json", import.meta.url)
+  new URL("./fixtures/ranged-single-shot.json", import.meta.url),
+  new URL("./fixtures/three-round-burst.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {

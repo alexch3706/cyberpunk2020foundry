@@ -29,9 +29,20 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   const attackRequest = buildAttackRollRequest(context, modifierEvidence);
   const attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
 
-  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller, options));
+  const fireMode = String(action.fireMode || "").toLowerCase();
+  let roundsFired = 1;
+  if (fireMode === "threeroundburst") {
+    const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+    roundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, 3) : 3;
+    if (roundsFired <= 0 && rawShotsLeft.valid) {
+      roundsFired = 0;
+    }
+  }
+
+  const targets = (context.targets || []).map(target => buildTargetOutcome(target, attackRoll, targetNumber, action, context.weapon, roller, options, roundsFired));
   const manualTargets = targets.filter(target => target.manualResolution?.required);
-  const ammoPlanning = buildAmmoPlanning(context.weapon);
+
+  const ammoPlanning = buildAmmoPlanning(context.weapon, roundsFired);
 
   return {
     action: {
@@ -121,7 +132,7 @@ function buildOutcomeManualResolution(manualResolutions) {
   };
 }
 
-function buildAmmoPlanning(weapon) {
+function buildAmmoPlanning(weapon, roundsFired = 1) {
   const ammoState = normalizeAmmoState(weapon?.snapshot?.shotsLeft);
   const plannedUpdates = {
     itemUpdates: [],
@@ -161,10 +172,12 @@ function buildAmmoPlanning(weapon) {
     };
   }
 
-  const after = shotsLeft - 1;
+  const actualRounds = Math.min(shotsLeft, roundsFired);
+  const delta = -actualRounds;
+  const after = shotsLeft - actualRounds;
   const ammo = {
     before: shotsLeft,
-    delta: -1,
+    delta,
     after,
     source: "weapon.snapshot.shotsLeft"
   };
@@ -247,7 +260,7 @@ function ammoWarning(code, message) {
   };
 }
 
-function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}) {
+function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
   const targetWarnings = cloneArray(target.warnings);
@@ -260,77 +273,155 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
     chatStatus: COMBAT_CHAT_STATUS.preview
   };
 
+  const fireMode = String(action.fireMode || "").toLowerCase();
+  let burstHitsRoll = null;
+
   if(hit && !manualResolution.required) {
-    const locationResult = resolveHitLocation(target, action, roller);
-    if(locationResult.manualResolution) {
-      manualResolution = locationResult.manualResolution;
+    let numHits = 1;
+    if (fireMode === "threeroundburst") {
+      const burstHitsRequest = {
+        id: "burst_hits",
+        formula: "1d3"
+      };
+      burstHitsRoll = roller(burstHitsRequest);
+      numHits = Math.min(burstHitsRoll.total, roundsFired);
     }
-    targetWarnings.push(...locationResult.warnings);
-    if(locationResult.hit) {
-      const hitDetail = locationResult.hit;
 
-      const damageRequest = {
-        id: "damage",
-        formula: weapon?.snapshot?.damage || "1d6"
-      };
-      const damageRoll = roller(damageRequest);
+    const targetSnapshotCopy = clonePlainData(target.snapshot || {});
+    const accumulatedAblations = {};
 
-      const weaponAP = !!weapon?.snapshot?.ap;
-      const armor = resolveArmor(weaponAP, target.snapshot, hitDetail.location, {
-        cover: action.cover || action.options?.cover
+    for (let i = 0; i < numHits; i++) {
+      const hitAction = { ...action };
+      if (i > 0) {
+        hitAction.targetArea = undefined;
+      }
+
+      const locationResult = resolveHitLocation(target, hitAction, roller);
+      if(locationResult.manualResolution) {
+        if (!manualResolution.required) {
+          manualResolution = clonePlainData(locationResult.manualResolution);
+        } else {
+          const categories = new Set([
+            ...(manualResolution.blockedUpdateCategories || []),
+            ...(locationResult.manualResolution.blockedUpdateCategories || [])
+          ]);
+          manualResolution.blockedUpdateCategories = [...categories];
+        }
+      }
+      targetWarnings.push(...locationResult.warnings);
+
+      if(locationResult.hit) {
+        const hitDetail = locationResult.hit;
+
+        const damageRequest = {
+          id: "damage",
+          formula: weapon?.snapshot?.damage || "1d6"
+        };
+        const damageRoll = roller(damageRequest);
+
+        const weaponAP = !!weapon?.snapshot?.ap;
+        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
+          cover: action.cover || action.options?.cover
+        });
+        const effectiveStoppingPower = armor.effectiveStoppingPower;
+
+        const rawDamage = damageRoll.total;
+        const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+        const penetratingDamageBeforeAP = rawDamage - armorMitigation;
+        let penetratingDamage = penetratingDamageBeforeAP;
+
+        if(armor.armorPiercing && penetratingDamage > 0) {
+          penetratingDamage = Math.floor(penetratingDamage / 2);
+        }
+
+        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
+
+        const stagedPenetration = buildStagedPenetrationEvidence({
+          enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
+          penetrated: rawDamage > effectiveStoppingPower,
+          armor,
+          target
+        });
+
+        if(stagedPenetration.plannedUpdate) {
+          const update = stagedPenetration.plannedUpdate.updates[0];
+          const armorId = update._id;
+          const updatePath = Object.keys(update).find(k => k !== "_id");
+
+          const ablationKey = `${armorId}-${updatePath}`;
+          accumulatedAblations[ablationKey] = {
+            actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+            type: "Item",
+            _id: armorId,
+            updatePath,
+            value: update[updatePath]
+          };
+
+          const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+          if(armorItem) {
+            const armorSystem = armorItem.system || armorItem;
+            const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+              k => k.toLowerCase() === hitDetail.location.toLowerCase()
+            );
+            if(coverageKey) {
+              if(!armorSystem.coverage[coverageKey]) {
+                armorSystem.coverage[coverageKey] = {};
+              }
+              armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
+            }
+          } else {
+            const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+            if(cyberwareItem) {
+              const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+              cyberwareSystem.ablation = stagedPenetration.evidence.after;
+            }
+          }
+        }
+
+        if(stagedPenetration.warning) {
+          hitDetail.warnings.push(stagedPenetration.warning);
+        }
+
+        hitDetail.damageRoll = {
+          id: damageRoll.id,
+          formula: damageRoll.formula || damageRequest.formula,
+          total: damageRoll.total,
+          die: clonePlainData(damageRoll.die || {}),
+          seed: damageRoll.seed
+        };
+        hitDetail.rawDamage = rawDamage;
+        hitDetail.effectiveStoppingPower = effectiveStoppingPower;
+        hitDetail.armorPiercing = armor.armorPiercing;
+        hitDetail.armorMitigation = armorMitigation;
+        hitDetail.penetratingDamage = penetratingDamage;
+        hitDetail.armorPiercingEvidence = {
+          ...(armor.armorPiercingEvidence || {}),
+          penetratingDamageBeforeAP,
+          penetratingDamageAfterAP: penetratingDamage
+        };
+        hitDetail.bodyTypeModifier = bodyTypeDamage.bodyTypeModifier;
+        hitDetail.bodyTypeMitigation = bodyTypeDamage.bodyTypeMitigation;
+        hitDetail.minimumDamageApplied = bodyTypeDamage.minimumDamageApplied;
+        hitDetail.finalDamage = bodyTypeDamage.finalDamage;
+        hitDetail.armor = armor;
+        hitDetail.stagedPenetration = stagedPenetration.evidence;
+        hitDetail.warnings.push(...armor.warnings);
+
+        hits.push(hitDetail);
+      }
+    }
+
+    for (const record of Object.values(accumulatedAblations)) {
+      plannedUpdates.embeddedItemUpdates.push({
+        actorUuid: record.actorUuid,
+        type: record.type,
+        updates: [
+          {
+            _id: record._id,
+            [record.updatePath]: record.value
+          }
+        ]
       });
-      const effectiveStoppingPower = armor.effectiveStoppingPower;
-
-      const rawDamage = damageRoll.total;
-      const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
-      const penetratingDamageBeforeAP = rawDamage - armorMitigation;
-      let penetratingDamage = penetratingDamageBeforeAP;
-
-      if(armor.armorPiercing && penetratingDamage > 0) {
-        penetratingDamage = Math.floor(penetratingDamage / 2);
-      }
-
-      const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
-
-      const stagedPenetration = buildStagedPenetrationEvidence({
-        enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
-        penetrated: rawDamage > effectiveStoppingPower,
-        armor,
-        target
-      });
-      if(stagedPenetration.plannedUpdate) {
-        plannedUpdates.embeddedItemUpdates.push(stagedPenetration.plannedUpdate);
-      }
-      if(stagedPenetration.warning) {
-        hitDetail.warnings.push(stagedPenetration.warning);
-      }
-
-      hitDetail.damageRoll = {
-        id: damageRoll.id,
-        formula: damageRoll.formula || damageRequest.formula,
-        total: damageRoll.total,
-        die: clonePlainData(damageRoll.die || {}),
-        seed: damageRoll.seed
-      };
-      hitDetail.rawDamage = rawDamage;
-      hitDetail.effectiveStoppingPower = effectiveStoppingPower;
-      hitDetail.armorPiercing = armor.armorPiercing;
-      hitDetail.armorMitigation = armorMitigation;
-      hitDetail.penetratingDamage = penetratingDamage;
-      hitDetail.armorPiercingEvidence = {
-        ...(armor.armorPiercingEvidence || {}),
-        penetratingDamageBeforeAP,
-        penetratingDamageAfterAP: penetratingDamage
-      };
-      hitDetail.bodyTypeModifier = bodyTypeDamage.bodyTypeModifier;
-      hitDetail.bodyTypeMitigation = bodyTypeDamage.bodyTypeMitigation;
-      hitDetail.minimumDamageApplied = bodyTypeDamage.minimumDamageApplied;
-      hitDetail.finalDamage = bodyTypeDamage.finalDamage;
-      hitDetail.armor = armor;
-      hitDetail.stagedPenetration = stagedPenetration.evidence;
-      hitDetail.warnings.push(...armor.warnings);
-
-      hits = [hitDetail];
     }
   }
 
@@ -341,7 +432,8 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       targetNumber,
       hit,
       margin,
-      warnings: []
+      warnings: [],
+      ...(burstHitsRoll ? { burstHitsRoll: clonePlainData(burstHitsRoll) } : {})
     },
     hits,
     saves: [],
@@ -578,6 +670,16 @@ function buildModifierEvidence(action, weapon) {
         term: modifier.term
       });
     }
+  }
+
+  const fireMode = String(action.fireMode || "").toLowerCase();
+  if (fireMode === "threeroundburst" && (range === ranges.close || range === ranges.medium)) {
+    evidence.push({
+      code: "threeRoundBurst",
+      label: "Three-Round Burst",
+      value: 3,
+      term: "@modifier.threeRoundBurst"
+    });
   }
 
   evidence.push({

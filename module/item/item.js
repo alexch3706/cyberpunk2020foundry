@@ -199,13 +199,13 @@ export class CyberpunkItem extends Item {
 
   // Let's just pretend the unusual ranged doesn't exist for now
   // Look into `modifiers.js` for the modifier obect
-  __weaponRoll(attackMods, targetTokens) {
+  __weaponRoll(attackMods, targetTokens, options = {}) {
     let owner = this.actor;
     if (owner === null) {
       throw new Error("This item isn't owned by anyone.");
     }
 
-    return resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens));
+    return resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
   }
 
   __buildCombatResolverContext(attackMods, targetTokens) {

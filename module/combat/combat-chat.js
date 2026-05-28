@@ -104,7 +104,8 @@ function buildAttackChatData(attack = {}) {
     opposedRoll: clonePlainData(attack?.opposedRoll),
     hit: attack?.hit,
     margin: attack?.margin,
-    warnings: cloneArray(attack?.warnings)
+    warnings: cloneArray(attack?.warnings),
+    burstHitsRoll: clonePlainData(attack?.burstHitsRoll)
   });
 }
 

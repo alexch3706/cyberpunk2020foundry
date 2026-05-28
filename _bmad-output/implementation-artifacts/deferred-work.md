@@ -40,3 +40,6 @@ This file tracks technical debt and deferred items from code reviews.
 - **Inconsistent validation of wound damage**: Discrepancy in `cannotResolveTargetSaves` and `resolveDamageEvidence` validation checks.
 - **Death save reminders bound to attacks instead of target turns**: Reminder prompts are triggered on attacks (even 0-damage ones) rather than target turn changes.
 
+## Deferred from: code review of 4-1-migrate-three-round-burst-to-resolver-outcome.md (2026-05-28)
+
+- **Cyberware armor updatePath in staged penetration**: Edge Case Hunter noted that cyberware layers might not have their `system.ablation` updated correctly because of how `updatePath` is resolved. This is a pre-existing issue related to cyberware ablation logic, not introduced by story 4.1.
