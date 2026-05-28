@@ -64,7 +64,7 @@ development_status:
   3-4-resolve-btm-and-minimum-damage: done
   3-5-apply-wound-state-and-special-damage-cases: done
   3-6-generate-stun-and-death-save-prompts: done
-  3-7-add-damage-pipeline-fixtures-and-foundry-checks: review
+  3-7-add-damage-pipeline-fixtures-and-foundry-checks: done
   epic-3-retrospective: optional
   epic-4: backlog
   4-1-migrate-three-round-burst-to-resolver-outcome: backlog

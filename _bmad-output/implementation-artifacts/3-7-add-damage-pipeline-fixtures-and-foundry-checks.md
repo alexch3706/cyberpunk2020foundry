@@ -1,6 +1,6 @@
 # Story 3.7: Add Damage Pipeline Fixtures and Foundry Checks
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -78,3 +78,16 @@ Antigravity
 ### Change Log
 
 - Completed Story 3.7: Added unarmored hit, Mortal wound state saves, and recurring death save reminders test cases to single-shot ranged attack fixtures; aligned Mortal wound labeling in state planner; expanded Foundry manual verification checklist with Epic 3 mechanics.
+
+### Review Findings
+
+- [x] [Review][Defer] Duplication of woundStateLabel function in state planner and save resolver [module/combat/state-planner.js:276] — deferred, pre-existing
+- [x] [Review][Defer] Duplication of normalizeDamageValue function in state planner and save resolver [module/combat/state-planner.js:283] — deferred, pre-existing
+- [x] [Review][Defer] Cover resolved as standard armor layer in resolveArmor [module/combat/armor-resolver.js:98] — deferred, pre-existing
+- [x] [Review][Defer] Ablation applied to personal armor instead of cover when cover is bypassed/penetrated [module/combat/armor-resolver.js:28] — deferred, pre-existing
+- [x] [Review][Defer] Skinweave and Subdermal Armor (cyberware) ignored during staged armor ablation [module/combat/armor-resolver.js:58] — deferred, pre-existing
+- [x] [Review][Defer] Hardcoded limb keys in LIMB_LOCATION_KEYS omit hand/foot/lhand/rfoot [module/combat/state-planner.js:15] — deferred, pre-existing
+- [x] [Review][Defer] Death save reminders generated even if target is stabilized [module/combat/save-resolver.js:60] — deferred, pre-existing
+- [x] [Review][Defer] Death saves generated for targets above Mortal 6 who should be dead [module/combat/save-resolver.js:100] — deferred, pre-existing
+- [x] [Review][Defer] Inconsistent validation of wound damage in cannotResolveTargetSaves and resolveDamageEvidence [module/combat/state-planner.js:117,120] — deferred, pre-existing
+- [x] [Review][Defer] Death save reminders triggered on attacks instead of target turn [module/combat/save-resolver.js:60] — deferred, pre-existing
