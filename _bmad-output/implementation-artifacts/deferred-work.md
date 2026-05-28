@@ -43,3 +43,9 @@ This file tracks technical debt and deferred items from code reviews.
 ## Deferred from: code review of 4-1-migrate-three-round-burst-to-resolver-outcome.md (2026-05-28)
 
 - **Cyberware armor updatePath in staged penetration**: Edge Case Hunter noted that cyberware layers might not have their `system.ablation` updated correctly because of how `updatePath` is resolved. This is a pre-existing issue related to cyberware ablation logic, not introduced by story 4.1.
+
+## Deferred from: code review of 4-3-resolve-full-auto-across-multiple-targets.md (2026-05-28)
+
+- **Semiauto/Single fire modes multi-targeting**: `canResolveSingleShotRangedContext` only blocks multi-targeting if the fire mode is `"threeroundburst"`. Other modes like `"semiauto"` or `"standard"` (single shot) are not restricted, allowing them to resolve against multiple targets using one roll and one bullet. This is pre-existing legacy behavior.
+- **Zero targets consuming ammo**: If a full auto attack is resolved with 0 targets, it goes to the `else` branch: `roundsFired = finalMaxRoundsFired` (which is `Math.min(shotsLeft, rof)`). So it fires ROF rounds, even though there are no targets. This is pre-existing legacy behavior.
+- **Mutation of input parameter `action.targetArea`**: The function directly mutates `action.targetArea = action.targetArea || action.options?.targetArea`, modifying the caller-provided object. This is pre-existing legacy behavior.

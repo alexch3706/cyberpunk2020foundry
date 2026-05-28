@@ -1,5 +1,5 @@
 import { rangeDCs, ranges } from "../lookups.js";
-import { resolveSingleShotRangedAttack } from "./attack-resolver.js";
+import { resolveSingleShotRangedAttack, normalizeAmmoState } from "./attack-resolver.js";
 
 /**
  * Top-level combat resolver shell.
@@ -55,6 +55,18 @@ function canResolveSingleShotRangedContext(context, roller) {
     if (shotsLeftVal !== undefined && shotsLeftVal !== null && shotsLeftVal !== "") {
       const value = Number(shotsLeftVal);
       if (Number.isFinite(value) && value <= 0) {
+        return false;
+      }
+    }
+    // Full auto must have at least 1 round per target
+    if (fireMode === "fullauto" && context.targets && context.targets.length > 1) {
+      const rawShotsLeft = normalizeAmmoState(shotsLeftVal);
+      const rof = Math.max(0, Number(context.weapon?.snapshot?.rof) || 0);
+      const maxRoundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
+      const finalMaxRoundsFired = (maxRoundsFired <= 0 && rawShotsLeft.valid) ? 0 : maxRoundsFired;
+      const targetCount = context.targets.length;
+      const roundsFiredPerTarget = Math.floor(finalMaxRoundsFired / targetCount);
+      if (roundsFiredPerTarget < 1) {
         return false;
       }
     }

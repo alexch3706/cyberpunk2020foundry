@@ -1227,4 +1227,46 @@ function assertCombatResolverRouting() {
 
   const result = resolveCombatAction(context, { structured: true }, roller);
   assert.notEqual(result, "fallback-called", "FullAuto should be routed to structured resolver");
+
+  // Multi-target full-auto with sufficient ammo/ROF (ROF 10, targets 2 => roundsFiredPerTarget = Math.floor(10 / 2) = 5)
+  const multiTargetContext = {
+    ...context,
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 10,
+        rof: 10
+      }
+    },
+    targets: [
+      {
+        snapshot: {
+          stats: { bt: { total: 6 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      },
+      {
+        snapshot: {
+          stats: { bt: { total: 6 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      }
+    ]
+  };
+  const multiResult = resolveCombatAction(multiTargetContext, { structured: true }, roller);
+  assert.notEqual(multiResult, "fallback-called", "Multi-target FullAuto with sufficient ROF/ammo should be routed to structured resolver");
+
+  // Multi-target full-auto with insufficient ammo (shotsLeft 1, targets 2 => roundsFiredPerTarget = Math.floor(1 / 2) = 0)
+  const insufficientAmmoContext = {
+    ...multiTargetContext,
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 1,
+        rof: 10
+      }
+    }
+  };
+  const insufficientResult = resolveCombatAction(insufficientAmmoContext, { structured: true }, roller);
+  assert.equal(insufficientResult, "fallback-called", "Multi-target FullAuto with roundsFiredPerTarget < 1 should fall back to legacy resolver");
 }

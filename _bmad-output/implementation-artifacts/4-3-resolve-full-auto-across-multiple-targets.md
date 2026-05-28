@@ -3,7 +3,7 @@ baseline_commit: 95de336eec9b775de2994c2c552fdae1832af820
 ---
 # Story 4.3: Resolve Full Auto Across Multiple Targets
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -45,6 +45,14 @@ so that ROF division, target rounding, range, hit count, and damage are auditabl
     - [x] 2 separate attack rolls (one for each target).
     - [x] Correct range modifiers based on 12 bullets per target.
   - [x] Run and verify tests using `node tests/run-combat-fixtures.mjs`.
+
+### Review Findings
+
+- [x] [Review][Decision] Division Resulting in Zero Rounds Per Target — If the number of targets exceeds the available ammo/ROF (e.g., ROF 5 on 6 targets), `roundsFiredPerTarget` evaluates to `0`. Resolved: Blocked in `canResolveSingleShotRangedContext` to fallback to manual resolution.
+- [x] [Review][Patch] Incomplete Aimed Shot Options Clearance [module/combat/attack-resolver.js:65-67]
+- [x] [Review][Defer] Semiauto/Single fire modes multi-targeting [module/combat/combat-resolver.js:48-52] — deferred, pre-existing
+- [x] [Review][Defer] Zero targets consuming ammo [module/combat/attack-resolver.js:50-52] — deferred, pre-existing
+- [x] [Review][Defer] Mutation of input parameter action.targetArea [module/combat/attack-resolver.js:25] — deferred, pre-existing
 
 ## Dev Notes
 

@@ -64,6 +64,12 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
       };
       if (idx > 0) {
         targetAction.targetArea = undefined;
+        if (targetAction.options) {
+          targetAction.options = {
+            ...targetAction.options,
+            targetArea: undefined
+          };
+        }
       }
       const targetModifierEvidence = buildModifierEvidence(targetAction, context.weapon);
       const targetAttackRequest = buildAttackRollRequest(
@@ -277,7 +283,7 @@ function buildAmmoPlanning(weapon, roundsFired = 1) {
   };
 }
 
-function normalizeAmmoState(rawShotsLeft) {
+export function normalizeAmmoState(rawShotsLeft) {
   if(rawShotsLeft === undefined || rawShotsLeft === null) {
     return {
       valid: false,
@@ -366,6 +372,12 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
       const hitAction = { ...action };
       if (i > 0) {
         hitAction.targetArea = undefined;
+        if (hitAction.options) {
+          hitAction.options = {
+            ...hitAction.options,
+            targetArea: undefined
+          };
+        }
       }
 
       const locationResult = resolveHitLocation(target, hitAction, roller);
