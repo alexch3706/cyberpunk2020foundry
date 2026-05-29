@@ -26,7 +26,7 @@ export class CyberpunkItem extends Item {
 
   isRanged() {
     let system = this.system;
-    return !(system.weaponType === "Melee" || system.weaponType === "Exotic" && Object.keys(meleeAttackTypes).includes(system.attackType));
+    return !(system.weaponType === "Melee" || (system.weaponType === "Exotic" && Object.values(meleeAttackTypes).includes(system.attackType)));
   }
   
   _prepareWeaponData(data) {

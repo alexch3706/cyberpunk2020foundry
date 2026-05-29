@@ -594,6 +594,69 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
   };
 }
 
+/**
+ * Resolve a melee or martial action — produces a CombatOutcome with target
+ * snapshots and placeholder attack data. Actual opposed resolution deferred
+ * to Story 5.2.
+ *
+ * @param {Object} context CombatActionContext with type "melee" or "martial".
+ *   For "melee": context.weapon.snapshot.attackSkill is required (validated by guard).
+ *   For "martial": context.action.meleeAction is required (validated by guard);
+ *                  weapon.attackSkill is NOT required (skill comes from martial art selection).
+ * @param {Object} [options] Reserved for future resolver options.
+ * @param {Function} [roller] Deterministic roller for fixture support.
+ * @returns {Object} Minimal CombatOutcome with enriched target snapshots.
+ */
+export function resolveMeleeAction(context, options = {}, roller = undefined) {
+  const action = clonePlainData(context.action || {});
+  const targets = (context.targets || []).map(target => resolveMeleeTargetOutcome(target));
+  const manualTargets = targets.filter(t => t.manualResolution?.required);
+
+  return {
+    action: {
+      ...action
+    },
+    attacker: clonePlainData(context.attacker || {}),
+    weapon: clonePlainData(context.weapon || {}),
+    targets,
+    pendingDecisions: [],
+    manualResolution: buildOutcomeManualResolution([
+      ...manualTargets.map(t => t.manualResolution)
+    ].filter(Boolean)),
+    ammo: {},
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.preview
+    },
+    chat: {
+      status: COMBAT_CHAT_STATUS.preview
+    },
+    warnings: []
+  };
+}
+
+function resolveMeleeTargetOutcome(target) {
+  const targetWarnings = cloneArray(target.warnings);
+  let manualResolution = target.manualResolution
+    ? clonePlainData(target.manualResolution)
+    : { required: false };
+
+  return {
+    target: clonePlainData(target),
+    attack: {
+      hit: false
+    },
+    hits: [],
+    saves: [],
+    plannedUpdates: {
+      embeddedItemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.preview
+    },
+    manualResolution,
+    warnings: targetWarnings
+  };
+}
+
 export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
   const normalizedPenetratingDamage = normalizeDamageAmount(penetratingDamage);
   const bodyTypeModifier = btmFromBT(normalizeBodyType(bodyType));

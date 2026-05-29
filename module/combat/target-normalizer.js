@@ -57,14 +57,52 @@ function buildTargetSnapshot(actor, existingSnapshot) {
     return undefined;
   }
 
+  // Enrich skills from actor.itemTypes.skill — same pattern as CyberpunkItem.__buildCombatSkillSnapshot
+  const enrichedSkills = buildEnrichedSkills(actor);
+
   return compactPlainObject({
     stats: clonePlainData(actor.system.stats),
-    skills: clonePlainData(actor.system.skills),
+    skills: enrichedSkills,
     damage: clonePlainData(actor.system.damage),
     hitLocations: clonePlainData(actor.system.hitLocations),
     equippedArmor: normalizeItemSnapshots(actor.itemTypes?.armor || []),
     equippedCyberware: normalizeItemSnapshots(actor.itemTypes?.cyberware || [])
   });
+}
+
+/**
+ * Build enriched skills snapshot from actor.itemTypes.skill,
+ * falling back to actor.system.skills when item skills are unavailable.
+ *
+ * @param {Object} actor Foundry actor document.
+ * @returns {Object|undefined} Enriched skills map or undefined.
+ */
+function buildEnrichedSkills(actor) {
+  if(!actor?.system) {
+    return undefined;
+  }
+
+  // Start with system.skills as baseline (handles older actor data)
+  const skills = clonePlainData(actor.system.skills?.skills || actor.system.skills || {}) || {};
+
+  // Enrich with itemTypes.skill which holds the real skill levels
+  if(Array.isArray(actor.itemTypes?.skill)) {
+    for(const skill of actor.itemTypes.skill) {
+      const level = typeof actor.getSkillVal === "function"
+        ? actor.getSkillVal(skill.name)
+        : (skill.system?.level || skill.system?.value || 0);
+      skills[skill.name] = {
+        ...(clonePlainData(skill.system || {}) || {}),
+        level
+      };
+    }
+  }
+
+  if(Object.keys(skills).length === 0) {
+    return undefined;
+  }
+
+  return skills;
 }
 
 function normalizeItemSnapshots(items = []) {

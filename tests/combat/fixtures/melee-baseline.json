@@ -1,0 +1,196 @@
+{
+  "name": "melee-baseline",
+  "useStructured": true,
+  "rolls": [],
+  "expected": {
+    "outcome": {
+      "chatStatus": "preview"
+    },
+    "plannedUpdates": {
+      "actorUpdates": [],
+      "itemUpdates": [],
+      "embeddedItemUpdates": [],
+      "chatStatus": "preview",
+      "warnings": []
+    },
+    "chatData": {
+      "preview": {}
+    }
+  },
+  "context": {
+    "action": {
+      "type": "melee",
+      "fireMode": null,
+      "meleeAction": null,
+      "range": null,
+      "targetArea": null,
+      "options": {}
+    },
+    "attacker": {
+      "actorUuid": "Actor.attacker",
+      "name": "Solo",
+      "snapshot": {
+        "stats": { "ref": { "total": 8 }, "bt": { "total": 6 } },
+        "skills": {
+          "melee": { "level": 5 },
+          "brawling": { "level": 4 }
+        }
+      }
+    },
+    "weapon": {
+      "itemUuid": "Actor.attacker.Item.knife",
+      "name": "Knife",
+      "snapshot": {
+        "damage": "1d6",
+        "attackSkill": "melee",
+        "attackType": "Melee"
+      }
+    },
+    "targets": [
+      {
+        "tokenUuid": "Scene.s.Token.defender",
+        "actorUuid": "Actor.defender",
+        "name": "Guard",
+        "snapshot": {
+          "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+          "skills": {
+            "melee": { "level": 4 },
+            "brawling": { "level": 2 },
+            "athletics": { "level": 3 }
+          },
+          "hitLocations": {
+            "torso": { "label": "Torso" },
+            "head": { "label": "Head" }
+          }
+        }
+      }
+    ]
+  },
+  "singleShotCases": [
+    {
+      "name": "melee-valid-defender",
+      "context": {},
+      "rolls": [],
+      "expected": {
+        "action": { "type": "melee" },
+        "attacker": { "actorUuid": "Actor.attacker" },
+        "weapon": { "itemUuid": "Actor.attacker.Item.knife" },
+        "targets": [
+          {
+            "target": {
+              "actorUuid": "Actor.defender",
+              "name": "Guard",
+              "snapshot": {
+                "stats": { "ref": { "total": 6 } },
+                "skills": {
+                  "melee": { "level": 4 },
+                  "brawling": { "level": 2 },
+                  "athletics": { "level": 3 }
+                },
+                "hitLocations": {
+                  "torso": { "label": "Torso" },
+                  "head": { "label": "Head" }
+                }
+              }
+            },
+            "attack": { "hit": false },
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "melee-actorless-target",
+      "context": {
+        "targets": [
+          {
+            "tokenUuid": "Scene.s.Token.actorless",
+            "name": "Mysterious Figure",
+            "manualResolution": {
+              "required": true,
+              "reason": "missing-target-actor",
+              "message": "Target Actor is unavailable; resolve target damage, armor, and saves manually.",
+              "blockedUpdateCategories": ["target-damage", "target-armor", "target-saves"]
+            }
+          }
+        ]
+      },
+      "rolls": [],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "manualResolution": { "required": true, "reason": "missing-target-actor" }
+          }
+        ],
+        "manualResolution": { "required": true }
+      }
+    },
+    {
+      "name": "martial-valid-defender",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Strike",
+          "options": {}
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "karate": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 },
+                "karate": { "level": 2 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Strike" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": { "hit": false },
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false }
+      }
+    },
+    {
+      "name": "melee-no-targets",
+      "context": {
+        "targets": []
+      },
+      "rolls": [],
+      "legacyExpected": {
+        "manualResolution": true,
+        "warning": "Legacy fallback for empty targets"
+      },
+      "expected": {}
+    }
+  ]
+}

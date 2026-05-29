@@ -16,7 +16,8 @@ const FIXTURE_URLS = [
   new URL("./fixtures/ranged-full-auto.json", import.meta.url),
   new URL("./fixtures/suppressive-fire.json", import.meta.url),
   new URL("./fixtures/reliability-jam.json", import.meta.url),
-  new URL("./fixtures/unsupported-modes.json", import.meta.url)
+  new URL("./fixtures/unsupported-modes.json", import.meta.url),
+  new URL("./fixtures/melee-baseline.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {

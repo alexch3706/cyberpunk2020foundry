@@ -1,5 +1,5 @@
 import { rangeDCs, ranges } from "../lookups.js";
-import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState } from "./attack-resolver.js";
+import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 
 /**
@@ -25,6 +25,9 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
     }
     if(canResolveSingleShotRangedContext(context, roller)) {
       return resolveSingleShotRangedAttack(context, options, roller);
+    }
+    if(canResolveMeleeContext(context, roller)) {
+      return resolveMeleeAction(context, options, roller);
     }
   }
 
@@ -59,6 +62,37 @@ function canResolveSuppressiveFireContext(context, roller) {
     const roundsFired = context.action?.roundsFired ?? context.action?.options?.roundsFired;
 
     if (fireZoneWidth === undefined || fireZoneWidth === null || roundsFired === undefined || roundsFired === null) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function canResolveMeleeContext(context, roller) {
+  const actionType = context?.action?.type || "";
+  if(actionType !== "melee" && actionType !== "martial") {
+    return false;
+  }
+  if(typeof roller !== "function") {
+    return false;
+  }
+  if(!context?.attacker?.snapshot?.stats) {
+    return false;
+  }
+  if(!Array.isArray(context.targets) || context.targets.length === 0) {
+    return false;
+  }
+
+  if(actionType === "melee") {
+    // Melee weapons always have attackSkill (Melee, Fencing, Brawling, etc.)
+    if(!context?.weapon?.snapshot?.attackSkill) {
+      return false;
+    }
+  }
+  else if(actionType === "martial") {
+    // Martial requires an action choice (Strike, Kick, etc.); skill comes from martial art
+    if(!context?.action?.meleeAction) {
       return false;
     }
   }

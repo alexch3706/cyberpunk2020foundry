@@ -48,7 +48,7 @@ development_status:
   1-3-add-state-planner-contract: done
   1-4-add-deterministic-fixture-baseline: done
   1-5-add-outcome-derived-chat-contract: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
   epic-2: done
   2-1-normalize-selected-targets-to-actor-aware-references: done
   2-2-resolve-single-shot-ranged-attack-outcome: done
@@ -75,8 +75,8 @@ development_status:
   4-6-disable-or-mark-unsupported-automatic-modes-until-complete: done
   4-7-add-automatic-fire-fixtures-and-foundry-checks: done
   epic-4-retrospective: optional
-  epic-5: backlog
-  5-1-normalize-defender-context-for-melee-resolution: backlog
+  epic-5: in-progress
+  5-1-normalize-defender-context-for-melee-resolution: done
   5-2-resolve-baseline-opposed-melee-attacks: backlog
   5-3-apply-melee-body-type-damage-modifiers: backlog
   5-4-add-martial-arts-data-module: backlog
