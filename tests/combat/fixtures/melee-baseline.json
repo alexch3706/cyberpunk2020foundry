@@ -237,19 +237,608 @@
         { "id": "damage", "total": 2, "die": { "natural": 2 } }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Strike" },
+        "action": { "type": "martial", "meleeAction": "Strike", "martialCategory": "damageOnly" },
         "targets": [
           {
             "target": { "actorUuid": "Actor.defender" },
             "attack": {
               "hit": true,
-              "roll": { "total": 16 },
+              "roll": { "total": 16, "keyTechniqueBonus": 0, "martialCategory": "damageOnly" },
               "opposedRoll": { "total": 13 }
             },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 2,
+                "strengthDamageBonus": 0
+              }
+            ],
             "manualResolution": { "required": false }
           }
         ],
-        "manualResolution": { "required": false }
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-strike-karate-bonus",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Strike",
+          "options": { "martialArt": "karate" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "karate": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 },
+                "karate": { "level": 2 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 20, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } },
+        { "id": "location", "total": 5, "die": { "natural": 5 }, "location": "torso" },
+        { "id": "damage", "total": 3, "die": { "natural": 3 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Strike", "martialCategory": "damageOnly" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 2, "martialCategory": "damageOnly" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 3,
+                "strengthDamageBonus": 0
+              }
+            ],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-kick-savate-bonus",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Kick",
+          "options": { "martialArt": "savate" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 8 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 5 },
+              "savate": { "level": 4 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 19, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Kick", "martialCategory": "damageOnly" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 21, "keyTechniqueBonus": 2, "martialCategory": "damageOnly" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 2,
+                "strengthDamageBonus": 0
+              }
+            ],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-block-parry",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "BlockParry",
+          "options": { "martialArt": "boxing" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "boxing": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "BlockParry", "martialCategory": "nonDamage" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-dodge-capoeira",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Dodge",
+          "options": { "martialArt": "capoeira" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "capoeira": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Dodge", "martialCategory": "nonDamage" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-disarm-aikido",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Disarm",
+          "options": { "martialArt": "aikido" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "aikido": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Disarm", "martialCategory": "nonDamage" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [
+          {
+            "reason": "prerequisite-check",
+            "action": "disarm",
+            "requires": ["blockParry", "dodge"]
+          }
+        ],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-grapple-karate",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Grapple",
+          "options": { "martialArt": "karate" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "karate": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 20, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Grapple", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 20, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-choke-requires-hold",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Choke",
+          "options": {}
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
+              "combatState": { "held": true }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Choke", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 21, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-escape-requires-grapple-hold",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Escape",
+          "options": { "martialArt": "judo" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "judo": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
+              "combatState": { "grappled": true }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Escape", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-unknown-action-fallback",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "UnknownAction",
+          "options": {}
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } },
+        { "id": "location", "total": 3, "die": { "natural": 3 }, "location": "torso" },
+        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "UnknownAction", "martialCategory": "damageOnly" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 21, "keyTechniqueBonus": 0, "martialCategory": "damageOnly" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 2,
+                "strengthDamageBonus": 0
+              }
+            ],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
       }
     },
     {
@@ -447,6 +1036,280 @@
             ]
           }
         ]
+      }
+    },
+    {
+      "name": "martial-throw-requires-grapple-without-state",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Throw",
+          "options": { "martialArt": "aikido" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "aikido": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 22, "die": { "natural": 7 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Throw", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": false,
+              "margin": 0,
+              "roll": { "total": 23, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": {
+              "required": true,
+              "reason": "prerequisite-unconfirmed"
+            }
+          }
+        ],
+        "manualResolution": { "required": true },
+        "pendingDecisions": [
+          {
+            "reason": "prerequisite-check",
+            "action": "throw",
+            "requires": ["grapple", "blockParry", "dodge"]
+          }
+        ],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-choke-without-hold-state",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Choke",
+          "options": {}
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 20, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Choke", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": false,
+              "margin": 0,
+              "roll": { "total": 20, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": {
+              "required": true,
+              "reason": "prerequisite-unconfirmed"
+            }
+          }
+        ],
+        "manualResolution": { "required": true },
+        "pendingDecisions": [
+          {
+            "reason": "prerequisite-check",
+            "action": "choke",
+            "requires": ["hold"]
+          }
+        ],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-escape-without-any-state",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Escape",
+          "options": { "martialArt": "judo" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "judo": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 7 } },
+        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Escape", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": false,
+              "margin": 0,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 11 }
+            },
+            "hits": [],
+            "manualResolution": {
+              "required": true,
+              "reason": "prerequisite-unconfirmed"
+            }
+          }
+        ],
+        "manualResolution": { "required": true },
+        "pendingDecisions": [
+          {
+            "reason": "prerequisite-check",
+            "action": "escape",
+            "requires": ["grapple", "hold"]
+          }
+        ],
+        "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "martial-hold-requires-grapple-with-state",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "Hold",
+          "options": { "martialArt": "aikido" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "aikido": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
+              "combatState": { "grappled": true }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 21, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "Hold", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
       }
     }
   ]

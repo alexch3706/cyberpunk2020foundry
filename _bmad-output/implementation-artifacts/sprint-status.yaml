@@ -37,6 +37,7 @@
 generated: 2026-05-24
 last_updated: 2026-05-29
 project: Cyberpunk2020VTT
+# Note: 5-6 story status updated to 'review' on 2026-05-29
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
@@ -80,8 +81,8 @@ development_status:
   5-2-resolve-baseline-opposed-melee-attacks: done
   5-3-apply-melee-body-type-damage-modifiers: done
   5-4-add-martial-arts-data-module: done
-  5-5-resolve-martial-and-brawling-actions: backlog
-  5-6-enforce-grapple-family-prerequisites-and-pending-state: backlog
+  5-5-resolve-martial-and-brawling-actions: done
+  5-6-enforce-grapple-family-prerequisites-and-pending-state: done
   5-7-add-melee-and-martial-fixtures-and-foundry-checks: backlog
   epic-5-retrospective: optional
   epic-6: backlog

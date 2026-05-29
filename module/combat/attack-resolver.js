@@ -1,6 +1,7 @@
 import { defaultAreaLookup, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
+import { getKeyTechniqueBonus, getRequiresPrerequisite } from "./martial-arts-data.js";
 
 const RANGED_MODIFIERS = Object.freeze([
   { code: "aimRounds", label: "Aiming", term: "@modifier.aimRounds", value: options => Number(options.aimRounds || 0), include: value => value !== 0 },
@@ -19,6 +20,79 @@ const RANGED_MODIFIERS = Object.freeze([
 
 const MISSING_LOCATION_BLOCKS = Object.freeze(["hit-location", "target-damage", "target-armor", "target-saves"]);
 const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
+
+/**
+ * Martial action classification.
+ * Each entry maps a lowercase action key to its behavior category.
+ * @type {Object<string, string>}
+ */
+const MARTIAL_ACTION_CLASSIFICATIONS = Object.freeze({
+  strike:     "damageOnly",
+  kick:       "damageOnly",
+  dodge:      "nonDamage",
+  blockparry: "nonDamage",
+  disarm:      "nonDamage",
+  sweeptrip:   "grappleFamily",
+  grapple:     "grappleFamily",
+  hold:        "grappleFamily",
+  choke:       "grappleFamily",
+  throw:       "grappleFamily",
+  escape:      "grappleFamily",
+});
+
+/**
+ * Human-readable labels for martial prerequisite action keys.
+ * Used in user-facing manual-resolution messages.
+ * Keys are lowercased for case-insensitive lookup.
+ * @type {Object<string, string>}
+ */
+const MARTIAL_PREREQ_LABELS = Object.freeze({
+  grapple: "Grapple",
+  hold: "Hold",
+  blockparry: "Block/Parry",
+  dodge: "Dodge"
+});
+
+/**
+ * Check whether a grapple-family martial action\'s prerequisites are confirmed
+ * by the target\'s combat state.
+ *
+ * @param {Object} targetSnapshot - Target actor snapshot (may include combatState).
+ * @param {string[]} prereqs - Array of prerequisite action keys (OR relationship).
+ * @returns {{ confirmed: boolean, missing: string[] }}
+ *   confirmed: true if ANY prerequisite is confirmed by combatState.
+ *   missing: array of prerequisite keys not confirmed.
+ */
+export function checkGrapplePrerequisites(targetSnapshot, prereqs) {
+  if (!Array.isArray(prereqs) || prereqs.length === 0) {
+    return { confirmed: true, missing: [] };
+  }
+  if (!targetSnapshot) {
+    return { confirmed: false, missing: [...prereqs] };
+  }
+
+  const combatState = targetSnapshot.combatState || {};
+
+  const PREREQ_TO_STATE_FLAG = {
+    grapple: "grappled",
+    hold: "held",
+    blockparry: "blockedParried",
+    dodge: "dodgeActive"
+  };
+
+  const confirmed = prereqs.some(prereq => {
+    const normalizedPrereq = String(prereq || "").toLowerCase().trim();
+    if (!normalizedPrereq) return false;
+    const stateFlag = PREREQ_TO_STATE_FLAG[normalizedPrereq];
+    return stateFlag && combatState[stateFlag] === true;
+  });
+
+  if (confirmed) {
+    return { confirmed: true, missing: [] };
+  }
+
+  return { confirmed: false, missing: [...prereqs] };
+}
 
 export function resolveJamOutcome(isFumble, fireMode, reliability, weaponName = "Weapon") {
   if (!isFumble) {
@@ -613,14 +687,27 @@ export function resolveMeleeAction(context, options = {}, roller = undefined) {
   );
   const manualTargets = targets.filter(t => t.manualResolution?.required);
 
+  // Collect per-target pendingDecisions into root pendingDecisions
+  const allPending = targets
+    .filter(t => Array.isArray(t.pendingDecisions))
+    .flatMap(t => t.pendingDecisions);
+
+  // Derive martialCategory directly from context action (not from targets —
+  // category is determined by meleeAction alone, independent of target count)
+  const meleeActionKey = String(context.action?.meleeAction || "").toLowerCase().trim();
+  const martialCategory = context.action?.type === "martial"
+    ? MARTIAL_ACTION_CLASSIFICATIONS[meleeActionKey] || "damageOnly"
+    : undefined;
+
   return {
     action: {
-      ...action
+      ...action,
+      ...(martialCategory ? { martialCategory } : {})
     },
     attacker: clonePlainData(context.attacker || {}),
     weapon: clonePlainData(context.weapon || {}),
     targets,
-    pendingDecisions: [],
+    pendingDecisions: allPending,
     manualResolution: buildOutcomeManualResolution([
       ...manualTargets.map(t => t.manualResolution)
     ].filter(Boolean)),
@@ -658,7 +745,8 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
 
   // 2. Resolve attacker skill
   let attackSkill = context.weapon?.snapshot?.attackSkill;
-  if (context.action?.type === "martial") {
+  const isMartial = context.action?.type === "martial";
+  if (isMartial) {
     attackSkill = context.action.options?.martialArt || "brawling";
   }
   if (!attackSkill) attackSkill = "melee";
@@ -666,7 +754,15 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
   const attacker = context.attacker;
   const attackerRef = attacker?.snapshot?.stats?.ref?.total || 0;
   const attackerSkillLevel = getSkillValueCaseInsensitive(attacker?.snapshot?.skills, attackSkill);
-  // Note: keyTechniqueBonus (martial arts technique bonuses) will be added in Story 5.5
+
+  // 2a. Key technique bonus (martial arts only)
+  const meleeAction = String(context.action?.meleeAction || "").toLowerCase().trim();
+  const keyTechniqueBonus = isMartial ? getKeyTechniqueBonus(attackSkill, meleeAction) : 0;
+
+  // 2b. Determine martial category
+  const martialCategory = isMartial
+    ? (MARTIAL_ACTION_CLASSIFICATIONS[meleeAction] || "damageOnly")
+    : undefined;
 
   const attackRequest = {
     id: "attack",
@@ -678,6 +774,13 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
     }
   };
   const attackRoll = normalizeMeleeRoll(roll(roller, attackRequest));
+
+  // 2c. Add key technique bonus to attack roll total
+  attackRoll.keyTechniqueBonus = keyTechniqueBonus;
+  attackRoll.total += keyTechniqueBonus;
+  if (martialCategory !== undefined) {
+    attackRoll.martialCategory = martialCategory;
+  }
 
   // 3. Defender opposed roll (case-insensitive skill lookup)
   const defenderSkill = resolveDefenderMeleeSkill(target, context, attackSkill);
@@ -696,15 +799,17 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
   const defendRoll = normalizeMeleeRoll(roll(roller, defendRequest));
 
   // 4. Opposed result — fumble is automatic miss
-  const hit = !attackRoll.isFumble && attackRoll.total > defendRoll.total;
-  const margin = hit ? attackRoll.total - defendRoll.total : 0;
+  let hit = !attackRoll.isFumble && attackRoll.total > defendRoll.total;
+  let margin = hit ? attackRoll.total - defendRoll.total : 0;
 
-  // 5. Damage resolution on hit
+  // 5. Damage resolution on hit (only for damageOnly martial actions or non-martial melee)
   let hits = [];
   const plannedUpdates = { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview };
   let targetManualResolution = { required: false };
 
-  if (hit) {
+  const resolveDamage = hit && (!isMartial || martialCategory === "damageOnly");
+
+  if (resolveDamage) {
     const locationResult = resolveHitLocation(target, context.action, roller);
     if (locationResult.manualResolution) {
       targetManualResolution = clonePlainData(locationResult.manualResolution);
@@ -724,6 +829,54 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
     }
   }
 
+  // 6. Prerequisite enforcement (martial actions with prerequisites)
+  let targetPendingDecisions = [];
+  if (isMartial) {
+    const prereqs = getRequiresPrerequisite(attackSkill, meleeAction);
+    if (prereqs && prereqs.length > 0 && martialCategory === "grappleFamily") {
+      const prereqCheck = checkGrapplePrerequisites(target.snapshot, prereqs);
+
+      if (prereqCheck.confirmed) {
+        // Prerequisite is satisfied — suppress the pending decision
+        // Action proceeds normally, no warning needed
+      } else {
+        // Prerequisite not confirmed — block the outcome with manual resolution
+        const actionLabel = context.action?.meleeAction || meleeAction || "Unknown";
+        targetPendingDecisions.push({
+          reason: "prerequisite-check",
+          message: `${actionLabel} requires ${prereqs.map(p => MARTIAL_PREREQ_LABELS[p.toLowerCase().trim()] || p).join(" or ")} — verify prerequisite is active before applying this outcome.`,
+          action: meleeAction,
+          requires: prereqs
+        });
+
+        // Override hit and margin — the opposed roll happened but the
+        // outcome is blocked pending manual confirmation.
+        hit = false;
+        margin = 0;
+        targetManualResolution = {
+          ...targetManualResolution,
+          required: true,
+          reason: "prerequisite-unconfirmed",
+          message: `${actionLabel} cannot be resolved: prerequisite ${prereqs.map(p => MARTIAL_PREREQ_LABELS[p.toLowerCase().trim()] || p).join(" or ")} is not confirmed on target ${target.name || target.actorUuid || "unknown"}. Verify grapple/hold state manually or set combatState.`,
+          action: meleeAction,
+          requires: prereqs,
+          missing: prereqCheck.missing,
+          combatState: target.snapshot?.combatState || {}
+        };
+      }
+    } else if (prereqs && prereqs.length > 0) {
+      // Non-grappleFamily actions (disarm, block/parry, dodge) still fire
+      // pendingDecisions warnings but are NOT blocked by manual-resolution.
+      const actionLabel = context.action?.meleeAction || meleeAction || "Unknown";
+      targetPendingDecisions.push({
+        reason: "prerequisite-check",
+        message: `${actionLabel} requires ${prereqs.map(p => MARTIAL_PREREQ_LABELS[p.toLowerCase().trim()] || p).join(" or ")} — verify prerequisite is active before applying this outcome.`,
+        action: meleeAction,
+        requires: prereqs
+      });
+    }
+  }
+
   return {
     target: clonePlainData(target),
     attack: {
@@ -737,7 +890,8 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
     saves: [],
     plannedUpdates,
     manualResolution: targetManualResolution,
-    warnings: targetWarnings
+    warnings: targetWarnings,
+    ...(targetPendingDecisions.length > 0 ? { pendingDecisions: targetPendingDecisions } : {})
   };
 }
 
@@ -1599,7 +1753,8 @@ function normalizeLocationRoll(rollResult, request) {
     formula: rollResult.formula || request.formula,
     total: rollResult.total,
     die: clonePlainData(rollResult.die || {}),
-    seed: rollResult.seed
+    seed: rollResult.seed,
+    ...(rollResult.location !== undefined ? { location: rollResult.location } : {})
   };
 }
 

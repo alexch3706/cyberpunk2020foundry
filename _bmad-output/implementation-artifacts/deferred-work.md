@@ -54,3 +54,8 @@ This file tracks technical debt and deferred items from code reviews.
 
 - **Multi-target full-auto target-specific modifier evidence is lost**: For multi-target full auto attacks, target-specific modifier evidence and attack roll details are only saved for the first target in the top-level outcome, losing target-specific information for subsequent targets.
 
+## Deferred from: code review of 5-6-enforce-grapple-family-prerequisites-and-pending-state.md (2026-05-29)
+
+- **Technique bonus applied to untrained martial arts attackers**: The key technique bonus from a martial art is applied to the roll even if the attacker has the martial art skill at level 0 (e.g. they fall back to Brawling or lack training in Aikido but still get the Aikido technique bonus). This is pre-existing behavior from Story 5.4.
+- **Incomplete test assertions for blocked prerequisite outcomes**: The test fixtures for unconfirmed prerequisites (such as `martial-throw-requires-grapple-without-state`) only specify `"required"` and `"reason"` in the expected `manualResolution` object. They fail to assert the added properties (`message`, `action`, `requires`, `missing`, `combatState`) that are produced by the code.
+
