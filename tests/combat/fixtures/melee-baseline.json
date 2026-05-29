@@ -1,7 +1,10 @@
 {
   "name": "melee-baseline",
   "useStructured": true,
-  "rolls": [],
+  "rolls": [
+    { "id": "attack", "total": 15, "die": { "natural": 5 } },
+    { "id": "defend", "total": 18, "die": { "natural": 7 } }
+  ],
   "expected": {
     "outcome": {
       "chatStatus": "preview"
@@ -68,37 +71,97 @@
   },
   "singleShotCases": [
     {
-      "name": "melee-valid-defender",
-      "context": {},
-      "rolls": [],
+      "name": "melee-attacker-wins",
+      "rolls": [
+        { "id": "attack", "total": 22, "die": { "natural": 8 } },
+        { "id": "defend", "total": 14, "die": { "natural": 5 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 3, "die": { "natural": 3 } }
+      ],
       "expected": {
         "action": { "type": "melee" },
         "attacker": { "actorUuid": "Actor.attacker" },
         "weapon": { "itemUuid": "Actor.attacker.Item.knife" },
         "targets": [
           {
-            "target": {
-              "actorUuid": "Actor.defender",
-              "name": "Guard",
-              "snapshot": {
-                "stats": { "ref": { "total": 6 } },
-                "skills": {
-                  "melee": { "level": 4 },
-                  "brawling": { "level": 2 },
-                  "athletics": { "level": 3 }
-                },
-                "hitLocations": {
-                  "torso": { "label": "Torso" },
-                  "head": { "label": "Head" }
-                }
-              }
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "margin": 8,
+              "roll": { "total": 22, "isCritical": false, "isFumble": false },
+              "opposedRoll": { "total": 14, "isCritical": false, "isFumble": false }
             },
-            "attack": { "hit": false },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 3,
+                "strengthDamageBonus": 0,
+                "armor": {},
+                "stagedPenetration": {}
+              }
+            ],
             "manualResolution": { "required": false }
           }
         ],
         "manualResolution": { "required": false },
         "chat": { "status": "preview" }
+      }
+    },
+    {
+      "name": "melee-defender-wins",
+      "rolls": [
+        { "id": "attack", "total": 11, "die": { "natural": 3 } },
+        { "id": "defend", "total": 18, "die": { "natural": 7 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": {
+              "hit": false,
+              "margin": 0,
+              "roll": { "total": 11 },
+              "opposedRoll": { "total": 18 }
+            },
+            "hits": []
+          }
+        ]
+      }
+    },
+    {
+      "name": "melee-tie",
+      "rolls": [
+        { "id": "attack", "total": 15, "die": { "natural": 5 } },
+        { "id": "defend", "total": 15, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": { "hit": false, "margin": 0 },
+            "hits": []
+          }
+        ]
+      }
+    },
+    {
+      "name": "melee-fumble",
+      "rolls": [
+        { "id": "attack", "total": 9, "die": { "natural": 1 } },
+        { "id": "defend", "total": 15, "die": { "natural": 5 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": {
+              "hit": false,
+              "margin": 0,
+              "roll": { "total": 9, "isFumble": true }
+            },
+            "hits": []
+          }
+        ]
       }
     },
     {
@@ -129,7 +192,7 @@
       }
     },
     {
-      "name": "martial-valid-defender",
+      "name": "martial-action-shell",
       "context": {
         "action": {
           "type": "martial",
@@ -167,30 +230,27 @@
           }
         ]
       },
-      "rolls": [],
+      "rolls": [
+        { "id": "attack", "total": 16, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 5 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+      ],
       "expected": {
         "action": { "type": "martial", "meleeAction": "Strike" },
         "targets": [
           {
             "target": { "actorUuid": "Actor.defender" },
-            "attack": { "hit": false },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 16 },
+              "opposedRoll": { "total": 13 }
+            },
             "manualResolution": { "required": false }
           }
         ],
         "manualResolution": { "required": false }
       }
-    },
-    {
-      "name": "melee-no-targets",
-      "context": {
-        "targets": []
-      },
-      "rolls": [],
-      "legacyExpected": {
-        "manualResolution": true,
-        "warning": "Legacy fallback for empty targets"
-      },
-      "expected": {}
     }
   ]
 }

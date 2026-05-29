@@ -1,4 +1,4 @@
-import { defaultAreaLookup, rangeDCs, ranges, btmFromBT } from "../lookups.js";
+import { defaultAreaLookup, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
 
@@ -595,9 +595,8 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
 }
 
 /**
- * Resolve a melee or martial action — produces a CombatOutcome with target
- * snapshots and placeholder attack data. Actual opposed resolution deferred
- * to Story 5.2.
+ * Resolve a melee or martial action — produces a CombatOutcome with opposed
+ * roll resolution per target.
  *
  * @param {Object} context CombatActionContext with type "melee" or "martial".
  *   For "melee": context.weapon.snapshot.attackSkill is required (validated by guard).
@@ -605,11 +604,13 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
  *                  weapon.attackSkill is NOT required (skill comes from martial art selection).
  * @param {Object} [options] Reserved for future resolver options.
  * @param {Function} [roller] Deterministic roller for fixture support.
- * @returns {Object} Minimal CombatOutcome with enriched target snapshots.
+ * @returns {Object} CombatOutcome with opposed rolls per target.
  */
 export function resolveMeleeAction(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
-  const targets = (context.targets || []).map(target => resolveMeleeTargetOutcome(target));
+  const targets = (context.targets || []).map(target =>
+    resolveMeleeTargetOutcome(target, context, options, roller)
+  );
   const manualTargets = targets.filter(t => t.manualResolution?.required);
 
   return {
@@ -635,26 +636,290 @@ export function resolveMeleeAction(context, options = {}, roller = undefined) {
   };
 }
 
-function resolveMeleeTargetOutcome(target) {
+/**
+ * Resolve opposed melee for one target.
+ *
+ * @param {Object} target Pre-normalized target with snapshot.
+ * @param {Object} context CombatActionContext with type "melee" or "martial".
+ * @param {Object} options Resolver options (reserved for future).
+ * @param {Function} roller Deterministic roller.
+ * @returns {Object} CombatTargetOutcome with opposed roll and optional damage.
+ */
+function resolveMeleeTargetOutcome(target, context, options, roller) {
   const targetWarnings = cloneArray(target.warnings);
   let manualResolution = target.manualResolution
     ? clonePlainData(target.manualResolution)
     : { required: false };
 
+  // 1. Early exit for manual-resolution targets
+  if (manualResolution.required) {
+    return meleeManualTarget(target, manualResolution, targetWarnings);
+  }
+
+  // 2. Resolve attacker skill
+  let attackSkill = context.weapon?.snapshot?.attackSkill;
+  if (context.action?.type === "martial") {
+    attackSkill = context.action.options?.martialArt || "brawling";
+  }
+  if (!attackSkill) attackSkill = "melee";
+
+  const attacker = context.attacker;
+  const attackerRef = attacker?.snapshot?.stats?.ref?.total || 0;
+  const attackerSkillLevel = getSkillValueCaseInsensitive(attacker?.snapshot?.skills, attackSkill);
+  // Note: keyTechniqueBonus (martial arts technique bonuses) will be added in Story 5.5
+
+  const attackRequest = {
+    id: "attack",
+    formula: "1d10x10 + @stats.ref.total + @skill." + attackSkill,
+    terms: ["1d10x10", "@stats.ref.total", "@skill." + attackSkill],
+    rollData: {
+      stats: { ref: { total: attackerRef } },
+      skill: { [attackSkill]: attackerSkillLevel }
+    }
+  };
+  const attackRoll = normalizeMeleeRoll(roll(roller, attackRequest));
+
+  // 3. Defender opposed roll (case-insensitive skill lookup)
+  const defenderSkill = resolveDefenderMeleeSkill(target, context, attackSkill);
+  const defenderRef = target.snapshot?.stats?.ref?.total || 0;
+  const defenderSkillLevel = getSkillValueCaseInsensitive(target.snapshot?.skills, defenderSkill);
+
+  const defendRequest = {
+    id: "defend",
+    formula: "1d10x10 + @stats.ref.total + @skill." + defenderSkill,
+    terms: ["1d10x10", "@stats.ref.total", "@skill." + defenderSkill],
+    rollData: {
+      stats: { ref: { total: defenderRef } },
+      skill: { [defenderSkill]: defenderSkillLevel }
+    }
+  };
+  const defendRoll = normalizeMeleeRoll(roll(roller, defendRequest));
+
+  // 4. Opposed result — fumble is automatic miss
+  const hit = !attackRoll.isFumble && attackRoll.total > defendRoll.total;
+  const margin = hit ? attackRoll.total - defendRoll.total : 0;
+
+  // 5. Damage resolution on hit
+  let hits = [];
+  const plannedUpdates = { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview };
+  let targetManualResolution = { required: false };
+
+  if (hit) {
+    const locationResult = resolveHitLocation(target, context.action, roller);
+    if (locationResult.manualResolution) {
+      targetManualResolution = clonePlainData(locationResult.manualResolution);
+    }
+    targetWarnings.push(...locationResult.warnings);
+
+    if (locationResult.hit) {
+      const hitDetail = resolveMeleeHitDamage(
+        locationResult.hit,
+        context,
+        target,
+        options,
+        roller,
+        plannedUpdates
+      );
+      hits.push(hitDetail);
+    }
+  }
+
   return {
     target: clonePlainData(target),
     attack: {
-      hit: false
+      roll: attackRoll,
+      opposedRoll: defendRoll,
+      hit,
+      margin,
+      warnings: []
     },
-    hits: [],
+    hits,
     saves: [],
-    plannedUpdates: {
-      embeddedItemUpdates: [],
-      chatStatus: COMBAT_CHAT_STATUS.preview
-    },
-    manualResolution,
+    plannedUpdates,
+    manualResolution: targetManualResolution,
     warnings: targetWarnings
   };
+}
+
+/**
+ * Build a CombatHitRecord for one melee hit (mirrors damage section of buildTargetOutcome).
+ */
+function resolveMeleeHitDamage(hitLocationResult, context, target, options, roller, plannedUpdates) {
+  const weapon = context.weapon?.snapshot || {};
+  const targetSnapshot = target.snapshot || {};
+
+  // Raw damage = weapon die + strengthDamageBonus(attacker BT)
+  const attackerBT = context.attacker?.snapshot?.stats?.bt?.total || 0;
+  const strengthBonus = strengthDamageBonus(attackerBT);
+  const damageRequest = { id: "damage", formula: weapon.damage || "1d6" };
+  const damageRoll = roll(roller, damageRequest);
+  const rawDamage = Math.max(1, damageRoll.total + strengthBonus);
+
+  // Armor (same pattern as ranged buildTargetOutcome)
+  const weaponAP = !!weapon.ap;
+  const armor = resolveArmor(weaponAP, targetSnapshot, hitLocationResult.location, {
+    cover: context.action?.cover || context.action?.options?.cover
+  });
+  const effectiveStoppingPower = armor.effectiveStoppingPower;
+  const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+  const penetratingDamageBeforeAP = rawDamage - armorMitigation;
+  let penetratingDamage = penetratingDamageBeforeAP;
+  if (armor.armorPiercing && penetratingDamage > 0) {
+    penetratingDamage = Math.floor(penetratingDamage / 2);
+  }
+
+  // BTM
+  const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
+
+  // Staged penetration
+  const stagedPenetration = buildStagedPenetrationEvidence({
+    enabled: resolveStagedPenetrationEnabled(context.action, options),
+    penetrated: rawDamage > effectiveStoppingPower,
+    armor,
+    target
+  });
+
+  // Collect staged penetration updates (same pattern as buildTargetOutcome)
+  if (stagedPenetration.plannedUpdate) {
+    const update = stagedPenetration.plannedUpdate.updates[0];
+    const armorId = update._id;
+    const updatePath = Object.keys(update).find(k => k !== "_id");
+    const targetSnapshotCopy = clonePlainData(targetSnapshot);
+    const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+    if (armorItem) {
+      const armorSystem = armorItem.system || armorItem;
+      const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+        k => k.toLowerCase() === hitLocationResult.location.toLowerCase()
+      );
+      if (coverageKey) {
+        if (!armorSystem.coverage[coverageKey]) armorSystem.coverage[coverageKey] = {};
+        armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
+      }
+    } else {
+      const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+      if (cyberwareItem) {
+        const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+        cyberwareSystem.ablation = stagedPenetration.evidence.after;
+      }
+    }
+    plannedUpdates.embeddedItemUpdates.push({
+      actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+      type: "Item",
+      updates: [{
+        _id: armorId,
+        [updatePath]: update[updatePath]
+      }]
+    });
+  }
+
+  const hitDetail = {
+    ...hitLocationResult,
+    damageRoll: {
+      id: damageRoll.id,
+      formula: damageRoll.formula || damageRequest.formula,
+      total: damageRoll.total,
+      die: clonePlainData(damageRoll.die || {}),
+      seed: damageRoll.seed
+    },
+    rawDamage,
+    effectiveStoppingPower,
+    armorPiercing: armor.armorPiercing,
+    armorMitigation,
+    penetratingDamage,
+    armorPiercingEvidence: armor.armorPiercing
+      ? {
+          ...(armor.armorPiercingEvidence || {}),
+          penetratingDamageBeforeAP,
+          penetratingDamageAfterAP: penetratingDamage
+        }
+      : undefined,
+    bodyTypeModifier: bodyTypeDamage.bodyTypeModifier,
+    bodyTypeMitigation: bodyTypeDamage.bodyTypeMitigation,
+    minimumDamageApplied: bodyTypeDamage.minimumDamageApplied,
+    finalDamage: bodyTypeDamage.finalDamage,
+    strengthDamageBonus: strengthBonus,
+    armor: armor,
+    stagedPenetration: stagedPenetration.evidence,
+    warnings: cloneArray(armor.warnings || [])
+  };
+
+  if (stagedPenetration.warning) {
+    hitDetail.warnings.push(stagedPenetration.warning);
+  }
+
+  return hitDetail;
+}
+
+/**
+ * Resolve defender's response skill for opposed melee.
+ * Uses case-insensitive matching against defender snapshot skills.
+ */
+function resolveDefenderMeleeSkill(target, context, attackerAttackSkill) {
+  const targetSkills = target.snapshot?.skills || {};
+  const actionType = context?.action?.type || "melee";
+
+  if (actionType === "martial") {
+    // Martial arts: defender always uses Brawling
+    const brawlingKey = Object.keys(targetSkills).find(k => k.toLowerCase() === "brawling");
+    return brawlingKey || "Brawling";
+  }
+
+  // Melee: try matching skill, then brawling, then melee, then fencing
+  const matchingKey = Object.keys(targetSkills).find(
+    k => k.toLowerCase() === String(attackerAttackSkill || "").toLowerCase()
+  );
+  if (matchingKey) return matchingKey;
+
+  const brawlingKey = Object.keys(targetSkills).find(k => k.toLowerCase() === "brawling");
+  if (brawlingKey) return brawlingKey;
+
+  const meleeKey = Object.keys(targetSkills).find(k => k.toLowerCase() === "melee");
+  if (meleeKey) return meleeKey;
+
+  return "Brawling"; // final fallback — resolves to level 0 if missing
+}
+
+/**
+ * Normalize a melee/martial roll result — same as normalizeAttackRoll without ranged-specific fields.
+ */
+function normalizeMeleeRoll(rollResult) {
+  return {
+    id: rollResult.id,
+    formula: rollResult.formula,
+    total: rollResult.total,
+    die: clonePlainData(rollResult.die || {}),
+    seed: rollResult.seed,
+    isCritical: !!rollResult.isCritical || rollResult.die?.natural === 10,
+    isFumble: !!rollResult.isFumble || rollResult.die?.natural === 1
+  };
+}
+
+/**
+ * Build a manual-resolution target outcome for melee.
+ */
+function meleeManualTarget(target, manualResolution, targetWarnings) {
+  return {
+    target: clonePlainData(target),
+    attack: {},
+    hits: [],
+    saves: [],
+    plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
+    manualResolution: clonePlainData(manualResolution) || { required: false },
+    warnings: cloneArray(targetWarnings)
+  };
+}
+
+/**
+ * Get a skill's numeric value from a snapshot skills object, matching case-insensitively.
+ */
+function getSkillValueCaseInsensitive(skills = {}, skillName) {
+  const lowerName = String(skillName || "").toLowerCase();
+  for (const [key, value] of Object.entries(skills)) {
+    if (key.toLowerCase() === lowerName) {
+      return getSkillValue(value);
+    }
+  }
+  return 0;
 }
 
 export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
