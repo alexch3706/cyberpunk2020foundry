@@ -386,6 +386,13 @@
     "SETTINGS.TrainedSkillsFirstHint": "Whether trained skills always come first in the skills list",
     "SETTINGS.StagedPenetration": "Staged Penetration",
     "SETTINGS.StagedPenetrationHint": "Increase affected armor ablation by one when damage penetrates armor.",
+    "SETTINGS.CorebookFidelityMode": "Corebook Fidelity Mode",
+    "SETTINGS.CorebookFidelityModeHint": "When enabled, combat resolution follows Cyberpunk 2020 corebook rules strictly. Exposed mechanics that are not fully implemented will be hidden, disabled, or marked manual.",
+    "SETTINGS.CombatDamageCommitMode": "Damage Commit Mode",
+    "SETTINGS.CombatDamageCommitModeHint": "How damage state changes are applied. 'Preview + Confirm' shows a dialog before persisting changes. 'Direct' applies changes immediately. Reserved for future use.",
+    "SETTINGS.CombatDamageCommitModePreviewConfirm": "Preview + Confirm",
+    "SETTINGS.CombatDamageCommitModeDirect": "Direct (no preview)",
+    "SuppressiveFireManualWarning": "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.",
     
     "CYBERPUNK.NoCombatError": "There's currently no combat encounter present; you'll need to start one",
     "CYBERPUNK.AmmoDelta": "Ammo Spent",

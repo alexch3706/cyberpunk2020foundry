@@ -707,6 +707,421 @@
           "after": 7
         }
       }
+    },
+    {
+      "name": "three-round-burst-close-range-advantage",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "close"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 7 }
+        },
+        {
+          "id": "burst_hits",
+          "total": 3,
+          "die": { "faces": 3, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "ThreeRoundBurst",
+          "range": "RangeClose",
+          "modifiers": [
+            {
+              "code": "range",
+              "value": "RangeClose",
+              "targetNumber": 15
+            },
+            {
+              "code": "fireMode",
+              "value": "ThreeRoundBurst"
+            },
+            {
+              "code": "threeRoundBurst",
+              "value": 3
+            },
+            {
+              "code": "weaponAccuracy",
+              "value": 0
+            }
+          ]
+        },
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 3,
+              "burstHitsRoll": {
+                "id": "burst_hits",
+                "total": 3
+              }
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              }
+            ]
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -3,
+          "after": 7
+        }
+      }
+    },
+    {
+      "name": "three-round-burst-aimed-location",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "medium",
+          "options": {
+            "targetArea": "torso"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": { "faces": 10, "natural": 9 }
+        },
+        {
+          "id": "burst_hits",
+          "total": 2,
+          "die": { "faces": 3, "natural": 2 }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "ThreeRoundBurst",
+          "range": "RangeMedium",
+          "modifiers": [
+            {
+              "code": "range",
+              "value": "RangeMedium",
+              "targetNumber": 20
+            },
+            {
+              "code": "fireMode",
+              "value": "ThreeRoundBurst"
+            },
+            {
+              "code": "targetArea",
+              "value": -4
+            },
+            {
+              "code": "threeRoundBurst",
+              "value": 3
+            },
+            {
+              "code": "weaponAccuracy",
+              "value": 0
+            }
+          ]
+        },
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 20,
+              "hit": true,
+              "margin": 1
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              },
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              }
+            ]
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -3,
+          "after": 7
+        }
+      }
+    },
+    {
+      "name": "three-round-burst-fumble-standard-jam",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "medium"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 1 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 20,
+              "hit": false,
+              "margin": 0,
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -3,
+          "after": 7
+        },
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning"
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "standard"
+          }
+        ]
+      }
+    },
+    {
+      "name": "three-round-burst-fumble-very-reliable",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "medium"
+        },
+        "weapon": {
+          "snapshot": {
+            "reliability": "VeryReliable"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 1 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 20,
+              "hit": false,
+              "margin": 0,
+              "roll": {
+                "isFumble": true
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -3,
+          "after": 7
+        },
+        "warnings": [],
+        "pendingDecisions": []
+      }
+    },
+    {
+      "name": "three-round-burst-fumble-unreliable",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "medium"
+        },
+        "weapon": {
+          "snapshot": {
+            "reliability": "Unreliable"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 1 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 20,
+              "hit": false,
+              "margin": 0,
+              "roll": {
+                "isFumble": true,
+                "isJam": true
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -3,
+          "after": 7
+        },
+        "warnings": [
+          {
+            "code": "weapon-jam",
+            "severity": "warning"
+          }
+        ],
+        "pendingDecisions": [
+          {
+            "type": "jam",
+            "severity": "unreliable"
+          }
+        ]
+      }
+    },
+    {
+      "name": "three-round-burst-zero-ammo",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "medium"
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": 0
+          }
+        }
+      },
+      "rolls": [],
+      "legacyExpected": {
+        "manualResolution": {
+          "required": true
+        },
+        "ammo": {
+          "before": 0,
+          "delta": 0,
+          "after": 0
+        },
+        "warnings": [
+          {
+            "code": "insufficient-ammo",
+            "severity": "warning",
+            "message": "Weapon has insufficient ammo; resolve ammo manually."
+          }
+        ]
+      },
+      "expected": {
+        "manualResolution": {
+          "required": true
+        },
+        "warnings": [
+          {
+            "code": "insufficient-ammo"
+          }
+        ],
+        "ammo": {
+          "before": 0,
+          "delta": 0,
+          "after": 0
+        }
+      }
     }
   ]
 }

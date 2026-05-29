@@ -174,3 +174,103 @@ Verify that the core combat resolver faithfully applies the Cyberpunk 2020 damag
 3. Target an already **Mortal** defender and roll a stopped hit (0 damage):
    - Verify that the preview lists a pending **recurring Death Save reminder** (to remind the GM/player to roll death saves each turn).
 4. Verify that confirming these states persists the damage updates on the target sheet, and the pending saves are printed to the chat card for player/GM resolution.
+
+---
+
+## 7. Epic 4 Automatic Fire (Manual Checks)
+
+Verify that three-round burst, full auto (single and multi-target), suppressive fire, and jam/reliability behavior in automatic fire modes produce correct preview/confirm flows, ammo accounting, hit count/damage, and chat evidence.
+
+### 7.1 Environment Setup
+Create a clean Foundry test world with:
+- **Attacker**: Create a character named **Solo (Attacker)** with:
+  - **REF**: `8`, **Rifle Skill**: `6`
+  - **Assault Rifle** (auto weapon): Damage `4d6`, Shots `30` / `30`, RoF `30`, Standard reliability, Range `400`m, Accuracy `0`
+  - **Backup Very Reliable weapon**: Copy the assault rifle, set reliability to `"VeryReliable"`
+  - **Backup Semi-Auto weapon**: A pistol with handgun skill (for Section 7.7 semi-auto check)
+- **Targets**: Three NPC actors named **Target A**, **Target B**, **Target C**, each with:
+  - **BODY**: `6` (BTM: `-2`)
+  - **Kevlar Vest**: SP `12` on Torso, equipped
+  - Place all tokens on an active scene
+
+### 7.2 Three-Round Burst
+1. Target **Target A** with Foundry's targeting tool.
+2. Open Solo's sheet → Combat tab → click the Assault Rifle roll button.
+3. In the modifiers dialog, select **Three-Round Burst** fire mode at **Medium** range, click Roll.
+4. ✅ Fire mode dropdown shows **"Three-Round Burst"** (not hidden, not disabled).
+5. ✅ Preview dialog shows **3 rounds expended**, ammo: `30 - 3 = 27`, hit count based on burst roll (1d3) capped by margin.
+6. ✅ Preview shows a `[COMMITTED]` button and a `[CANCEL]` button.
+7. Click **Confirm**:
+   - ✅ Chat card updates to `[COMMITTED]` banner (green).
+   - ✅ Chat card displays burst hit count, ammo delta `-3`, damage per hit with location/armor/penetration.
+   - ✅ Attacker sheet ammo shows `27`.
+8. Repeat with weapon set to **1 round left**:
+   - ✅ Preview shows **1 round expended**, burst_hits capped at 1, ammo: `1 - 1 = 0`.
+9. Try attacking with **0 rounds**:
+   - ✅ Preview shows insuffient ammo warning, `[CONFIRM]` is blocked or marked manual.
+
+### 7.3 Full Auto, Single Target
+1. Reload weapon to 30 shots. Target **Target B**.
+2. Select **Full Auto** fire mode, **Close** range, click Roll.
+3. ✅ Preview dialog shows ammo delta = `30` (min(shotsLeft=30, ROF=30) = 30).
+4. ✅ Hit count = `Math.min(roundsFired, margin)` capped at rounds fired.
+5. ✅ Chat card shows full auto details, hit locations, damage per hit, ammo delta `-30`.
+6. ✅ Confirm: attacker ammo = `0`.
+7. Reload to 30 shots, select **Long** range:
+   - ✅ Preview shows single hit with full auto `-3` modifier (`-1 * Math.floor(30/10)`).
+8. Select **Medium** range with 10 shots:
+   - ✅ Preview shows ammo delta = 10, full auto `-1` modifier (`-1 * Math.floor(10/10)`).
+
+### 7.4 Full Auto, Multi-Target
+1. Reload weapon to 30 shots. Target **Target B** and **Target C** (2 targets).
+2. Select **Full Auto**, **Close** range, click Roll.
+3. ✅ Preview dialog shows per-target outcomes:
+   - Rounds per target = `Math.floor(30 / 2) = 15`.
+   - Ammo delta = `30`.
+4. ✅ Chat card shows each target's outcomes with separate hit/miss, locations, damage.
+5. On confirm:
+   - ✅ Attacker ammo = `0`.
+   - ✅ Each target's damage/armor updated per hit count.
+6. Target all three NPCs, reload weapon to 25 shots:
+   - ✅ Rounds per target = `Math.floor(25 / 3) = 8`, ammo delta = `24` (1 round left over).
+   - ✅ Third target rounds fire normally.
+
+### 7.5 Suppressive Fire — Hidden When Fidelity ON
+1. Ensure **Corebook Fidelity Mode** setting is **ON** (default).
+2. Open Solo's sheet, select Assault Rifle, open modifiers dialog.
+3. ✅ **"Suppressive"** is **NOT** visible in the fire mode dropdown.
+4. ✅ Only Semi-Auto, Three-Round Burst, and Full Auto are visible.
+
+### 7.6 Suppressive Fire — Warning When Fidelity OFF
+1. Open World Settings → toggle **Corebook Fidelity Mode** to **OFF**.
+2. Target any NPC, select **Suppressive** fire mode, any range, click Roll.
+3. ✅ A warning notification appears: **"Suppressive fire not supported without zone width and rounds fired inputs."**
+4. ✅ Chat card shows manual-resolution status (`[MANUAL]`), no hits applied, no ammo deducted.
+5. Reset Corebook Fidelity Mode to **ON**.
+
+### 7.7 Jam and Reliability
+1. Ensure attacker has a **Standard reliability** auto weapon with full ammo (30 shots).
+2. Target an NPC, roll full auto attacks repeatedly until a **natural 1** occurs on the attack d10.
+3. ✅ On natural 1 with Standard reliability:
+   - Chat card shows jam warning (`isJam: true`), hit forced false.
+   - Ammo **is** deducted (full ROF).
+   - `[PENDING DECISION]` jam indicator visible in chat card.
+4. Switch to a **Very Reliable** weapon (edit item or create one).
+5. Roll until natural 1:
+   - ✅ On natural 1, no jam warning, just a miss (`hit: false`, no `isJam`).
+   - Ammo **is** deducted.
+6. Load a **semi-auto** weapon (non-automatic).
+7. Roll until natural 1:
+   - ✅ No jam, standard fumble miss only (no `isJam` on roll).
+
+### 7.8 Ammo Consistency
+1. Set weapon to exactly **5 rounds** remaining.
+2. Full auto at Close range (ROF ≥ 10).
+3. ✅ Preview shows ammo delta = **5** (not ROF — bounded by `shotsLeft`).
+4. Confirm, verify ammo = **0**, no negative values.
+5. Try another attack with **0 ammo**:
+   - ✅ Preview shows ammo warning, commit is blocked or marked manual.
+6. Set weapon to **1 round**, select **Three-Round Burst**:
+   - ✅ Preview shows **1 round** expended (`Math.min(1, 3) = 1`).
+7. Set weapon to **2 rounds**, select **Three-Round Burst**:
+   - ✅ Preview shows **2 rounds** expended (`Math.min(2, 3) = 2`).

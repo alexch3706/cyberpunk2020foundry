@@ -27,4 +27,26 @@ export function registerSystemSettings() {
     type: Boolean,
     default: true
   });
+
+  game.settings.register("cyberpunk2020", "corebookFidelityMode", {
+    name: "SETTINGS.CorebookFidelityMode",
+    hint: "SETTINGS.CorebookFidelityModeHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("cyberpunk2020", "combatDamageCommitMode", {
+    name: "SETTINGS.CombatDamageCommitMode",
+    hint: "SETTINGS.CombatDamageCommitModeHint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: {
+      previewConfirm: "SETTINGS.CombatDamageCommitModePreviewConfirm",
+      direct: "SETTINGS.CombatDamageCommitModeDirect"
+    },
+    default: "previewConfirm"
+  });
 }

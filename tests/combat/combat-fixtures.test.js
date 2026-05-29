@@ -8,13 +8,15 @@ import { resolveSavePromptsForTarget } from "../../module/combat/save-resolver.j
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
+import { isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
   new URL("./fixtures/three-round-burst.json", import.meta.url),
   new URL("./fixtures/ranged-full-auto.json", import.meta.url),
   new URL("./fixtures/suppressive-fire.json", import.meta.url),
-  new URL("./fixtures/reliability-jam.json", import.meta.url)
+  new URL("./fixtures/reliability-jam.json", import.meta.url),
+  new URL("./fixtures/unsupported-modes.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
@@ -26,6 +28,7 @@ export async function runCombatFixtures() {
   assertSavePromptResolution();
   assertArmorResolver();
   assertCombatResolverRouting();
+  assertSettingsHelpers();
 
   for(const fixtureUrl of FIXTURE_URLS) {
     const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
@@ -1305,4 +1308,28 @@ function assertCombatResolverRouting() {
   };
   const insufficientResult = resolveCombatAction(insufficientAmmoContext, { structured: true }, roller);
   assert.equal(insufficientResult, "fallback-called", "Multi-target FullAuto with roundsFiredPerTarget < 1 should fall back to legacy resolver");
+}
+
+function assertSettingsHelpers() {
+  const originalGame = global.game;
+
+  try {
+    // 1. Default (no game object): should return true
+    delete global.game;
+    assert.equal(isCorebookFidelityEnabled(), true);
+    assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto"]);
+
+    // 2. Corebook Fidelity ON
+    global.game = { settings: { get: () => true } };
+    assert.equal(isCorebookFidelityEnabled(), true);
+    assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto"]);
+
+    // 3. Corebook Fidelity OFF (relaxed mode)
+    global.game = { settings: { get: () => false } };
+    assert.equal(isCorebookFidelityEnabled(), false);
+    assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto", "Suppressive"]);
+  } finally {
+    // Restore
+    global.game = originalGame;
+  }
 }

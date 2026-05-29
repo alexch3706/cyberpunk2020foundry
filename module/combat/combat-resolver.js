@@ -1,5 +1,6 @@
 import { rangeDCs, ranges } from "../lookups.js";
 import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState } from "./attack-resolver.js";
+import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 
 /**
  * Top-level combat resolver shell.
@@ -46,10 +47,23 @@ function isSupportedSingleShotRangedContext(context) {
 
 function canResolveSuppressiveFireContext(context, roller) {
   const fireMode = String(context?.action?.fireMode || "").toLowerCase();
-  return context?.action?.type === "ranged"
+  const isValidMode = context?.action?.type === "ranged"
     && (fireMode === "suppressive" || fireMode === "suppressivefire")
     && Array.isArray(context.targets)
     && typeof roller === "function";
+
+  if (!isValidMode) return false;
+
+  if (isCorebookFidelityEnabled(context)) {
+    const fireZoneWidth = context.action?.fireZoneWidth ?? context.action?.options?.fireZoneWidth;
+    const roundsFired = context.action?.roundsFired ?? context.action?.options?.roundsFired;
+
+    if (fireZoneWidth === undefined || fireZoneWidth === null || roundsFired === undefined || roundsFired === null) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function canResolveSingleShotRangedContext(context, roller) {

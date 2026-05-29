@@ -618,6 +618,9 @@
           "roundsFired": "__UNDEFINED__",
           "source": "__UNDEFINED__"
         },
+        "options": {
+          "corebookFidelityMode": false
+        },
         "targets": [
           {
             "actorUuid": "Actor.nope",
@@ -641,6 +644,9 @@
           "roundsFired": "__UNDEFINED__",
           "source": "__UNDEFINED__"
         },
+        "options": {
+          "corebookFidelityMode": false
+        },
         "targets": [
           {
             "actorUuid": "Actor.nope",
@@ -653,6 +659,513 @@
       "expected": {
         "manualResolution": {
           "required": true
+        }
+      }
+    },
+    {
+      "name": "suppressive-fire-all-pass",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 3,
+          "roundsFired": 30
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 15,
+          "die": { "faces": 10, "natural": 5 }
+        },
+        {
+          "id": "save",
+          "total": 14,
+          "die": { "faces": 10, "natural": 8 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "save": {
+                "passed": true
+              }
+            },
+            "hits": []
+          },
+          {
+            "attack": {
+              "save": {
+                "passed": true
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "suppressive-fire-all-fail",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 3,
+          "roundsFired": 30
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 5,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 5,
+          "die": { "faces": 6, "natural": 5 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "save",
+          "total": 3,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 5,
+          "die": { "faces": 6, "natural": 5 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 5,
+          "die": { "faces": 6, "natural": 5 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 1,
+          "die": { "faces": 6, "natural": 1 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "save": {
+                "passed": false
+              }
+            },
+            "hits": [{}, {}]
+          },
+          {
+            "attack": {
+              "save": {
+                "passed": false
+              }
+            },
+            "hits": [{}, {}, {}]
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "suppressive-fire-high-rof",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 3,
+          "roundsFired": 60
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": 60,
+            "rof": 60
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 10,
+          "die": { "faces": 10, "natural": 3 }
+        },
+        {
+          "id": "hitCount",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 8,
+          "die": { "faces": 6, "natural": 8 }
+        },
+        {
+          "id": "save",
+          "total": 22,
+          "die": { "faces": 10, "natural": 10 }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "roundsFired": 60,
+          "fireZoneWidth": 3
+        },
+        "targets": [
+          {
+            "attack": {
+              "save": {
+                "passed": false
+              }
+            },
+            "hits": [{}, {}]
+          },
+          {
+            "attack": {
+              "save": {
+                "passed": true
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 60,
+          "delta": -60,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "suppressive-fire-armored-targets",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 3,
+          "roundsFired": 30
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 7,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 4,
+          "die": { "faces": 6, "natural": 4 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 15,
+          "die": { "faces": 6, "natural": 15 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 8,
+          "die": { "faces": 6, "natural": 8 }
+        },
+        {
+          "id": "save",
+          "total": 6,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 15,
+          "die": { "faces": 6, "natural": 15 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "save": {
+                "passed": false
+              }
+            },
+            "hits": [{}, {}]
+          },
+          {
+            "attack": {
+              "save": {
+                "passed": false
+              }
+            },
+            "hits": [{}, {}]
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      }
+    },
+    {
+      "name": "suppressive-fire-zero-ammo",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 3,
+          "roundsFired": 30
+        },
+        "weapon": {
+          "snapshot": {
+            "shotsLeft": "__UNDEFINED__"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 5,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 3,
+          "die": { "faces": 6, "natural": 3 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 8,
+          "die": { "faces": 6, "natural": 8 }
+        },
+        {
+          "id": "save",
+          "total": 4,
+          "die": { "faces": 10, "natural": 1 }
+        },
+        {
+          "id": "hitCount",
+          "total": 2,
+          "die": { "faces": 6, "natural": 2 }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": { "faces": 10, "natural": 4 },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 6,
+          "die": { "faces": 6, "natural": 6 }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire"
+        },
+        "targets": [
+          {
+            "attack": {
+              "save": { "passed": false }
+            },
+            "hits": [{}, {}]
+          },
+          {
+            "attack": {
+              "save": { "passed": false }
+            },
+            "hits": [{}]
+          }
+        ],
+        "ammo": {
+          "before": null,
+          "delta": 0,
+          "after": null
+        },
+        "warnings": [
+          {
+            "code": "missing-ammo-state"
+          }
+        ]
+      }
+    },
+    {
+      "name": "suppressive-fire-wide-zone",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": 30,
+          "roundsFired": 30
+        }
+      },
+      "rolls": [
+        {
+          "id": "save",
+          "total": 15,
+          "die": { "faces": 10, "natural": 5 }
+        },
+        {
+          "id": "save",
+          "total": 12,
+          "die": { "faces": 10, "natural": 2 }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "roundsFired": 30,
+          "fireZoneWidth": 30
+        },
+        "targets": [
+          {
+            "attack": {
+              "save": {
+                "passed": true,
+                "saveDC": 2
+              }
+            },
+            "hits": []
+          },
+          {
+            "attack": {
+              "save": {
+                "passed": true,
+                "saveDC": 2
+              }
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
         }
       }
     }

@@ -1,5 +1,5 @@
 # generated: 2026-05-24
-# last_updated: 2026-06-28
+# last_updated: 2026-05-29
 # project: Cyberpunk2020VTT
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-24
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 project: Cyberpunk2020VTT
 project_key: NOKEY
 tracking_system: file-system
@@ -72,8 +72,8 @@ development_status:
   4-3-resolve-full-auto-across-multiple-targets: done
   4-4-implement-suppressive-fire-resolver: done
   4-5-add-reliability-fumble-and-jam-handling: done
-  4-6-disable-or-mark-unsupported-automatic-modes-until-complete: backlog
-  4-7-add-automatic-fire-fixtures-and-foundry-checks: backlog
+  4-6-disable-or-mark-unsupported-automatic-modes-until-complete: done
+  4-7-add-automatic-fire-fixtures-and-foundry-checks: done
   epic-4-retrospective: optional
   epic-5: backlog
   5-1-normalize-defender-context-for-melee-resolution: backlog

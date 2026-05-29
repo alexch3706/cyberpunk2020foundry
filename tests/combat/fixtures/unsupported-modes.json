@@ -1,0 +1,206 @@
+{
+  "name": "unsupported-modes",
+  "context": {
+    "action": {
+      "type": "ranged",
+      "fireMode": "SuppressiveFire",
+      "fireZoneWidth": 3,
+      "roundsFired": 30,
+      "source": "tests/combat/fixtures/unsupported-modes.json"
+    },
+    "attacker": {
+      "actorUuid": "Actor.attacker",
+      "name": "Solo",
+      "snapshot": {
+        "stats": {
+          "ref": { "total": 8 }
+        },
+        "skills": {
+          "rifle": { "level": 6 }
+        },
+        "damage": 0
+      }
+    },
+    "weapon": {
+      "itemUuid": "Actor.attacker.Item.auto-rifle",
+      "name": "Assault Rifle",
+      "snapshot": {
+        "damage": "2d6",
+        "ap": false,
+        "shotsLeft": 30,
+        "rof": 30,
+        "reliability": "standard",
+        "range": 400,
+        "accuracy": 0,
+        "attackType": "Auto",
+        "attackSkill": "rifle"
+      }
+    },
+    "targets": [
+      {
+        "actorUuid": "Actor.target1",
+        "tokenUuid": "Scene.test.Token.target1",
+        "name": "Target In Zone 1",
+        "snapshot": {
+          "stats": {
+            "ref": { "total": 6 },
+            "bt": { "total": 6 }
+          },
+          "skills": {
+            "athletics": { "level": 4 }
+          },
+          "damage": 0,
+          "hitLocations": {
+            "torso": { "label": "Torso" }
+          },
+          "equippedArmor": [
+            {
+              "id": "armor-vest",
+              "name": "Kevlar Vest",
+              "equipped": true,
+              "system": {
+                "coverage": {
+                  "torso": {
+                    "sp": 12,
+                    "ablation": 0,
+                    "layer": "soft"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "rolls": [
+    { "id": "save", "expectedRequest": { "id": "save" }, "total": 10, "die": [{ "result": 10 }] }
+  ],
+  "expected": {
+    "outcome": {
+      "chatStatus": "preview"
+    },
+    "plannedUpdates": {},
+    "chatData": {
+      "preview": {}
+    }
+  },
+  "chatStatusCases": [],
+  "invalidPlanCases": [],
+  "singleShotCases": [
+    {
+      "name": "suppressive-no-inputs-fidelity - reject to legacy warning",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": "__UNDEFINED__",
+          "roundsFired": "__UNDEFINED__",
+          "source": "__UNDEFINED__"
+        },
+        "options": {
+          "corebookFidelityMode": true
+        }
+      },
+      "rolls": [],
+      "legacyExpected": {
+        "manualResolution": true,
+        "warning": "Suppressive fire not supported without zone width and rounds fired inputs."
+      },
+      "expected": {
+        "manualResolution": true,
+        "warning": "Suppressive fire not supported without zone width and rounds fired inputs."
+      }
+    },
+    {
+      "name": "suppressive-no-inputs-relaxed - routes to resolver, returns resolver manual outcome",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "SuppressiveFire",
+          "fireZoneWidth": "__UNDEFINED__",
+          "roundsFired": "__UNDEFINED__",
+          "source": "__UNDEFINED__"
+        },
+        "options": {
+          "corebookFidelityMode": false
+        }
+      },
+      "rolls": [],
+      "expected": {
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "message": "Suppressive fire requires fireZoneWidth and roundsFired; resolve manually."
+        }
+      }
+    },
+    {
+      "name": "full-auto-fidelity-supported",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto",
+          "targetNumber": 15,
+          "range": "close",
+          "fireZoneWidth": "__UNDEFINED__",
+          "roundsFired": "__UNDEFINED__"
+        },
+        "options": {
+          "corebookFidelityMode": true
+        }
+      },
+      "rolls": [
+        { "id": "attack", "total": 16, "die": { "faces": 10, "natural": 8 } },
+        { "id": "location", "total": 4, "die": { "faces": 10, "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 6, "die": { "faces": 6, "natural": 6 } }
+      ],
+      "expected": {
+        "manualResolution": {
+          "required": false
+        },
+        "targets": [
+          {
+            "attack": {
+              "hit": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "three-round-burst-fidelity-supported",
+      "context": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "ThreeRoundBurst",
+          "targetNumber": 15,
+          "range": "close",
+          "fireZoneWidth": "__UNDEFINED__",
+          "roundsFired": "__UNDEFINED__"
+        },
+        "options": {
+          "corebookFidelityMode": true
+        }
+      },
+      "rolls": [
+        { "id": "attack", "total": 16, "die": { "faces": 10, "natural": 8 } },
+        { "id": "burst_hits", "total": 1, "die": { "faces": 3, "natural": 1 } },
+        { "id": "location", "total": 4, "die": { "faces": 10, "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 6, "die": { "faces": 6, "natural": 6 } }
+      ],
+      "expected": {
+        "manualResolution": {
+          "required": false
+        },
+        "targets": [
+          {
+            "attack": {
+              "hit": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

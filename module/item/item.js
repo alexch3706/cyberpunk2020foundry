@@ -330,16 +330,26 @@ export class CyberpunkItem extends Item {
       }
     }
 
+    // ---- Suppressive fire guard: no legacy handler exists ----
+    if (attackMods?.fireMode === fireModes.suppressive) {
+      const msg = localize("SuppressiveFireManualWarning") || "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.";
+      ui.notifications?.warn?.(msg);
+      return {
+        manualResolution: true,
+        warning: "Suppressive fire not supported without zone width and rounds fired inputs."
+      };
+    }
+
     // ---- Firemode-specific rolling. I may roll together some common aspects later ----
     // Full auto
-    if(attackMods.fireMode === fireModes.fullAuto) {
+    if(attackMods?.fireMode === fireModes.fullAuto) {
       return this.__fullAuto(attackMods, targetTokens);
     }
     // Three-round burst. Shares... a lot in common with full auto actually
-    else if(attackMods.fireMode === fireModes.threeRoundBurst) {
+    else if(attackMods?.fireMode === fireModes.threeRoundBurst) {
       return this.__threeRoundBurst(attackMods);
     }
-    else if(attackMods.fireMode === fireModes.semiAuto) {
+    else if(attackMods?.fireMode === fireModes.semiAuto) {
       return this.__semiAuto(attackMods);
     }
   }

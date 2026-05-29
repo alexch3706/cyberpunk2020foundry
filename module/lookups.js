@@ -153,9 +153,12 @@ export let defaultAreaLookup = {
 }
 export function defaultHitLocations() { return game.system.template.Actor.templates.hitLocations.hitLocations; }
 
+import { filterSupportedFireModes } from "./combat/settings-helpers.js";
+
 export function rangedModifiers(weapon, targetTokens=[]) {
     let range = weapon.system.range || 50;
-    let fireModes = weapon.__getFireModes() || [];
+    let rawFireModes = weapon.__getFireModes() || [];
+    let fireModes = filterSupportedFireModes(rawFireModes);
     return [
         [{
             localKey: "FireMode",
