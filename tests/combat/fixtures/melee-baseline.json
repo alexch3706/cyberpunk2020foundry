@@ -1311,6 +1311,67 @@
         "pendingDecisions": [],
         "chat": { "status": "preview" }
       }
+    },
+    {
+      "name": "martial-sweep-trip-basic",
+      "context": {
+        "action": {
+          "type": "martial",
+          "meleeAction": "SweepTrip",
+          "options": { "martialArt": "capoeira" }
+        },
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "skills": {
+              "brawling": { "level": 6 },
+              "capoeira": { "level": 5 }
+            }
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "1d3",
+            "attackSkill": null,
+            "attackType": "Martial"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.defender",
+            "name": "Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+              "skills": {
+                "brawling": { "level": 3 }
+              },
+              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 20, "die": { "natural": 6 } },
+        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "martial", "meleeAction": "SweepTrip", "martialCategory": "grappleFamily" },
+        "targets": [
+          {
+            "target": { "actorUuid": "Actor.defender" },
+            "attack": {
+              "hit": true,
+              "roll": { "total": 21, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
+              "opposedRoll": { "total": 13 }
+            },
+            "hits": [],
+            "manualResolution": { "required": false }
+          }
+        ],
+        "manualResolution": { "required": false },
+        "pendingDecisions": [],
+        "chat": { "status": "preview" }
+      }
     }
   ]
 }

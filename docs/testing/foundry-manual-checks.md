@@ -123,7 +123,7 @@ Verify that missing actor context or state conflicts block the commit path and a
 To execute the automated suite of deterministic combat fixtures (verifying normalization, outcomes, hit locations, and fallbacks in code):
 1. Open a terminal in the project root directory.
 2. Run the command: `node tests/run-combat-fixtures.mjs`.
-3. Verify that the output displays `2 combat fixture(s) passed`.
+3. Verify that the output displays `9 combat fixture(s) passed`.
 
 ---
 
@@ -274,3 +274,162 @@ Create a clean Foundry test world with:
    - ✅ Preview shows **1 round** expended (`Math.min(1, 3) = 1`).
 7. Set weapon to **2 rounds**, select **Three-Round Burst**:
    - ✅ Preview shows **2 rounds** expended (`Math.min(2, 3) = 2`).
+
+---
+
+## 8. Epic 5 Melee & Martial Actions (Manual Checks)
+
+Verify that melee attacks resolve as opposed rolls, martial actions use correct categories and key technique bonuses, grapple-family prerequisites are enforced, and chat evidence displays correct action labels.
+
+### 8.1 Environment Setup
+Create a clean Foundry test world with:
+- **Attacker**: Create a character named **Fighter (Attacker)** with:
+  - **REF**: `9`, **Melee**: `5`, **Brawling**: `6`, **Karate**: `5`, **Aikido**: `5`
+  - **Melee Weapon**: Knife (damage `1d6`, attackSkill `melee`)
+  - **Martial Weapon**: Fists (damage `1d3`, attackType `Martial`, attackSkill `null`)
+  - **BODY**: `6` (BTM: `-2`)
+- **Defender**: Create an NPC named **Guard (Defender)** with:
+  - **REF**: `6`, **Brawling**: `3`, **Melee**: `4`
+  - **BODY**: `8` (BTM: `-2`)
+  - **Light Armorjack**: SP `4` on Torso, equipped
+- Place tokens for both actors on an active scene.
+
+### 8.2 Basic Melee Attack
+1. Select the **Fighter** token. Target the **Guard** token.
+2. Open Fighter's sheet → **Combat** tab → click a **melee weapon roll** button (e.g., Knife).
+3. A melee roll should fire — there is **no modifiers dialog** for melee (melee rolls begin resolution immediately).
+4. ✅ A preview dialog appears showing:
+   - **Attacker**: Fighter using Knife
+   - **Opposed Roll**: Attacker REF `9` + Melee `5` + 1d10 vs Defender REF `6` + Melee `4` + 1d10
+   - **Hit/Miss**: Hit when attacker total > defender total
+   - **Damage**: Weapon damage (1d6) + strength bonus from attacker BODY (6 → +0) — armor/BTM applied
+   - **Ammo**: No ammo change (melee)
+5. Click **Confirm**:
+   - ✅ Chat card updates to `[COMMITTED]` banner (green)
+   - ✅ Chat card shows opposed roll values with attacker/defender totals
+   - ✅ Damage displays raw damage, armor mitigation, BTM, final damage
+   - ✅ Defender sheet damage is updated
+6. Click **Cancel** on a subsequent roll:
+   - ✅ Chat card updates to `[CANCELED]` banner
+   - ✅ No sheet mutations applied
+
+### 8.3 Melee — Defender Wins
+1. Attack again. If defender roll > attacker roll:
+   - ✅ Preview shows **miss** (`hit: false`)
+   - ✅ No damage section displayed
+   - ✅ Ammo unchanged
+2. Confirm the miss:
+   - ✅ Chat card shows `[COMMITTED]` with miss status
+   - ✅ "Defender wins" information visible in roll evidence
+
+### 8.4 Martial Action — Strike with Karate
+1. Ensure Fighter has **Karate 5** skill and the martial weapon (fists). Target the Guard.
+2. Open Fighter's sheet → find the martial action control (dropdown or selector).
+3. Select **Strike** action → **Karate** style.
+4. Click roll:
+   - ✅ Preview dialog shows **martialCategory: "damageOnly"**
+   - ✅ Attack total includes **key technique bonus +2** (Karate strike)
+   - ✅ Opposed roll uses attacker Karate vs defender Brawling
+   - ✅ Damage resolves (1d3 + strength bonus — armor — BTM)
+5. Confirm:
+   - ✅ Chat card shows `[COMMITTED]`, action label "Strike", style "Karate", bonus "+2"
+   - ✅ Sheet mutations applied
+   - ✅ Chat card shows martialCategory "damageOnly" in the roll evidence
+
+### 8.5 Martial Action — Block/Parry (Non-Damage)
+1. Select **Block/Parry** action → **Karate** style.
+2. Click roll:
+   - ✅ Preview shows martialCategory: **"nonDamage"**
+   - ✅ Attack total includes key technique bonus **+1** (Karate block/parry)
+   - ✅ **hits is empty** — no damage section
+   - ✅ No ammo, no damage planning
+3. Confirm:
+   - ✅ Chat card shows `[COMMITTED]` with Block/Parry result
+   - ✅ Chat card shows martialCategory "nonDamage" in the roll evidence
+   - ✅ No sheet mutations (no damage, no ammo)
+
+### 8.6 Martial Action — Kick with Savate
+1. Select **Kick** action → **Savate** style.
+2. Click roll:
+   - ✅ Preview shows martialCategory: **"damageOnly"**
+   - ✅ Attack total includes **key technique bonus +2** (Savate kick)
+   - ✅ Opposed roll uses attacker Savate vs defender Brawling
+   - ✅ Damage resolves (1d3 + strength bonus — armor — BTM)
+3. Confirm:
+   - ✅ Chat card shows `[COMMITTED]`, action label "Kick", style "Savate", bonus "+2"
+   - ✅ Chat card shows martialCategory "damageOnly" in the roll evidence
+   - ✅ Sheet mutations applied
+
+### 8.7 Martial Action — Grapple (No Prerequisites)
+1. Select **Grapple** action → **Karate** style.
+2. Click roll:
+   - ✅ Preview shows martialCategory: **"grappleFamily"**
+   - ✅ Attack total includes key technique bonus **+0** (Karate grapple not a key technique)
+   - ✅ **hits is empty**
+   - ✅ No pending decisions, no manual resolution
+3. Confirm:
+   - ✅ Chat card shows `[COMMITTED]` with Grapple outcome
+   - ✅ Chat card shows martialCategory "grappleFamily" in the roll evidence
+
+### 8.8 Martial Action — Choke with Prerequisite Confirmed
+1. First set up defender with the prerequisite hold state by running this in the browser console:
+   ```js
+   game.actors.getName('Guard (Defender)').update({
+     'system.combatState.held': true
+   });
+   ```
+2. Then switch to the attacker, select **Choke** action → **Aikido** style.
+3. Click roll:
+   - ✅ Preview shows martialCategory: **"grappleFamily"**
+   - ✅ Attack total includes **key technique bonus +0** (no key technique for choke)
+   - ✅ **hits is empty** — grappleFamily
+   - ✅ No manual resolution (prerequisite confirmed via combatState)
+4. Confirm:
+   - ✅ Chat card shows `[COMMITTED]` with Choke outcome
+   - ✅ Chat card shows martialCategory "grappleFamily" in the roll evidence
+
+### 8.9 Martial Action — Hold with Prerequisite Confirmed
+1. Switch to **Aikido** style. Select **Hold** → roll (Hold requires grapple — will be blocked).
+   - ✅ Preview shows `[MANUAL]` banner with "prerequisite-unconfirmed" reason
+   - ✅ Confirm button disabled or blocked
+   - `[GM override or manual resolution flow]`
+2. To test a clean path with prerequisite already satisfied, run this in the browser console before rolling:
+   ```js
+   // Set combatState.grappled on the defender token's actor
+   game.actors.getName('Guard (Defender)').update({
+     'system.combatState.grappled': true
+   });
+   ```
+   Then select **Hold** → **Aikido** → roll
+   - ✅ Preview shows clean outcome, no manual resolution
+   - ✅ Hit/miss based on opposed roll
+   - ✅ hits is empty (grappleFamily)
+   - ✅ Chat card shows martialCategory "grappleFamily" in the roll evidence
+
+### 8.10 Martial Action — Disarm (Prerequisite Warning, No Block)
+1. Select **Disarm** action → **Aikido** style.
+2. Click roll:
+   - ✅ Preview shows martialCategory: **"nonDamage"**
+   - ✅ Attack total includes key technique bonus **+1**
+   - ✅ **hits is empty**
+   - ✅ Chat card shows a **prerequisite warning** ("Disarm requires Block/Parry or Dodge")
+   - ✅ **Confirm button IS available** — disarm is non-grappleFamily, so the warning is advisory
+3. Confirm:
+   - ✅ Chat card updates to `[COMMITTED]` with pending decision warning
+   - ✅ Chat card shows martialCategory "nonDamage" in the roll evidence
+   - ✅ No sheet mutations
+
+### 8.11 Default Melee with Martial Art Not Matching Weapon Skill
+1. Use the **Knife** (melee weapon, attackSkill: "melee") while having **Karate 5**.
+2. Select a martial action → **Strike** → **Karate**:
+   - ✅ Resolver uses Karate skill for opposed roll (not melee skill)
+   - ✅ Key technique bonus applies
+   - ✅ Chat card shows martialCategory "damageOnly" in the roll evidence
+   - Damage resolves through martial damage pipeline.
+
+### 8.12 Manual Resolution — Missing Defender Context
+1. Place an actorless (unlinked) token on the scene.
+2. Target the actorless token, initiate a melee attack:
+   - ✅ Preview shows `[MANUAL]` banner with "missing-target-actor" reason
+   - ✅ Confirm button is blocked
+   - ✅ Chat card shows manual-resolution status
