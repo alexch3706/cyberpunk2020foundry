@@ -78,7 +78,7 @@ development_status:
   epic-5: in-progress
   5-1-normalize-defender-context-for-melee-resolution: done
   5-2-resolve-baseline-opposed-melee-attacks: done
-  5-3-apply-melee-body-type-damage-modifiers: backlog
+  5-3-apply-melee-body-type-damage-modifiers: done
   5-4-add-martial-arts-data-module: backlog
   5-5-resolve-martial-and-brawling-actions: backlog
   5-6-enforce-grapple-family-prerequisites-and-pending-state: backlog

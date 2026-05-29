@@ -460,6 +460,78 @@ function assertBodyTypeDamageResolver() {
     finalDamage: 5,
     minimumDamageApplied: false
   }, "invalid Body Type does not become maximum BTM");
+
+  // BT 13 — modifier 6 (was 5 before fix), 7 - 6 = 1, not minimum-forced
+  assert.deepEqual(resolveBodyTypeDamage(7, 13), {
+    penetratingDamage: 7,
+    bodyTypeModifier: 6,
+    bodyTypeMitigation: 6,
+    finalDamage: 1,
+    minimumDamageApplied: false
+  }, "BT 13 BTM reduces penetrating damage to exactly 1 (not minimum-forced)");
+
+  // BT 14 — modifier 6 (was 5 before fix), 5 - 6 = -1, forced to minimum 1
+  assert.deepEqual(resolveBodyTypeDamage(5, 14), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 6,
+    bodyTypeMitigation: 4,
+    finalDamage: 1,
+    minimumDamageApplied: true
+  }, "BT 14 BTM forces minimum damage when BTM exceeds penetrating damage");
+
+  // BT 15 — modifier 8 (was 5 before fix), 10 - 8 = 2
+  assert.deepEqual(resolveBodyTypeDamage(10, 15), {
+    penetratingDamage: 10,
+    bodyTypeModifier: 8,
+    bodyTypeMitigation: 8,
+    finalDamage: 2,
+    minimumDamageApplied: false
+  }, "BT 15 BTM correctly resolves to modifier 8");
+
+  // BT 2 — modifier 0 (guard limit)
+  assert.deepEqual(resolveBodyTypeDamage(5, 2), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 0,
+    bodyTypeMitigation: 0,
+    finalDamage: 5,
+    minimumDamageApplied: false
+  }, "BT 2 BTM resolves to modifier 0");
+
+  // BT 11 — modifier 5 (explicit case)
+  assert.deepEqual(resolveBodyTypeDamage(7, 11), {
+    penetratingDamage: 7,
+    bodyTypeModifier: 5,
+    bodyTypeMitigation: 5,
+    finalDamage: 2,
+    minimumDamageApplied: false
+  }, "BT 11 BTM resolves to modifier 5");
+
+  // BT 12 — modifier 5 (explicit case)
+  assert.deepEqual(resolveBodyTypeDamage(5, 12), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 5,
+    bodyTypeMitigation: 4,
+    finalDamage: 1,
+    minimumDamageApplied: true
+  }, "BT 12 BTM forces minimum damage when BTM matches penetrating damage");
+
+  // BT 10.5 — fractional input resolves to BT 10 (modifier 4)
+  assert.deepEqual(resolveBodyTypeDamage(10, 10.5), {
+    penetratingDamage: 10,
+    bodyTypeModifier: 4,
+    bodyTypeMitigation: 4,
+    finalDamage: 6,
+    minimumDamageApplied: false
+  }, "fractional BT 10.5 resolves to BT 10 modifier 4");
+
+  // BT "13" — string input resolves to modifier 6
+  assert.deepEqual(resolveBodyTypeDamage(7, "13"), {
+    penetratingDamage: 7,
+    bodyTypeModifier: 6,
+    bodyTypeMitigation: 6,
+    finalDamage: 1,
+    minimumDamageApplied: false
+  }, "string BT '13' resolves to BT 13 modifier 6");
 }
 
 function assertWoundPlanning() {

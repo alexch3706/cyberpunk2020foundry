@@ -266,14 +266,13 @@ export function meleeBonkOptions() {
  * I couldn't figure out a single formula that'd work for it (cos of the weird widths of BT values)
  */
 export function btmFromBT(body) {
+    body = Math.floor(Number(body) || 0);
     if(body <= 2) {
         return 0;
       }
       switch(body) {
-        // Very weak
-        case 2: return 0
         // Weak
-        case 3: 
+        case 3:
         case 4: return 1
         // Average
         case 5:
@@ -284,11 +283,18 @@ export function btmFromBT(body) {
         case 9: return 3;
         // Very strong
         case 10: return 4;
-        default: return 5;
+        // Super strong
+        case 11:
+        case 12: return 5;
+        // Extremely strong
+        case 13:
+        case 14: return 6;
+        default: return 8;
       }
 }
 
 export function strengthDamageBonus(bt) {
+    bt = Math.floor(Number(bt) || 0);
     let btm = btmFromBT(bt);
     if(btm < 5)
         return btm - 2;

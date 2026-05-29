@@ -251,6 +251,203 @@
         ],
         "manualResolution": { "required": false }
       }
+    },
+    {
+      "name": "melee-bt13-vs-bt14",
+      "context": {
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 8 }, "bt": { "total": 13 } },
+            "skills": { "melee": { "level": 5 } }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.tough",
+            "name": "Tough Guard",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 14 } },
+              "skills": { "melee": { "level": 3 } },
+              "hitLocations": { "torso": { "label": "Torso" } },
+              "equippedArmor": [
+                { "id": "armor-jacket", "name": "Armor Jacket", "equipped": true, "coverage": { "torso": { "stoppingPower": 4, "ablation": 0 } } }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 18, "die": { "natural": 5 } },
+        { "id": "defend", "total": 12, "die": { "natural": 3 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 8, "die": { "natural": 8 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": { "hit": true },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 13,
+                "strengthDamageBonus": 5,
+                "effectiveStoppingPower": 4,
+                "armorMitigation": 4,
+                "penetratingDamage": 9,
+                "bodyTypeModifier": 6,
+                "bodyTypeMitigation": 6,
+                "finalDamage": 3,
+                "minimumDamageApplied": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "melee-bt15-vs-bt15",
+      "context": {
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 10 }, "bt": { "total": 15 } },
+            "skills": { "melee": { "level": 6 } }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.powerhouse",
+            "name": "Powerhouse",
+            "snapshot": {
+              "stats": { "ref": { "total": 8 }, "bt": { "total": 15 } },
+              "skills": { "melee": { "level": 4 } },
+              "hitLocations": { "torso": { "label": "Torso" } },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 20, "die": { "natural": 4 } },
+        { "id": "defend", "total": 14, "die": { "natural": 2 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 4, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": { "hit": true },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 12,
+                "strengthDamageBonus": 8,
+                "bodyTypeModifier": 8,
+                "bodyTypeMitigation": 8,
+                "finalDamage": 4,
+                "minimumDamageApplied": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "melee-bt10-vs-bt10",
+      "context": {
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 8 }, "bt": { "total": 10 } },
+            "skills": { "melee": { "level": 4 } }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.strong",
+            "name": "Strong Target",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 10 } },
+              "skills": { "melee": { "level": 3 } },
+              "hitLocations": { "torso": { "label": "Torso" } },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 17, "die": { "natural": 5 } },
+        { "id": "defend", "total": 12, "die": { "natural": 3 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 4, "die": { "natural": 4 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": { "hit": true },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 6,
+                "strengthDamageBonus": 2,
+                "bodyTypeModifier": 4,
+                "bodyTypeMitigation": 4,
+                "finalDamage": 2,
+                "minimumDamageApplied": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "melee-bt11-vs-bt11",
+      "context": {
+        "attacker": {
+          "snapshot": {
+            "stats": { "ref": { "total": 8 }, "bt": { "total": 11 } },
+            "skills": { "melee": { "level": 5 } }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.strong-bt11",
+            "name": "BT 11 Target",
+            "snapshot": {
+              "stats": { "ref": { "total": 6 }, "bt": { "total": 11 } },
+              "skills": { "melee": { "level": 3 } },
+              "hitLocations": { "torso": { "label": "Torso" } },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "total": 18, "die": { "natural": 5 } },
+        { "id": "defend", "total": 12, "die": { "natural": 3 } },
+        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
+        { "id": "damage", "total": 5, "die": { "natural": 5 } }
+      ],
+      "expected": {
+        "action": { "type": "melee" },
+        "targets": [
+          {
+            "attack": { "hit": true },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 9,
+                "strengthDamageBonus": 4,
+                "bodyTypeModifier": 5,
+                "bodyTypeMitigation": 5,
+                "finalDamage": 4,
+                "minimumDamageApplied": false
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
