@@ -681,7 +681,7 @@
           "after": 0
         }
       },
-      "ruleReference": "CP2020 p.100: Suppressive Fire save vs DC; failed save = 1d6 hits"
+      "ruleReference": "CP2020 p.100: Suppressive Fire save vs DC; CP2020 p.100: failed save = 1d6 hits"
     },
     {
       "name": "suppressive fire - missing fireZoneWidth returns manual",
@@ -1351,7 +1351,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.100: Suppressive fire consumes all remaining ammo; missing ammo warning"
+      "ruleReference": "CP2020 p.100: Suppressive fire consumes all remaining ammo; Audit 6.4: missing ammo warning"
     },
     {
       "name": "suppressive-fire-wide-zone",

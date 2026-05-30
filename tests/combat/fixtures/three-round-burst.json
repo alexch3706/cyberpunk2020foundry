@@ -673,7 +673,7 @@
           ]
         }
       },
-      "ruleReference": "CP2020 p.99: Burst with limited ammo; ammo delta = min(shotsLeft, 3)"
+      "ruleReference": "CP2020 p.99: Burst with limited ammo; CP2020 p.99: ammo delta = min(shotsLeft, 3)"
     },
     {
       "name": "three-round burst miss skips location/damage rolls and subtracts 3 ammo",
@@ -710,7 +710,7 @@
           "after": 7
         }
       },
-      "ruleReference": "CP2020 p.99: Burst miss consumes 3 ammo; skip damage rolls"
+      "ruleReference": "CP2020 p.99: Burst miss consumes 3 ammo; CP2020 p.99: skip damage rolls"
     },
     {
       "name": "three-round-burst-close-range-advantage",

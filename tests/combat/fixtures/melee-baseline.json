@@ -194,7 +194,7 @@
           "status": "preview"
         }
       },
-      "ruleReference": "CP2020 p.100: Melee opposed roll — attacker wins = hit; strength damage bonus applied"
+      "ruleReference": "CP2020 p.100: Melee opposed roll — attacker wins = hit; CP2020 p.100: strength damage bonus applied"
     },
     {
       "name": "melee-defender-wins",
@@ -345,7 +345,7 @@
           "required": true
         }
       },
-      "ruleReference": "Audit: Missing target actor blocks melee resolution"
+      "ruleReference": "Audit 6.4: Missing target actor blocks melee resolution"
     },
     {
       "name": "martial-action-shell",
@@ -1147,7 +1147,7 @@
           "status": "preview"
         }
       },
-      "ruleReference": "CP2020 p.101: Aikido Disarm +1; prerequisite check (requires BlockParry, Dodge)"
+      "ruleReference": "CP2020 p.101: Aikido Disarm +1; CP2020 p.101: prerequisite check (requires BlockParry, Dodge)"
     },
     {
       "name": "martial-grapple-karate",
@@ -1511,7 +1511,7 @@
           "status": "preview"
         }
       },
-      "ruleReference": "CP2020 p.101: Escape requires Grapple or Hold state (confirmed); Judo +1"
+      "ruleReference": "CP2020 p.101: Escape requires Grapple or Hold state (confirmed); CP2020 p.101: Judo +1"
     },
     {
       "name": "martial-unknown-action-fallback",
@@ -1767,7 +1767,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.106: BTM table — BT 13 = -6, BT 14 = -6; strengthDamageBonus BT 13 = +5"
+      "ruleReference": "CP2020 p.106: BTM table — BT 13 = -6, BT 14 = -6; CP2020 p.100: strengthDamageBonus BT 13 = +5"
     },
     {
       "name": "melee-bt15-vs-bt15",
@@ -1871,7 +1871,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.106: BTM table — BT 15 = -8; strengthDamageBonus BT 15 = +8"
+      "ruleReference": "CP2020 p.106: BTM table — BT 15 = -8; CP2020 p.100: strengthDamageBonus BT 15 = +8"
     },
     {
       "name": "melee-bt10-vs-bt10",
@@ -1975,7 +1975,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.106: BTM table — BT 10 = -4; strengthDamageBonus BT 10 = +2"
+      "ruleReference": "CP2020 p.106: BTM table — BT 10 = -4; CP2020 p.100: strengthDamageBonus BT 10 = +2"
     },
     {
       "name": "melee-bt11-vs-bt11",
@@ -2079,7 +2079,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.106: BTM table — BT 11 = -5; strengthDamageBonus BT 11 = +4"
+      "ruleReference": "CP2020 p.106: BTM table — BT 11 = -5; CP2020 p.100: strengthDamageBonus BT 11 = +4"
     },
     {
       "name": "martial-throw-requires-grapple-without-state",
@@ -2594,7 +2594,7 @@
           "status": "preview"
         }
       },
-      "ruleReference": "CP2020 p.101: Hold requires Grapple (confirmed); Aikido +1"
+      "ruleReference": "CP2020 p.101: Hold requires Grapple (confirmed); CP2020 p.101: Aikido +1"
     },
     {
       "name": "martial-sweep-trip-basic",
@@ -2715,7 +2715,7 @@
           "status": "preview"
         }
       },
-      "ruleReference": "CP2020 p.101: Sweep/Trip (grappleFamily); Capoeira +1"
+      "ruleReference": "CP2020 p.101: Sweep/Trip (grappleFamily); CP2020 p.101: Capoeira +1"
     }
   ]
 }

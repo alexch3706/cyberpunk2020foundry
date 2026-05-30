@@ -171,7 +171,7 @@
         "actorUpdates": [],
         "embeddedItemUpdates": []
       },
-      "ruleReference": "CP2020 p.99: Standard reliability jams on Natural 1; clear stoppage before next shot"
+      "ruleReference": "CP2020 p.99: Standard reliability jams on Natural 1; CP2020 p.99: clear stoppage before next shot"
     },
     {
       "name": "full-auto-fumble-unreliable",
@@ -235,7 +235,7 @@
           "after": 0
         }
       },
-      "ruleReference": "CP2020 p.99: Unreliable jams and damages on Natural 1; repair required"
+      "ruleReference": "CP2020 p.99: Unreliable jams and damages on Natural 1; CP2020 p.99: repair required"
     },
     {
       "name": "full-auto-fumble-very-reliable",

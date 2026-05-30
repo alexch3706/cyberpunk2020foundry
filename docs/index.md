@@ -1,6 +1,6 @@
 # Project Documentation Index
 
-Last updated: 2026-05-24
+Last updated: 2026-05-30
 
 ## Project Overview
 
@@ -28,6 +28,8 @@ Last updated: 2026-05-24
 
 ## Generated Documentation
 
+- [Resolver Contracts Reference](./resolver-contracts.md)
+- [Rule Reference Policy](./rule-reference-policy.md)
 - [Project Overview](./project-overview.md)
 - [Architecture](./architecture.md)
 - [Source Tree Analysis](./source-tree-analysis.md)

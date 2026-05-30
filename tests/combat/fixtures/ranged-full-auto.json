@@ -876,7 +876,7 @@
           "after": 0
         }
       },
-      "ruleReference": "CP2020 p.100: Full Auto 0 mod (5 ROF); hit cap = margin of success"
+      "ruleReference": "CP2020 p.100: Full Auto 0 mod (5 ROF); CP2020 p.100: hit cap = margin of success"
     },
     {
       "name": "full auto multi-target success with 25 shots on 2 targets",
@@ -1078,7 +1078,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.100: ROF halved per target; separate attack rolls"
+      "ruleReference": "CP2020 p.100: ROF halved per target; CP2020 p.100: separate attack rolls"
     },
     {
       "name": "full-auto-single-target-miss",
@@ -1174,7 +1174,7 @@
           }
         ]
       },
-      "ruleReference": "CP2020 p.99: Natural 1 Fumble; Standard reliability jam"
+      "ruleReference": "CP2020 p.99: Natural 1 Fumble; CP2020 p.99: Standard reliability jam"
     },
     {
       "name": "full-auto-fumble-very-reliable",

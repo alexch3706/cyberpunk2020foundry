@@ -434,7 +434,7 @@
         ],
         "warnings": []
       },
-      "ruleReference": "CP2020 p.99: Attack roll vs DC; miss skips location/damage rolls"
+      "ruleReference": "CP2020 p.99: Attack roll vs DC; CP2020 p.99: miss skips location/damage rolls"
     },
     {
       "name": "structured hit applies manual cover as armor layer",
@@ -791,7 +791,7 @@
         "embeddedItemUpdates": [],
         "warnings": []
       },
-      "ruleReference": "Audit: stagedPenetration setting disabled; CP2020 p.106: AP halving without ablation"
+      "ruleReference": "Audit 6.4: stagedPenetration setting disabled; CP2020 p.106: AP halving without ablation"
     },
     {
       "name": "structured layered armor ablates outer item-backed layer",
@@ -1654,7 +1654,7 @@
           ]
         }
       },
-      "ruleReference": "Audit: missing hit-location model blocks automated resolution"
+      "ruleReference": "Audit 6.4: missing hit-location model blocks automated resolution"
     },
     {
       "name": "structured outcome warns when ammo is insufficient",
@@ -2324,7 +2324,7 @@
     },
     {
       "name": "structured PointBlank range hit",
-      "ruleReference": "CP2020 p.99: Range DC table (PointBlank=10); point-blank always hits at DC 10",
+      "ruleReference": "CP2020 p.99: Range DC table (PointBlank=10); CP2020 p.99: point-blank always hits at DC 10",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -2402,7 +2402,7 @@
     },
     {
       "name": "structured Extreme range miss",
-      "ruleReference": "CP2020 p.99: Range DC table (Extreme=30); miss at DC 30 with 1d10+8+6 = 24",
+      "ruleReference": "CP2020 p.99: Range DC table (Extreme=30); CP2020 p.99: miss at DC 30 with 1d10+8+6 = 24",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -2580,7 +2580,7 @@
     },
     {
       "name": "structured mortal 7+ triggers death save not auto-death",
-      "ruleReference": "CP2020 p.108: Mortal 7+ auto-death is deferred (FR14); death save is still generated",
+      "ruleReference": "CP2020 p.108: Mortal 7+ auto-death is deferred (FR14); CP2020 p.108: death save is still generated",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
