@@ -129,7 +129,8 @@
           "system.shotsLeft": 7
         }
       }
-    ]
+    ],
+    "ruleReference": "CP2020 p.99: Three-Round Burst rules; CP2020 p.102: Hit locations"
   },
   "rolls": [
     {
@@ -591,7 +592,8 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.99: Three-Round Burst; CP2020 p.106: Progressive armor ablation (staged penetration)"
     },
     {
       "name": "three-round burst success with 1 bullet remaining in weapon",
@@ -670,7 +672,8 @@
             }
           ]
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Burst with limited ammo; ammo delta = min(shotsLeft, 3)"
     },
     {
       "name": "three-round burst miss skips location/damage rolls and subtracts 3 ammo",
@@ -706,7 +709,8 @@
           "delta": -3,
           "after": 7
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Burst miss consumes 3 ammo; skip damage rolls"
     },
     {
       "name": "three-round-burst-close-range-advantage",
@@ -720,42 +724,66 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 7 }
+          "die": {
+            "faces": 10,
+            "natural": 7
+          }
         },
         {
           "id": "burst_hits",
           "total": 3,
-          "die": { "faces": 3, "natural": 3 }
+          "die": {
+            "faces": 3,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         }
       ],
       "expected": {
@@ -827,7 +855,8 @@
           "delta": -3,
           "after": 7
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Burst +3 at Close range; CP2020 p.99: Range DC table (Close=15)"
     },
     {
       "name": "three-round-burst-aimed-location",
@@ -844,27 +873,42 @@
         {
           "id": "attack",
           "total": 21,
-          "die": { "faces": 10, "natural": 9 }
+          "die": {
+            "faces": 10,
+            "natural": 9
+          }
         },
         {
           "id": "burst_hits",
           "total": 2,
-          "die": { "faces": 3, "natural": 2 }
+          "die": {
+            "faces": 3,
+            "natural": 2
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         }
       ],
       "expected": {
@@ -928,7 +972,8 @@
           "delta": -3,
           "after": 7
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Burst +3 at any range; CP2020 p.99: Aimed shot (-4)"
     },
     {
       "name": "three-round-burst-fumble-standard-jam",
@@ -942,7 +987,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -977,7 +1025,8 @@
             "severity": "standard"
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.99: Natural 1 is Fumble; CP2020 p.99: Standard reliability jams on fumble"
     },
     {
       "name": "three-round-burst-fumble-very-reliable",
@@ -996,7 +1045,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -1020,7 +1072,8 @@
         },
         "warnings": [],
         "pendingDecisions": []
-      }
+      },
+      "ruleReference": "CP2020 p.99: VeryReliable does not jam on fumble"
     },
     {
       "name": "three-round-burst-fumble-unreliable",
@@ -1039,7 +1092,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -1074,7 +1130,8 @@
             "severity": "unreliable"
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.99: Unreliable jams and damages on fumble"
     },
     {
       "name": "three-round-burst-zero-ammo",
@@ -1121,7 +1178,8 @@
           "delta": 0,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Burst requires ammo; Audit 6.4: Insufficient ammo warning"
     }
   ]
 }

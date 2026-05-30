@@ -346,12 +346,18 @@
                 "damageRoll": {
                   "id": "damage",
                   "total": 5,
-                  "die": { "faces": 6, "natural": 5 }
+                  "die": {
+                    "faces": 6,
+                    "natural": 5
+                  }
                 },
                 "locationRoll": {
                   "id": "location",
                   "total": 4,
-                  "die": { "faces": 10, "natural": 4 },
+                  "die": {
+                    "faces": 10,
+                    "natural": 4
+                  },
                   "location": "torso"
                 },
                 "woundDamage": 1,
@@ -373,12 +379,18 @@
                 "damageRoll": {
                   "id": "damage",
                   "total": 3,
-                  "die": { "faces": 6, "natural": 3 }
+                  "die": {
+                    "faces": 6,
+                    "natural": 3
+                  }
                 },
                 "locationRoll": {
                   "id": "location",
                   "total": 4,
-                  "die": { "faces": 10, "natural": 4 },
+                  "die": {
+                    "faces": 10,
+                    "natural": 4
+                  },
                   "location": "torso"
                 },
                 "warnings": []
@@ -393,12 +405,18 @@
                 "damageRoll": {
                   "id": "damage",
                   "total": 1,
-                  "die": { "faces": 6, "natural": 1 }
+                  "die": {
+                    "faces": 6,
+                    "natural": 1
+                  }
                 },
                 "locationRoll": {
                   "id": "location",
                   "total": 4,
-                  "die": { "faces": 10, "natural": 4 },
+                  "die": {
+                    "faces": 10,
+                    "natural": 4
+                  },
                   "location": "torso"
                 },
                 "warnings": []
@@ -418,7 +436,10 @@
                 "bodyType": 5,
                 "threshold": 5,
                 "penalty": 0,
-                "woundState": { "level": 1, "label": "Light" },
+                "woundState": {
+                  "level": 1,
+                  "label": "Light"
+                },
                 "evidence": {
                   "previousDamage": 0,
                   "nextDamage": 1,
@@ -458,15 +479,23 @@
             "name": "Target In Zone 1",
             "snapshot": {
               "stats": {
-                "ref": { "total": 6 },
-                "bt": { "total": 6 }
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 6
+                }
               },
               "skills": {
-                "athletics": { "level": 4 }
+                "athletics": {
+                  "level": 4
+                }
               },
               "damage": 0,
               "hitLocations": {
-                "torso": { "label": "Torso" }
+                "torso": {
+                  "label": "Torso"
+                }
               },
               "equippedArmor": [
                 {
@@ -474,7 +503,11 @@
                   "name": "Kevlar Vest",
                   "equipped": true,
                   "coverage": {
-                    "torso": { "sp": 12, "ablation": 0, "layer": "soft" }
+                    "torso": {
+                      "sp": 12,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
                   }
                 }
               ]
@@ -485,15 +518,23 @@
             "name": "Target In Zone 2",
             "snapshot": {
               "stats": {
-                "ref": { "total": 4 },
-                "bt": { "total": 5 }
+                "ref": {
+                  "total": 4
+                },
+                "bt": {
+                  "total": 5
+                }
               },
               "skills": {
-                "athletics": { "level": 2 }
+                "athletics": {
+                  "level": 2
+                }
               },
               "damage": 0,
               "hitLocations": {
-                "torso": { "label": "Torso" }
+                "torso": {
+                  "label": "Torso"
+                }
               },
               "equippedArmor": [
                 {
@@ -501,7 +542,11 @@
                   "name": "Kevlar Vest 2",
                   "equipped": true,
                   "coverage": {
-                    "torso": { "sp": 4, "ablation": 0, "layer": "soft" }
+                    "torso": {
+                      "sp": 4,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
                   }
                 }
               ]
@@ -513,47 +558,74 @@
         {
           "id": "save",
           "total": 15,
-          "die": { "faces": 10, "natural": 5 }
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
         },
         {
           "id": "save",
           "total": 7,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 5,
-          "die": { "faces": 6, "natural": 5 }
+          "die": {
+            "faces": 6,
+            "natural": 5
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 5,
-          "die": { "faces": 6, "natural": 5 }
+          "die": {
+            "faces": 6,
+            "natural": 5
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 1,
-          "die": { "faces": 6, "natural": 1 }
+          "die": {
+            "faces": 6,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -608,7 +680,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Suppressive Fire save vs DC; failed save = 1d6 hits"
     },
     {
       "name": "suppressive fire - missing fireZoneWidth returns manual",
@@ -634,7 +707,8 @@
         "manualResolution": {
           "required": true
         }
-      }
+      },
+      "ruleReference": "Audit 6.2: Missing suppressive fire inputs block resolution"
     },
     {
       "name": "suppressive fire - missing roundsFired returns manual",
@@ -660,7 +734,8 @@
         "manualResolution": {
           "required": true
         }
-      }
+      },
+      "ruleReference": "Audit 6.2: Missing suppressive fire inputs block resolution"
     },
     {
       "name": "suppressive-fire-all-pass",
@@ -676,12 +751,18 @@
         {
           "id": "save",
           "total": 15,
-          "die": { "faces": 10, "natural": 5 }
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
         },
         {
           "id": "save",
           "total": 14,
-          "die": { "faces": 10, "natural": 8 }
+          "die": {
+            "faces": 10,
+            "natural": 8
+          }
         }
       ],
       "expected": {
@@ -708,7 +789,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: All targets pass save = no hits"
     },
     {
       "name": "suppressive-fire-all-fail",
@@ -724,77 +806,119 @@
         {
           "id": "save",
           "total": 5,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 5,
-          "die": { "faces": 6, "natural": 5 }
+          "die": {
+            "faces": 6,
+            "natural": 5
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "save",
           "total": 3,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 5,
-          "die": { "faces": 6, "natural": 5 }
+          "die": {
+            "faces": 6,
+            "natural": 5
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 5,
-          "die": { "faces": 6, "natural": 5 }
+          "die": {
+            "faces": 6,
+            "natural": 5
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 1,
-          "die": { "faces": 6, "natural": 1 }
+          "die": {
+            "faces": 6,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -805,7 +929,10 @@
                 "passed": false
               }
             },
-            "hits": [{}, {}]
+            "hits": [
+              {},
+              {}
+            ]
           },
           {
             "attack": {
@@ -813,7 +940,11 @@
                 "passed": false
               }
             },
-            "hits": [{}, {}, {}]
+            "hits": [
+              {},
+              {},
+              {}
+            ]
           }
         ],
         "ammo": {
@@ -821,7 +952,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: All targets fail save = 1d6 hits each"
     },
     {
       "name": "suppressive-fire-high-rof",
@@ -843,39 +975,60 @@
         {
           "id": "save",
           "total": 10,
-          "die": { "faces": 10, "natural": 3 }
+          "die": {
+            "faces": 10,
+            "natural": 3
+          }
         },
         {
           "id": "hitCount",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 8,
-          "die": { "faces": 6, "natural": 8 }
+          "die": {
+            "faces": 6,
+            "natural": 8
+          }
         },
         {
           "id": "save",
           "total": 22,
-          "die": { "faces": 10, "natural": 10 }
+          "die": {
+            "faces": 10,
+            "natural": 10
+          }
         }
       ],
       "expected": {
@@ -892,7 +1045,10 @@
                 "passed": false
               }
             },
-            "hits": [{}, {}]
+            "hits": [
+              {},
+              {}
+            ]
           },
           {
             "attack": {
@@ -908,7 +1064,8 @@
           "delta": -60,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: High ROF = higher save DC (60 / 3 = 20); CP2020 p.99: Natural 10 on save = success"
     },
     {
       "name": "suppressive-fire-armored-targets",
@@ -924,66 +1081,102 @@
         {
           "id": "save",
           "total": 7,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 4,
-          "die": { "faces": 6, "natural": 4 }
+          "die": {
+            "faces": 6,
+            "natural": 4
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 15,
-          "die": { "faces": 6, "natural": 15 }
+          "die": {
+            "faces": 6,
+            "natural": 15
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 8,
-          "die": { "faces": 6, "natural": 8 }
+          "die": {
+            "faces": 6,
+            "natural": 8
+          }
         },
         {
           "id": "save",
           "total": 6,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 15,
-          "die": { "faces": 6, "natural": 15 }
+          "die": {
+            "faces": 6,
+            "natural": 15
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         }
       ],
       "expected": {
@@ -994,7 +1187,10 @@
                 "passed": false
               }
             },
-            "hits": [{}, {}]
+            "hits": [
+              {},
+              {}
+            ]
           },
           {
             "attack": {
@@ -1002,7 +1198,10 @@
                 "passed": false
               }
             },
-            "hits": [{}, {}]
+            "hits": [
+              {},
+              {}
+            ]
           }
         ],
         "ammo": {
@@ -1010,7 +1209,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Suppressive hits resolved through armor pipeline"
     },
     {
       "name": "suppressive-fire-zero-ammo",
@@ -1031,55 +1231,85 @@
         {
           "id": "save",
           "total": 5,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 3,
-          "die": { "faces": 6, "natural": 3 }
+          "die": {
+            "faces": 6,
+            "natural": 3
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 8,
-          "die": { "faces": 6, "natural": 8 }
+          "die": {
+            "faces": 6,
+            "natural": 8
+          }
         },
         {
           "id": "save",
           "total": 4,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         },
         {
           "id": "hitCount",
           "total": 2,
-          "die": { "faces": 6, "natural": 2 }
+          "die": {
+            "faces": 6,
+            "natural": 2
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 },
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
           "location": "torso"
         },
         {
           "id": "damage",
           "total": 6,
-          "die": { "faces": 6, "natural": 6 }
+          "die": {
+            "faces": 6,
+            "natural": 6
+          }
         }
       ],
       "expected": {
@@ -1090,15 +1320,24 @@
         "targets": [
           {
             "attack": {
-              "save": { "passed": false }
+              "save": {
+                "passed": false
+              }
             },
-            "hits": [{}, {}]
+            "hits": [
+              {},
+              {}
+            ]
           },
           {
             "attack": {
-              "save": { "passed": false }
+              "save": {
+                "passed": false
+              }
             },
-            "hits": [{}]
+            "hits": [
+              {}
+            ]
           }
         ],
         "ammo": {
@@ -1111,7 +1350,8 @@
             "code": "missing-ammo-state"
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: Suppressive fire consumes all remaining ammo; missing ammo warning"
     },
     {
       "name": "suppressive-fire-wide-zone",
@@ -1127,12 +1367,18 @@
         {
           "id": "save",
           "total": 15,
-          "die": { "faces": 10, "natural": 5 }
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
         },
         {
           "id": "save",
           "total": 12,
-          "die": { "faces": 10, "natural": 2 }
+          "die": {
+            "faces": 10,
+            "natural": 2
+          }
         }
       ],
       "expected": {
@@ -1167,7 +1413,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Wide zone = lower DC (30 / 30 = 1), capped at minimum 2"
     }
   ]
 }

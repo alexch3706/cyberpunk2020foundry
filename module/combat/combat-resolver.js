@@ -13,6 +13,43 @@ import { MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.j
  */
 
 /**
+ * Default runtime roller using globalThis.Roll (Foundry's dice engine).
+ * Evaluates roll requests synchronously and maps results to structured rollMetadata format.
+ * @param {Object} request Roll request with { id, formula, terms, rollData }
+ * @returns {Object} rollMetadata with { id, formula, total, die }
+ */
+function activeRoller(request = {}) {
+  if (typeof globalThis.Roll !== "function") {
+    throw new Error("activeRoller requires Foundry's Roll class (globalThis.Roll) to be available.");
+  }
+
+  // Strip " hit location" suffix from location formula rolls
+  let formula = String(request.formula || "").replace(/\s+hit\s+location$/i, "");
+  if (!formula) {
+    formula = "1d10";
+  }
+
+  const roll = new globalThis.Roll(formula, request.rollData);
+  roll.evaluate({ async: false });
+
+  // Build die info from the first die term
+  const firstDie = roll.dice && roll.dice.length > 0 ? roll.dice[0] : null;
+  const die = {
+    faces: firstDie ? firstDie.faces : 10,
+    natural: firstDie && firstDie.results && firstDie.results.length > 0 ? firstDie.results[0].result : roll.total,
+    results: firstDie && firstDie.results ? firstDie.results.map(r => r.result) : [roll.total],
+    exploded: firstDie && firstDie.results ? firstDie.results.some(r => r.active === false) : false
+  };
+
+  return {
+    id: request.id,
+    formula: request.formula,
+    total: roll.total,
+    die
+  };
+}
+
+/**
  * Resolve a combat action through the current migration shell.
  *
  * @param {Object} context Plain combat context built by a Foundry adapter.
@@ -21,6 +58,9 @@ import { MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.j
  * @returns {*} The legacy fallback result for current combat paths.
  */
 export function resolveCombatAction(context, options = {}, roller = undefined) {
+  // Resolve the roller: use provided roller (tests), or default activeRoller (runtime)
+  const resolvedRoller = roller || (typeof globalThis.Roll === "function" ? activeRoller : undefined);
+
   if(options.structured === true) {
     // ---- Exotic attack guard: block before any ranged/enemy routing ----
     if (isCorebookFidelityEnabled(context) && context?.action?.type === "ranged") {
@@ -31,14 +71,14 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
       }
     }
 
-    if(canResolveSuppressiveFireContext(context, roller)) {
-      return resolveSuppressiveFire(context, options, roller);
+    if(canResolveSuppressiveFireContext(context, resolvedRoller)) {
+      return resolveSuppressiveFire(context, options, resolvedRoller);
     }
-    if(canResolveSingleShotRangedContext(context, roller)) {
-      return resolveSingleShotRangedAttack(context, options, roller);
+    if(canResolveSingleShotRangedContext(context, resolvedRoller)) {
+      return resolveSingleShotRangedAttack(context, options, resolvedRoller);
     }
-    if(canResolveMeleeContext(context, roller)) {
-      return resolveMeleeAction(context, options, roller);
+    if(canResolveMeleeContext(context, resolvedRoller)) {
+      return resolveMeleeAction(context, options, resolvedRoller);
     }
   }
 
@@ -164,23 +204,25 @@ function buildManualExoticOutcome(context, support) {
   const weaponName = context?.weapon?.name || "Unknown";
   const attackType = context?.weapon?.snapshot?.attackType || "";
 
+  const clone = obj => typeof foundry !== "undefined" ? foundry.utils.deepClone(obj) : JSON.parse(JSON.stringify(obj));
+
   const isPartial = support === "partial";
   const message = isPartial
     ? `"${attackType}" has basic resolver support but special rules are not applied. Resolve manually.`
     : `Exotic weapon type (${attackType}) requires manual resolution — special attack rules are not applied by the combat resolver.`;
 
   return {
-    action: context?.action ? foundry.utils.deepClone(context.action) : { type: "ranged" },
+    action: context?.action ? clone(context.action) : { type: "ranged" },
     attacker: {
       actorUuid: context?.attacker?.actorUuid,
       tokenUuid: context?.attacker?.tokenUuid,
       name: attackerName,
-      snapshot: context?.attacker?.snapshot ? foundry.utils.deepClone(context.attacker.snapshot) : undefined
+      snapshot: context?.attacker?.snapshot ? clone(context.attacker.snapshot) : undefined
     },
     weapon: {
       itemUuid: context?.weapon?.itemUuid,
       name: weaponName,
-      snapshot: context?.weapon?.snapshot ? foundry.utils.deepClone(context.weapon.snapshot) : { attackType }
+      snapshot: context?.weapon?.snapshot ? clone(context.weapon.snapshot) : { attackType }
     },
     targets: (context?.targets || []).map(t => ({
       target: {

@@ -211,6 +211,10 @@ function buildSingleShotOutcome(context, roller, fixture) {
 
 function assertSingleShotCases(fixture) {
   for(const singleShotCase of fixture.singleShotCases || []) {
+    // Strict ruleReference validation — every fixture case must document which rule it verifies
+    if (!singleShotCase.ruleReference || typeof singleShotCase.ruleReference !== "string") {
+      throw new Error(`${fixture.name}: case "${singleShotCase.name}" is missing required "ruleReference" string`);
+    }
     const roller = createScriptedRoller(singleShotCase.rolls);
     const context = reviveFixtureSentinels(mergePlainData(fixture.context, singleShotCase.context || {}));
     if(singleShotCase.legacyExpected) {
@@ -496,6 +500,60 @@ function assertBodyTypeDamageResolver() {
     finalDamage: 5,
     minimumDamageApplied: false
   }, "BT 2 BTM resolves to modifier 0");
+
+  // BT 3 — modifier 1 (CP2020 p.106: BT 3-4 = -1)
+  assert.deepEqual(resolveBodyTypeDamage(6, 3), {
+    penetratingDamage: 6,
+    bodyTypeModifier: 1,
+    bodyTypeMitigation: 1,
+    finalDamage: 5,
+    minimumDamageApplied: false
+  }, "BT 3 BTM resolves to modifier 1");
+
+  // BT 4 — modifier 1
+  assert.deepEqual(resolveBodyTypeDamage(5, 4), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 1,
+    bodyTypeMitigation: 1,
+    finalDamage: 4,
+    minimumDamageApplied: false
+  }, "BT 4 BTM resolves to modifier 1");
+
+  // BT 5 — modifier 2 (CP2020 p.106: BT 5-7 = -2)
+  assert.deepEqual(resolveBodyTypeDamage(5, 5), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 2,
+    bodyTypeMitigation: 2,
+    finalDamage: 3,
+    minimumDamageApplied: false
+  }, "BT 5 BTM resolves to modifier 2");
+
+  // BT 7 — modifier 2 (CP2020 p.106: BT 5-7 = -2)
+  assert.deepEqual(resolveBodyTypeDamage(5, 7), {
+    penetratingDamage: 5,
+    bodyTypeModifier: 2,
+    bodyTypeMitigation: 2,
+    finalDamage: 3,
+    minimumDamageApplied: false
+  }, "BT 7 BTM resolves to modifier 2");
+
+  // BT 8 — modifier 3 (CP2020 p.106: BT 8-9 = -3)
+  assert.deepEqual(resolveBodyTypeDamage(6, 8), {
+    penetratingDamage: 6,
+    bodyTypeModifier: 3,
+    bodyTypeMitigation: 3,
+    finalDamage: 3,
+    minimumDamageApplied: false
+  }, "BT 8 BTM resolves to modifier 3");
+
+  // BT 9 — modifier 3 (CP2020 p.106: BT 8-9 = -3)
+  assert.deepEqual(resolveBodyTypeDamage(4, 9), {
+    penetratingDamage: 4,
+    bodyTypeModifier: 3,
+    bodyTypeMitigation: 3,
+    finalDamage: 1,
+    minimumDamageApplied: false
+  }, "BT 9 BTM resolves to modifier 3; 4-3=1 exactly, no minimum forcing");
 
   // BT 11 — modifier 5 (explicit case)
   assert.deepEqual(resolveBodyTypeDamage(7, 11), {
@@ -1321,7 +1379,8 @@ function assertCombatResolverRouting() {
     weapon: {
       snapshot: {
         attackSkill: "rifle",
-        shotsLeft: 10
+        shotsLeft: 10,
+        attackType: "Auto"
       }
     },
     targets: [
@@ -1347,7 +1406,8 @@ function assertCombatResolverRouting() {
       snapshot: {
         attackSkill: "rifle",
         shotsLeft: 10,
-        rof: 10
+        rof: 10,
+        attackType: "Auto"
       }
     },
     targets: [
@@ -1375,7 +1435,8 @@ function assertCombatResolverRouting() {
       snapshot: {
         attackSkill: "rifle",
         shotsLeft: 1,
-        rof: 10
+        rof: 10,
+        attackType: "Auto"
       }
     }
   };

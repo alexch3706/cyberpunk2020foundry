@@ -98,7 +98,8 @@
           "system.shotsLeft": 0
         }
       }
-    ]
+    ],
+    "ruleReference": "CP2020 p.99: Weapon Reliability and Jams; fumble behavior varies by reliability tier"
   },
   "singleShotCases": [
     {
@@ -169,7 +170,8 @@
         ],
         "actorUpdates": [],
         "embeddedItemUpdates": []
-      }
+      },
+      "ruleReference": "CP2020 p.99: Standard reliability jams on Natural 1; clear stoppage before next shot"
     },
     {
       "name": "full-auto-fumble-unreliable",
@@ -232,7 +234,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Unreliable jams and damages on Natural 1; repair required"
     },
     {
       "name": "full-auto-fumble-very-reliable",
@@ -282,7 +285,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: VeryReliable does not jam on Natural 1"
     },
     {
       "name": "burst-fumble-standard",
@@ -340,7 +344,8 @@
           "delta": -3,
           "after": 27
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: ThreeRoundBurst fumble with Standard reliability = jam"
     },
     {
       "name": "semi-auto-fumble-standard",
@@ -385,7 +390,8 @@
           "delta": -1,
           "after": 29
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Semi-auto fumble = miss but no jam (ammo still consumed)"
     },
     {
       "name": "full-auto-hit-no-fumble",
@@ -458,7 +464,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Non-fumble attack resolves normally"
     },
     {
       "name": "full-auto-fumble-missing-reliability",
@@ -521,7 +528,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Missing reliability defaults to standard jam behavior"
     }
   ],
   "rolls": [

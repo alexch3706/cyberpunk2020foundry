@@ -3,6 +3,7 @@ import { localize, localizeParam } from "../utils.js"
 import { ModifiersDialog } from "../dialog/modifiers.js"
 import { SortOrders } from "./skill-sort.js";
 import { normalizeSelectedTargets } from "../combat/target-normalizer.js";
+import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -225,9 +226,9 @@ export class CyberpunkActorSheet extends ActorSheet {
     html.find('.rc-item-delete').bind("contextmenu", deleteItemDialog.bind(this)); 
 
     function structuredResolverOptions(item) {
-      // Return truthy options object if the current action is supported by the structured resolver.
-      // Check fire mode, target availability, and required inputs.
-      // For now, return null — structured resolver will be enabled by default in Story 6-8.
+      if (isCorebookFidelityEnabled({ weapon: item, actor: item?.actor || this?.actor })) {
+        return {};
+      }
       return null;
     }
 

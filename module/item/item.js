@@ -5,6 +5,7 @@ import { CyberpunkActor } from "../actor/actor.js";
 import { resolveCombatAction } from "../combat/combat-resolver.js";
 import { classifyAttackTypeSupport } from "../combat/conformance-helpers.js";
 import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
+import { buildCombatPreviewData, previewAndApplyCombatOutcome } from "../combat/combat-commit.js";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -207,7 +208,92 @@ export class CyberpunkItem extends Item {
       throw new Error("This item isn't owned by anyone.");
     }
 
-    return await resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
+    const result = await resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
+
+    // Structured resolver outcome — handle commit via dialog or direct
+    if (options.structured === true && !result?.manualResolution?.required && result?.action && result?.targets) {
+      return await this.__handleStructuredOutcome(result);
+    }
+
+    return result;
+  }
+
+  async __handleStructuredOutcome(outcome) {
+    const commitMode = this.__getDamageCommitMode();
+
+    if (commitMode === "direct") {
+      return await previewAndApplyCombatOutcome(outcome, { decision: "confirm" });
+    }
+
+    // "previewConfirm" — preview card then confirm/cancel dialog
+    const previewResult = await previewAndApplyCombatOutcome(outcome);
+
+    return new Promise((resolve) => {
+      let resolved = false;
+      const preview = buildCombatPreviewData(outcome);
+      const targetSummary = (preview.targets || []).map(t => {
+        const name = t.target?.name || "Unknown";
+        const hitInfo = t.hits ? `${t.hits.length} hit(s)` : "miss";
+        return `${name}: ${hitInfo}`;
+      }).join("<br>");
+      const ammoDelta = outcome.ammo?.delta !== undefined ? `Ammo: ${outcome.ammo.delta} round(s)` : "";
+
+      const dialog = new Dialog({
+        title: (typeof game !== "undefined" ? game.i18n.localize : (s) => s)("CYBERPUNK.CombatOutcomeTitle") || "Combat Outcome",
+        content: `
+          <p><strong>${(typeof game !== "undefined" ? game.i18n.localize : (s) => s)("CYBERPUNK.ReviewCombatOutcome") || "Review combat outcome:"}</strong></p>
+          <p>${ammoDelta}</p>
+          <p>${targetSummary}</p>
+          ${preview.warnings.length > 0 ? `<p style="color:#b88a00">⚠ ${preview.warnings.map(w => w.message).join("; ")}</p>` : ""}
+        `,
+        buttons: {
+          confirm: {
+            label: (typeof game !== "undefined" ? game.i18n.localize : (s) => s)("CYBERPUNK.Yes"),
+            callback: async () => {
+              if (resolved) return;
+              resolved = true;
+              resolve(await previewAndApplyCombatOutcome(outcome, {
+                decision: "confirm",
+                messageId: previewResult.messageId
+              }));
+            }
+          },
+          cancel: {
+            label: (typeof game !== "undefined" ? game.i18n.localize : (s) => s)("CYBERPUNK.No"),
+            callback: async () => {
+              if (resolved) return;
+              resolved = true;
+              resolve(await previewAndApplyCombatOutcome(outcome, {
+                decision: "cancel",
+                messageId: previewResult.messageId
+              }));
+            }
+          }
+        },
+        default: "confirm",
+        close: () => {
+          if (!resolved) {
+            resolved = true;
+            previewAndApplyCombatOutcome(outcome, {
+              decision: "cancel",
+              messageId: previewResult.messageId
+            }).then(resolve);
+          }
+        }
+      });
+      dialog.render(true);
+    });
+  }
+
+  __getDamageCommitMode() {
+    try {
+      if (typeof game?.settings?.get === "function") {
+        return game.settings.get("cyberpunk2020-rilerena", "combatDamageCommitMode");
+      }
+    } catch {
+      // fall through to default
+    }
+    return "previewConfirm";
   }
 
   __buildCombatResolverContext(attackMods, targetTokens) {
@@ -323,6 +409,17 @@ export class CyberpunkItem extends Item {
   __legacyWeaponRoll(attackMods, targetTokens) {
     let system = this.system;
     let isRanged = this.isRanged();
+
+    // ---- Corebook Fidelity Mode fence: block legacy paths under CBF ----
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) {
+      const msg = "Corebook Fidelity Mode is active — legacy combat path is disabled. Use the structured combat resolver instead.";
+      console.warn(`[Cyberpunk2020VTT] ${msg}`);
+      if (typeof ui?.notifications?.warn === "function") {
+        ui.notifications.warn(msg);
+      }
+      return null;
+    }
+
     if(!isRanged) {
       if(system.attackType === meleeAttackTypes.martial) {
         return this.__martialBonk(attackMods);
@@ -411,6 +508,7 @@ export class CyberpunkItem extends Item {
    * @returns 
    */
   async __fullAuto(attackMods, targetTokens) {
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) return null;
     let system = this.system;
     // The kind of distance we're attacking at, so we can display Close: <50m or something like that
     let actualRangeBracket = rangeResolve[attackMods.range](system.range);
@@ -465,6 +563,7 @@ export class CyberpunkItem extends Item {
   }
 
   async __threeRoundBurst(attackMods) {
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) return null;
     let system = this.system;
     // The kind of distance we're attacking at, so we can display Close: <50m or something like that
     let actualRangeBracket = rangeResolve[attackMods.range](system.range);
@@ -506,6 +605,7 @@ export class CyberpunkItem extends Item {
   }
 
   async __semiAuto(attackMods) {
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) return null;
     let system = this.system;
     // The range we're shooting at
     let DC = rangeDCs[attackMods.range];
@@ -524,6 +624,7 @@ export class CyberpunkItem extends Item {
     return bigRoll;
   }
   async __meleeBonk(attackMods) {
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) return null;
     // Just doesn't have a DC - is contested instead
     let attackRoll = await this.attackRoll(attackMods);
     let damageRoll = new Roll(`${this.system.damage}+@strengthBonus`, {
@@ -539,6 +640,7 @@ export class CyberpunkItem extends Item {
     return bigRoll;
   }
   async __martialBonk(attackMods) {
+    if (isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) return null;
     let actor = this.actor;
     let system = actor.system;
     // Action being done, eg strike, block etc

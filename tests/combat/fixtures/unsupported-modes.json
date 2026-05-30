@@ -13,10 +13,14 @@
       "name": "Solo",
       "snapshot": {
         "stats": {
-          "ref": { "total": 8 }
+          "ref": {
+            "total": 8
+          }
         },
         "skills": {
-          "rifle": { "level": 6 }
+          "rifle": {
+            "level": 6
+          }
         },
         "damage": 0
       }
@@ -43,15 +47,23 @@
         "name": "Target In Zone 1",
         "snapshot": {
           "stats": {
-            "ref": { "total": 6 },
-            "bt": { "total": 6 }
+            "ref": {
+              "total": 6
+            },
+            "bt": {
+              "total": 6
+            }
           },
           "skills": {
-            "athletics": { "level": 4 }
+            "athletics": {
+              "level": 4
+            }
           },
           "damage": 0,
           "hitLocations": {
-            "torso": { "label": "Torso" }
+            "torso": {
+              "label": "Torso"
+            }
           },
           "equippedArmor": [
             {
@@ -74,7 +86,18 @@
     ]
   },
   "rolls": [
-    { "id": "save", "expectedRequest": { "id": "save" }, "total": 10, "die": [{ "result": 10 }] }
+    {
+      "id": "save",
+      "expectedRequest": {
+        "id": "save"
+      },
+      "total": 10,
+      "die": [
+        {
+          "result": 10
+        }
+      ]
+    }
   ],
   "expected": {
     "outcome": {
@@ -110,7 +133,8 @@
       "expected": {
         "manualResolution": true,
         "warning": "Suppressive fire not supported without zone width and rounds fired inputs."
-      }
+      },
+      "ruleReference": "Audit 6.2: Corebook Fidelity mode rejects missing inputs"
     },
     {
       "name": "suppressive-no-inputs-relaxed - routes to resolver, returns resolver manual outcome",
@@ -133,7 +157,8 @@
           "reason": "missing-rule-data",
           "message": "Suppressive fire requires fireZoneWidth and roundsFired; resolve manually."
         }
-      }
+      },
+      "ruleReference": "Audit 6.2: Relaxed mode routes to resolver which returns manual outcome"
     },
     {
       "name": "full-auto-fidelity-supported",
@@ -151,9 +176,31 @@
         }
       },
       "rolls": [
-        { "id": "attack", "total": 16, "die": { "faces": 10, "natural": 8 } },
-        { "id": "location", "total": 4, "die": { "faces": 10, "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 6, "die": { "faces": 6, "natural": 6 } }
+        {
+          "id": "attack",
+          "total": 16,
+          "die": {
+            "faces": 10,
+            "natural": 8
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 6,
+          "die": {
+            "faces": 6,
+            "natural": 6
+          }
+        }
       ],
       "expected": {
         "manualResolution": {
@@ -166,7 +213,8 @@
             }
           }
         ]
-      }
+      },
+      "ruleReference": "Audit 6.2: FullAuto is a supported attack type in Corebook Fidelity mode"
     },
     {
       "name": "three-round-burst-fidelity-supported",
@@ -184,10 +232,39 @@
         }
       },
       "rolls": [
-        { "id": "attack", "total": 16, "die": { "faces": 10, "natural": 8 } },
-        { "id": "burst_hits", "total": 1, "die": { "faces": 3, "natural": 1 } },
-        { "id": "location", "total": 4, "die": { "faces": 10, "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 6, "die": { "faces": 6, "natural": 6 } }
+        {
+          "id": "attack",
+          "total": 16,
+          "die": {
+            "faces": 10,
+            "natural": 8
+          }
+        },
+        {
+          "id": "burst_hits",
+          "total": 1,
+          "die": {
+            "faces": 3,
+            "natural": 1
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 6,
+          "die": {
+            "faces": 6,
+            "natural": 6
+          }
+        }
       ],
       "expected": {
         "manualResolution": {
@@ -200,7 +277,8 @@
             }
           }
         ]
-      }
+      },
+      "ruleReference": "Audit 6.2: ThreeRoundBurst is supported in Corebook Fidelity mode"
     }
   ]
 }

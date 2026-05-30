@@ -1,3 +1,6 @@
+// Regenerate coverage map before running tests
+await import("./combat/generate-coverage-map.mjs");
+
 import { runCombatFixtures } from "./combat/combat-fixtures.test.js";
 import { runCombatCommitTests } from "./combat/combat-commit.test.js";
 import { runMartialArtsDataTests } from "./combat/martial-arts-data.test.js";
@@ -5,13 +8,18 @@ import { runConformanceHelpersTests } from "./combat/conformance-helpers.test.js
 import { runDeferredMechanicsTests } from "./combat/deferred-mechanics.test.js";
 import { runAttackTypeClassificationTests } from "./combat/attack-type-classification.test.js";
 
+import { runHumanityPersistenceTests } from "./combat/humanity-persistence.test.js";
+import { runRangeDcTests } from "./combat/range-dcs.test.js";
+
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
   await runMartialArtsDataTests(),
   ...await runConformanceHelpersTests(),
   ...await runDeferredMechanicsTests(),
-  ...await runAttackTypeClassificationTests()
+  ...await runAttackTypeClassificationTests(),
+  ...await runHumanityPersistenceTests(),
+  ...await runRangeDcTests()
 ];
 
 for(const result of results) {

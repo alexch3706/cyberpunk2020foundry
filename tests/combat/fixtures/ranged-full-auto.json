@@ -129,7 +129,8 @@
           "system.shotsLeft": 0
         }
       }
-    ]
+    ],
+    "ruleReference": "CP2020 p.100: Full Auto rules; CP2020 p.100: ROF divided per target"
   },
   "rolls": [
     {
@@ -611,7 +612,8 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto; CP2020 p.100: Close range +3; CP2020 p.106: Staged armor ablation"
     },
     {
       "name": "full auto success at medium range with 10 bullets (-1 mod) and 1 hit",
@@ -700,7 +702,8 @@
           "delta": -10,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto at Medium (-1 mod per 10 ROF); CP2020 p.99: Range DC (Medium=20)"
     },
     {
       "name": "full auto success with 5 bullets left at close range (0 mod) and 5 hits",
@@ -872,7 +875,8 @@
           "delta": -5,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto 0 mod (5 ROF); hit cap = margin of success"
     },
     {
       "name": "full auto multi-target success with 25 shots on 2 targets",
@@ -1073,7 +1077,8 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: ROF halved per target; separate attack rolls"
     },
     {
       "name": "full-auto-single-target-miss",
@@ -1093,7 +1098,10 @@
         {
           "id": "attack",
           "total": 12,
-          "die": { "faces": 10, "natural": 3 }
+          "die": {
+            "faces": 10,
+            "natural": 3
+          }
         }
       ],
       "expected": {
@@ -1112,7 +1120,8 @@
           "delta": -10,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto miss consumes ROF ammo"
     },
     {
       "name": "full-auto-fumble-standard-jam",
@@ -1126,7 +1135,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -1161,7 +1173,8 @@
             "severity": "standard"
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.99: Natural 1 Fumble; Standard reliability jam"
     },
     {
       "name": "full-auto-fumble-very-reliable",
@@ -1180,7 +1193,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -1204,7 +1220,8 @@
         },
         "warnings": [],
         "pendingDecisions": []
-      }
+      },
+      "ruleReference": "CP2020 p.99: VeryReliable does not jam on fumble"
     },
     {
       "name": "full-auto-long-range",
@@ -1224,17 +1241,26 @@
         {
           "id": "attack",
           "total": 26,
-          "die": { "faces": 10, "natural": 8 }
+          "die": {
+            "faces": 10,
+            "natural": 8
+          }
         },
         {
           "id": "location",
           "total": 4,
-          "die": { "faces": 10, "natural": 4 }
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
         },
         {
           "id": "damage",
           "total": 10,
-          "die": { "faces": 6, "natural": 10 }
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
         }
       ],
       "expected": {
@@ -1262,7 +1288,8 @@
           "delta": -30,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Range DC (Long=25); CP2020 p.100: Full Auto at Long range"
     },
     {
       "name": "full-auto-zero-ammo",
@@ -1310,7 +1337,8 @@
           "delta": 0,
           "after": 0
         }
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto requires ammo; Audit 6.4: Insufficient ammo warning"
     },
     {
       "name": "full-auto-multi-target-jam-abort",
@@ -1332,11 +1360,15 @@
             "name": "Target 1",
             "snapshot": {
               "stats": {
-                "bt": { "total": 6 }
+                "bt": {
+                  "total": 6
+                }
               },
               "damage": 0,
               "hitLocations": {
-                "torso": { "label": "Torso" }
+                "torso": {
+                  "label": "Torso"
+                }
               },
               "equippedArmor": []
             }
@@ -1347,11 +1379,15 @@
             "name": "Target 2",
             "snapshot": {
               "stats": {
-                "bt": { "total": 6 }
+                "bt": {
+                  "total": 6
+                }
               },
               "damage": 0,
               "hitLocations": {
-                "torso": { "label": "Torso" }
+                "torso": {
+                  "label": "Torso"
+                }
               },
               "equippedArmor": []
             }
@@ -1362,7 +1398,10 @@
         {
           "id": "attack",
           "total": 18,
-          "die": { "faces": 10, "natural": 1 }
+          "die": {
+            "faces": 10,
+            "natural": 1
+          }
         }
       ],
       "expected": {
@@ -1411,7 +1450,8 @@
             "severity": "standard"
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: Full Auto multi-target jam aborts remaining targets"
     }
   ]
 }

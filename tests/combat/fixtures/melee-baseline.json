@@ -1,9 +1,22 @@
 {
   "name": "melee-baseline",
   "useStructured": true,
+  "ruleReference": "CP2020 p.100: Melee Attacker vs Defender opposed roll; CP2020 p.100: Melee damage = weapon + strength bonus",
   "rolls": [
-    { "id": "attack", "total": 15, "die": { "natural": 5 } },
-    { "id": "defend", "total": 18, "die": { "natural": 7 } }
+    {
+      "id": "attack",
+      "total": 15,
+      "die": {
+        "natural": 5
+      }
+    },
+    {
+      "id": "defend",
+      "total": 18,
+      "die": {
+        "natural": 7
+      }
+    }
   ],
   "expected": {
     "outcome": {
@@ -33,10 +46,21 @@
       "actorUuid": "Actor.attacker",
       "name": "Solo",
       "snapshot": {
-        "stats": { "ref": { "total": 8 }, "bt": { "total": 6 } },
+        "stats": {
+          "ref": {
+            "total": 8
+          },
+          "bt": {
+            "total": 6
+          }
+        },
         "skills": {
-          "melee": { "level": 5 },
-          "brawling": { "level": 4 }
+          "melee": {
+            "level": 5
+          },
+          "brawling": {
+            "level": 4
+          }
         }
       }
     },
@@ -55,15 +79,32 @@
         "actorUuid": "Actor.defender",
         "name": "Guard",
         "snapshot": {
-          "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
+          "stats": {
+            "ref": {
+              "total": 6
+            },
+            "bt": {
+              "total": 8
+            }
+          },
           "skills": {
-            "melee": { "level": 4 },
-            "brawling": { "level": 2 },
-            "athletics": { "level": 3 }
+            "melee": {
+              "level": 4
+            },
+            "brawling": {
+              "level": 2
+            },
+            "athletics": {
+              "level": 3
+            }
           },
           "hitLocations": {
-            "torso": { "label": "Torso" },
-            "head": { "label": "Head" }
+            "torso": {
+              "label": "Torso"
+            },
+            "head": {
+              "label": "Head"
+            }
           }
         }
       }
@@ -73,23 +114,64 @@
     {
       "name": "melee-attacker-wins",
       "rolls": [
-        { "id": "attack", "total": 22, "die": { "natural": 8 } },
-        { "id": "defend", "total": 14, "die": { "natural": 5 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 3, "die": { "natural": 3 } }
+        {
+          "id": "attack",
+          "total": 22,
+          "die": {
+            "natural": 8
+          }
+        },
+        {
+          "id": "defend",
+          "total": 14,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 3,
+          "die": {
+            "natural": 3
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
-        "attacker": { "actorUuid": "Actor.attacker" },
-        "weapon": { "itemUuid": "Actor.attacker.Item.knife" },
+        "action": {
+          "type": "melee"
+        },
+        "attacker": {
+          "actorUuid": "Actor.attacker"
+        },
+        "weapon": {
+          "itemUuid": "Actor.attacker.Item.knife"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
               "margin": 8,
-              "roll": { "total": 22, "isCritical": false, "isFumble": false },
-              "opposedRoll": { "total": 14, "isCritical": false, "isFumble": false }
+              "roll": {
+                "total": 22,
+                "isCritical": false,
+                "isFumble": false
+              },
+              "opposedRoll": {
+                "total": 14,
+                "isCritical": false,
+                "isFumble": false
+              }
             },
             "hits": [
               {
@@ -100,69 +182,131 @@
                 "stagedPenetration": {}
               }
             ],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
-        "chat": { "status": "preview" }
-      }
+        "manualResolution": {
+          "required": false
+        },
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.100: Melee opposed roll — attacker wins = hit; strength damage bonus applied"
     },
     {
       "name": "melee-defender-wins",
       "rolls": [
-        { "id": "attack", "total": 11, "die": { "natural": 3 } },
-        { "id": "defend", "total": 18, "die": { "natural": 7 } }
+        {
+          "id": "attack",
+          "total": 11,
+          "die": {
+            "natural": 3
+          }
+        },
+        {
+          "id": "defend",
+          "total": 18,
+          "die": {
+            "natural": 7
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
             "attack": {
               "hit": false,
               "margin": 0,
-              "roll": { "total": 11 },
-              "opposedRoll": { "total": 18 }
+              "roll": {
+                "total": 11
+              },
+              "opposedRoll": {
+                "total": 18
+              }
             },
             "hits": []
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: Melee opposed roll — defender wins = miss"
     },
     {
       "name": "melee-tie",
       "rolls": [
-        { "id": "attack", "total": 15, "die": { "natural": 5 } },
-        { "id": "defend", "total": 15, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 15,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "defend",
+          "total": 15,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "attack": { "hit": false, "margin": 0 },
+            "attack": {
+              "hit": false,
+              "margin": 0
+            },
             "hits": []
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.100: Melee tie = defender wins (attacker does not beat defender)"
     },
     {
       "name": "melee-fumble",
       "rolls": [
-        { "id": "attack", "total": 9, "die": { "natural": 1 } },
-        { "id": "defend", "total": 15, "die": { "natural": 5 } }
+        {
+          "id": "attack",
+          "total": 9,
+          "die": {
+            "natural": 1
+          }
+        },
+        {
+          "id": "defend",
+          "total": 15,
+          "die": {
+            "natural": 5
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
             "attack": {
               "hit": false,
               "margin": 0,
-              "roll": { "total": 9, "isFumble": true }
+              "roll": {
+                "total": 9,
+                "isFumble": true
+              }
             },
             "hits": []
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.99: Melee Natural 1 = fumble (miss)"
     },
     {
       "name": "melee-actorless-target",
@@ -175,21 +319,33 @@
               "required": true,
               "reason": "missing-target-actor",
               "message": "Target Actor is unavailable; resolve target damage, armor, and saves manually.",
-              "blockedUpdateCategories": ["target-damage", "target-armor", "target-saves"]
+              "blockedUpdateCategories": [
+                "target-damage",
+                "target-armor",
+                "target-saves"
+              ]
             }
           }
         ]
       },
       "rolls": [],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "manualResolution": { "required": true, "reason": "missing-target-actor" }
+            "manualResolution": {
+              "required": true,
+              "reason": "missing-target-actor"
+            }
           }
         ],
-        "manualResolution": { "required": true }
-      }
+        "manualResolution": {
+          "required": true
+        }
+      },
+      "ruleReference": "Audit: Missing target actor blocks melee resolution"
     },
     {
       "name": "martial-action-shell",
@@ -201,10 +357,21 @@
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "karate": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "karate": {
+                "level": 5
+              }
             }
           }
         },
@@ -220,31 +387,86 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 },
-                "karate": { "level": 2 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                },
+                "karate": {
+                  "level": 2
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 16, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 5 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 16,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 2,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Strike", "martialCategory": "damageOnly" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Strike",
+          "martialCategory": "damageOnly"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 16, "keyTechniqueBonus": 0, "martialCategory": "damageOnly" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 16,
+                "keyTechniqueBonus": 0,
+                "martialCategory": "damageOnly"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [
               {
@@ -253,13 +475,20 @@
                 "strengthDamageBonus": 0
               }
             ],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Martial Arts — Strike (baseline damageOnly category)"
     },
     {
       "name": "martial-strike-karate-bonus",
@@ -267,14 +496,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Strike",
-          "options": { "martialArt": "karate" }
+          "options": {
+            "martialArt": "karate"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "karate": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "karate": {
+                "level": 5
+              }
             }
           }
         },
@@ -290,31 +532,86 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 },
-                "karate": { "level": 2 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                },
+                "karate": {
+                  "level": 2
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 20, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } },
-        { "id": "location", "total": 5, "die": { "natural": 5 }, "location": "torso" },
-        { "id": "damage", "total": 3, "die": { "natural": 3 } }
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        },
+        {
+          "id": "location",
+          "total": 5,
+          "die": {
+            "natural": 5
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 3,
+          "die": {
+            "natural": 3
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Strike", "martialCategory": "damageOnly" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Strike",
+          "martialCategory": "damageOnly"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 2, "martialCategory": "damageOnly" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 2,
+                "martialCategory": "damageOnly"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [
               {
@@ -323,13 +620,20 @@
                 "strengthDamageBonus": 0
               }
             ],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Karate Strike +2 key technique bonus"
     },
     {
       "name": "martial-kick-savate-bonus",
@@ -337,14 +641,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Kick",
-          "options": { "martialArt": "savate" }
+          "options": {
+            "martialArt": "savate"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 8 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 8
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 5 },
-              "savate": { "level": 4 }
+              "brawling": {
+                "level": 5
+              },
+              "savate": {
+                "level": 4
+              }
             }
           }
         },
@@ -360,30 +677,83 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 19, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 19,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 2,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Kick", "martialCategory": "damageOnly" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Kick",
+          "martialCategory": "damageOnly"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 21, "keyTechniqueBonus": 2, "martialCategory": "damageOnly" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 21,
+                "keyTechniqueBonus": 2,
+                "martialCategory": "damageOnly"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [
               {
@@ -392,13 +762,20 @@
                 "strengthDamageBonus": 0
               }
             ],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Savate Kick +2 key technique bonus"
     },
     {
       "name": "martial-block-parry",
@@ -406,14 +783,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "BlockParry",
-          "options": { "martialArt": "boxing" }
+          "options": {
+            "martialArt": "boxing"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "boxing": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "boxing": {
+                "level": 5
+              }
             }
           }
         },
@@ -429,37 +819,84 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "BlockParry", "martialCategory": "nonDamage" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "BlockParry",
+          "martialCategory": "nonDamage"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "nonDamage"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Boxing Block/Parry +1 key technique bonus (non-damage category)"
     },
     {
       "name": "martial-dodge-capoeira",
@@ -467,14 +904,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Dodge",
-          "options": { "martialArt": "capoeira" }
+          "options": {
+            "martialArt": "capoeira"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "capoeira": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "capoeira": {
+                "level": 5
+              }
             }
           }
         },
@@ -490,37 +940,84 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Dodge", "martialCategory": "nonDamage" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Dodge",
+          "martialCategory": "nonDamage"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "nonDamage"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Capoeira Dodge +1 key technique bonus (non-damage category)"
     },
     {
       "name": "martial-disarm-aikido",
@@ -528,14 +1025,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Disarm",
-          "options": { "martialArt": "aikido" }
+          "options": {
+            "martialArt": "aikido"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "aikido": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "aikido": {
+                "level": 5
+              }
             }
           }
         },
@@ -551,43 +1061,93 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Disarm", "martialCategory": "nonDamage" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Disarm",
+          "martialCategory": "nonDamage"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "nonDamage" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "nonDamage"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [
           {
             "reason": "prerequisite-check",
             "action": "disarm",
-            "requires": ["blockParry", "dodge"]
+            "requires": [
+              "blockParry",
+              "dodge"
+            ]
           }
         ],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Aikido Disarm +1; prerequisite check (requires BlockParry, Dodge)"
     },
     {
       "name": "martial-grapple-karate",
@@ -595,14 +1155,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Grapple",
-          "options": { "martialArt": "karate" }
+          "options": {
+            "martialArt": "karate"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "karate": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "karate": {
+                "level": 5
+              }
             }
           }
         },
@@ -618,37 +1191,84 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 20, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Grapple", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Grapple",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 20, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 20,
+                "keyTechniqueBonus": 0,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Karate Grapple (grappleFamily, no key technique bonus for grapple)"
     },
     {
       "name": "martial-choke-requires-hold",
@@ -660,9 +1280,18 @@
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 }
+              "brawling": {
+                "level": 6
+              }
             }
           }
         },
@@ -678,38 +1307,87 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
-              "combatState": { "held": true }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              },
+              "combatState": {
+                "held": true
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Choke", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Choke",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 21, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 21,
+                "keyTechniqueBonus": 0,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Choke requires prerequisite Hold state (confirmed)"
     },
     {
       "name": "martial-escape-requires-grapple-hold",
@@ -717,14 +1395,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Escape",
-          "options": { "martialArt": "judo" }
+          "options": {
+            "martialArt": "judo"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "judo": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "judo": {
+                "level": 5
+              }
             }
           }
         },
@@ -740,38 +1431,87 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
-              "combatState": { "grappled": true }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              },
+              "combatState": {
+                "grappled": true
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Escape", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Escape",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Escape requires Grapple or Hold state (confirmed); Judo +1"
     },
     {
       "name": "martial-unknown-action-fallback",
@@ -783,9 +1523,18 @@
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 }
+              "brawling": {
+                "level": 6
+              }
             }
           }
         },
@@ -801,30 +1550,83 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } },
-        { "id": "location", "total": 3, "die": { "natural": 3 }, "location": "torso" },
-        { "id": "damage", "total": 2, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        },
+        {
+          "id": "location",
+          "total": 3,
+          "die": {
+            "natural": 3
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 2,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "UnknownAction", "martialCategory": "damageOnly" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "UnknownAction",
+          "martialCategory": "damageOnly"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 21, "keyTechniqueBonus": 0, "martialCategory": "damageOnly" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 21,
+                "keyTechniqueBonus": 0,
+                "martialCategory": "damageOnly"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [
               {
@@ -833,21 +1635,39 @@
                 "strengthDamageBonus": 0
               }
             ],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Unknown martial action falls back to damageOnly category"
     },
     {
       "name": "melee-bt13-vs-bt14",
       "context": {
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 8 }, "bt": { "total": 13 } },
-            "skills": { "melee": { "level": 5 } }
+            "stats": {
+              "ref": {
+                "total": 8
+              },
+              "bt": {
+                "total": 13
+              }
+            },
+            "skills": {
+              "melee": {
+                "level": 5
+              }
+            }
           }
         },
         "targets": [
@@ -855,27 +1675,81 @@
             "actorUuid": "Actor.tough",
             "name": "Tough Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 14 } },
-              "skills": { "melee": { "level": 3 } },
-              "hitLocations": { "torso": { "label": "Torso" } },
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 14
+                }
+              },
+              "skills": {
+                "melee": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
               "equippedArmor": [
-                { "id": "armor-jacket", "name": "Armor Jacket", "equipped": true, "coverage": { "torso": { "stoppingPower": 4, "ablation": 0 } } }
+                {
+                  "id": "armor-jacket",
+                  "name": "Armor Jacket",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "stoppingPower": 4,
+                      "ablation": 0
+                    }
+                  }
+                }
               ]
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 18, "die": { "natural": 5 } },
-        { "id": "defend", "total": 12, "die": { "natural": 3 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 8, "die": { "natural": 8 } }
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "defend",
+          "total": 12,
+          "die": {
+            "natural": 3
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 8,
+          "die": {
+            "natural": 8
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "attack": { "hit": true },
+            "attack": {
+              "hit": true
+            },
             "hits": [
               {
                 "location": "torso",
@@ -892,15 +1766,27 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.106: BTM table — BT 13 = -6, BT 14 = -6; strengthDamageBonus BT 13 = +5"
     },
     {
       "name": "melee-bt15-vs-bt15",
       "context": {
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 10 }, "bt": { "total": 15 } },
-            "skills": { "melee": { "level": 6 } }
+            "stats": {
+              "ref": {
+                "total": 10
+              },
+              "bt": {
+                "total": 15
+              }
+            },
+            "skills": {
+              "melee": {
+                "level": 6
+              }
+            }
           }
         },
         "targets": [
@@ -908,25 +1794,69 @@
             "actorUuid": "Actor.powerhouse",
             "name": "Powerhouse",
             "snapshot": {
-              "stats": { "ref": { "total": 8 }, "bt": { "total": 15 } },
-              "skills": { "melee": { "level": 4 } },
-              "hitLocations": { "torso": { "label": "Torso" } },
+              "stats": {
+                "ref": {
+                  "total": 8
+                },
+                "bt": {
+                  "total": 15
+                }
+              },
+              "skills": {
+                "melee": {
+                  "level": 4
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
               "equippedArmor": []
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 20, "die": { "natural": 4 } },
-        { "id": "defend", "total": 14, "die": { "natural": 2 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 4, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "natural": 4
+          }
+        },
+        {
+          "id": "defend",
+          "total": 14,
+          "die": {
+            "natural": 2
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 4,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "attack": { "hit": true },
+            "attack": {
+              "hit": true
+            },
             "hits": [
               {
                 "location": "torso",
@@ -940,15 +1870,27 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.106: BTM table — BT 15 = -8; strengthDamageBonus BT 15 = +8"
     },
     {
       "name": "melee-bt10-vs-bt10",
       "context": {
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 8 }, "bt": { "total": 10 } },
-            "skills": { "melee": { "level": 4 } }
+            "stats": {
+              "ref": {
+                "total": 8
+              },
+              "bt": {
+                "total": 10
+              }
+            },
+            "skills": {
+              "melee": {
+                "level": 4
+              }
+            }
           }
         },
         "targets": [
@@ -956,25 +1898,69 @@
             "actorUuid": "Actor.strong",
             "name": "Strong Target",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 10 } },
-              "skills": { "melee": { "level": 3 } },
-              "hitLocations": { "torso": { "label": "Torso" } },
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 10
+                }
+              },
+              "skills": {
+                "melee": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
               "equippedArmor": []
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 17, "die": { "natural": 5 } },
-        { "id": "defend", "total": 12, "die": { "natural": 3 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 4, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 17,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "defend",
+          "total": 12,
+          "die": {
+            "natural": 3
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 4,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "attack": { "hit": true },
+            "attack": {
+              "hit": true
+            },
             "hits": [
               {
                 "location": "torso",
@@ -988,15 +1974,27 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.106: BTM table — BT 10 = -4; strengthDamageBonus BT 10 = +2"
     },
     {
       "name": "melee-bt11-vs-bt11",
       "context": {
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 8 }, "bt": { "total": 11 } },
-            "skills": { "melee": { "level": 5 } }
+            "stats": {
+              "ref": {
+                "total": 8
+              },
+              "bt": {
+                "total": 11
+              }
+            },
+            "skills": {
+              "melee": {
+                "level": 5
+              }
+            }
           }
         },
         "targets": [
@@ -1004,25 +2002,69 @@
             "actorUuid": "Actor.strong-bt11",
             "name": "BT 11 Target",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 11 } },
-              "skills": { "melee": { "level": 3 } },
-              "hitLocations": { "torso": { "label": "Torso" } },
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 11
+                }
+              },
+              "skills": {
+                "melee": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
               "equippedArmor": []
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 18, "die": { "natural": 5 } },
-        { "id": "defend", "total": 12, "die": { "natural": 3 } },
-        { "id": "location", "total": 4, "die": { "natural": 4 }, "location": "torso" },
-        { "id": "damage", "total": 5, "die": { "natural": 5 } }
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "natural": 5
+          }
+        },
+        {
+          "id": "defend",
+          "total": 12,
+          "die": {
+            "natural": 3
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "total": 5,
+          "die": {
+            "natural": 5
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "melee" },
+        "action": {
+          "type": "melee"
+        },
         "targets": [
           {
-            "attack": { "hit": true },
+            "attack": {
+              "hit": true
+            },
             "hits": [
               {
                 "location": "torso",
@@ -1036,7 +2078,8 @@
             ]
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.106: BTM table — BT 11 = -5; strengthDamageBonus BT 11 = +4"
     },
     {
       "name": "martial-throw-requires-grapple-without-state",
@@ -1044,14 +2087,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Throw",
-          "options": { "martialArt": "aikido" }
+          "options": {
+            "martialArt": "aikido"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "aikido": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "aikido": {
+                "level": 5
+              }
             }
           }
         },
@@ -1067,29 +2123,69 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 22, "die": { "natural": 7 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 22,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Throw", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Throw",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": false,
               "margin": 0,
-              "roll": { "total": 23, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 23,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
             "manualResolution": {
@@ -1098,16 +2194,25 @@
             }
           }
         ],
-        "manualResolution": { "required": true },
+        "manualResolution": {
+          "required": true
+        },
         "pendingDecisions": [
           {
             "reason": "prerequisite-check",
             "action": "throw",
-            "requires": ["grapple", "blockParry", "dodge"]
+            "requires": [
+              "grapple",
+              "blockParry",
+              "dodge"
+            ]
           }
         ],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Throw requires Grapple + BlockParry + Dodge prerequisites (unconfirmed)"
     },
     {
       "name": "martial-choke-without-hold-state",
@@ -1119,9 +2224,18 @@
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 }
+              "brawling": {
+                "level": 6
+              }
             }
           }
         },
@@ -1137,29 +2251,69 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 20, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Choke", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Choke",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": false,
               "margin": 0,
-              "roll": { "total": 20, "keyTechniqueBonus": 0, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 20,
+                "keyTechniqueBonus": 0,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
             "manualResolution": {
@@ -1168,16 +2322,23 @@
             }
           }
         ],
-        "manualResolution": { "required": true },
+        "manualResolution": {
+          "required": true
+        },
         "pendingDecisions": [
           {
             "reason": "prerequisite-check",
             "action": "choke",
-            "requires": ["hold"]
+            "requires": [
+              "hold"
+            ]
           }
         ],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Choke requires Hold (unconfirmed) — manual resolution required"
     },
     {
       "name": "martial-escape-without-any-state",
@@ -1185,14 +2346,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Escape",
-          "options": { "martialArt": "judo" }
+          "options": {
+            "martialArt": "judo"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "judo": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "judo": {
+                "level": 5
+              }
             }
           }
         },
@@ -1208,29 +2382,69 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 7 } },
-        { "id": "defend", "total": 11, "die": { "natural": 2 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 7
+          }
+        },
+        {
+          "id": "defend",
+          "total": 11,
+          "die": {
+            "natural": 2
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Escape", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Escape",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": false,
               "margin": 0,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 11 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 11
+              }
             },
             "hits": [],
             "manualResolution": {
@@ -1239,16 +2453,24 @@
             }
           }
         ],
-        "manualResolution": { "required": true },
+        "manualResolution": {
+          "required": true
+        },
         "pendingDecisions": [
           {
             "reason": "prerequisite-check",
             "action": "escape",
-            "requires": ["grapple", "hold"]
+            "requires": [
+              "grapple",
+              "hold"
+            ]
           }
         ],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Escape requires Grapple or Hold (unconfirmed) — manual resolution required"
     },
     {
       "name": "martial-hold-requires-grapple-with-state",
@@ -1256,14 +2478,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "Hold",
-          "options": { "martialArt": "aikido" }
+          "options": {
+            "martialArt": "aikido"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "aikido": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "aikido": {
+                "level": 5
+              }
             }
           }
         },
@@ -1279,38 +2514,87 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } },
-              "combatState": { "grappled": true }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              },
+              "combatState": {
+                "grappled": true
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 21, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "Hold", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "Hold",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 22, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 22,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Hold requires Grapple (confirmed); Aikido +1"
     },
     {
       "name": "martial-sweep-trip-basic",
@@ -1318,14 +2602,27 @@
         "action": {
           "type": "martial",
           "meleeAction": "SweepTrip",
-          "options": { "martialArt": "capoeira" }
+          "options": {
+            "martialArt": "capoeira"
+          }
         },
         "attacker": {
           "snapshot": {
-            "stats": { "ref": { "total": 9 }, "bt": { "total": 6 } },
+            "stats": {
+              "ref": {
+                "total": 9
+              },
+              "bt": {
+                "total": 6
+              }
+            },
             "skills": {
-              "brawling": { "level": 6 },
-              "capoeira": { "level": 5 }
+              "brawling": {
+                "level": 6
+              },
+              "capoeira": {
+                "level": 5
+              }
             }
           }
         },
@@ -1341,37 +2638,84 @@
             "actorUuid": "Actor.defender",
             "name": "Guard",
             "snapshot": {
-              "stats": { "ref": { "total": 6 }, "bt": { "total": 8 } },
-              "skills": {
-                "brawling": { "level": 3 }
+              "stats": {
+                "ref": {
+                  "total": 6
+                },
+                "bt": {
+                  "total": 8
+                }
               },
-              "hitLocations": { "torso": { "label": "Torso" }, "head": { "label": "Head" } }
+              "skills": {
+                "brawling": {
+                  "level": 3
+                }
+              },
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                },
+                "head": {
+                  "label": "Head"
+                }
+              }
             }
           }
         ]
       },
       "rolls": [
-        { "id": "attack", "total": 20, "die": { "natural": 6 } },
-        { "id": "defend", "total": 13, "die": { "natural": 4 } }
+        {
+          "id": "attack",
+          "total": 20,
+          "die": {
+            "natural": 6
+          }
+        },
+        {
+          "id": "defend",
+          "total": 13,
+          "die": {
+            "natural": 4
+          }
+        }
       ],
       "expected": {
-        "action": { "type": "martial", "meleeAction": "SweepTrip", "martialCategory": "grappleFamily" },
+        "action": {
+          "type": "martial",
+          "meleeAction": "SweepTrip",
+          "martialCategory": "grappleFamily"
+        },
         "targets": [
           {
-            "target": { "actorUuid": "Actor.defender" },
+            "target": {
+              "actorUuid": "Actor.defender"
+            },
             "attack": {
               "hit": true,
-              "roll": { "total": 21, "keyTechniqueBonus": 1, "martialCategory": "grappleFamily" },
-              "opposedRoll": { "total": 13 }
+              "roll": {
+                "total": 21,
+                "keyTechniqueBonus": 1,
+                "martialCategory": "grappleFamily"
+              },
+              "opposedRoll": {
+                "total": 13
+              }
             },
             "hits": [],
-            "manualResolution": { "required": false }
+            "manualResolution": {
+              "required": false
+            }
           }
         ],
-        "manualResolution": { "required": false },
+        "manualResolution": {
+          "required": false
+        },
         "pendingDecisions": [],
-        "chat": { "status": "preview" }
-      }
+        "chat": {
+          "status": "preview"
+        }
+      },
+      "ruleReference": "CP2020 p.101: Sweep/Trip (grappleFamily); Capoeira +1"
     }
   ]
 }

@@ -128,7 +128,8 @@
           "system.shotsLeft": 9
         }
       }
-    ]
+    ],
+    "ruleReference": "CP2020 p.99: Attack roll formula; CP2020 p.102: Hit location; CP2020 p.105: Armor/AP/BTM pipeline"
   },
   "rolls": [
     {
@@ -386,7 +387,8 @@
         ],
         "chatStatus": "preview",
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.99: Range DC table (Medium=20); CP2020 p.99: Aiming rounds; CP2020 p.100: Blinded modifier; CP2020 p.100: Misc modifiers; CP2020 p.99: Weapon Accuracy"
     },
     {
       "name": "structured miss skips location",
@@ -431,7 +433,8 @@
           }
         ],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.99: Attack roll vs DC; miss skips location/damage rolls"
     },
     {
       "name": "structured hit applies manual cover as armor layer",
@@ -538,7 +541,8 @@
         "manualResolution": {
           "required": false
         }
-      }
+      },
+      "ruleReference": "CP2020 p.105: Cover stopping power; CP2020 p.105: Proportional armor layering"
     },
     {
       "name": "structured AP penetration plans staged armor ablation",
@@ -708,7 +712,8 @@
           }
         ],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.106: Armor Piercing halving; CP2020 p.106: Staged Penetration; Audit 3.3: Staged armor ablation on penetration"
     },
     {
       "name": "structured AP penetration respects staged penetration disabled",
@@ -785,7 +790,8 @@
       "expectedPlan": {
         "embeddedItemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "Audit: stagedPenetration setting disabled; CP2020 p.106: AP halving without ablation"
     },
     {
       "name": "structured layered armor ablates outer item-backed layer",
@@ -931,7 +937,8 @@
           }
         ],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.105: Proportional Armor Layering; CP2020 p.106: Staged Penetration on outer layer"
     },
     {
       "name": "structured stopped hit does not plan staged armor ablation",
@@ -1001,7 +1008,8 @@
       "expectedPlan": {
         "embeddedItemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.106: No penetration = no staged ablation"
     },
     {
       "name": "structured penetrating hit applies minimum damage after BTM",
@@ -1087,7 +1095,8 @@
       "expectedPlan": {
         "embeddedItemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.106: Minimum 1 damage after BTM"
     },
     {
       "name": "structured head hit doubles wound damage",
@@ -1238,7 +1247,8 @@
           }
         ],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.102: Head hit doubles damage; CP2020 p.108: Head hit > 8 damage = special (auto-death threshold)"
     },
     {
       "name": "structured limb hit over threshold surfaces severing warning",
@@ -1361,7 +1371,8 @@
           }
         ],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.108: Limb > 8 damage = severed/crushed"
     },
     {
       "name": "structured manual cover penetration has no staged armor target",
@@ -1464,7 +1475,8 @@
       "expectedPlan": {
         "embeddedItemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "CP2020 p.106: Staged Penetration only applies to item-backed armor"
     },
     {
       "name": "structured hit uses options-only aimed location",
@@ -1563,7 +1575,8 @@
         "manualResolution": {
           "required": false
         }
-      }
+      },
+      "ruleReference": "CP2020 p.99: Aimed shot (-4 to hit); CP2020 p.102: Hit Location table"
     },
     {
       "name": "structured hit without location model is manual",
@@ -1640,7 +1653,8 @@
             "target-saves"
           ]
         }
-      }
+      },
+      "ruleReference": "Audit: missing hit-location model blocks automated resolution"
     },
     {
       "name": "structured outcome warns when ammo is insufficient",
@@ -1698,7 +1712,8 @@
       "expectedPlan": {
         "itemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "Audit 6.4: Awaited update discipline — insufficient ammo blocks automated update"
     },
     {
       "name": "structured outcome warns when ammo state is missing",
@@ -1756,7 +1771,8 @@
       "expectedPlan": {
         "itemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "Audit 6.4: Missing ammo state blocks ammo updates"
     },
     {
       "name": "structured outcome warns when ammo state is fractional",
@@ -1814,7 +1830,8 @@
       "expectedPlan": {
         "itemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "Audit 6.4: Fractional ammo state is invalid"
     },
     {
       "name": "structured outcome warns when ammo update target is missing",
@@ -1873,7 +1890,8 @@
       "expectedPlan": {
         "itemUpdates": [],
         "warnings": []
-      }
+      },
+      "ruleReference": "Audit 6.4: Missing item UUID blocks ammo update planning"
     },
     {
       "name": "structured path falls back when range data is missing",
@@ -1892,7 +1910,8 @@
       "expected": {
         "legacy": true,
         "reason": "fallback"
-      }
+      },
+      "ruleReference": "Audit 6.4: Missing range data triggers legacy fallback"
     },
     {
       "name": "structured unarmored hit resolves damage and stun save",
@@ -2018,7 +2037,8 @@
             }
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.107: Wound State table; CP2020 p.108: Stun/Shock save"
     },
     {
       "name": "structured hit causing Mortal wound state generates stun and death saves",
@@ -2171,7 +2191,8 @@
             }
           }
         ]
-      }
+      },
+      "ruleReference": "CP2020 p.107: Mortal wound state (13+); CP2020 p.108: Death Saves"
     },
     {
       "name": "structured stopped hit on already Mortal target resolves recurring death save reminder",
@@ -2298,6 +2319,407 @@
       },
       "expectedPlan": {
         "actorUpdates": []
+      },
+      "ruleReference": "CP2020 p.108: Recurring Death Save at Mortal"
+    },
+    {
+      "name": "structured PointBlank range hit",
+      "ruleReference": "CP2020 p.99: Range DC table (PointBlank=10); point-blank always hits at DC 10",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangePointBlank",
+          "targetNumber": "__UNDEFINED__",
+          "options": {}
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3,
+            "results": [
+              3
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [
+              4
+            ]
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 10,
+          "die": {
+            "faces": 6,
+            "natural": 10,
+            "results": [
+              3,
+              3,
+              2,
+              2
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 10,
+              "hit": true,
+              "margin": 2
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 10,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [],
+        "embeddedItemUpdates": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured Extreme range miss",
+      "ruleReference": "CP2020 p.99: Range DC table (Extreme=30); miss at DC 30 with 1d10+8+6 = 24",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeExtreme",
+          "targetNumber": "__UNDEFINED__",
+          "options": {}
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 24,
+          "die": {
+            "faces": 10,
+            "natural": 10,
+            "results": [
+              10
+            ],
+            "exploded": false
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 30,
+              "hit": false,
+              "margin": -6
+            },
+            "hits": []
+          }
+        ],
+        "ammo": {
+          "before": 10,
+          "delta": -1,
+          "after": 9
+        }
+      },
+      "expectedPlan": {
+        "itemUpdates": [
+          {
+            "itemUuid": "Actor.attacker.Item.heavy-pistol",
+            "update": {
+              "system.shotsLeft": 9
+            }
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured weapon conformance label in snapshot",
+      "ruleReference": "Audit 6.1: source-based conformance — CP2020 Corebook source classifies as corebook",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "stagedPenetration": false
+          }
+        },
+        "weapon": {
+          "itemUuid": "Actor.attacker.Item.legacy-pistol",
+          "name": "Legacy Pistol",
+          "snapshot": {
+            "damage": "2d6",
+            "ap": false,
+            "shotsLeft": 6,
+            "rof": 2,
+            "reliability": "standard",
+            "range": 50,
+            "accuracy": 0,
+            "attackType": "Auto",
+            "attackSkill": "handgun",
+            "conformance": "corebook"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [
+              4
+            ]
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "2d6",
+          "total": 7,
+          "die": {
+            "faces": 6,
+            "natural": 7,
+            "results": [
+              4,
+              3
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "weapon": {
+          "snapshot": {
+            "conformance": "corebook"
+          }
+        },
+        "targets": [
+          {
+            "attack": {
+              "hit": true
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 7,
+                "armorMitigation": 0,
+                "penetratingDamage": 7,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 5
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 5
+            }
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured mortal 7+ triggers death save not auto-death",
+      "ruleReference": "CP2020 p.108: Mortal 7+ auto-death is deferred (FR14); death save is still generated",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "stagedPenetration": false
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 37,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [
+              4
+            ]
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 24,
+          "die": {
+            "faces": 6,
+            "natural": 24,
+            "results": [
+              6,
+              6,
+              6,
+              6
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "hit": true
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 24,
+                "armorMitigation": 0,
+                "penetratingDamage": 24,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 22,
+                "woundDamage": 22
+              }
+            ],
+            "damage": {
+              "previousDamage": 37,
+              "damageDelta": 22,
+              "nextDamage": 59,
+              "nextWoundState": {
+                "level": 15,
+                "label": "Mortal 11"
+              }
+            },
+            "saves": [
+              {
+                "type": "stun",
+                "status": "pending",
+                "reason": "damage-taken",
+                "bodyType": 6,
+                "threshold": 1,
+                "targetNumber": 1,
+                "penalty": 14,
+                "woundState": {
+                  "level": 15,
+                  "label": "Mortal 11"
+                }
+              },
+              {
+                "type": "death",
+                "status": "pending",
+                "reason": "mortal-wound",
+                "bodyType": 6,
+                "threshold": 1,
+                "targetNumber": 1,
+                "penalty": 11,
+                "mortalLevel": 11,
+                "woundState": {
+                  "level": 15,
+                  "label": "Mortal 11"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 59
+            }
+          }
+        ],
+        "warnings": []
       }
     }
   ],
