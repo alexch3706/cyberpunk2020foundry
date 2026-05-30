@@ -128,8 +128,7 @@ export class CyberpunkItemSheet extends ItemSheet {
         const num = Number(hc);
         loss = (isNaN(num)) ? 0 : num;
       }
-      cyber.system.humanityLoss = loss;
-      cyber.sheet.render(true);
+      await cyber.update({ "system.humanityLoss": loss });
     });
   }
   
