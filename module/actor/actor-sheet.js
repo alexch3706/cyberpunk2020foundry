@@ -27,12 +27,11 @@ export class CyberpunkActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData(options) {
     // the data THIS returns is only available in this class and the template
-    const sheetData = super.getData();
-    const actorData = sheetData.data;
+    const sheetData = await super.getData(options);
     // Make actor info available relatively easily
-    sheetData.system = actorData.system;
+    sheetData.system = sheetData.actor.system;
 
     // Prepare items.
     if (this.actor.type == 'character' || this.actor.type == "npc") {

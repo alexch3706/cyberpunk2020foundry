@@ -33,9 +33,9 @@ export class CyberpunkItemSheet extends ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData(options) {
     // This means the handlebars data and the form edit data actually mirror each other
-    const data = super.getData();
+    const data = await super.getData(options);
     data.system = this.item.system;
 
     switch (this.item.type) {
