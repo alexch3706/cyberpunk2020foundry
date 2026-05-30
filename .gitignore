@@ -20,3 +20,38 @@ packs/**
 # Local rulebook source/extraction artifacts
 docs/*.pdf
 docs/*core-rules-extracted.md
+
+# OpenClaw agent workspace (local infra, not part of Foundry system)
+.agents/
+.openclaw/
+AGENTS.md
+DREAMS.md
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
+
+# Memory / daily notes (personal, not system data)
+memory/
+
+# BMad internal scaffolding (subdirectories, not config/manifests)
+_bmad/bmm/1-analysis/
+_bmad/bmm/2-plan-workflows/
+_bmad/bmm/3-solutioning/
+_bmad/bmm/4-implementation/
+_bmad/cis/skills/
+_bmad/scripts/tests/
+_bmad/tea/agents/
+_bmad/wds/agents/
+_bmad/wds/tools/
+_bmad/wds/workflows/
+
+# Standalone helper scripts outside module
+scripts/
+
+# BMad output artifacts (generated, not part of the system)
+_bmad-output/
+
+# Design artifacts (UX, prototypes, WDS output)
+design-artifacts/
