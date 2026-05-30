@@ -1,5 +1,6 @@
 import { deepSet, localize } from "../utils.js"
 import { defaultTargetLocations } from "../lookups.js"
+import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js"
 
 /**
  * A specialized form used to select the modifiers for shooting with a weapon
@@ -49,7 +50,8 @@ import { defaultTargetLocations } from "../lookups.js"
         modifierGroups: this.options.modifierGroups,
         targetTokens: this.options.targetTokens,
         // You can't refer to indices in FormApplication form entries as far as I know, so let's give them a place to live
-        defaultValues: {}
+        defaultValues: {},
+        isCorebookFidelityEnabled: isCorebookFidelityEnabled({ weapon: this.options.weapon })
       };
       if(this.options.extraMod) {
         data.modifierGroups.push([{

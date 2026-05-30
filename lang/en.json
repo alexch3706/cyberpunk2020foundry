@@ -376,7 +376,7 @@
     "CYBERPUNK.DragItemsPrompt": "Drag items here to add (for now)",
 
     "CYBERPUNK.InitiativeTrackerWarning": "At the moment, rolling initiative from the sheet doesn't add to the encounter's combat tracker.",
-    "CYBERPUNK.KeyTechniqueWarning": "Key technique bonuses for martial arts aren't implemented yet",
+    "CYBERPUNK.ExoticAttackManualWarning": "Exotic weapon type requires manual resolution — special attack rules are not applied by the combat resolver.",
     "CYBERPUNK.MigrateMessage": "Migrating data of {target}",
 
     "CYBERPUNK.NPC": "NPC",

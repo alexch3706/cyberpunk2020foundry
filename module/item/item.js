@@ -3,6 +3,8 @@ import { Multiroll, makeD10Roll }  from "../dice.js"
 import { clamp, deepLookup, localize, localizeParam, rollLocation } from "../utils.js"
 import { CyberpunkActor } from "../actor/actor.js";
 import { resolveCombatAction } from "../combat/combat-resolver.js";
+import { classifyAttackTypeSupport } from "../combat/conformance-helpers.js";
+import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -63,7 +65,7 @@ export class CyberpunkItem extends Item {
         for(let armorArea in system.coverage) {
           if(!ownerLocs[armorArea]) {
             console.warn(`ARMOR MORPH: The new owner of this armor (${this.actor.name}) does not have a ${armorArea}. Removing the area from the armor.`)
-            delete system.coverage.armorArea;
+            delete system.coverage[armorArea];
           }
         }
       }
@@ -90,7 +92,7 @@ export class CyberpunkItem extends Item {
     // This is where the item would make a roll in the chat or something like that.
     switch (this.type) {
       case "weapon":
-        this.__weaponRoll();
+        await this.__weaponRoll();
         break;
 
       default:
@@ -199,13 +201,13 @@ export class CyberpunkItem extends Item {
 
   // Let's just pretend the unusual ranged doesn't exist for now
   // Look into `modifiers.js` for the modifier obect
-  __weaponRoll(attackMods, targetTokens, options = {}) {
+  async __weaponRoll(attackMods, targetTokens, options = {}) {
     let owner = this.actor;
     if (owner === null) {
       throw new Error("This item isn't owned by anyone.");
     }
 
-    return resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
+    return await resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
   }
 
   __buildCombatResolverContext(attackMods, targetTokens) {
@@ -340,6 +342,18 @@ export class CyberpunkItem extends Item {
       };
     }
 
+    // ---- Exotic attack type guard (after suppressive fire guard, before fire mode routing) ----
+    if (isRanged && isCorebookFidelityEnabled({ weapon: this, actor: this.actor })) {
+      const attackerType = system.attackType;
+      const support = classifyAttackTypeSupport(attackerType);
+      if (support === "manual" || support === "partial" || support === "unknown") {
+        const msg = localize("CYBERPUNK.ExoticAttackManualWarning")
+          || "Exotic weapon type requires manual resolution — special attack rules not applied.";
+        ui.notifications?.warn?.(msg);
+        return { manualResolution: true, warning: msg, attackType: attackerType };
+      }
+    }
+
     // ---- Firemode-specific rolling. I may roll together some common aspects later ----
     // Full auto
     if(attackMods?.fireMode === fireModes.fullAuto) {
@@ -405,10 +419,15 @@ export class CyberpunkItem extends Item {
     
     // This is a somewhat flawed multi-target thing - given target tokens, we could calculate distance (& therefore penalty) for each, and apply damage to them
     let rolls = [];
+    // Compute total ammo delta once outside the per-target loop
+    let remainingShots = system.shotsLeft ?? 0;
+    let rofVal = Number(system.rof) || 0;
+    let validTargetCount = Math.max(1, targetCount);
+    let rofPerTarget = Math.max(1, Math.floor(rofVal / validTargetCount));
     for (let i = 0; i < targetCount; i++) {
       let attackRoll = await this.attackRoll(attackMods);
-      let roundsFired = Math.min(system.shotsLeft, system.rof / targetCount);
-      await this.update({"system.shotsLeft": system.shotsLeft - roundsFired})
+      let roundsFired = Math.min(remainingShots, rofPerTarget);
+      remainingShots -= roundsFired;
       let roundsHit = Math.min(roundsFired, attackRoll.total - DC);
       if(roundsHit < 0) {
         roundsHit = 0;
@@ -440,6 +459,8 @@ export class CyberpunkItem extends Item {
       roll.execute(undefined, "systems/cyberpunk2020-rilerena/templates/chat/multi-hit.hbs", templateData);
       rolls.push(roll);
     }
+    // Single awaited update after the loop with correct remaining ammo
+    await this.update({"system.shotsLeft": Math.max(0, remainingShots)});
     return rolls;
   }
 
@@ -480,7 +501,7 @@ export class CyberpunkItem extends Item {
     }
     let roll = new Multiroll(localize("ThreeRoundBurst"));
     roll.execute(undefined, "systems/cyberpunk2020-rilerena/templates/chat/multi-hit.hbs", templateData);
-    this.update({"system.shotsLeft": system.shotsLeft - roundsFired})
+    await this.update({"system.shotsLeft": system.shotsLeft - roundsFired});
     return roll;
   }
 
@@ -498,7 +519,8 @@ export class CyberpunkItem extends Item {
       .addRoll(damageRoll, {name: localize("Damage")})
       .addRoll(locationRoll.roll, {name: localize("Location"), flavor: locationRoll.areaHit });
     bigRoll.defaultExecute({img:this.img});
-    this.update({"system.shotsLeft": system.shotsLeft - 1})
+    let newShots = Math.max(0, (system.shotsLeft ?? 0) - 1);
+    await this.update({"system.shotsLeft": newShots});
     return bigRoll;
   }
   async __meleeBonk(attackMods) {

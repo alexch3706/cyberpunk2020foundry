@@ -1,6 +1,8 @@
 import { rangeDCs, ranges } from "../lookups.js";
 import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
+import { classifyAttackTypeSupport } from "./conformance-helpers.js";
+import { MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
 
 /**
  * Top-level combat resolver shell.
@@ -20,6 +22,15 @@ import { isCorebookFidelityEnabled } from "./settings-helpers.js";
  */
 export function resolveCombatAction(context, options = {}, roller = undefined) {
   if(options.structured === true) {
+    // ---- Exotic attack guard: block before any ranged/enemy routing ----
+    if (isCorebookFidelityEnabled(context) && context?.action?.type === "ranged") {
+      const rawAttackType = context?.weapon?.snapshot?.attackType;
+      const support = classifyAttackTypeSupport(rawAttackType);
+      if (support === "manual" || support === "partial" || support === "unknown") {
+        return buildManualExoticOutcome(context, support);
+      }
+    }
+
     if(canResolveSuppressiveFireContext(context, roller)) {
       return resolveSuppressiveFire(context, options, roller);
     }
@@ -140,6 +151,61 @@ function canResolveSingleShotRangedContext(context, roller) {
     && !!context.weapon?.snapshot?.attackSkill
     && Array.isArray(context.targets)
     && context.targets.length > 0;
+}
+
+/**
+ * Build a manual-resolution outcome for an exotic attack type.
+ * @param {Object} context — Combat context
+ * @param {"manual"|"partial"|"unknown"} support — Support classification
+ * @returns {Object} CombatOutcome marked for manual resolution
+ */
+function buildManualExoticOutcome(context, support) {
+  const attackerName = context?.attacker?.name || "Unknown";
+  const weaponName = context?.weapon?.name || "Unknown";
+  const attackType = context?.weapon?.snapshot?.attackType || "";
+
+  const isPartial = support === "partial";
+  const message = isPartial
+    ? `"${attackType}" has basic resolver support but special rules are not applied. Resolve manually.`
+    : `Exotic weapon type (${attackType}) requires manual resolution — special attack rules are not applied by the combat resolver.`;
+
+  return {
+    action: context?.action ? foundry.utils.deepClone(context.action) : { type: "ranged" },
+    attacker: {
+      actorUuid: context?.attacker?.actorUuid,
+      tokenUuid: context?.attacker?.tokenUuid,
+      name: attackerName,
+      snapshot: context?.attacker?.snapshot ? foundry.utils.deepClone(context.attacker.snapshot) : undefined
+    },
+    weapon: {
+      itemUuid: context?.weapon?.itemUuid,
+      name: weaponName,
+      snapshot: context?.weapon?.snapshot ? foundry.utils.deepClone(context.weapon.snapshot) : { attackType }
+    },
+    targets: (context?.targets || []).map(t => ({
+      target: {
+        tokenUuid: t?.tokenUuid,
+        actorUuid: t?.actorUuid,
+        name: t?.name || "Unknown"
+      },
+      warnings: []
+    })),
+    ammo: { delta: 0 },
+    manualResolution: {
+      required: true,
+      reason: MANUAL_RESOLUTION_REASON.unsupportedAction,
+      message,
+      blockedUpdateCategories: ["attacker-ammo", "target-damage", "target-armor", "target-saves"]
+    },
+    chat: { status: COMBAT_CHAT_STATUS.manual },
+    warnings: [
+      {
+        code: "exotic-attack-type-unsupported",
+        severity: "warning",
+        message
+      }
+    ]
+  };
 }
 
 function normalizeRange(range) {

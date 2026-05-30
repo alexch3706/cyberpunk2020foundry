@@ -113,6 +113,12 @@
         {{/if}}
         {{#if isManual}}
             <span>{{CPLocal "ManualStatus"}} - {{CPLocal "ManualStatusDesc"}}</span>
+            {{#if manualResolution.reason}}
+                <span class="manual-reason">({{manualResolution.reason}})</span>
+            {{/if}}
+            {{#if manualResolution.message}}
+                <div class="manual-message">{{manualResolution.message}}</div>
+            {{/if}}
         {{/if}}
     </div>
 </div>

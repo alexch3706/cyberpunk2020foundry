@@ -23,5 +23,12 @@
         {{/each}}
         </div>
     {{/if}}
+
+    {{#if isCorebookFidelityEnabled}}
+        <div class="warning" style="color: darkred; font-size: 0.9em; margin-bottom: 5px;">
+            Note: Cover SP input is deferred. Please track cover ablation manually.
+        </div>
+    {{/if}}
+
     <button type="submit" name="submit" class="fire" value="1" autofocus>{{CPLocal "OK"}}</button>
 </form>

@@ -41,7 +41,7 @@
         "reliability": "standard",
         "range": 50,
         "accuracy": 0,
-        "attackType": "ranged",
+        "attackType": "Auto",
         "attackSkill": "handgun"
       }
     },
@@ -138,7 +138,9 @@
       "die": {
         "faces": 10,
         "natural": 7,
-        "results": [7]
+        "results": [
+          7
+        ]
       }
     },
     {
@@ -148,7 +150,9 @@
       "die": {
         "faces": 10,
         "natural": 4,
-        "results": [4]
+        "results": [
+          4
+        ]
       },
       "location": "torso"
     },
@@ -159,7 +163,12 @@
       "die": {
         "faces": 6,
         "natural": 15,
-        "results": [4, 4, 4, 3]
+        "results": [
+          4,
+          4,
+          4,
+          3
+        ]
       }
     }
   ],
@@ -198,7 +207,9 @@
           "die": {
             "faces": 10,
             "natural": 9,
-            "results": [9],
+            "results": [
+              9
+            ],
             "exploded": false
           }
         },
@@ -208,7 +219,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           }
         },
         {
@@ -218,7 +231,12 @@
           "die": {
             "faces": 6,
             "natural": 15,
-            "results": [4, 4, 4, 3]
+            "results": [
+              4,
+              4,
+              4,
+              3
+            ]
           }
         }
       ],
@@ -271,12 +289,23 @@
             "attack": {
               "roll": {
                 "formula": "1d10x10 + @stats.ref.total + @skill.handgun + @modifier.aimRounds + @modifier.targetsCount + @modifier.blinded + @modifier.extraMod + @weapon.accuracy",
-                "terms": ["1d10x10", "@stats.ref.total", "@skill.handgun", "@modifier.aimRounds", "@modifier.targetsCount", "@modifier.blinded", "@modifier.extraMod", "@weapon.accuracy"],
+                "terms": [
+                  "1d10x10",
+                  "@stats.ref.total",
+                  "@skill.handgun",
+                  "@modifier.aimRounds",
+                  "@modifier.targetsCount",
+                  "@modifier.blinded",
+                  "@modifier.extraMod",
+                  "@weapon.accuracy"
+                ],
                 "total": 21,
                 "die": {
                   "faces": 10,
                   "natural": 9,
-                  "results": [9],
+                  "results": [
+                    9
+                  ],
                   "exploded": false
                 },
                 "isCritical": false,
@@ -297,7 +326,9 @@
                   "die": {
                     "faces": 10,
                     "natural": 4,
-                    "results": [4]
+                    "results": [
+                      4
+                    ]
                   },
                   "location": "torso"
                 },
@@ -376,7 +407,9 @@
           "die": {
             "faces": 10,
             "natural": 3,
-            "results": [3],
+            "results": [
+              3
+            ],
             "exploded": false
           }
         }
@@ -424,7 +457,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -434,7 +469,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           }
         },
         {
@@ -444,7 +481,12 @@
           "die": {
             "faces": 6,
             "natural": 20,
-            "results": [5, 5, 5, 5]
+            "results": [
+              5,
+              5,
+              5,
+              5
+            ]
           }
         }
       ],
@@ -559,7 +601,9 @@
           "die": {
             "faces": 10,
             "natural": 8,
-            "results": [8],
+            "results": [
+              8
+            ],
             "exploded": false
           }
         },
@@ -570,7 +614,12 @@
           "die": {
             "faces": 6,
             "natural": 18,
-            "results": [6, 5, 4, 3]
+            "results": [
+              6,
+              5,
+              4,
+              3
+            ]
           }
         }
       ],
@@ -688,7 +737,9 @@
           "die": {
             "faces": 10,
             "natural": 8,
-            "results": [8],
+            "results": [
+              8
+            ],
             "exploded": false
           }
         },
@@ -699,7 +750,12 @@
           "die": {
             "faces": 6,
             "natural": 18,
-            "results": [6, 5, 4, 3]
+            "results": [
+              6,
+              5,
+              4,
+              3
+            ]
           }
         }
       ],
@@ -797,7 +853,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -808,7 +866,12 @@
           "die": {
             "faces": 6,
             "natural": 20,
-            "results": [5, 5, 5, 5]
+            "results": [
+              5,
+              5,
+              5,
+              5
+            ]
           }
         }
       ],
@@ -890,7 +953,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -901,7 +966,12 @@
           "die": {
             "faces": 6,
             "natural": 10,
-            "results": [4, 3, 2, 1]
+            "results": [
+              4,
+              3,
+              2,
+              1
+            ]
           }
         }
       ],
@@ -953,7 +1023,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -964,7 +1036,12 @@
           "die": {
             "faces": 6,
             "natural": 13,
-            "results": [4, 4, 3, 2]
+            "results": [
+              4,
+              4,
+              3,
+              2
+            ]
           }
         }
       ],
@@ -1053,7 +1130,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -1064,7 +1143,12 @@
           "die": {
             "faces": 6,
             "natural": 7,
-            "results": [2, 2, 2, 1]
+            "results": [
+              2,
+              2,
+              2,
+              1
+            ]
           }
         }
       ],
@@ -1197,7 +1281,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -1208,7 +1294,12 @@
           "die": {
             "faces": 6,
             "natural": 11,
-            "results": [3, 3, 3, 2]
+            "results": [
+              3,
+              3,
+              3,
+              2
+            ]
           }
         }
       ],
@@ -1319,7 +1410,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         },
@@ -1330,7 +1423,12 @@
           "die": {
             "faces": 6,
             "natural": 10,
-            "results": [4, 3, 2, 1]
+            "results": [
+              4,
+              3,
+              2,
+              1
+            ]
           }
         }
       ],
@@ -1387,7 +1485,9 @@
           "die": {
             "faces": 10,
             "natural": 7,
-            "results": [7],
+            "results": [
+              7
+            ],
             "exploded": false
           }
         },
@@ -1398,7 +1498,12 @@
           "die": {
             "faces": 6,
             "natural": 10,
-            "results": [4, 3, 2, 1]
+            "results": [
+              4,
+              3,
+              2,
+              1
+            ]
           }
         }
       ],
@@ -1491,7 +1596,9 @@
           "die": {
             "faces": 10,
             "natural": 6,
-            "results": [6],
+            "results": [
+              6
+            ],
             "exploded": false
           }
         }
@@ -1508,7 +1615,12 @@
             "manualResolution": {
               "required": true,
               "reason": "missing-rule-data",
-              "blockedUpdateCategories": ["hit-location", "target-damage", "target-armor", "target-saves"]
+              "blockedUpdateCategories": [
+                "hit-location",
+                "target-damage",
+                "target-armor",
+                "target-saves"
+              ]
             },
             "warnings": [
               {
@@ -1517,12 +1629,16 @@
               }
             ]
           }
-        ]
-      ,
+        ],
         "manualResolution": {
           "required": true,
           "reason": "missing-rule-data",
-          "blockedUpdateCategories": ["hit-location", "target-damage", "target-armor", "target-saves"]
+          "blockedUpdateCategories": [
+            "hit-location",
+            "target-damage",
+            "target-armor",
+            "target-saves"
+          ]
         }
       }
     },
@@ -1547,7 +1663,9 @@
           "die": {
             "faces": 10,
             "natural": 3,
-            "results": [3],
+            "results": [
+              3
+            ],
             "exploded": false
           }
         }
@@ -1566,7 +1684,9 @@
         "manualResolution": {
           "required": true,
           "reason": "missing-rule-data",
-          "blockedUpdateCategories": ["attacker-ammo"]
+          "blockedUpdateCategories": [
+            "attacker-ammo"
+          ]
         },
         "warnings": [
           {
@@ -1601,7 +1721,9 @@
           "die": {
             "faces": 10,
             "natural": 3,
-            "results": [3],
+            "results": [
+              3
+            ],
             "exploded": false
           }
         }
@@ -1620,7 +1742,9 @@
         "manualResolution": {
           "required": true,
           "reason": "missing-rule-data",
-          "blockedUpdateCategories": ["attacker-ammo"]
+          "blockedUpdateCategories": [
+            "attacker-ammo"
+          ]
         },
         "warnings": [
           {
@@ -1655,7 +1779,9 @@
           "die": {
             "faces": 10,
             "natural": 3,
-            "results": [3],
+            "results": [
+              3
+            ],
             "exploded": false
           }
         }
@@ -1674,7 +1800,9 @@
         "manualResolution": {
           "required": true,
           "reason": "missing-rule-data",
-          "blockedUpdateCategories": ["attacker-ammo"]
+          "blockedUpdateCategories": [
+            "attacker-ammo"
+          ]
         },
         "warnings": [
           {
@@ -1710,7 +1838,9 @@
           "die": {
             "faces": 10,
             "natural": 3,
-            "results": [3],
+            "results": [
+              3
+            ],
             "exploded": false
           }
         }
@@ -1729,7 +1859,9 @@
         "manualResolution": {
           "required": true,
           "reason": "missing-rule-data",
-          "blockedUpdateCategories": ["attacker-ammo"]
+          "blockedUpdateCategories": [
+            "attacker-ammo"
+          ]
         },
         "warnings": [
           {
@@ -1797,7 +1929,9 @@
           "die": {
             "faces": 10,
             "natural": 8,
-            "results": [8],
+            "results": [
+              8
+            ],
             "exploded": false
           }
         },
@@ -1808,7 +1942,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           },
           "location": "torso"
         },
@@ -1819,7 +1955,12 @@
           "die": {
             "faces": 6,
             "natural": 5,
-            "results": [2, 1, 1, 1]
+            "results": [
+              2,
+              1,
+              1,
+              1
+            ]
           }
         }
       ],
@@ -1927,7 +2068,9 @@
           "die": {
             "faces": 10,
             "natural": 8,
-            "results": [8],
+            "results": [
+              8
+            ],
             "exploded": false
           }
         },
@@ -1938,7 +2081,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           },
           "location": "torso"
         },
@@ -1949,7 +2094,12 @@
           "die": {
             "faces": 6,
             "natural": 16,
-            "results": [4, 4, 4, 4]
+            "results": [
+              4,
+              4,
+              4,
+              4
+            ]
           }
         }
       ],
@@ -2071,7 +2221,9 @@
           "die": {
             "faces": 10,
             "natural": 8,
-            "results": [8],
+            "results": [
+              8
+            ],
             "exploded": false
           }
         },
@@ -2082,7 +2234,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           },
           "location": "torso"
         },
@@ -2093,7 +2247,12 @@
           "die": {
             "faces": 6,
             "natural": 5,
-            "results": [2, 1, 1, 1]
+            "results": [
+              2,
+              1,
+              1,
+              1
+            ]
           }
         }
       ],
@@ -2209,7 +2368,9 @@
           "required": true,
           "reason": "missing-target-actor",
           "message": "Target has no actor context.",
-          "blockedUpdateCategories": ["actorUpdates"]
+          "blockedUpdateCategories": [
+            "actorUpdates"
+          ]
         }
       },
       "plannedUpdates": {
@@ -2225,7 +2386,9 @@
           "required": true,
           "reason": "missing-target-actor",
           "message": "Target has no actor context.",
-          "blockedUpdateCategories": ["actorUpdates"]
+          "blockedUpdateCategories": [
+            "actorUpdates"
+          ]
         }
       }
     }
@@ -2255,7 +2418,9 @@
           "die": {
             "faces": 10,
             "natural": 7,
-            "results": [7]
+            "results": [
+              7
+            ]
           },
           "seed": "ranged-single-shot-baseline"
         },
@@ -2266,7 +2431,9 @@
           "die": {
             "faces": 10,
             "natural": 4,
-            "results": [4]
+            "results": [
+              4
+            ]
           },
           "seed": "ranged-single-shot-baseline",
           "location": "torso"
@@ -2278,7 +2445,12 @@
           "die": {
             "faces": 6,
             "natural": 15,
-            "results": [4, 4, 4, 3]
+            "results": [
+              4,
+              4,
+              4,
+              3
+            ]
           },
           "seed": "ranged-single-shot-baseline"
         }
@@ -2369,7 +2541,9 @@
               "die": {
                 "faces": 10,
                 "natural": 7,
-                "results": [7]
+                "results": [
+                  7
+                ]
               },
               "targetNumber": 15,
               "hit": true,
@@ -2410,7 +2584,12 @@
                   "die": {
                     "faces": 6,
                     "natural": 15,
-                    "results": [4, 4, 4, 3]
+                    "results": [
+                      4,
+                      4,
+                      4,
+                      3
+                    ]
                   },
                   "seed": "ranged-single-shot-baseline"
                 },
@@ -2421,7 +2600,9 @@
                   "die": {
                     "faces": 10,
                     "natural": 4,
-                    "results": [4]
+                    "results": [
+                      4
+                    ]
                   },
                   "seed": "ranged-single-shot-baseline",
                   "location": "torso"

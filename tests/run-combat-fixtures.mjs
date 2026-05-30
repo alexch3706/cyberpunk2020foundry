@@ -2,12 +2,16 @@ import { runCombatFixtures } from "./combat/combat-fixtures.test.js";
 import { runCombatCommitTests } from "./combat/combat-commit.test.js";
 import { runMartialArtsDataTests } from "./combat/martial-arts-data.test.js";
 import { runConformanceHelpersTests } from "./combat/conformance-helpers.test.js";
+import { runDeferredMechanicsTests } from "./combat/deferred-mechanics.test.js";
+import { runAttackTypeClassificationTests } from "./combat/attack-type-classification.test.js";
 
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
   await runMartialArtsDataTests(),
-  ...await runConformanceHelpersTests()
+  ...await runConformanceHelpersTests(),
+  ...await runDeferredMechanicsTests(),
+  ...await runAttackTypeClassificationTests()
 ];
 
 for(const result of results) {

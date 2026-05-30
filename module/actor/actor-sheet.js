@@ -1,4 +1,4 @@
-import { martialOptions, meleeAttackTypes, meleeBonkOptions, rangedModifiers, weaponTypes } from "../lookups.js"
+import { fireModes, martialOptions, meleeAttackTypes, meleeBonkOptions, rangedModifiers, weaponTypes } from "../lookups.js"
 import { localize, localizeParam } from "../utils.js"
 import { ModifiersDialog } from "../dialog/modifiers.js"
 import { SortOrders } from "./skill-sort.js";
@@ -173,17 +173,17 @@ export class CyberpunkActorSheet extends ActorSheet {
       this.actor.rollStat(statName);
     });
     // TODO: Refactor these skill interactivity stuff into their own methods
-    html.find(".skill-level").click((event) => event.target.select()).change((event) => {
+    html.find(".skill-level").click((event) => event.target.select()).change(async (event) => {
       let skill = this.actor.items.get(event.currentTarget.dataset.skillId);
       let target = skill.system.isChipped ? "system.chipLevel" : "system.level";
       let updateData = {_id: skill.id};
       updateData[target] = parseInt(event.target.value, 10);
-      this.actor.updateEmbeddedDocuments("Item", [updateData]);
+      await this.actor.updateEmbeddedDocuments("Item", [updateData]);
       // Mild hack to make sheet refresh and re-sort: the ability to do that should just be put in 
     });
-    html.find(".chip-toggle").click(ev => {
+    html.find(".chip-toggle").click(async ev => {
       let skill = this.actor.items.get(ev.currentTarget.dataset.skillId);
-      this.actor.updateEmbeddedDocuments("Item", [{
+      await this.actor.updateEmbeddedDocuments("Item", [{
         _id: skill.id,
         "system.isChipped": !skill.system.isChipped
       }]);
@@ -200,9 +200,9 @@ export class CyberpunkActorSheet extends ActorSheet {
     html.find(".roll-initiative").click(ev => {
       this.actor.addToCombatAndRollInitiative();
     });
-    html.find(".damage").click(ev => {
+    html.find(".damage").click(async ev => {
       let damage = Number(ev.currentTarget.dataset.damage);
-      this.actor.update({
+      await this.actor.update({
         "system.damage": damage
       });
     });
@@ -224,6 +224,13 @@ export class CyberpunkActorSheet extends ActorSheet {
     html.find('.item-delete').click(deleteItemDialog.bind(this));
     html.find('.rc-item-delete').bind("contextmenu", deleteItemDialog.bind(this)); 
 
+    function structuredResolverOptions(item) {
+      // Return truthy options object if the current action is supported by the structured resolver.
+      // Check fire mode, target availability, and required inputs.
+      // For now, return null — structured resolver will be enabled by default in Story 6-8.
+      return null;
+    }
+
     html.find('.fire-weapon').click(ev => {
       ev.stopPropagation();
       let item = getEventItem(this, ev);
@@ -243,11 +250,12 @@ export class CyberpunkActorSheet extends ActorSheet {
         modifierGroups = meleeBonkOptions();
       }
       
+      let resolverOptions = structuredResolverOptions(item);
       let dialog = new ModifiersDialog(this.actor, {
         weapon: item,
         targetTokens: targetTokens,
         modifierGroups: modifierGroups,
-        onConfirm: (fireOptions) => item.__weaponRoll(fireOptions, targetTokens)
+        onConfirm: (fireOptions) => item.__weaponRoll(fireOptions, targetTokens, { structured: !!resolverOptions, ...resolverOptions })
       });
       dialog.render(true);
     });

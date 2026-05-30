@@ -375,7 +375,7 @@
     "CYBERPUNK.DragItemsPrompt": "Trascina qui gli oggetti per aggiungerli (per ora)",
 
     "CYBERPUNK.InitiativeTrackerWarning": "Al momento, tirare l'iniziativa dalla scheda non viene aggiunto alla tracker dell'incontro.",
-    "CYBERPUNK.KeyTechniqueWarning": "Le tecniche delle arti marziali non sono implementate al momento,",
+    "CYBERPUNK.ExoticAttackManualWarning": "Tipo di arma esotica richiede risoluzione manuale — le regole speciali d'attacco non sono applicate dal risolutore di combattimento.",
     "CYBERPUNK.MigrateMessage": "Migrazione dati di {target}",
 
     "CYBERPUNK.NPC": "NPC",

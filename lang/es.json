@@ -373,7 +373,7 @@
     "CYBERPUNK.DragItemsPrompt": "Arrastra objetos aquí para añadirlos (por ahora)",
 
     "CYBERPUNK.InitiativeTrackerWarning": "Por ahora las tiradas de iniciativa desde la hoja de personaje no se añaden solas al orden de turnos de combate.",
-    "CYBERPUNK.KeyTechniqueWarning": "Key technique bonuses for martial arts aren't implemented yet",
+    "CYBERPUNK.ExoticAttackManualWarning": "Tipo de arma exótica requiere resolución manual — las reglas especiales de ataque no son aplicadas por el resolvedor de combate.",
     "CYBERPUNK.MigrateMessage": "Migrando datos de {target}",
 
     "CYBERPUNK.NPC": "NPC",

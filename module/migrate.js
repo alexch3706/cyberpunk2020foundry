@@ -10,29 +10,37 @@ const updateFuncs = {
 let migrationSuccess = true;
 // Handle migration of things. The shape of it nabbed from 5e
 export async function migrateWorld() {
+    migrationSuccess = true;
     if (!game.user.isGM) {
         ui.notifications.error("Only the GM can migrate the world");
         return;
     }
 
-    for(let actor of game.actors.contents) {
-        migrateDocument(actor);
-        actor.items.forEach(item => migrateDocument(item));
-    }
-    for(let item of game.items.contents) {
-        migrateDocument(item);
-    }
-    for(let compendium of game.packs.contents) {
-        migrateCompendium(compendium);
-    }
-    if(migrationSuccess) {
-        game.settings.set("cyberpunk2020-rilerena", "systemMigrationVersion", game.system.version);
-        ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.version} completed!`, {permanent: true});
-    }
-    else {
+    try {
+        for(const actor of game.actors.contents) {
+            await migrateDocument(actor);
+            for(const item of actor.items) {
+                await migrateDocument(item);
+            }
+        }
+        for(const item of game.items.contents) {
+            await migrateDocument(item);
+        }
+        for(const compendium of game.packs.contents) {
+            await migrateCompendium(compendium);
+        }
+        if(migrationSuccess) {
+            await game.settings.set("cyberpunk2020-rilerena", "systemMigrationVersion", game.system.version);
+            ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.version} completed!`, {permanent: true});
+        }
+        else {
+            ui.notifications.error(`Cyberpunk2020 System Migration failed :( Please see console log for details`);
+        }
+    } catch(err) {
+        migrationSuccess = false;
+        console.error(`Cyberpunk2020 migration aborted: ${err.message}`);
         ui.notifications.error(`Cyberpunk2020 System Migration failed :( Please see console log for details`);
     }
-}
 
 const defaultDataUse = async (document, updateData) => {
     if (!foundry.utils.isEmpty(updateData)) {
@@ -48,10 +56,10 @@ async function migrateDocument(document, withUpdataData = defaultDataUse) {
             console.log(`No migrate function for document with documentName field "${document.documentName}"`);
         }
         const updateData = await migrateDataFunc(document);
-        withUpdataData(document, updateData);
+        await withUpdataData(document, updateData);
     } catch(err) {
         migrationSuccess = false;
-        err.message = `Failed cyberpunk system migration for ${document.type} ${document.name}: ${err.message}`;
+        err.message = `Failed cyberpunk system migration for ${document?.type} ${document?.name}: ${err.message}`;
         console.error(err);
         return;
     }
@@ -156,7 +164,7 @@ export async function migrateActor(actor) {
         // Keep current items
         const currentItems = Array.from(actor.items).map(item => item.toObject());
         // TODO: This is repeated in a few places - centralise/refactor
-        actorUpdates.items = currentItems.concat(currentItems, skillsToAdd);
+        actorUpdates.items = currentItems.concat(skillsToAdd);
     }
 
     return actorUpdates;
@@ -185,20 +193,31 @@ export function migrateItem(item) {
     return itemUpdates;
 }
 
-export function migrateCompendium(compendium) {
+export async function migrateCompendium(compendium) {
     if(compendium.locked) {
         console.log(`Not migrating compendium ${compendium.metadata.label}, as it is locked`);
         return
     }
     console.log(`Updating entities in compendium ${compendium.metadata.label}`);
     let documentIDs = compendium.index.map(e => e.id);
-    documentIDs.forEach(async (id) => {
-        let document = await compendium.getDocument(id);
-        migrateDocument(document, async (document, updateData) => {
-            updateData.id = id;
-            await compendium.updateDocument(updateData);
-        });
-    });
+    const CHUNK_SIZE = 50;
+    for (let i = 0; i < documentIDs.length; i += CHUNK_SIZE) {
+        const chunk = documentIDs.slice(i, i + CHUNK_SIZE);
+        await Promise.all(chunk.map(async (id) => {
+            try {
+                let document = await compendium.getDocument(id);
+                await migrateDocument(document, async (doc, updateData) => {
+                    updateData._id = id; // use _id for updateDocument
+                    if (!foundry.utils.isEmpty(updateData)) {
+                        await compendium.updateDocument(updateData);
+                    }
+                });
+            } catch(err) {
+                console.error(`Cyberpunk2020 migration failed for document ${id} in compendium ${compendium.metadata.label}: ${err.message}`);
+                migrationSuccess = false;
+            }
+        }));
+    }
 }
 
 // Take an old hardcoded skill and translate it into data for a skill item
