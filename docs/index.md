@@ -38,6 +38,8 @@ Last updated: 2026-05-30
 - [Development Guide](./development-guide.md)
 - [Refactor Assessment](./refactor-assessment.md)
 - [Project Scan State](./project-scan-report.json)
+- [MVP Verification Checklist](./verification-checklist.md) — readiness review sign-off checklist for Foundry runtime checks
+- [Combat Mechanics Audit](./combat-mechanics-audit.md) — adherence check between Combat Resolver and Corebook rules
 
 ## Existing Documentation
 

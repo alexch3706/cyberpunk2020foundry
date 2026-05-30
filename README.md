@@ -61,6 +61,7 @@ The project has a dedicated **mechanics resolver** (`module/combat/`) that produ
 - **Commit/rollback** — you can cancel and nothing persists.
 - **Chat evidence** — structured chat cards show every intermediate value for referee audit.
 - **Corebook Fidelity Mode** (`corebookFidelityMode` setting) — enables/disables strict rules enforcement.
+- **Corebook conformance labels** — clearly distinguishes core items from extended content.
 - **Staged penetration toggle** — disable for compatible/simplified play.
 - **Direct commit mode** option — skip preview for speed.
 
@@ -91,8 +92,7 @@ Full item packs for: default skills, role-specific skills, weapons, armor, cyber
 - **Mech sheet** — planned for later.
 - **Scene / map cover automation** — cover is manual input only.
 - **Active Effects for cyberware** — cyberware stats don't auto-modify actor stats.
-- **Full Foundry v12 / ApplicationV2** — architecture is v10/v11 compatible; v12 support declared as `maximum` but `verified` is still 11.
-- **All items validated for corebook conformance** — packs contain a mix of core and extended data; conformance labelling is in progress.
+- **Full Foundry ApplicationV2** — architecture is v10/v11/v12 compatible (verified up to v12, maximum v13), but a full transition to ApplicationV2 is deferred.
 
 See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work.md`](./_bmad-output/implementation-artifacts/deferred-work.md) for detailed scope tracking.
 
@@ -105,12 +105,12 @@ See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work
 | Layer | What |
 |---|---|
 | **Runtime** | Plain JavaScript ES modules (Foundry client runtime) |
-| **Entrypoint** | `module/cyberpunk2020.js` via `system.json → esmodules` |
+| **Entrypoint** | `module/cyberpunk2020-rilerena.js` via `system.json → esmodules` |
 | **Actor** | `CyberpunkActor` (`module/actor/actor.js`) |
 | **Item** | `CyberpunkItem` (`module/item/item.js`) |
 | **Sheets** | Foundry `ActorSheet` / `ItemSheet` subclasses + Handlebars `.hbs` |
 | **Combat resolver** | `module/combat/` — pure JS modules |
-| **Styling** | Sass → `css/cyberpunk2020.css` |
+| **Styling** | Sass → `css/cyberpunk2020-rilerena.css` |
 | **Data model** | `template.json` (Foundry system template) |
 | **Tests** | Node.js assertion tests with JSON fixtures under `tests/combat/` |
 
@@ -119,11 +119,11 @@ See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work
 1. Clone the repo into your Foundry `systems/` directory.
 2. Edit `.scss` files (not `.css`) and compile:
    ```bash
-   sass scss/cyberpunk2020.scss css/cyberpunk2020.css
+   sass scss/cyberpunk2020-rilerena.scss css/cyberpunk2020-rilerena.css
    ```
    Or auto-compile on save:
    ```bash
-   sass --watch scss/cyberpunk2020.scss css/cyberpunk2020.css
+   sass --watch scss/cyberpunk2020-rilerena.scss css/cyberpunk2020-rilerena.css
    ```
 3. Run combat fixture tests:
    ```bash
@@ -135,7 +135,7 @@ See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work
 
 ```
 module/
-  cyberpunk2020.js      # Bootstrap: init, ready, settings, helpers
+  cyberpunk2020-rilerena.js # Bootstrap: init, ready, settings, helpers
   actor/                # CyberpunkActor, CyberpunkActorSheet
   item/                 # CyberpunkItem, CyberpunkItemSheet
   combat/               # Resolver: attack, armor, damage, saves, melee, martial
