@@ -23,15 +23,20 @@ export let attackSkills = {
 }
 
 export function getStatNames() {
-    let actorTemplate = game.system.template.Actor;
+    const actorModel = game.model?.Actor || game.system?.template?.Actor;
+    if (!actorModel) {
+        return ["int", "ref", "tech", "cool", "attr", "luck", "ma", "body", "emp"];
+    }
     // v11 and earlier format
-    if (actorTemplate.templates) {
-        return actorTemplate.templates.stats.stats;
+    if (actorModel.templates?.stats?.stats) {
+        return actorModel.templates.stats.stats;
     }
     // v12 onwards
-    else {
-        return Object.keys(actorTemplate.character.stats);
+    else if (actorModel.character?.stats) {
+        return Object.keys(actorModel.character.stats);
     }
+    // Default fallback
+    return ["int", "ref", "tech", "cool", "attr", "luck", "ma", "body", "emp"];
 }
 
 // How a weapon attacks. Something like pistol or an SMG have rigid rules on how they can attack, but shotguns can be regular or auto shotgun, exotic can be laser, etc. So this is for weird and special stuff that isn't necessarily covered by the weapon's type or other information
@@ -151,7 +156,21 @@ export let defaultAreaLookup = {
     9: "rLeg",
     10: "rLeg"
 }
-export function defaultHitLocations() { return game.system.template.Actor.templates.hitLocations.hitLocations; }
+export function defaultHitLocations() {
+    const actorModel = game.model?.Actor || game.system?.template?.Actor;
+    const hitLocs = actorModel?.templates?.hitLocations?.hitLocations || actorModel?.character?.hitLocations;
+    if (hitLocs) return hitLocs;
+    
+    // Default fallback
+    return {
+        Head: { location: [1], stoppingPower: 0, ablation: 0},
+        Torso: { location: [2, 4], stoppingPower: 0, ablation: 0},
+        lArm: { location: [6], stoppingPower: 0, ablation: 0},
+        rArm: { location: [5], stoppingPower: 0, ablation: 0},
+        lLeg: { location: [7, 8], stoppingPower: 0, ablation: 0},
+        rLeg: { location: [9, 10], stoppingPower: 0, ablation: 0}
+    };
+}
 
 import { filterSupportedFireModes } from "./combat/settings-helpers.js";
 

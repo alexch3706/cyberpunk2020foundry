@@ -26,8 +26,8 @@ export async function migrateWorld() {
         migrateCompendium(compendium);
     }
     if(migrationSuccess) {
-        game.settings.set("cyberpunk2020", "systemMigrationVersion", game.system.data.version);
-        ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.data.version} completed!`, {permanent: true});
+        game.settings.set("cyberpunk2020", "systemMigrationVersion", game.system.version);
+        ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.version} completed!`, {permanent: true});
     }
     else {
         ui.notifications.error(`Cyberpunk2020 System Migration failed :( Please see console log for details`);
@@ -35,7 +35,7 @@ export async function migrateWorld() {
 }
 
 const defaultDataUse = async (document, updateData) => {
-    if (!isObjectEmpty(updateData)) {
+    if (!foundry.utils.isEmpty(updateData)) {
         console.log(`Total update data for document ${document.name}:`);
         console.log(updateData);
         await document.update(updateData);
@@ -75,15 +75,23 @@ export async function migrateActor(actor) {
         actorUpdates[`system.damage`] = 0;
     }
     if(actor.type == "character") {
-        if(!actor.token.actorLink) {
+        const prototypeToken = actor.prototypeToken || actor.token || {};
+        const actorLink = prototypeToken.actorLink;
+        const hasVision = prototypeToken.sight?.enabled ?? prototypeToken.vision;
+        if(!actorLink) {
             console.log(`Making ${actor.name}'s default token be linked to the actor, and be friendly`);
-            actorUpdates[`token.actorLink`] = true;
-            actorUpdates[`token.disposition`] = 1;
+            actorUpdates[`prototypeToken.actorLink`] = true;
+            actorUpdates[`prototypeToken.disposition`] = 1;
         }
-        if(!actor.token.vision) {
+        if(!hasVision) {
             console.log(`Making ${actor.name}'s default token actually have vision`);
-            actorUpdates[`token.vision`] = true;
-            actorUpdates[`token.dimSight`] = 30;
+            if (prototypeToken.sight !== undefined) {
+                actorUpdates[`prototypeToken.sight.enabled`] = true;
+                actorUpdates[`prototypeToken.sight.range`] = 30;
+            } else {
+                actorUpdates[`token.vision`] = true;
+                actorUpdates[`token.dimSight`] = 30;
+            }
         }
     }
     
@@ -160,7 +168,8 @@ export function migrateItem(item) {
     // No need to migrate items currently
     let itemUpdates = {}
     let system = item.system;
-    let itemTemplates = game.system.template.Item[item.type].templates;
+    const itemModel = game.model?.Item?.[item.type] || game.system?.template?.Item?.[item.type];
+    let itemTemplates = itemModel?.templates;
 
     if(itemTemplates?.includes("common") && system.source === undefined) {
         console.log(`${item.name} has no source field. Giving it one.`)
@@ -169,7 +178,8 @@ export function migrateItem(item) {
     if(item.type == "weapon") {
         if(!system.rangeDamages) {
             console.log(`${item.name} has no place to put damages per range. Instantiating those.`);
-            itemUpdates["system.rangeDamages"] = game.system.template.Item.weapon.rangeDamages;
+            const weaponModel = game.model?.Item?.weapon || game.system?.template?.Item?.weapon;
+            itemUpdates["system.rangeDamages"] = weaponModel?.rangeDamages || [0, 0, 0, 0, 0];
         }
     }
     return itemUpdates;

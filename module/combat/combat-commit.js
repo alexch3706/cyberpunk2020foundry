@@ -519,8 +519,10 @@ export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus
     const userId = options.userId || (typeof globalThis.game?.user?.id === "string" ? globalThis.game.user.id : undefined);
     if (userId) chatMessageData.user = userId;
     if (speaker && Object.keys(speaker).length > 0) chatMessageData.speaker = speaker;
-    const msgType = typeof globalThis.CONST?.CHAT_MESSAGE_TYPES?.OTHER !== "undefined" ? globalThis.CONST.CHAT_MESSAGE_TYPES.OTHER : undefined;
-    if (msgType !== undefined) chatMessageData.type = msgType;
+    const msgStyle = globalThis.CONST?.CHAT_MESSAGE_STYLES?.OTHER;
+    const msgType = globalThis.CONST?.CHAT_MESSAGE_TYPES?.OTHER;
+    if (msgStyle !== undefined) chatMessageData.style = msgStyle;
+    else if (msgType !== undefined) chatMessageData.type = msgType;
 
     const createdId = await adapter.createChatMessage(chatMessageData);
     if (!createdId) {

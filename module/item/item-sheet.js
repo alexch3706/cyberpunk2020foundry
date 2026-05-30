@@ -10,7 +10,7 @@ export class CyberpunkItemSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["cyberpunk", "sheet", "item"],
       width: 520,
       height: 480,
@@ -101,6 +101,7 @@ export class CyberpunkItemSheet extends ItemSheet {
 
   /** @override */
   activateListeners(html) {
+    html = $(html);
     super.activateListeners(html);
 
     // Everything below here is only needed if the sheet is editable

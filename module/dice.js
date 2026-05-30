@@ -89,7 +89,7 @@ export function classifyRollDice(roll) {
                 fumbleThreshold = firstDie.number;
         }
 
-        this.rollMetaData.push(mergeObject({
+        this.rollMetaData.push(foundry.utils.mergeObject({
             name: name,
             flavor: flavor, 
             critThreshold: critThreshold,
@@ -121,7 +121,7 @@ export function classifyRollDice(roll) {
             }
         }));
         
-        const fullTemplateData = mergeObject({
+        const fullTemplateData = foundry.utils.mergeObject({
             user: game.user.id,
             title: this.title,
             flavor: this.flavor,
@@ -129,7 +129,7 @@ export function classifyRollDice(roll) {
                 let metaData = this.rollMetaData[i];
                 let firstDiceTerm = roll.terms.find(term => term instanceof Die) || roll.terms[0];
                 // Add name, flavor, critThreshold, fumbleThreshold etc. Also add whether crit or fumble.
-                return mergeObject(metaData, { 
+                return foundry.utils.mergeObject(metaData, { 
                     roll: roll,
                     diceInfo: classifyRollDice(roll),
                     isCrit: metaData.critThreshold && firstDiceTerm.total >= metaData.critThreshold,
@@ -139,7 +139,7 @@ export function classifyRollDice(roll) {
         }, extraTemplateData || {});
 
         let chatData = {
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            type: CONST.CHAT_MESSAGE_STYLES?.ROLL ?? CONST.CHAT_MESSAGE_TYPES?.ROLL ?? 0,
             // Filter chat rolls to only those that actually have dice, for Dice So Nice. Doesn't seem to work without this filter if something "rolls" just a number
             rolls: this.rolls.filter(r=>r.dice.length > 0),
             user: game.user.id,
