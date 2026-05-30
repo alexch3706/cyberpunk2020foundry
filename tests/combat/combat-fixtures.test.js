@@ -28,18 +28,18 @@ export async function runCombatFixtures() {
   assertWoundPlanning();
   assertSavePromptResolution();
   assertArmorResolver();
-  assertCombatResolverRouting();
+  await assertCombatResolverRouting();
   assertSettingsHelpers();
 
   for(const fixtureUrl of FIXTURE_URLS) {
     const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
-    results.push(runFixture(fixture));
+    results.push(await runFixture(fixture));
   }
 
   return results;
 }
 
-function runFixture(fixture) {
+async function runFixture(fixture) {
   const roller = createScriptedRoller(fixture.rolls);
   const context = clonePlainData(fixture.context);
   const isSuppressiveFire = (String(context?.action?.fireMode || "").toLowerCase() === "suppressivefire");
@@ -58,7 +58,7 @@ function runFixture(fixture) {
   };
 
   const options = useStructured ? { structured: true } : {};
-  const outcome = resolveCombatAction(context, options, roller);
+  const outcome = await resolveCombatAction(context, options, roller);
   roller.assertComplete();
 
   if(useStructured) {
@@ -92,7 +92,7 @@ function runFixture(fixture) {
     assert.deepEqual(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
   }
 
-  assertSingleShotCases(fixture);
+  await assertSingleShotCases(fixture);
 
   for(const statusCase of fixture.chatStatusCases || []) {
     const caseOutcome = reviveFixtureSentinels(mergePlainData(outcome, statusCase.outcome || {}));
@@ -209,7 +209,7 @@ function buildSingleShotOutcome(context, roller, fixture) {
   };
 }
 
-function assertSingleShotCases(fixture) {
+async function assertSingleShotCases(fixture) {
   for(const singleShotCase of fixture.singleShotCases || []) {
     // Strict ruleReference validation — every fixture case must document which rule it verifies
     if (!singleShotCase.ruleReference || typeof singleShotCase.ruleReference !== "string") {
@@ -223,7 +223,7 @@ function assertSingleShotCases(fixture) {
         fallback: () => clonePlainData(singleShotCase.legacyExpected)
       };
     }
-    const outcome = resolveCombatAction(context, { structured: true }, roller);
+    const outcome = await resolveCombatAction(context, { structured: true }, roller);
     roller.assertComplete();
     const plan = planCombatUpdates(outcome);
     assertObjectIncludes(outcome, singleShotCase.expected, `${fixture.name} ${singleShotCase.name} outcome`);
@@ -1351,7 +1351,7 @@ function assertArmorResolver() {
   assert.equal(casePreservingArmor.layers[0].updatePath, "system.coverage.Torso.ablation", "update path preserves original coverage key");
 }
 
-function assertCombatResolverRouting() {
+async function assertCombatResolverRouting() {
   const roller = (request) => {
     if (request.id === "attack") {
       return { id: "attack", total: 20, die: { natural: 8 } };
@@ -1396,7 +1396,7 @@ function assertCombatResolverRouting() {
     }
   };
 
-  const result = resolveCombatAction(context, { structured: true }, roller);
+  const result = await resolveCombatAction(context, { structured: true }, roller);
   assert.notEqual(result, "fallback-called", "FullAuto should be routed to structured resolver");
 
   // Multi-target full-auto with sufficient ammo/ROF (ROF 10, targets 2 => roundsFiredPerTarget = Math.floor(10 / 2) = 5)
@@ -1425,7 +1425,7 @@ function assertCombatResolverRouting() {
       }
     ]
   };
-  const multiResult = resolveCombatAction(multiTargetContext, { structured: true }, roller);
+  const multiResult = await resolveCombatAction(multiTargetContext, { structured: true }, roller);
   assert.notEqual(multiResult, "fallback-called", "Multi-target FullAuto with sufficient ROF/ammo should be routed to structured resolver");
 
   // Multi-target full-auto with insufficient ammo (shotsLeft 1, targets 2 => roundsFiredPerTarget = Math.floor(1 / 2) = 0)
@@ -1440,7 +1440,7 @@ function assertCombatResolverRouting() {
       }
     }
   };
-  const insufficientResult = resolveCombatAction(insufficientAmmoContext, { structured: true }, roller);
+  const insufficientResult = await resolveCombatAction(insufficientAmmoContext, { structured: true }, roller);
   assert.equal(insufficientResult, "fallback-called", "Multi-target FullAuto with roundsFiredPerTarget < 1 should fall back to legacy resolver");
 }
 
@@ -1454,12 +1454,12 @@ function assertSettingsHelpers() {
     assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto"]);
 
     // 2. Corebook Fidelity ON
-    global.game = { settings: { get: () => true } };
+    global.game = { system: { id: "cyberpunk2020" }, settings: { get: () => true } };
     assert.equal(isCorebookFidelityEnabled(), true);
     assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto"]);
 
     // 3. Corebook Fidelity OFF (relaxed mode)
-    global.game = { settings: { get: () => false } };
+    global.game = { system: { id: "cyberpunk2020" }, settings: { get: () => false } };
     assert.equal(isCorebookFidelityEnabled(), false);
     assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto", "Suppressive"]);
   } finally {
