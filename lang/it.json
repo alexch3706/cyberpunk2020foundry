@@ -439,5 +439,9 @@
     "CYBERPUNK.CanceledStatus": "[CANCELLATO]",
     "CYBERPUNK.CanceledStatusDesc": "Scartato",
     "CYBERPUNK.ManualStatus": "[MANUALE]",
-    "CYBERPUNK.ManualStatusDesc": "Richiede Risoluzione del GM"
+    "CYBERPUNK.ManualStatusDesc": "Richiede Risoluzione del GM",
+
+    "CYBERPUNK.ConformanceCorebook": "Manuale Base",
+    "CYBERPUNK.ConformanceExtended": "Supplemento",
+    "CYBERPUNK.ConformanceUnknown": "Sconosciuto"
 }

@@ -46,6 +46,9 @@ export const preloadHandlebarsTemplates = async function() {
         "systems/cyberpunk2020-rilerena/templates/item/parts/skill/summary.hbs",
         "systems/cyberpunk2020-rilerena/templates/item/parts/skill/settings.hbs",
 
+        // Shared item partials
+        "systems/cyberpunk2020-rilerena/templates/item/parts/shared/conformance-badge.hbs",
+
         // Misc
         "systems/cyberpunk2020-rilerena/templates/item/parts/misc/summary.hbs",
         "systems/cyberpunk2020-rilerena/templates/item/parts/misc/settings.hbs",

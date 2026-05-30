@@ -1,16 +1,26 @@
 import { runCombatFixtures } from "./combat/combat-fixtures.test.js";
 import { runCombatCommitTests } from "./combat/combat-commit.test.js";
 import { runMartialArtsDataTests } from "./combat/martial-arts-data.test.js";
+import { runConformanceHelpersTests } from "./combat/conformance-helpers.test.js";
 
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
-  await runMartialArtsDataTests()
+  await runMartialArtsDataTests(),
+  ...await runConformanceHelpersTests()
 ];
 
 for(const result of results) {
-  console.log(`ok ${result.name}`);
+  if (result.passed !== false) {
+    console.log(`ok ${result.name}`);
+  } else {
+    console.log(`FAIL ${result.name}`);
+  }
 }
 
-console.log(`${results.length} combat fixture(s) passed`);
+const failed = results.filter(r => r.passed === false).length;
+const passed = results.length - failed;
+console.log(`\n${results.length} fixture(s): ${passed} passed, ${failed} failed`);
+
+if (failed > 0) process.exit(1);
 

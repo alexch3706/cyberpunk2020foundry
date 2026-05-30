@@ -28,6 +28,37 @@
     align-items: baseline;
 }
 
+// Conformance badge shown in item sheet header
+.conformance-badge {
+    display: inline-block;
+    font-family: $font-primary;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-left: 4px;
+    vertical-align: middle;
+    line-height: 1.4;
+
+    &.corebook {
+        background-color: #228b22; // forest green
+        color: $text-colour-inverted;
+    }
+
+    &.extended {
+        background-color: #1e3a8a; // deep blue
+        color: $text-colour-inverted;
+    }
+
+    &.unknown {
+        background-color: $inactive-colour; // muted charcoal
+        color: $text-colour-inverted;
+    }
+}
+
 // The text VERY quickly summarising an item - eg "Pistol (flame)"
 .summary {
     flex-grow: 0;

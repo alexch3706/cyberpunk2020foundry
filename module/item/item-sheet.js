@@ -1,6 +1,7 @@
 import { weaponTypes, sortedAttackTypes, concealability, availability, reliability, attackSkills, meleeAttackTypes, getStatNames } from "../lookups.js";
 import { formulaHasDice } from "../dice.js";
 import { localize } from "../utils.js";
+import { classifyConformance } from "../combat/conformance-helpers.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -53,6 +54,14 @@ export class CyberpunkItemSheet extends ItemSheet {
       default:
         break;
     }
+
+    // Derive conformance for non-skill items
+    if (this.item.type !== "skill") {
+      const scope = classifyConformance(this.item.system.source);
+      const labelKey = `CYBERPUNK.Conformance${scope.charAt(0).toUpperCase() + scope.slice(1)}`;
+      data.conformance = { scope, labelKey };
+    }
+
     return data;
   }
 

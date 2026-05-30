@@ -399,5 +399,9 @@
     "CYBERPUNK.CanceledStatus": "[CANCELADO]",
     "CYBERPUNK.CanceledStatusDesc": "Descartado",
     "CYBERPUNK.ManualStatus": "[MANUAL]",
-    "CYBERPUNK.ManualStatusDesc": "Requiere Resolución del DJ"
+    "CYBERPUNK.ManualStatusDesc": "Requiere Resolución del DJ",
+
+    "CYBERPUNK.ConformanceCorebook": "Manual Básico",
+    "CYBERPUNK.ConformanceExtended": "Suplemento",
+    "CYBERPUNK.ConformanceUnknown": "Desconocido"
 }

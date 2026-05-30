@@ -404,5 +404,9 @@
     "CYBERPUNK.CanceledStatus": "[CANCELED]",
     "CYBERPUNK.CanceledStatusDesc": "Discarded",
     "CYBERPUNK.ManualStatus": "[MANUAL]",
-    "CYBERPUNK.ManualStatusDesc": "Requires GM Resolution"
+    "CYBERPUNK.ManualStatusDesc": "Requires GM Resolution",
+
+    "CYBERPUNK.ConformanceCorebook": "Corebook",
+    "CYBERPUNK.ConformanceExtended": "Extended",
+    "CYBERPUNK.ConformanceUnknown": "Unknown"
 }
