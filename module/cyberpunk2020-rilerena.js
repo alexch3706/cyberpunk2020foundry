@@ -26,9 +26,9 @@ Hooks.once('init', async function () {
 
     // Register sheets, unregister original core sheets
     Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("cyberpunk2020-rilerena", CyberpunkActorSheet, { makeDefault: true });
+    Actors.registerSheet("cyberpunk2020-rilerena", CyberpunkActorSheet, { types: ["character", "npc"], makeDefault: true });
     Items.unregisterSheet("core", ItemSheet);
-    Items.registerSheet("cyberpunk2020-rilerena", CyberpunkItemSheet, { makeDefault: true });
+    Items.registerSheet("cyberpunk2020-rilerena", CyberpunkItemSheet, { types: ["skill", "weapon", "armor", "cyberware", "vehicle", "misc"], makeDefault: true });
 
     // Register System Settings
     registerSystemSettings();
