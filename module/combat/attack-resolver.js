@@ -1625,7 +1625,8 @@ function missingHitLocationResult() {
 
 function buildAttackRollRequest(context, modifierEvidence) {
   const attackSkill = context.weapon?.snapshot?.attackSkill;
-  const skillTerm = attackSkill ? `@skill.${attackSkill}` : undefined;
+  const attackSkillValue = attackSkill ? Number(getSkillValue(context.attacker?.snapshot?.skills?.[attackSkill])) || 0 : 0;
+  const skillTerm = attackSkill ? `@attackSkillBonus` : undefined;
   const terms = [
     "1d10x10",
     "@stats.ref.total",
@@ -1643,15 +1644,13 @@ function buildAttackRollRequest(context, modifierEvidence) {
     rollData: {
       stats: {
         ref: {
-          total: context.attacker?.snapshot?.stats?.ref?.total || 0
+          total: Number(context.attacker?.snapshot?.stats?.ref?.total) || 0
         }
       },
-      skill: {
-        ...(attackSkill ? { [attackSkill]: getSkillValue(context.attacker?.snapshot?.skills?.[attackSkill]) } : {})
-      },
-      modifier: Object.fromEntries(modifierEvidence.map(modifier => [modifier.code, modifier.value])),
+      attackSkillBonus: attackSkillValue,
+      modifier: Object.fromEntries(modifierEvidence.map(modifier => [modifier.code, Number.isFinite(modifier.value) ? modifier.value : 0])),
       weapon: {
-        accuracy: Number(context.weapon?.snapshot?.accuracy || 0)
+        accuracy: Number(context.weapon?.snapshot?.accuracy) || 0
       }
     }
   };
@@ -1678,7 +1677,8 @@ function buildModifierEvidence(action, weapon) {
   ];
 
   for(const modifier of RANGED_MODIFIERS) {
-    const value = modifier.value(options);
+    let value = modifier.value(options);
+    if(!Number.isFinite(value)) value = 0;
     if(modifier.include(value)) {
       evidence.push({
         code: modifier.code,
@@ -1712,19 +1712,22 @@ function buildModifierEvidence(action, weapon) {
       multiplier = -1;
     }
 
-    const value = multiplier * Math.floor(bullets / 10);
-    evidence.push({
-      code: "fullAuto",
-      label: "Full Auto",
-      value,
-      term: "@modifier.fullAuto"
-    });
+    let value = multiplier * Math.floor(bullets / 10);
+    if(!Number.isFinite(value)) value = 0;
+    if(value !== 0) {
+      evidence.push({
+        code: "fullAuto",
+        label: "Full Auto",
+        value,
+        term: "@modifier.fullAuto"
+      });
+    }
   }
 
   evidence.push({
     code: "weaponAccuracy",
     label: "Weapon Accuracy",
-    value: Number(weapon?.snapshot?.accuracy || 0),
+    value: Number(weapon?.snapshot?.accuracy) || 0,
     term: "@weapon.accuracy"
   });
 
