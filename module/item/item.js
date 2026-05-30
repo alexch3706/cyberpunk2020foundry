@@ -288,7 +288,7 @@ export class CyberpunkItem extends Item {
   __getDamageCommitMode() {
     try {
       if (typeof game?.settings?.get === "function") {
-        return game.settings.get("cyberpunk2020-rilerena", "combatDamageCommitMode");
+        return game.settings.get(game.system.id, "combatDamageCommitMode");
       }
     } catch {
       // fall through to default
@@ -354,7 +354,7 @@ export class CyberpunkItem extends Item {
   __getStagedPenetrationSetting() {
     try {
       if(typeof game?.settings?.get === "function") {
-        return !!game.settings.get("cyberpunk2020-rilerena", "stagedPenetration");
+        return !!game.settings.get(game.system.id, "stagedPenetration");
       }
     }
     catch {

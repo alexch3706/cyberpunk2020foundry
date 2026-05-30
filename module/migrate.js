@@ -30,7 +30,7 @@ export async function migrateWorld() {
             await migrateCompendium(compendium);
         }
         if(migrationSuccess) {
-            await game.settings.set("cyberpunk2020-rilerena", "systemMigrationVersion", game.system.version);
+            await game.settings.set(game.system.id, "systemMigrationVersion", game.system.version);
             ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.version} completed!`, {permanent: true});
         }
         else {

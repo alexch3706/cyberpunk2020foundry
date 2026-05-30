@@ -2,7 +2,7 @@ export function registerSystemSettings() {
    /**
    * Track the system version upon which point a migration was last applied
    */
-  game.settings.register("cyberpunk2020-rilerena", "systemMigrationVersion", {
+  game.settings.register(game.system.id, "systemMigrationVersion", {
     name: "SETTINGS.SysMigration",
     scope: "world",
     config: false,
@@ -10,7 +10,7 @@ export function registerSystemSettings() {
     default: ""
   });
 
-  game.settings.register("cyberpunk2020-rilerena", "trainedSkillsFirst", {
+  game.settings.register(game.system.id, "trainedSkillsFirst", {
     name: "SETTINGS.TrainedSkillsFirst",
     hint: "SETTINGS.TrainedSkillsFirstHint",
     scope: "client",
@@ -19,7 +19,7 @@ export function registerSystemSettings() {
     default: true
   });
 
-  game.settings.register("cyberpunk2020-rilerena", "stagedPenetration", {
+  game.settings.register(game.system.id, "stagedPenetration", {
     name: "SETTINGS.StagedPenetration",
     hint: "SETTINGS.StagedPenetrationHint",
     scope: "world",
@@ -28,7 +28,7 @@ export function registerSystemSettings() {
     default: true
   });
 
-  game.settings.register("cyberpunk2020-rilerena", "corebookFidelityMode", {
+  game.settings.register(game.system.id, "corebookFidelityMode", {
     name: "SETTINGS.CorebookFidelityMode",
     hint: "SETTINGS.CorebookFidelityModeHint",
     scope: "world",
@@ -37,7 +37,7 @@ export function registerSystemSettings() {
     default: true
   });
 
-  game.settings.register("cyberpunk2020-rilerena", "combatDamageCommitMode", {
+  game.settings.register(game.system.id, "combatDamageCommitMode", {
     name: "SETTINGS.CombatDamageCommitMode",
     hint: "SETTINGS.CombatDamageCommitModeHint",
     scope: "world",

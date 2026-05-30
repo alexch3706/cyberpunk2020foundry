@@ -13,7 +13,7 @@ import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js"
       static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
         id: "weapon-modifier",
-        classes: ["cyberpunk2020-rilerena"],
+        classes: [game.system.id],
         title: localize("AttackModifiers"),
         template: "systems/cyberpunk2020-rilerena/templates/dialog/modifiers.hbs",
         width: 400,

@@ -89,7 +89,7 @@ function sortSkills(skills, compareFs) {
         return skills;
     }
     let unsorted = skills.slice();
-    let firstFilter = game.settings.get("cyberpunk2020-rilerena", "trainedSkillsFirst") ? [hasPoints] : [];
+    let firstFilter = game.settings.get(game.system.id, "trainedSkillsFirst") ? [hasPoints] : [];
 
     return unsorted.sort(hierarchical(firstFilter.concat(compareFs)));
 }
