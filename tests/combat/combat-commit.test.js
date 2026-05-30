@@ -444,7 +444,7 @@ async function assertChatOutcomeLifecycle() {
   assert.deepEqual(previewCalls, [
     {
       type: "renderTemplate",
-      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      templatePath: "systems/cyberpunk2020-rilerena/templates/chat/combat-outcome.hbs",
       data: previewResult.chatData
     },
     {
@@ -471,7 +471,7 @@ async function assertChatOutcomeLifecycle() {
   assert.deepEqual(confirmCalls, [
     {
       type: "renderTemplate",
-      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      templatePath: "systems/cyberpunk2020-rilerena/templates/chat/combat-outcome.hbs",
       data: confirmResult.chatData
     },
     {
@@ -497,7 +497,7 @@ async function assertChatOutcomeLifecycle() {
   assert.deepEqual(cancelCalls, [
     {
       type: "renderTemplate",
-      templatePath: "systems/cyberpunk2020/templates/chat/combat-outcome.hbs",
+      templatePath: "systems/cyberpunk2020-rilerena/templates/chat/combat-outcome.hbs",
       data: cancelResult.chatData
     },
     {

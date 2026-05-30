@@ -12,9 +12,9 @@ import { defaultTargetLocations } from "../lookups.js"
       static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
         id: "weapon-modifier",
-        classes: ["cyberpunk2020"],
+        classes: ["cyberpunk2020-rilerena"],
         title: localize("AttackModifiers"),
-        template: "systems/cyberpunk2020/templates/dialog/modifiers.hbs",
+        template: "systems/cyberpunk2020-rilerena/templates/dialog/modifiers.hbs",
         width: 400,
         height: "auto",
         weapon: null,

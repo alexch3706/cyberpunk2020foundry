@@ -266,7 +266,7 @@ export class CyberpunkItem extends Item {
   __getStagedPenetrationSetting() {
     try {
       if(typeof game?.settings?.get === "function") {
-        return !!game.settings.get("cyberpunk2020", "stagedPenetration");
+        return !!game.settings.get("cyberpunk2020-rilerena", "stagedPenetration");
       }
     }
     catch {
@@ -437,7 +437,7 @@ export class CyberpunkItem extends Item {
         }
       }
       let roll = new Multiroll(`${localize("Autofire")}`, `${localize("Range")}: ${localizeParam(attackMods.range, {range: actualRangeBracket})}`);
-      roll.execute(undefined, "systems/cyberpunk2020/templates/chat/multi-hit.hbs", templateData);
+      roll.execute(undefined, "systems/cyberpunk2020-rilerena/templates/chat/multi-hit.hbs", templateData);
       rolls.push(roll);
     }
     return rolls;
@@ -479,7 +479,7 @@ export class CyberpunkItem extends Item {
       }
     }
     let roll = new Multiroll(localize("ThreeRoundBurst"));
-    roll.execute(undefined, "systems/cyberpunk2020/templates/chat/multi-hit.hbs", templateData);
+    roll.execute(undefined, "systems/cyberpunk2020-rilerena/templates/chat/multi-hit.hbs", templateData);
     this.update({"system.shotsLeft": system.shotsLeft - roundsFired})
     return roll;
   }

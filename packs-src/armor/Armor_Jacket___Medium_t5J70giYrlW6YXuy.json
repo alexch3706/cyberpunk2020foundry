@@ -45,7 +45,7 @@
   "flags": {
     "exportSource": {
       "world": "cyberpunk_2020",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "coreVersion": "0.7.10",
       "systemVersion": "0.2.6"
     }

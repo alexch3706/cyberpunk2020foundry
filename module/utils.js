@@ -93,7 +93,7 @@ export function clamp(x, min, max) {
 }
 
 export async function getDefaultSkills() {
-    const pack = game.packs.get("cyberpunk2020.default-skills");
+    const pack = game.packs.get("cyberpunk2020-rilerena.default-skills");
     const content = await pack.getDocuments();
     return content;
 }

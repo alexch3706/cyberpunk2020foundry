@@ -18,7 +18,7 @@ export function isCorebookFidelityEnabled(context = {}) {
   }
   try {
     if (typeof game?.settings?.get === "function") {
-      return !!game.settings.get("cyberpunk2020", "corebookFidelityMode");
+      return !!game.settings.get("cyberpunk2020-rilerena", "corebookFidelityMode");
     }
   } catch {
     // fall through to default

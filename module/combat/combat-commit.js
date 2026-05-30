@@ -493,7 +493,7 @@ export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus
     ];
   }
 
-  const templatePath = "systems/cyberpunk2020/templates/chat/combat-outcome.hbs";
+  const templatePath = "systems/cyberpunk2020-rilerena/templates/chat/combat-outcome.hbs";
   const htmlContent = await adapter.renderTemplate(templatePath, chatData);
 
   const messageId = options.messageId;

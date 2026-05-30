@@ -1,6 +1,6 @@
 {
-  "id": "cyberpunk2020",
-  "name": "cyberpunk2020",
+  "id": "cyberpunk2020-rilerena",
+  "name": "cyberpunk2020-rilerena",
   "title": "Cyberpunk 2020 (Rilerena fork)",
   "description": "R. Talsorian Games' Cyberpunk 2020 System",
   "version": "0.3.12",
@@ -24,30 +24,30 @@
   ],
   "scripts": [],
   "esmodules": [
-    "module/cyberpunk2020.js"
+    "module/cyberpunk2020-rilerena.js"
   ],
   "styles": [
-    "css/cyberpunk2020.css"
+    "css/cyberpunk2020-rilerena.css"
   ],
   "packs": [
     {
       "name": "roll-tables",
       "label": "Roll Tables",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "path": "./packs/roll-tables",
       "type": "RollTable"
     },
     {
       "name": "default-skills",
       "label": "Default Skills",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "path": "./packs/default-skills",
       "type": "Item"
     },
     {
       "name": "role-skills",
       "label": "Role Skills",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "path": "./packs/role-skills",
       "type": "Item"
     },
@@ -55,133 +55,133 @@
       "name": "pistols",
       "label": "Pistols",
       "path": "./packs/pistols",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "rifles",
       "label": "Rifles",
       "path": "./packs/rifles",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "cyberware",
       "label": "Cyberware",
       "path": "./packs/cyberware",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "chipware",
       "label": "Chipware",
       "path": "./packs/chipware",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "communication",
       "label": "Communication",
       "path": "./packs/communication",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "electronics",
       "label": "Electronics",
       "path": "./packs/electronics",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "entertainment",
       "label": "Entertainment",
       "path": "./packs/entertainment",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "fashion",
       "label": "Fashion",
       "path": "./packs/fashion",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "furnishing",
       "label": "Furnishing",
       "path": "./packs/furnishing",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "medical",
       "label": "Medical",
       "path": "./packs/medical",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "netrunningEquipment",
       "label": "Netrunning Equipment",
       "path": "./packs/netrunningEquipment",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "security",
       "label": "Security",
       "path": "./packs/security",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "surveillance",
       "label": "Surveillance",
       "path": "./packs/surveillance",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "tools",
       "label": "Tools",
       "path": "./packs/tools",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "rentalandservices",
       "label": "Rental&Services",
       "path": "./packs/rentalandservices",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "sellthedead",
       "label": "Sell the Dead",
       "path": "./packs/sellTheDead",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "armor",
       "label": "Armor",
       "path": "./packs/armor",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "vehicles",
       "label": "Vehicles",
       "path": "./packs/vehicles",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     },
     {
       "name": "smgs",
       "label": "SMGs",
       "path": "./packs/smgs",
-      "system": "cyberpunk2020",
+      "system": "cyberpunk2020-rilerena",
       "type": "Item"
     }
   ],
@@ -210,7 +210,7 @@
   },
   "primaryTokenAttribute": null,
   "secondaryTokenAttribute": null,
-  "url": "https://github.com/alexch3706/cyberpunk2020foundry",
-  "manifest": "https://raw.githubusercontent.com/alexch3706/cyberpunk2020foundry/main/system.json",
-  "download": "https://github.com/alexch3706/cyberpunk2020foundry/archive/refs/heads/main.zip"
+  "url": "https://github.com/alexch3706/cyberpunk2020-rilerenafoundry",
+  "manifest": "https://raw.githubusercontent.com/alexch3706/cyberpunk2020-rilerenafoundry/main/system.json",
+  "download": "https://github.com/alexch3706/cyberpunk2020-rilerenafoundry/archive/refs/heads/main.zip"
 }

@@ -26,7 +26,7 @@ export async function migrateWorld() {
         migrateCompendium(compendium);
     }
     if(migrationSuccess) {
-        game.settings.set("cyberpunk2020", "systemMigrationVersion", game.system.version);
+        game.settings.set("cyberpunk2020-rilerena", "systemMigrationVersion", game.system.version);
         ui.notifications.info(`Cyberpunk2020 System Migration to version ${game.system.version} completed!`, {permanent: true});
     }
     else {
@@ -59,7 +59,7 @@ async function migrateDocument(document, withUpdataData = defaultDataUse) {
 
 // For now, actors. We can do migrate world as a total of them all. Nabbed framework of code from 5e
 /**
- * Migrate a single Actor document to incorporate latest cyberpunk2020 data model changes
+ * Migrate a single Actor document to incorporate latest cyberpunk2020-rilerena data model changes
  * Return an Object of updateData to be applied
  * @param {object} actor    The actor Document to update
  * @return {Object}         The updateData to apply (via `document.update`)
