@@ -2,6 +2,7 @@ import { makeD10Roll, Multiroll } from "../dice.js";
 import { SortOrders, sortSkills } from "./skill-sort.js";
 import { btmFromBT } from "../lookups.js";
 import { properCase, localize, getDefaultSkills } from "../utils.js"
+import { resolveArmor } from "../combat/armor-resolver.js";
 
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -88,16 +89,18 @@ export class CyberpunkActor extends Actor {
       if(armorData.encumbrance != null) {
         stats.ref.armorMod -= armorData.encumbrance;
       }
-
-      // While we're looping through armor, might as well modify hit locations' armor
-      for(let armorArea in armorData.coverage) {
-        let location = system.hitLocations[armorArea];
-        if(location !== undefined) {
-          armorArea = armorData.coverage[armorArea];
-          location.stoppingPower += armorArea.stoppingPower;
-        }
-      }
     });
+
+    const targetSnapshot = {
+      equippedArmor: equippedItems.filter(i => i.type === "armor"),
+      equippedCyberware: equippedItems.filter(i => i.type === "cyberware")
+    };
+
+    for(const locName in system.hitLocations) {
+      let location = system.hitLocations[locName];
+      const resolution = resolveArmor(false, targetSnapshot, locName);
+      location.stoppingPower = resolution.effectiveStoppingPower;
+    }
     stats.ref.total = stats.ref.base + stats.ref.tempMod + stats.ref.armorMod;
 
     const move = stats.ma;

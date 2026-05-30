@@ -18,7 +18,7 @@ import { MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.j
  * @param {Object} request Roll request with { id, formula, terms, rollData }
  * @returns {Object} rollMetadata with { id, formula, total, die }
  */
-function activeRoller(request = {}) {
+async function activeRoller(request = {}) {
   if (typeof globalThis.Roll !== "function") {
     throw new Error("activeRoller requires Foundry's Roll class (globalThis.Roll) to be available.");
   }
@@ -30,7 +30,7 @@ function activeRoller(request = {}) {
   }
 
   const roll = new globalThis.Roll(formula, request.rollData);
-  roll.evaluate({ async: false });
+  await roll.evaluate();
 
   // Build die info from the first die term
   const firstDie = roll.dice && roll.dice.length > 0 ? roll.dice[0] : null;
@@ -57,7 +57,7 @@ function activeRoller(request = {}) {
  * @param {Function} [roller] Optional deterministic roller hook reserved for tests.
  * @returns {*} The legacy fallback result for current combat paths.
  */
-export function resolveCombatAction(context, options = {}, roller = undefined) {
+export async function resolveCombatAction(context, options = {}, roller = undefined) {
   // Resolve the roller: use provided roller (tests), or default activeRoller (runtime)
   const resolvedRoller = roller || (typeof globalThis.Roll === "function" ? activeRoller : undefined);
 
@@ -72,13 +72,13 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
     }
 
     if(canResolveSuppressiveFireContext(context, resolvedRoller)) {
-      return resolveSuppressiveFire(context, options, resolvedRoller);
+      return await resolveSuppressiveFire(context, options, resolvedRoller);
     }
     if(canResolveSingleShotRangedContext(context, resolvedRoller)) {
-      return resolveSingleShotRangedAttack(context, options, resolvedRoller);
+      return await resolveSingleShotRangedAttack(context, options, resolvedRoller);
     }
     if(canResolveMeleeContext(context, resolvedRoller)) {
-      return resolveMeleeAction(context, options, resolvedRoller);
+      return await resolveMeleeAction(context, options, resolvedRoller);
     }
   }
 
@@ -86,7 +86,7 @@ export function resolveCombatAction(context, options = {}, roller = undefined) {
     throw new Error("Combat resolver requires a legacy fallback during migration.");
   }
 
-  return context.legacy.fallback({
+  return await context.legacy.fallback({
     context,
     options,
     roller

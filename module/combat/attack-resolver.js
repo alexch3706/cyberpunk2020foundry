@@ -143,7 +143,7 @@ export function resolveJamOutcome(isFumble, fireMode, reliability, weaponName = 
   };
 }
 
-export function resolveSingleShotRangedAttack(context, options = {}, roller = undefined) {
+export async function resolveSingleShotRangedAttack(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
   action.targetArea = action.targetArea || action.options?.targetArea;
   const range = normalizeRange(action.range);
@@ -183,9 +183,10 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
 
   if (fireMode === "fullauto" && targetCount > 1) {
     let jamAborted = false;
-    targets = (context.targets || []).map((target, idx) => {
+    let idx = 0;
+    for (const target of (context.targets || [])) {
       if (jamAborted) {
-        return {
+        targets.push({
           target: clonePlainData(target),
           attack: {
             hit: false,
@@ -196,7 +197,9 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
           plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
           manualResolution: { required: false },
           warnings: cloneArray(target.warnings)
-        };
+        });
+        idx++;
+        continue;
       }
 
       const targetAction = {
@@ -218,7 +221,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
         targetModifierEvidence
       );
       const targetAttackRoll = normalizeAttackRoll(
-        roll(roller, targetAttackRequest),
+        await roll(roller, targetAttackRequest),
         targetAttackRequest
       );
 
@@ -250,7 +253,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
       }
 
       if (forceMiss || jamAborted) {
-        return {
+        targets.push({
           target: clonePlainData(target),
           attack: {
             roll: clonePlainData(targetAttackRoll),
@@ -264,10 +267,12 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
           plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
           manualResolution: { required: false },
           warnings: cloneArray(target.warnings)
-        };
+        });
+        idx++;
+        continue;
       }
 
-      return buildTargetOutcome(
+      targets.push(await buildTargetOutcome(
         target,
         targetAttackRoll,
         targetNumber,
@@ -276,12 +281,13 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
         roller,
         options,
         roundsFiredPerTarget
-      );
-    });
+      ));
+      idx++;
+    }
   } else {
     modifierEvidence = buildModifierEvidence(action, context.weapon);
     const attackRequest = buildAttackRollRequest(context, modifierEvidence);
-    attackRoll = normalizeAttackRoll(roll(roller, attackRequest), attackRequest);
+    attackRoll = normalizeAttackRoll(await roll(roller, attackRequest), attackRequest);
 
     // Jam check after attack roll (single-target or shared-roll modes)
     const isFumble = !!attackRoll.isFumble;
@@ -304,9 +310,9 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
       forceMiss = true;
     }
 
-    targets = (context.targets || []).map(target => {
+    for (const target of (context.targets || [])) {
       if (forceMiss) {
-        return {
+        targets.push({
           target: clonePlainData(target),
           attack: {
             roll: clonePlainData(attackRoll),
@@ -320,9 +326,10 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
           plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.preview },
           manualResolution: { required: false },
           warnings: cloneArray(target.warnings)
-        };
+        });
+        continue;
       }
-      return buildTargetOutcome(
+      targets.push(await buildTargetOutcome(
         target,
         attackRoll,
         targetNumber,
@@ -331,8 +338,8 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
         roller,
         options,
         roundsFired
-      );
-    });
+      ));
+    }
   }
 
   const manualTargets = targets.filter(target => target.manualResolution?.required);
@@ -362,7 +369,7 @@ export function resolveSingleShotRangedAttack(context, options = {}, roller = un
   };
 }
 
-export function resolveSuppressiveFire(context, options = {}, roller = undefined) {
+export async function resolveSuppressiveFire(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
   const fireZoneWidth = action.fireZoneWidth ?? action.options?.fireZoneWidth;
   const roundsFired = action.roundsFired ?? action.options?.roundsFired;
@@ -394,9 +401,9 @@ export function resolveSuppressiveFire(context, options = {}, roller = undefined
   // Save DC: Math.max(2, Math.floor(finalRoundsFired / fireZoneWidth))
   const saveDC = Math.max(2, Math.floor(finalRoundsFired / zoneWidth));
 
-  const targets = (context.targets || []).map(target =>
-    resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options)
-  );
+  const targets = await Promise.all((context.targets || []).map(async target =>
+    await resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options)
+  ));
 
   const manualTargets = targets.filter(t => t.manualResolution?.required);
 
@@ -451,7 +458,7 @@ function buildSuppressiveFireManual(message) {
   };
 }
 
-function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, resolverOptions = {}) {
+async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, resolverOptions = {}) {
   const targetWarnings = cloneArray(target.warnings);
   let manualResolution = target.manualResolution
     ? clonePlainData(target.manualResolution)
@@ -491,7 +498,7 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
       }
     }
   };
-  const saveRoll = roll(roller, saveRollRequest);
+  const saveRoll = await roll(roller, saveRollRequest);
   const savePassed = saveRoll.total >= saveDC;
   const saveMargin = saveRoll.total - saveDC;
 
@@ -507,14 +514,14 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
       id: "hitCount",
       formula: "1d6"
     };
-    const hitCountRoll = roll(roller, hitCountRequest);
+    const hitCountRoll = await roll(roller, hitCountRequest);
     const numHits = Math.ceil(hitCountRoll.total / 2);
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
     const accumulatedAblations = {};
 
     for(let i = 0; i < numHits; i++) {
-      const locationResult = resolveHitLocation(target, { ...action, targetArea: undefined }, roller);
+      const locationResult = await resolveHitLocation(target, { ...action, targetArea: undefined }, roller);
       if(locationResult.manualResolution) {
         if(!manualResolution.required) {
           manualResolution = clonePlainData(locationResult.manualResolution);
@@ -536,7 +543,7 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
           id: "damage",
           formula: weaponDamage
         };
-        const damageRoll = roll(roller, damageRequest);
+        const damageRoll = await roll(roller, damageRequest);
 
         const weaponAP = !!weapon?.snapshot?.ap;
         const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
@@ -680,11 +687,11 @@ function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, re
  * @param {Function} [roller] Deterministic roller for fixture support.
  * @returns {Object} CombatOutcome with opposed rolls per target.
  */
-export function resolveMeleeAction(context, options = {}, roller = undefined) {
+export async function resolveMeleeAction(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
-  const targets = (context.targets || []).map(target =>
-    resolveMeleeTargetOutcome(target, context, options, roller)
-  );
+  const targets = await Promise.all((context.targets || []).map(async target =>
+    await resolveMeleeTargetOutcome(target, context, options, roller)
+  ));
   const manualTargets = targets.filter(t => t.manualResolution?.required);
 
   // Collect per-target pendingDecisions into root pendingDecisions
@@ -732,7 +739,7 @@ export function resolveMeleeAction(context, options = {}, roller = undefined) {
  * @param {Function} roller Deterministic roller.
  * @returns {Object} CombatTargetOutcome with opposed roll and optional damage.
  */
-function resolveMeleeTargetOutcome(target, context, options, roller) {
+async function resolveMeleeTargetOutcome(target, context, options, roller) {
   const targetWarnings = cloneArray(target.warnings);
   let manualResolution = target.manualResolution
     ? clonePlainData(target.manualResolution)
@@ -773,7 +780,7 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
       skill: { [attackSkill]: attackerSkillLevel }
     }
   };
-  const attackRoll = normalizeMeleeRoll(roll(roller, attackRequest));
+  const attackRoll = normalizeMeleeRoll(await roll(roller, attackRequest));
 
   // 2c. Add key technique bonus to attack roll total
   attackRoll.keyTechniqueBonus = keyTechniqueBonus;
@@ -796,7 +803,7 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
       skill: { [defenderSkill]: defenderSkillLevel }
     }
   };
-  const defendRoll = normalizeMeleeRoll(roll(roller, defendRequest));
+  const defendRoll = normalizeMeleeRoll(await roll(roller, defendRequest));
 
   // 4. Opposed result — fumble is automatic miss
   let hit = !attackRoll.isFumble && attackRoll.total > defendRoll.total;
@@ -810,14 +817,14 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
   const resolveDamage = hit && (!isMartial || martialCategory === "damageOnly");
 
   if (resolveDamage) {
-    const locationResult = resolveHitLocation(target, context.action, roller);
+    const locationResult = await resolveHitLocation(target, context.action, roller);
     if (locationResult.manualResolution) {
       targetManualResolution = clonePlainData(locationResult.manualResolution);
     }
     targetWarnings.push(...locationResult.warnings);
 
     if (locationResult.hit) {
-      const hitDetail = resolveMeleeHitDamage(
+      const hitDetail = await resolveMeleeHitDamage(
         locationResult.hit,
         context,
         target,
@@ -898,7 +905,7 @@ function resolveMeleeTargetOutcome(target, context, options, roller) {
 /**
  * Build a CombatHitRecord for one melee hit (mirrors damage section of buildTargetOutcome).
  */
-function resolveMeleeHitDamage(hitLocationResult, context, target, options, roller, plannedUpdates) {
+async function resolveMeleeHitDamage(hitLocationResult, context, target, options, roller, plannedUpdates) {
   const weapon = context.weapon?.snapshot || {};
   const targetSnapshot = target.snapshot || {};
 
@@ -906,7 +913,7 @@ function resolveMeleeHitDamage(hitLocationResult, context, target, options, roll
   const attackerBT = context.attacker?.snapshot?.stats?.bt?.total || 0;
   const strengthBonus = strengthDamageBonus(attackerBT);
   const damageRequest = { id: "damage", formula: weapon.damage || "1d6" };
-  const damageRoll = roll(roller, damageRequest);
+  const damageRoll = await roll(roller, damageRequest);
   const rawDamage = Math.max(1, damageRoll.total + strengthBonus);
 
   // Armor (same pattern as ranged buildTargetOutcome)
@@ -1269,7 +1276,7 @@ function ammoWarning(code, message) {
   };
 }
 
-function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1) {
+async function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
   const targetWarnings = cloneArray(target.warnings);
@@ -1292,7 +1299,7 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
         id: "burst_hits",
         formula: "1d3"
       };
-      burstHitsRoll = roller(burstHitsRequest);
+      burstHitsRoll = await roller(burstHitsRequest);
       numHits = Math.min(burstHitsRoll.total, roundsFired);
     } else if (fireMode === "fullauto") {
       numHits = Number.isFinite(roundsFired) && roundsFired > 0 ? Math.max(1, Math.min(roundsFired, margin)) : 0;
@@ -1313,7 +1320,7 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
         }
       }
 
-      const locationResult = resolveHitLocation(target, hitAction, roller);
+      const locationResult = await resolveHitLocation(target, hitAction, roller);
       if(locationResult.manualResolution) {
         if (!manualResolution.required) {
           manualResolution = clonePlainData(locationResult.manualResolution);
@@ -1334,7 +1341,7 @@ function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, ro
           id: "damage",
           formula: weapon?.snapshot?.damage || "1d6"
         };
-        const damageRoll = roller(damageRequest);
+        const damageRoll = await roller(damageRequest);
 
         const weaponAP = !!weapon?.snapshot?.ap;
         const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
@@ -1558,7 +1565,7 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
   };
 }
 
-function resolveHitLocation(target, action, roller) {
+async function resolveHitLocation(target, action, roller) {
   const hitLocations = target.snapshot?.hitLocations;
   if(action.targetArea) {
     const locationEntry = findHitLocationEntry(action.targetArea, hitLocations);
@@ -1584,7 +1591,7 @@ function resolveHitLocation(target, action, roller) {
     id: "location",
     formula: "1d10 hit location"
   };
-  const locationRoll = normalizeLocationRoll(roll(roller, locationRequest), locationRequest);
+  const locationRoll = normalizeLocationRoll(await roll(roller, locationRequest), locationRequest);
   const location = mapLocation(locationRoll, hitLocations);
 
   if(!location) {
@@ -1784,11 +1791,11 @@ function findHitLocationEntry(requestedLocation, hitLocations = {}) {
   };
 }
 
-function roll(roller, request) {
+async function roll(roller, request) {
   if(typeof roller !== "function") {
     throw new Error("Structured combat resolution requires a deterministic roller until Foundry rolling is wired.");
   }
-  return roller(request);
+  return await roller(request);
 }
 
 function normalizeRange(range) {
