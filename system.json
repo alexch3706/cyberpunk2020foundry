@@ -210,7 +210,7 @@
   },
   "primaryTokenAttribute": null,
   "secondaryTokenAttribute": null,
-  "url": "https://github.com/alexch3706/cyberpunk2020-rilerenafoundry",
-  "manifest": "https://raw.githubusercontent.com/alexch3706/cyberpunk2020-rilerenafoundry/main/system.json",
-  "download": "https://github.com/alexch3706/cyberpunk2020-rilerenafoundry/archive/refs/heads/main.zip"
+  "url": "https://github.com/alexch3706/cyberpunk2020foundry",
+  "manifest": "https://raw.githubusercontent.com/alexch3706/cyberpunk2020foundry/main/system.json",
+  "download": "https://github.com/alexch3706/cyberpunk2020foundry/archive/refs/heads/main.zip"
 }
