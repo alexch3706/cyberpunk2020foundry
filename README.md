@@ -1,47 +1,162 @@
-# cyberpunk2020 (for FoundryVTT)
-*Finally on 0.8.6! ...hopefully v9 now too!*
-**A note on dev time: For the past while, I've had enough going on that this has been on the backburner. I'm now taking time off from those other things to recover, but don't know how much time I'll be throwing at CP2020. Will still try to address bugs when my brain cooperates, and fingers crossed this situation changes.**
+# cyberpunk2020 — for FoundryVTT
 
-R. Talsorian Games' [Cyberpunk 2020](https://talsorianstore.com/products/cyberpunk-2020) system, but for FoundryVTT. Time to get chromed, and frag some slags.
+> *R. Talsorian Games' [Cyberpunk 2020](https://talsorianstore.com/products/cyberpunk-2020) for FoundryVTT. Time to get chromed, and frag some slags.*
 
-![image](https://user-images.githubusercontent.com/6842867/115111007-0f80f900-9f76-11eb-8b42-7f6b6682a6a3.png) ![image](https://user-images.githubusercontent.com/6842867/115111021-26bfe680-9f76-11eb-93ee-7cf42d44190f.png)
+A FoundryVTT game system package (version **0.3.12**) — not a standalone app. Loaded by Foundry through `system.json`, runs as ES modules in the Foundry client, renders Handlebars sheets, and ships with full item compendia.
 
-I believe this is now ready to reasonably run games in without anything particularly fundamental missing (minus, at the moment, custom skills).
-Here's the gist of what's there so far:
+---
 
-* A character sheet with stats, damage tracking, gear, combat tab, searchable skills, and cyberware.
-  * Cyberware does not currently affect stats - it will probably involve working with Active Effects, but no promises, as I have no idea how to implement that framework yet.
-* Consistent design reminiscent of the Core Rulebook, with UI design and user experience taken into heavy consideration.
-* Skills as items, sortable by either name or stat. Full tracking of chipped/unchipped, IP, etc. Rollable.
-  * Skills with points are shown first
-* Stopping power and encumbrance tracked for armor.
-  * SP is currently just added together for each equipped piece of armor. Proportional armor will come later.
-* Ranged attacks for single shots, as well as three-round burst and autofire for automatic weapons.
-* Easy modifier selection when making ranged attacks.
-* A start of cyberpunk's melee system
+## What's Here
 
-Yet to come:
-* Ammo expenditure and reloads easily doable from chat messages.
-* Attack hit roll automatically translating to the name of the hit location.
-* Target selection for attacks.
-* Martial arts key moves
-* Template area selection for area attacks
-* Netrunning: Please dear gods, I've not used it in a campaign so it's a little far down my list
-* Mech sheet: Yes this will come Ste, likely after Okay Weapon Rolls and the combat tab.
+Everything you need to run Cyberpunk 2020 combat faithfully to the core rules:
 
-All rights to Cyberpunk 2020 lie with R. Talsorian games. Under their [homebrew content policy](https://rtalsoriangames.com/homebrew-content-policy/), any compendium produced with this will likely only be the statistical summaries of items, equivalent to the rows in the weapon table, without R. Talsorian's descriptive text. There will not be any stat blocks for monsters, NPCs, or hazards.
+### Characters & Sheets
 
-Happy to take any feedback; feel free to add issues or to make a PR :)
+- **Full character sheet** — stats, skills (searchable, sortable), damage tracking, combat tab, gear inventory, cyberware, life notes.
+- **NPCs** share the same data model and sheet.
+- **Skills as items** — each skill is its own item with level, IP, chip level, stat association, and role-skill flag. Rollable from the sheet.
+- **Armor** — per-location coverage, stopping power, encumbrance tracked per equipped piece.
 
-## Development notes
-Please feel free to contribute! Whether by raising issues you find during play, requesting features, or contributing yourself, all is appreciated :) 
-This project uses Sass - please edit the .scss files instead of the .css files.
+### Combat Resolver
 
-### How to build
-At the moment, this project only requires running `sass --watch scss/cyberpunk2020.scss css/cyberpunk2020.css` in the project's folder as you develop - this will auto-compile the scss as you make edits.
+The project has a dedicated **mechanics resolver** (`module/combat/`) that produces structured, auditable combat outcomes — no more silent arithmetic.
 
-### Recent repo url change
-It used to be this repo was called `cyberpunk2020-foundry`, and you'd have to change the folder name after cloning. Not anymore! But due to the rename, if you had the repo, you'll likely want to run `git remote set-url origin git@github.com:OctarineSourcerer/cyberpunk2020.git` to make sure your repo points to the rename (I don't know how long old versions will link to it).
+#### Ranged Combat
 
-### Time I have
-The amount I can do for this repo goes up and down sometimes, so don't be particularly worried if some couple-week gaps happen. Just means I'm a little busy :)
+| Fire Mode | Status |
+|---|---|
+| **Semi-auto / single shot** | ✅ Full resolution: attack roll, range DCs, modifiers, hit/miss, location, ammo |
+| **Three-round burst** | ✅ Corebook burst rules: close/medium advantage, 1d3 hits, ammo |
+| **Full auto — one target** | ✅ ROF, margin-based hits, damage per hit, ammo |
+| **Full auto — multiple targets** | ✅ ROF division, per-target range context, rounding |
+| **Suppressive fire** | ✅ Zone width, save DC (rounds÷width), Athletics+REF saves per target, failed-save hit allocation |
+
+#### Damage Pipeline
+
+| Mechanic | Status |
+|---|---|
+| **Hit locations** — random and aimed | ✅ Target-aware, uses target's own location model |
+| **Armor layering** — proportional SP | ✅ Per-location, hard/soft constraints flagged |
+| **Cover** | ✅ Manual cover input; scene cover deferred |
+| **Armor Piercing (AP)** | ✅ Halves armor SP, then halves penetrating damage |
+| **Staged penetration / ablation** | ✅ Explicit, auditable, configurable toggle (`stagedPenetration`) |
+| **Body Type Modifier (BTM)** | ✅ Full BTM table, minimum damage = 1 enforcement |
+| **Wound states** — Light → Mortal 9+ | ✅ Head-hit double damage, limb loss, critical injuries surfaced |
+| **Stun / Death saves** | ✅ Threshold from Body Type + wound state, pending/passed/failed |
+| **Reliability & jams** | ✅ Standard vs Unreliable jam outcomes, non-auto fumbles distinguished |
+
+#### Melee & Martial Arts
+
+| Mechanic | Status |
+|---|---|
+| **Opposed melee** (REF+skill+1d10 vs defender) | ✅ Case-insensitive skill matching, brawling fallback |
+| **Body Type damage modifiers** | ✅ Corebook strength-damage table |
+| **All martial arts styles & key technique bonuses** | ✅ 12 styles + Brawling, each with key technique data |
+| **Martial actions** — strike, kick, block/parry, dodge, disarm, sweep/trip, grapple, hold, choke, throw, escape | ✅ Each produces an action-specific opposed outcome |
+| **Grapple prerequisite enforcement** | ✅ Throw, hold, choke, escape check combat state before proceeding |
+
+#### Usability
+
+- **Preview/confirm damage** — lightweight dialog shows planned state changes (ammo, damage, armor, wounds) before commit.
+- **Commit/rollback** — you can cancel and nothing persists.
+- **Chat evidence** — structured chat cards show every intermediate value for referee audit.
+- **Corebook Fidelity Mode** (`corebookFidelityMode` setting) — enables/disables strict rules enforcement.
+- **Staged penetration toggle** — disable for compatible/simplified play.
+- **Direct commit mode** option — skip preview for speed.
+
+### Architecture
+
+- **Resolver layer** (`module/combat/`) — pure mechanics modules with zero Foundry runtime dependency. `CombatOutcome` is the single source of truth for chat, preview, commit, and tests.
+- **State planner** — planned updates collected and validated before any Foundry document mutates.
+- **Deterministic fixtures** — 7 JSON fixture files + 2356 lines of test assertions covering all combat modes, runnable outside a live world.
+- **No bundler, no TypeScript, no build step.** Plain JS ES modules loaded directly by Foundry.
+
+### Compendia
+
+Full item packs for: default skills, role-specific skills, weapons, armor, cyberware/chipware, gear categories, vehicles, roll tables.
+
+### Localization
+
+| Language | File |
+|---|---|
+| **English** | `lang/en.json` |
+| **Spanish** | `lang/es.json` |
+| **Italian** | `lang/it.json` |
+
+---
+
+## What's Not Yet Done
+
+- **Netrunning** — deferred (low usage in most campaigns).
+- **Mech sheet** — planned for later.
+- **Scene / map cover automation** — cover is manual input only.
+- **Active Effects for cyberware** — cyberware stats don't auto-modify actor stats.
+- **Full Foundry v12 / ApplicationV2** — architecture is v10/v11 compatible; v12 support declared as `maximum` but `verified` is still 11.
+- **All items validated for corebook conformance** — packs contain a mix of core and extended data; conformance labelling is in progress.
+
+See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work.md`](./_bmad-output/implementation-artifacts/deferred-work.md) for detailed scope tracking.
+
+---
+
+## Development Notes
+
+### Stack
+
+| Layer | What |
+|---|---|
+| **Runtime** | Plain JavaScript ES modules (Foundry client runtime) |
+| **Entrypoint** | `module/cyberpunk2020.js` via `system.json → esmodules` |
+| **Actor** | `CyberpunkActor` (`module/actor/actor.js`) |
+| **Item** | `CyberpunkItem` (`module/item/item.js`) |
+| **Sheets** | Foundry `ActorSheet` / `ItemSheet` subclasses + Handlebars `.hbs` |
+| **Combat resolver** | `module/combat/` — pure JS modules |
+| **Styling** | Sass → `css/cyberpunk2020.css` |
+| **Data model** | `template.json` (Foundry system template) |
+| **Tests** | Node.js assertion tests with JSON fixtures under `tests/combat/` |
+
+### How to Contribute
+
+1. Clone the repo into your Foundry `systems/` directory.
+2. Edit `.scss` files (not `.css`) and compile:
+   ```bash
+   sass scss/cyberpunk2020.scss css/cyberpunk2020.css
+   ```
+   Or auto-compile on save:
+   ```bash
+   sass --watch scss/cyberpunk2020.scss css/cyberpunk2020.css
+   ```
+3. Run combat fixture tests:
+   ```bash
+   node tests/combat/combat-fixtures.test.js
+   ```
+4. Load Foundry, select the **Cyberpunk 2020** system, and create a world to test UI changes.
+
+### Repo Layout
+
+```
+module/
+  cyberpunk2020.js      # Bootstrap: init, ready, settings, helpers
+  actor/                # CyberpunkActor, CyberpunkActorSheet
+  item/                 # CyberpunkItem, CyberpunkItemSheet
+  combat/               # Resolver: attack, armor, damage, saves, melee, martial
+  dialog/               # ModifiersDialog
+  dice.js               # Roll helpers (d10, Multiroll)
+  lookups.js            # Constants, lookups, helper data
+  settings.js           # System settings registration
+  utils.js              # Shared utilities
+templates/              # Handlebars templates (actor, item, chat, dialog)
+scss/                   # Sass source → compiled CSS
+tests/combat/           # Fixtures and assertion tests
+packs/                  # Compendium .db files
+docs/                   # Architecture, component inventory, data models
+```
+
+### Credits
+
+Original system by **OctarineSourceror**. Extended and refactored for core-rules combat fidelity.
+
+All rights to *Cyberpunk 2020* lie with **R. Talsorian Games**. Compendium content contains statistical summaries equivalent to weapon/armor table rows. No copyrighted descriptive text from corebooks is included. Per [RTG's homebrew content policy](https://rtalsoriangames.com/homebrew-content-policy/).
+
+---
+
+*Found a bug? Want a feature? Open an issue or send a PR.*
