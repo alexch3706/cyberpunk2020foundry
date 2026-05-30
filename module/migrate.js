@@ -41,6 +41,7 @@ export async function migrateWorld() {
         console.error(`Cyberpunk2020 migration aborted: ${err.message}`);
         ui.notifications.error(`Cyberpunk2020 System Migration failed :( Please see console log for details`);
     }
+}
 
 const defaultDataUse = async (document, updateData) => {
     if (!foundry.utils.isEmpty(updateData)) {
