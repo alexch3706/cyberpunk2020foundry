@@ -1,0 +1,24 @@
+{
+  "name": "Wardrobe & Style +3",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "MRAM Skill Chip",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.83"
+  },
+  "_id": "qy9UxRsLOxTlA1W9"
+}

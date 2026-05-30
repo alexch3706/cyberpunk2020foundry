@@ -1,0 +1,28 @@
+{
+  "_id": "w2cPu8afToHf2TtU",
+  "name": "360 Rotating Joints",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "+1 to Escaping; some TECH repairs (.5 spaces)",
+    "cost": 120,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "RJ",
+    "flags": {},
+    "source": "Chromebook 4 pg.6",
+    "humanityLoss": null
+  },
+  "flags": {},
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

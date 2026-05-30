@@ -1,0 +1,24 @@
+{
+  "name": "Home Chip",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Very Difficult Cool/Resist Torture roll to resist",
+    "cost": 940,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.16"
+  },
+  "_id": "zq1C8KgnXdQWTNjt"
+}

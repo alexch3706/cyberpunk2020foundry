@@ -1,0 +1,24 @@
+{
+  "name": "Grapple Hand",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "3",
+    "notes": "",
+    "flavor": "Extends rocket-propelled grapple; 30m line",
+    "cost": 350,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "GRP",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.90"
+  },
+  "_id": "suHTIl4qGHMaVqkb"
+}

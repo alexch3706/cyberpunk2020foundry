@@ -1,0 +1,28 @@
+{
+  "_id": "2iPdzr4QzklAsWDn",
+  "name": "Aip Hypo",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "4 doses;air containers 3",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDAH",
+    "flags": {},
+    "source": "Chromebook 2 pg.4",
+    "humanityLoss": null
+  },
+  "flags": {},
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Ubermensch Pain Editor",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "As Pain Editor; but only works 75% of the time",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "UTE",
+    "flags": {},
+    "source": "Eurotour pg.31"
+  },
+  "_id": "i40dfAdYuQS4s0II"
+}

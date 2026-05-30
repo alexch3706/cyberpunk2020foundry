@@ -1,0 +1,24 @@
+{
+  "name": "Storage Space",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "BUILTIN",
+    "surgCode": "N",
+    "humanityCost": "0.5",
+    "notes": "",
+    "flavor": "2 in. x 6 in. storage space. Can be locked",
+    "cost": 50,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "STR",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.91"
+  },
+  "_id": "I5jT46ciWO4jF1pQ"
+}

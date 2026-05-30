@@ -1,0 +1,24 @@
+{
+  "name": "The Crawler Surveillance Cyberhand",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Remote cyberhand",
+    "cost": 1500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "HND",
+    "flags": {},
+    "source": "Interface 2.1 pg.2"
+  },
+  "_id": "Y4E94yWBlPsrQ8zI"
+}

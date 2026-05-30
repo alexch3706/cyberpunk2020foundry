@@ -1,0 +1,24 @@
+{
+  "name": "Cybersnake",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "4d6",
+    "notes": "",
+    "flavor": "1d6 damage. 1m range",
+    "cost": 1200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "CSN",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.86"
+  },
+  "_id": "PGSQ5CXATS4wruv5"
+}

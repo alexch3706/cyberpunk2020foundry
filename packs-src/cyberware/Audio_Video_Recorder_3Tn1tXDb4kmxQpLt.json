@@ -1,0 +1,24 @@
+{
+  "name": "Audio/Video Recorder",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "BUILTIN",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "stores input from external mic, video cam or recording link",
+    "cost": 250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "AVR2",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.91"
+  },
+  "_id": "3Tn1tXDb4kmxQpLt"
+}

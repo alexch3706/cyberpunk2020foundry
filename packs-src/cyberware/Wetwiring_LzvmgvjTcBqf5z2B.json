@@ -1,0 +1,24 @@
+{
+  "name": "Wetwiring",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERNETIC SYSTEM",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "200 meters; Streetwise 20/25 to find. Cost is 300% of Cyberware",
+    "cost": 0,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "WTW",
+    "flags": {},
+    "source": "Firestorm: Stormfront pg.27"
+  },
+  "_id": "LzvmgvjTcBqf5z2B"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Enhanced Hearing: Enhanced Range",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "NEURAL ENHANCEMENT",
+    "surgCode": "M",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "Max of 2 Enhanced Hearing",
+    "cost": 1200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Deep Space pg.60"
+  },
+  "_id": "wiQqRW2m3TzpSRY3"
+}

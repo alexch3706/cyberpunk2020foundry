@@ -1,0 +1,24 @@
+{
+  "name": "Digi-Tone ID",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Used with cyberaudio to recognise phone no.",
+    "cost": 70,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.73"
+  },
+  "_id": "T8tO43A0379z4Zxt"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Mini Light",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "25m beam; batteries 1eb 105 .5 Chr1;IR/UV Flashlight;N 10m range",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDML",
+    "flags": {},
+    "source": "Chromebook 1 pg.32"
+  },
+  "_id": "wAGWZRb3afAZDYhj"
+}

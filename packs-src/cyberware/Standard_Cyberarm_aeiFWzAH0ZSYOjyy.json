@@ -1,0 +1,24 @@
+{
+  "name": "Standard Cyberarm",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "20/30 SDP; 4 option spaces; 1d6 punch",
+    "cost": 3000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 4,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.88"
+  },
+  "_id": "aeiFWzAH0ZSYOjyy"
+}

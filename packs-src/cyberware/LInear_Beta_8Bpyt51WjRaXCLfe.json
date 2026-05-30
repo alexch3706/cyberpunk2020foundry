@@ -1,0 +1,24 @@
+{
+  "name": "LInear Beta",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "LINEAR FRAMES",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "Built into the body; BOD 14; BTM -6",
+    "cost": 8000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "BETA",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.79"
+  },
+  "_id": "8Bpyt51WjRaXCLfe"
+}

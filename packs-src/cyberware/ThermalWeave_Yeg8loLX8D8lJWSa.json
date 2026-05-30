@@ -1,0 +1,24 @@
+{
+  "name": "ThermalWeave",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "SKIN WEAVE",
+    "surgCode": "N",
+    "humanityCost": "1d6+3",
+    "notes": "",
+    "flavor": "Silvery skin increases Heat resistance to 107°F",
+    "cost": 1500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "TSKW",
+    "flags": {},
+    "source": "Deep Space pg.60"
+  },
+  "_id": "Yeg8loLX8D8lJWSa"
+}

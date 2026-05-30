@@ -1,0 +1,24 @@
+{
+  "name": "Weaponmasters Martial Art Chip",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "ArasakaTe; and Thamoc available (max +3); cost per level",
+    "cost": 270,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.38"
+  },
+  "_id": "pE7Sjyo83QriSCxz"
+}

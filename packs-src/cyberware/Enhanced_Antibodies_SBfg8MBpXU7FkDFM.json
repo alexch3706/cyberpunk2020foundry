@@ -1,0 +1,24 @@
+{
+  "name": "Enhanced Antibodies",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Improves Healing by +1 point per day",
+    "cost": 3000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "EA",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.85"
+  },
+  "_id": "SBfg8MBpXU7FkDFM"
+}

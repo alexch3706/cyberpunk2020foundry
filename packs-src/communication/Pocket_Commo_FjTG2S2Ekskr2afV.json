@@ -1,0 +1,28 @@
+{
+  "_id": "FjTG2S2Ekskr2afV",
+  "name": "Pocket Commo",
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "type": "misc",
+  "data": {
+    "name": "Common",
+    "flavor": "Section: Communications p.70 - 16KM Range Walkie Talkie",
+    "notes": "",
+    "cost": "50",
+    "weight": "0",
+    "equipped": true,
+    "source": "Cyberpunk2020"
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

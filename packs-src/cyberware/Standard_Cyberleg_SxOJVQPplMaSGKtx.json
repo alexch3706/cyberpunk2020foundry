@@ -1,0 +1,24 @@
+{
+  "name": "Standard Cyberleg",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "20/30SDP; 3 option spaces; 2d6 kick",
+    "cost": 2000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 3,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.88"
+  },
+  "_id": "SxOJVQPplMaSGKtx"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Winch",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "BUILTIN",
+    "surgCode": "N",
+    "humanityCost": "1d6+3",
+    "notes": "",
+    "flavor": "15m cable; pulls up to 1 ton",
+    "cost": 500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.5"
+  },
+  "_id": "BrI89iRxkghthong"
+}

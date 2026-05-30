@@ -1,0 +1,24 @@
+{
+  "name": "Anchoring Cyberfeet",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERFOOT",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "3",
+    "notes": "",
+    "flavor": "Anchors use to ground. 4 uses (2 spaces each)",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.5"
+  },
+  "_id": "imsHKz2ooCEs5Xfr"
+}

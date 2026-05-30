@@ -1,0 +1,24 @@
+{
+  "name": "Mandibles",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "5d6",
+    "notes": "",
+    "flavor": "2d6 damage bite; look normal except for eating",
+    "cost": 1200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Interface 2.2 pg.4"
+  },
+  "_id": "PKoJy1uvhb3fMh1m"
+}

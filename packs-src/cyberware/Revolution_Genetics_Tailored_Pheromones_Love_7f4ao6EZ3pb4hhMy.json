@@ -1,0 +1,24 @@
+{
+  "name": "Revolution Genetics Tailored Pheromones-Love",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "+1 to Seduction. Nasal filters 60% effective",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.23"
+  },
+  "_id": "7f4ao6EZ3pb4hhMy"
+}

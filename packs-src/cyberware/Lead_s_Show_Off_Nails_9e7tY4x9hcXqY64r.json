@@ -1,0 +1,24 @@
+{
+  "name": "Lead's Show-Off Nails",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "Pattern changing nails; Cost is for a set of 10 else 45eb/nail",
+    "cost": 425,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.36"
+  },
+  "_id": "9e7tY4x9hcXqY64r"
+}

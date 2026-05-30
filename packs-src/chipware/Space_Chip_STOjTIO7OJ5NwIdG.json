@@ -1,0 +1,24 @@
+{
+  "name": "Space Chip",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Space Survival +2; Highrider Culture +1",
+    "cost": 900,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.74"
+  },
+  "_id": "STOjTIO7OJ5NwIdG"
+}

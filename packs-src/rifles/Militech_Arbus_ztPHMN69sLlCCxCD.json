@@ -1,0 +1,52 @@
+{
+  "_id": "ztPHMN69sLlCCxCD",
+  "name": "Militech Arbus",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Sniper rifle made in USA",
+    "notes": "",
+    "cost": "1650",
+    "weight": "5.5",
+    "equipped": true,
+    "source": "https://datafortress2020.com/",
+    "weaponType": "Rifle",
+    "accuracy": "3",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "7 mm C",
+    "damage": "6D6",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "10",
+    "shots": "10",
+    "rof": "1",
+    "reliability": "VeryReliable",
+    "range": "800",
+    "attackType": "Auto",
+    "attackSkill": "Rifle",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

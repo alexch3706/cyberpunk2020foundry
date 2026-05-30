@@ -1,0 +1,24 @@
+{
+  "name": "Kerenzikov Boosterware I",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "+1 to Initiative",
+    "cost": 500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "RFB",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.81"
+  },
+  "_id": "wjnYaHhvxqvRoLs1"
+}

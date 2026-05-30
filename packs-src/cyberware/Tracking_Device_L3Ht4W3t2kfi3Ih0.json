@@ -1,0 +1,24 @@
+{
+  "name": "Tracking Device",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0.5",
+    "notes": "",
+    "flavor": "3m range; 2 bugs; 3 km transmitter",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDTD",
+    "flags": {},
+    "source": "Chromebook 2 pg.4"
+  },
+  "_id": "L3Ht4W3t2kfi3Ih0"
+}

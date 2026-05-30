@@ -1,0 +1,24 @@
+{
+  "name": "Mace Hand",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "",
+    "humanityCost": "3",
+    "notes": "",
+    "flavor": "Punch 1d10-2/2d6+11/2m",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.36"
+  },
+  "_id": "RP2iuDNPK0EKlhdg"
+}

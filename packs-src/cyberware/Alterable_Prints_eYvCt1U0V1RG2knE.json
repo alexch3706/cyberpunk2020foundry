@@ -1,0 +1,28 @@
+{
+  "_id": "eYvCt1U0V1RG2knE",
+  "name": "Alterable Prints",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Programmable Nanotech altered prints (20 secs)",
+    "cost": 550,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Wildside pg.65",
+    "humanityLoss": null
+  },
+  "flags": {},
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

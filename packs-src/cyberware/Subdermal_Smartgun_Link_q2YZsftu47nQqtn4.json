@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Smartgun Link",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Weapon only version of Mag-Duct Spots (+1)",
+    "cost": 220,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "SSLNK",
+    "flags": {},
+    "source": "Rough Guide to the U.K. pg.32"
+  },
+  "_id": "q2YZsftu47nQqtn4"
+}

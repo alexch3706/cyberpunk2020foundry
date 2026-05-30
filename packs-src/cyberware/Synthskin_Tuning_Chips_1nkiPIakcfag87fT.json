@@ -1,0 +1,24 @@
+{
+  "name": "Synthskin Tuning Chips",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Stores different patterns/colors for Synthskin",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "SYNC",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.80"
+  },
+  "_id": "1nkiPIakcfag87fT"
+}

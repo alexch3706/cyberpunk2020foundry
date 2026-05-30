@@ -1,0 +1,24 @@
+{
+  "name": "Neuralware Processor",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Basic processor. Must have for all systems",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.81"
+  },
+  "_id": "sIxq9zW5FG8DQNq3"
+}

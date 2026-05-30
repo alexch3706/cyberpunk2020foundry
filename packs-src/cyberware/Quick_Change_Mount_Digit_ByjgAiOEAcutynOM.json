@@ -1,0 +1,24 @@
+{
+  "name": "Quick Change Mount Digit",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Click and turn mount; mod =120",
+    "cost": 150,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDQCM",
+    "flags": {},
+    "source": "Chromebook 2 pg.4"
+  },
+  "_id": "ByjgAiOEAcutynOM"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "T-Maxx Ileocecal Siphon",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Function without water for 24 to 48hrs",
+    "cost": 500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.28"
+  },
+  "_id": "SBBvPt5U8168wuzK"
+}

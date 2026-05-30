@@ -1,0 +1,24 @@
+{
+  "name": "Sandevistan Speedware",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Adds +3 to Initiative for 5 turns",
+    "cost": 1600,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "SW",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.81"
+  },
+  "_id": "LOCvUXXqo5uFmMn5"
+}

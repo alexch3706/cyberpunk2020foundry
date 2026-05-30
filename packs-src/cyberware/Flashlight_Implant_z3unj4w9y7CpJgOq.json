@@ -1,0 +1,24 @@
+{
+  "name": "Flashlight Implant",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Patch of synthskin; 3m range",
+    "cost": 90,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Interface 1.4 pg.2"
+  },
+  "_id": "z3unj4w9y7CpJgOq"
+}

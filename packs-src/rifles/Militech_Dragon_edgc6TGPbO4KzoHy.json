@@ -1,0 +1,52 @@
+{
+  "_id": "edgc6TGPbO4KzoHy",
+  "name": "Militech Dragon",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Assault rifle made in USA",
+    "notes": "",
+    "cost": "700",
+    "weight": "4",
+    "equipped": true,
+    "source": "Corporate Report 2",
+    "weaponType": "Rifle",
+    "accuracy": "0",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "6.5 mm",
+    "damage": "6D6-1",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "35",
+    "shots": "35",
+    "rof": "30",
+    "reliability": "VeryReliable",
+    "range": "300",
+    "attackType": "Auto",
+    "attackSkill": "Rifle",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

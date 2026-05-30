@@ -1,0 +1,24 @@
+{
+  "name": "Chemical Analyzer",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "5m range. 70% effective",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "CH",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.84"
+  },
+  "_id": "mroUvDLW0m8i33N7"
+}

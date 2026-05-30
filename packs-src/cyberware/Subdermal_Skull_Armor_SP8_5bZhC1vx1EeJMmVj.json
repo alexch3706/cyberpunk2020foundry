@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Skull Armor SP8",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "SUBDERMAL ARMOR",
+    "surgCode": "MA",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "8SP; DIFF 25 to spot; 40% unprotected",
+    "cost": 750,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.7"
+  },
+  "_id": "5bZhC1vx1EeJMmVj"
+}

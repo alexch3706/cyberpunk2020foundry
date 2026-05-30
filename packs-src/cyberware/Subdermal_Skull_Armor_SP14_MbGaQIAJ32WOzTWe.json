@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Skull Armor SP14",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "SUBDERMAL ARMOR",
+    "surgCode": "MA",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "14 SP; DIFF 10 to spot; -1 ATTR; 40% unprotected",
+    "cost": 1400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.7"
+  },
+  "_id": "MbGaQIAJ32WOzTWe"
+}

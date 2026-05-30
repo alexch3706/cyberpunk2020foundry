@@ -1,0 +1,24 @@
+{
+  "name": "Cyber-Lung",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "1d6+1",
+    "notes": "",
+    "flavor": "Required for Vac Weave. Provides 15 minutes of air for us in vacuum",
+    "cost": 700,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Deep Space pg.60"
+  },
+  "_id": "dr08HrUWsSaP27B2"
+}

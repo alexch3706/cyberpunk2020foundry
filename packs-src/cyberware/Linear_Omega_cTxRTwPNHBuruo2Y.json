@@ -1,0 +1,24 @@
+{
+  "name": "Linear Omega",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "LINEAR FRAMES",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "3d6",
+    "notes": "",
+    "flavor": "Built into the body; BOD 16; BTM -7",
+    "cost": 10000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "OMEGA",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.79"
+  },
+  "_id": "cTxRTwPNHBuruo2Y"
+}

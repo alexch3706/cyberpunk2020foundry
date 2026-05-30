@@ -1,0 +1,24 @@
+{
+  "name": "Lead's Turn-On Nails",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Color change nails; Cost is for set of 10 else  25eb/nail",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.36"
+  },
+  "_id": "POMGj69ON3zmGXoQ"
+}

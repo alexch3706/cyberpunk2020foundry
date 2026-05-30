@@ -1,0 +1,52 @@
+{
+  "_id": "4TL2YX17Sp12VwM1",
+  "name": "DefiantConcealPocket Lint",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Light semi-auto pistol made in Japan",
+    "notes": "",
+    "cost": "175",
+    "weight": "0.75",
+    "equipped": true,
+    "source": "http://cyberpunk.asia/",
+    "weaponType": "Pistol",
+    "accuracy": "-1",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "6 mm",
+    "damage": "1D6+1",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "4",
+    "shots": "4",
+    "rof": "2",
+    "reliability": "standard",
+    "range": "20",
+    "attackType": "Auto",
+    "attackSkill": "Handgun",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Super Sized Arm",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "SDP 30/40; -2 REF; +1EV; 2d10/3d6; SP 20",
+    "cost": 4000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 4,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.25"
+  },
+  "_id": "IGetyuKm0S5naB00"
+}

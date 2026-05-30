@@ -1,0 +1,24 @@
+{
+  "name": "IHAG Nictating Membrane",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6/3",
+    "notes": "",
+    "flavor": "Can see in difficult conditions. Replace 6-8 mth",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Firestorm: Stormfront pg.28"
+  },
+  "_id": "97VkPsJ6n3i21OLe"
+}

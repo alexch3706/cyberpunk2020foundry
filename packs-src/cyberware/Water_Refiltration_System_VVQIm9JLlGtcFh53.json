@@ -1,0 +1,24 @@
+{
+  "name": "Water Refiltration System",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Triples length of survival time without water",
+    "cost": 2500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "When Gravity Fails pg.60"
+  },
+  "_id": "VVQIm9JLlGtcFh53"
+}

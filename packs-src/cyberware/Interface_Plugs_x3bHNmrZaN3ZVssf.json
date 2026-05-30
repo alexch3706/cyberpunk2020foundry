@@ -1,0 +1,24 @@
+{
+  "name": "Interface Plugs",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Allows direct connection to smartguns; etc.",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "PLG",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.82"
+  },
+  "_id": "x3bHNmrZaN3ZVssf"
+}

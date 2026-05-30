@@ -1,0 +1,24 @@
+{
+  "name": "Laser Mike",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "BUILTIN",
+    "surgCode": "N",
+    "humanityCost": "1d6+2",
+    "notes": "",
+    "flavor": "60m range; Human Perception -5",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.20"
+  },
+  "_id": "AJfBv2g93bYc3pCr"
+}

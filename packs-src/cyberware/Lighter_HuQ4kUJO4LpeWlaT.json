@@ -1,0 +1,24 @@
+{
+  "name": "Lighter",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "2 hours of fuel; 1 eb/refill",
+    "cost": 105,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDLGH",
+    "flags": {},
+    "source": "Chromebook 2 pg.4"
+  },
+  "_id": "HuQ4kUJO4LpeWlaT"
+}

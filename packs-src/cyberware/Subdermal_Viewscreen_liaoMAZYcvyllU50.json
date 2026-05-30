@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Viewscreen",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Similar to Times Square Marquee",
+    "cost": 250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.8"
+  },
+  "_id": "liaoMAZYcvyllU50"
+}

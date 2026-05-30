@@ -1,0 +1,24 @@
+{
+  "name": "General Products Exoskeleton (Series-A)",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "LINEAR FRAMES",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "4d6",
+    "notes": "",
+    "flavor": "STR 18; SDP 15; SP 6; MA 4; REF 5",
+    "cost": 12000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.34"
+  },
+  "_id": "NpOACgBGfKqubbbU"
+}

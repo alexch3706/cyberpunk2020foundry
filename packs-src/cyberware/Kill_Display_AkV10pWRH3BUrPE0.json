@@ -1,0 +1,24 @@
+{
+  "name": "Kill Display",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "3 digit display",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.6"
+  },
+  "_id": "AkV10pWRH3BUrPE0"
+}

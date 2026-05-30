@@ -1,0 +1,24 @@
+{
+  "name": "Biomechanical Arm",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "10/15 SDP; 1d6 punch; 1d6 crush; 1/2 dam normal",
+    "cost": 0,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Interface 1.2 pg.15"
+  },
+  "_id": "ZAgJE8utIokUZtNx"
+}

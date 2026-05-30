@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Moddy Rack",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Holds 3 Moddy and 10 Daddy; difficult to spot",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "When Gravity Fails pg.59"
+  },
+  "_id": "1S8kFZ6zk8ZZ87q1"
+}

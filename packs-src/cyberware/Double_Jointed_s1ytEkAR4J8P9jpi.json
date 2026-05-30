@@ -1,0 +1,24 @@
+{
+  "name": "Double-Jointed",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "+1 Grapple; Holds; Chokes; Escapes (.5spaces)",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "DJ",
+    "flags": {},
+    "source": "Chromebook 4 pg.6"
+  },
+  "_id": "s1ytEkAR4J8P9jpi"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Finger Mace Sprayer",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "P +0 - E Mace 2 1 ST 1m",
+    "cost": 150,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDFM",
+    "flags": {},
+    "source": "Chromebook 1 pg.32"
+  },
+  "_id": "228IMhUfmHorqqNF"
+}

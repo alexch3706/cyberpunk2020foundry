@@ -1,0 +1,24 @@
+{
+  "name": "Revolution Genetics Flashlite Implant",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1d2",
+    "notes": "",
+    "flavor": "Non-glare; semi-focused glow; 1m range",
+    "cost": 290,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.26"
+  },
+  "_id": "D5uZmayiXzXXLTRM"
+}

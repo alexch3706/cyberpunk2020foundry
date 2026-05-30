@@ -1,0 +1,24 @@
+{
+  "name": "Independent Action Chip",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Independent action for each arm. Amb +2 optics",
+    "cost": 250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.75"
+  },
+  "_id": "GOAJDVDej8n3UskJ"
+}

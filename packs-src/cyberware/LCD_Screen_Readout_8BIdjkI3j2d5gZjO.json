@@ -1,0 +1,24 @@
+{
+  "name": "LCD Screen Readout",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "BUILTIN",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Can be linked to any output device",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "LCD",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.91"
+  },
+  "_id": "8BIdjkI3j2d5gZjO"
+}

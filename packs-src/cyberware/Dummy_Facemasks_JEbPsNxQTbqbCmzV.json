@@ -1,0 +1,24 @@
+{
+  "name": "Dummy Facemasks",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BODY PLATING",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Detachable faceplates; cost 25-500eb",
+    "cost": 250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "DFM",
+    "flags": {},
+    "source": "Solo of Fortune 2 pg.69"
+  },
+  "_id": "JEbPsNxQTbqbCmzV"
+}

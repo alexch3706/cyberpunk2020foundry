@@ -1,0 +1,24 @@
+{
+  "name": "NanoAuditory Rebuild",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Enhanced Hearing Range\\& Level Damper",
+    "cost": 1500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.20"
+  },
+  "_id": "mWl6cgjZjN3yl5lz"
+}

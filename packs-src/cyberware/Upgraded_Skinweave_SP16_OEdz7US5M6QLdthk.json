@@ -1,0 +1,24 @@
+{
+  "name": "Upgraded Skinweave SP16",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "SKINWEAVE",
+    "surgCode": "N",
+    "humanityCost": "2d6+4",
+    "notes": "",
+    "flavor": "16 SP;-2 ATTR loss; DIFF 15 to spot",
+    "cost": 2750,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "SKW16",
+    "flags": {},
+    "source": "Chromebook 2 pg.9"
+  },
+  "_id": "OEdz7US5M6QLdthk"
+}

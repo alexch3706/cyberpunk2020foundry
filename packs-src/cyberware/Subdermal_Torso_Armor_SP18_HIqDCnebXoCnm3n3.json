@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Torso Armor SP18",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "SUBDERMAL ARMOR",
+    "surgCode": "CR",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "18 SP; DIFF 20 to spot; 50% chance -1 ATTR",
+    "cost": 1200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.7"
+  },
+  "_id": "HIqDCnebXoCnm3n3"
+}

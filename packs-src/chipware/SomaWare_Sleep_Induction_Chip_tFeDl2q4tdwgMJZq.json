@@ -1,0 +1,24 @@
+{
+  "name": "SomaWare Sleep Induction Chip",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Normal sleep (after 15 uses COOL 15+ to sleep)",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.37"
+  },
+  "_id": "tFeDl2q4tdwgMJZq"
+}

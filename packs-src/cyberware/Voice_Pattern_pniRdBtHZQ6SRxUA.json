@@ -1,0 +1,24 @@
+{
+  "name": "Voice Pattern",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERVOCAL",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "A Vox/New Throat option; allows voice pattern emulation",
+    "cost": 350,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "VP",
+    "flags": {},
+    "source": "Chromebook 1 pg.35"
+  },
+  "_id": "pniRdBtHZQ6SRxUA"
+}

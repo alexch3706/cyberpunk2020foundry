@@ -1,0 +1,24 @@
+{
+  "name": "CyberFacial Remounts: Jigsaw",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BODY PLATING",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "-1 ATT; SP12 25% protect",
+    "cost": 250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.33"
+  },
+  "_id": "lAfdzOea8xK30yV8"
+}

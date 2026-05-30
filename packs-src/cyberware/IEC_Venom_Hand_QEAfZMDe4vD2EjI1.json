@@ -1,0 +1,24 @@
+{
+  "name": "IEC Venom Hand",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "Punch 1d6-1/by Drug 1m",
+    "cost": 600,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Corpbook 2 pg.70"
+  },
+  "_id": "QEAfZMDe4vD2EjI1"
+}

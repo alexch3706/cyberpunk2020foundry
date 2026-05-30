@@ -1,0 +1,24 @@
+{
+  "name": "Ultra Violet",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBEROPTIC",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "See in darkness; using UV flash",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "UV",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.87"
+  },
+  "_id": "XG6ffmsWnkUWNkcW"
+}

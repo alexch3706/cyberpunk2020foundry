@@ -1,0 +1,24 @@
+{
+  "name": "Cyber-Detection Computer",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "1d6+3",
+    "notes": "",
+    "flavor": "Reconnaissance/Detection device; need M/T link",
+    "cost": 3000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDC",
+    "flags": {},
+    "source": "Chromebook 4 pg.14"
+  },
+  "_id": "kzTeWMWACQZjJnul"
+}

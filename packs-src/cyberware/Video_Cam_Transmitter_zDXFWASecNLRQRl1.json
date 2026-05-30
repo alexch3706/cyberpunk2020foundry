@@ -1,0 +1,24 @@
+{
+  "name": "Video Cam/Transmitter",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBEROPTIC",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Live feed 1m range (4 spaces)",
+    "cost": 330,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "VCT",
+    "flags": {},
+    "source": "Chromebook 1 pg.39"
+  },
+  "_id": "zDXFWASecNLRQRl1"
+}

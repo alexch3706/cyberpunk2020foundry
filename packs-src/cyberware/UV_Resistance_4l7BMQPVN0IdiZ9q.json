@@ -1,0 +1,24 @@
+{
+  "name": "UV Resistance",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "BIOTECH",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "No sunscreen needed; Temporary; Requires Prepatory DNA Mapping. If existing cyber HC10+ Double cost.",
+    "cost": 7600,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Eurosource Plus pg.105"
+  },
+  "_id": "4l7BMQPVN0IdiZ9q"
+}

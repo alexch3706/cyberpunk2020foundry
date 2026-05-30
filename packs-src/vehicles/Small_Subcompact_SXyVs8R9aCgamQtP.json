@@ -1,0 +1,50 @@
+{
+  "_id": "SXyVs8R9aCgamQtP",
+  "name": "Small Subcompact",
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "type": "vehicle",
+  "data": {
+    "name": "Common",
+    "flavor": "",
+    "notes": "",
+    "cost": "6000",
+    "weight": 0,
+    "equipped": true,
+    "source": "Cyberpunk2020 – Section: Vehicles p.79",
+    "sdp": {
+      "value": "0",
+      "max": "0"
+    },
+    "sp": "0",
+    "passengers": "4",
+    "speed": {
+      "value": "90",
+      "max": "90",
+      "maneuver": "0",
+      "acceleration": "0"
+    },
+    "maneuverability": {
+      "value": "4",
+      "condition": "allRolls"
+    },
+    "fuel": {
+      "type": "CHOOH2",
+      "efficiency": "1",
+      "max": "10",
+      "value": "10"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.5"
+    }
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

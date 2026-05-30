@@ -1,0 +1,24 @@
+{
+  "name": "Hammerhand",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "2d6+1",
+    "notes": "",
+    "flavor": "1D10 damage.",
+    "cost": 1150,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Solo of Fortune pg.32"
+  },
+  "_id": "IqX9BDgOdS3EGLue"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Tentacle Finger",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Can't have rippers; ",
+    "cost": 500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDT",
+    "flags": {},
+    "source": "Interface 2.2 pg.4"
+  },
+  "_id": "CCD7DxMBp3YNQNbI"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Wolvers",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "3d6+1",
+    "notes": "",
+    "flavor": "3d6* damage",
+    "cost": 600,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "WLV",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.86"
+  },
+  "_id": "REpTpQ8k1fUiUOzD"
+}

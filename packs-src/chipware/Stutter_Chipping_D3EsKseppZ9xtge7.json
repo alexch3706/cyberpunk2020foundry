@@ -1,0 +1,24 @@
+{
+  "name": "Stutter Chipping",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Won't shoot designated (1 turn) friendlies",
+    "cost": 310,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.38"
+  },
+  "_id": "D3EsKseppZ9xtge7"
+}

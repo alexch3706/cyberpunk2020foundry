@@ -1,0 +1,24 @@
+{
+  "name": "ChainRipp",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "",
+    "humanityCost": "2d6+4",
+    "notes": "",
+    "flavor": "Punch 3d6(1/3SP) 1m",
+    "cost": 1250,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.29"
+  },
+  "_id": "xy6LzNXilhL1PaL4"
+}

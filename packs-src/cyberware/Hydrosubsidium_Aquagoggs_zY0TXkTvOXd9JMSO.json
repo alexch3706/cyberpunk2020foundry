@@ -1,0 +1,24 @@
+{
+  "name": "Hydrosubsidium Aquagoggs",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBEROPTIC",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1",
+    "notes": "",
+    "flavor": "Synthetic nictitating membranes; good to 200m",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "HSA",
+    "flags": {},
+    "source": "Firestorm: Stormfront pg.28"
+  },
+  "_id": "zY0TXkTvOXd9JMSO"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Probe Link",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0.5",
+    "notes": "",
+    "flavor": "Interface link",
+    "cost": 150,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDPL",
+    "flags": {},
+    "source": "Chromebook 3 pg.22"
+  },
+  "_id": "oC2Znx4VqJKXvTYD"
+}

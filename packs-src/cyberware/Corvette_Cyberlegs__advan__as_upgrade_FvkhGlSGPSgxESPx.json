@@ -1,0 +1,24 @@
+{
+  "name": "Corvette Cyberlegs (advan) as upgrade",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "3d6+4",
+    "notes": "",
+    "flavor": "+8 MA; +2 on movement rolls",
+    "cost": 500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.5"
+  },
+  "_id": "FvkhGlSGPSgxESPx"
+}

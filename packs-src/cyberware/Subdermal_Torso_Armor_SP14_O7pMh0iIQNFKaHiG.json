@@ -1,0 +1,24 @@
+{
+  "name": "Subdermal Torso Armor SP14",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "SUBDERMAL ARMOR",
+    "surgCode": "CR",
+    "humanityCost": "1d6+2",
+    "notes": "",
+    "flavor": "14 SP; DIFF 25 to spot; no REF/ATTR loss",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.7"
+  },
+  "_id": "O7pMh0iIQNFKaHiG"
+}

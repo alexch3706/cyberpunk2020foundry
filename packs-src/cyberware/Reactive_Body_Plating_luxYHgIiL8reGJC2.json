@@ -1,0 +1,24 @@
+{
+  "name": "Reactive Body Plating",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BODY PLATING",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "MA",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Detects laser\\& smart sights; REF&gt;10 dodge",
+    "cost": 6000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "RBP",
+    "flags": {},
+    "source": "Solo of Fortune 2 pg.70"
+  },
+  "_id": "luxYHgIiL8reGJC2"
+}

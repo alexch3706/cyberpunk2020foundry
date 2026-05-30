@@ -1,0 +1,24 @@
+{
+  "name": "Skate Foot",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERFOOT",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Allows an MA 20. Use Athletics or skate skill",
+    "cost": 440,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.33"
+  },
+  "_id": "gbGm8DvlN4zlmEeu"
+}

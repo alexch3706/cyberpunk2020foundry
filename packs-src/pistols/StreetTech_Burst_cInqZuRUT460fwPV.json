@@ -1,0 +1,52 @@
+{
+  "_id": "cInqZuRUT460fwPV",
+  "name": "StreetTech Burst",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Light shot handgun made in USA",
+    "notes": "",
+    "cost": "33",
+    "weight": "0.75",
+    "equipped": true,
+    "source": "Protect & Serve",
+    "weaponType": "Pistol",
+    "accuracy": "-1",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "CAL28",
+    "damage": "2D6+1",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "1",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "very reliable",
+    "range": "3",
+    "attackType": "Auto",
+    "attackSkill": "Handgun",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

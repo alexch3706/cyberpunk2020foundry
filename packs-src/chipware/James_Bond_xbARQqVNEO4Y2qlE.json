@@ -1,0 +1,24 @@
+{
+  "name": "James Bond",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "COOL +1 (max 11); user is a top British agent",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "When Gravity Fails pg.53"
+  },
+  "_id": "xbARQqVNEO4Y2qlE"
+}

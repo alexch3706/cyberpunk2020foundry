@@ -1,0 +1,24 @@
+{
+  "name": "Waterproofing",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERNETIC SYSTEM",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "100 meters; Streetwise 20 to find; +1EV to limbs; Cost is 200% of Cyberware",
+    "cost": 0,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "WTP",
+    "flags": {},
+    "source": "Firestorm: Stormfront pg.27"
+  },
+  "_id": "BRwlpf6NvbwOtEhF"
+}

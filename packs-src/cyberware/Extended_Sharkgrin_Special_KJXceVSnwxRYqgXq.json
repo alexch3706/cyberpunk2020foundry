@@ -1,0 +1,24 @@
+{
+  "name": "Extended Sharkgrin Special",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "4d6",
+    "notes": "",
+    "flavor": "Mouth. 1d6*damage. Retractable",
+    "cost": 1400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 2 pg.9"
+  },
+  "_id": "KJXceVSnwxRYqgXq"
+}

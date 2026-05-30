@@ -1,0 +1,24 @@
+{
+  "name": "Full-Spectrum Immuno-Booster",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1/2d6+1",
+    "notes": "",
+    "flavor": "+4 vs illness/infection/poison/drugs; +1 Healing",
+    "cost": 7500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Neo Tribes pg.90"
+  },
+  "_id": "kifoCjok6nolZ9Kz"
+}

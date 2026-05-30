@@ -1,0 +1,24 @@
+{
+  "name": "ShareChecker™ Link",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERAUDIO",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0.5",
+    "notes": "",
+    "flavor": "Share information using Time Square; screen or audio",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "SCL",
+    "flags": {},
+    "source": "Eurotour pg.8"
+  },
+  "_id": "Co8HvSiqa0dvFWrj"
+}

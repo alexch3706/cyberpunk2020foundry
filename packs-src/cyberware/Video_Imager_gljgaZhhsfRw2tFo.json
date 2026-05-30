@@ -1,0 +1,24 @@
+{
+  "name": "Video Imager",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBEROPTIC",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "Receives vid images(2 spaces)",
+    "cost": 350,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "VI",
+    "flags": {},
+    "source": "Chromebook 1 pg.39"
+  },
+  "_id": "gljgaZhhsfRw2tFo"
+}

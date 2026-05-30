@@ -1,0 +1,24 @@
+{
+  "name": "Biomechanical Cyberarm",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "20% EMP; 1d6 punch; 8 flesh + 8 SDP; 1 option",
+    "cost": 6000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 1,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "When Gravity Fails pg.62"
+  },
+  "_id": "uBfr1F905NQhpKi4"
+}

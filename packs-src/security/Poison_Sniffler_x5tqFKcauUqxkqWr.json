@@ -1,0 +1,28 @@
+{
+  "_id": "x5tqFKcauUqxkqWr",
+  "name": "Poison Sniffler",
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "type": "misc",
+  "data": {
+    "name": "Common",
+    "flavor": "Section:Security p.70 - 85% Accuracy to detect Poisons",
+    "notes": "",
+    "cost": "1500",
+    "weight": "0",
+    "equipped": true,
+    "source": "Cyberpunk2020"
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "effects": []
+}

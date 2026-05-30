@@ -1,0 +1,52 @@
+{
+  "_id": "LwXQ2uk6s6KF3Ur9",
+  "name": "Sternmeyer SH-8",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Automatic shotgun made in Germany",
+    "notes": "",
+    "cost": "1025",
+    "weight": "3",
+    "equipped": true,
+    "source": "https://datafortress2020.com/",
+    "weaponType": "Rifle",
+    "accuracy": "-1",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "CAL12",
+    "damage": "4D6",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "18",
+    "shots": "18",
+    "rof": "1",
+    "reliability": "VeryReliable",
+    "range": "50",
+    "attackType": "Autoshotgun",
+    "attackSkill": "Rifle",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

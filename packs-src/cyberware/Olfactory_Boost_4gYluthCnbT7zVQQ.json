@@ -1,0 +1,24 @@
+{
+  "name": "Olfactory Boost",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "+2 Awareness/track via smell. Locate scent 50%",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "OLF",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.81"
+  },
+  "_id": "4gYluthCnbT7zVQQ"
+}

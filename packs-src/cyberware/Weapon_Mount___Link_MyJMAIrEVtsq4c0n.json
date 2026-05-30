@@ -1,0 +1,24 @@
+{
+  "name": "Weapon Mount & Link",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "WEAPON",
+    "surgCode": "N",
+    "humanityCost": "3",
+    "notes": "",
+    "flavor": "Mounting with neural link for 1 weapon",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "WML",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.91"
+  },
+  "_id": "MyJMAIrEVtsq4c0n"
+}

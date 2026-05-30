@@ -1,0 +1,24 @@
+{
+  "name": "Stinger",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "1d6+3",
+    "notes": "",
+    "flavor": "Fingermounted Hypodermic needle (3 doses)",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.10"
+  },
+  "_id": "qx0qUrG6J1vBSex4"
+}

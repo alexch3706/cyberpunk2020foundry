@@ -1,0 +1,24 @@
+{
+  "name": "Medical Modular Cyberhand - part of cyberarm",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "Monoscalpel; air-hypo; stapler; probe;etc",
+    "cost": 975,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.5"
+  },
+  "_id": "hnlzxi6fjpEEtVH7"
+}

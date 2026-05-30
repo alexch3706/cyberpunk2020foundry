@@ -1,0 +1,24 @@
+{
+  "name": "Raven Advanced Biomonitor",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "(1d6/2)-1",
+    "notes": "",
+    "flavor": "Includes ability broadcast information over 2km",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Corpbook 3 pg.72"
+  },
+  "_id": "HHpbdwb8gWcNjDE7"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Standard Foot",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERFOOT",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Resembles normal foot",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "STD",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.90"
+  },
+  "_id": "U8g5kuEVr1AbI0Lr"
+}

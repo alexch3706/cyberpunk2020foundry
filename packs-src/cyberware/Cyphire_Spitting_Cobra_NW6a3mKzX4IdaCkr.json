@@ -1,0 +1,24 @@
+{
+  "name": "Cyphire Spitting Cobra",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "M",
+    "humanityCost": "4d6",
+    "notes": "",
+    "flavor": "Vampires that spit chemicals 6ft; as airgun pellet",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.27"
+  },
+  "_id": "NW6a3mKzX4IdaCkr"
+}

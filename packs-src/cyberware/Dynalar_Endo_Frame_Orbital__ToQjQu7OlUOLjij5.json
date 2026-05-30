@@ -1,0 +1,24 @@
+{
+  "name": "Dynalar Endo-Frame(Orbital)",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "CRx2",
+    "humanityCost": "2d6+3",
+    "notes": "",
+    "flavor": "BOD +3; +2 all dam; 12 points/limb",
+    "cost": 25000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.28"
+  },
+  "_id": "ToQjQu7OlUOLjij5"
+}

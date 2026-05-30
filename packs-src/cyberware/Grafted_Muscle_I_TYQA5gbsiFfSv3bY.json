@@ -1,0 +1,24 @@
+{
+  "name": "Grafted Muscle I",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "+1 BODY",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "GR",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.85"
+  },
+  "_id": "TYQA5gbsiFfSv3bY"
+}

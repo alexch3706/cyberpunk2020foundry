@@ -1,0 +1,24 @@
+{
+  "name": "Front Optic Mount",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BODY PLATING",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "MA",
+    "humanityCost": "4d6",
+    "notes": "",
+    "flavor": "Allows up to 5 optics to be mounted. -1 ATTR",
+    "cost": 1000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "FOM",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.93"
+  },
+  "_id": "PIOY5fUaIbz8qr36"
+}

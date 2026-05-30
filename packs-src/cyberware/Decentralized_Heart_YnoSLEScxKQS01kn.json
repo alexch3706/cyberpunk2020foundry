@@ -1,0 +1,24 @@
+{
+  "name": "Decentralized Heart",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "1d6+4",
+    "notes": "",
+    "flavor": "+2 to Death Saves for Torso wounds",
+    "cost": 1300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.37"
+  },
+  "_id": "YnoSLEScxKQS01kn"
+}

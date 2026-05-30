@@ -1,0 +1,24 @@
+{
+  "name": "Flare",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERHAND",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "150m altitude; 25m diameter (15eb)",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "CDFLR",
+    "flags": {},
+    "source": "Chromebook 3 pg.22"
+  },
+  "_id": "SIUDnA5V2TsKt8iE"
+}

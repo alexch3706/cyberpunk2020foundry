@@ -1,0 +1,24 @@
+{
+  "name": "Ignore Pain",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "BIOTECH",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "+4 to Stun Saves for 12 hours; -2 tactile sense; Take one a day max",
+    "cost": 1800,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Eurosource Plus pg.105"
+  },
+  "_id": "bR5KO3ShSj4evXOI"
+}

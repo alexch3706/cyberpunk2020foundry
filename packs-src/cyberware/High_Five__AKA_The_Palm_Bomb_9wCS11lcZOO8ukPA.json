@@ -1,0 +1,24 @@
+{
+  "name": "High Five, AKA The Palm Bomb",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERWEAPON",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6+3",
+    "notes": "",
+    "flavor": "20-30 to detect. .477 or 12ga round; 1 shot",
+    "cost": 355,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.11"
+  },
+  "_id": "9wCS11lcZOO8ukPA"
+}

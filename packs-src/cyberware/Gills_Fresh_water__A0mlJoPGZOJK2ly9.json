@@ -1,0 +1,24 @@
+{
+  "name": "Gills(Fresh water)",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "IMPLANT",
+    "cyberwareSubtype": "",
+    "surgCode": "MA",
+    "humanityCost": "3d6",
+    "notes": "",
+    "flavor": "Waterbreathing system; good for 4 hours",
+    "cost": 400,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "GL",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.84"
+  },
+  "_id": "A0mlJoPGZOJK2ly9"
+}

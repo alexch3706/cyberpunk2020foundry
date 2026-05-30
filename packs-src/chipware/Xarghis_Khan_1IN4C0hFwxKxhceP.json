@@ -1,0 +1,24 @@
+{
+  "name": "Xarghis Khan",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "EMP 1; COOL 10; user wants to torture and kill",
+    "cost": 4000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "When Gravity Fails pg.53"
+  },
+  "_id": "1IN4C0hFwxKxhceP"
+}

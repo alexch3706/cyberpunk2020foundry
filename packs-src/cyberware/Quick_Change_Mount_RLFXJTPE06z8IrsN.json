@@ -1,0 +1,24 @@
+{
+  "name": "Quick Change Mount",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "2",
+    "notes": "",
+    "flavor": "Allows 1 turn changing of cyberlimb",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "QC",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.89"
+  },
+  "_id": "RLFXJTPE06z8IrsN"
+}

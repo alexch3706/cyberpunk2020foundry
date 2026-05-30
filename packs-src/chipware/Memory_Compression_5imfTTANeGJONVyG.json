@@ -1,0 +1,24 @@
+{
+  "name": "Memory Compression",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "3 skills; skill level +3 total; Cost is range of 200-400eb",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 1 pg.74"
+  },
+  "_id": "5imfTTANeGJONVyG"
+}

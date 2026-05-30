@@ -1,0 +1,24 @@
+{
+  "name": "Artificial Shoulder Mount",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "CR",
+    "humanityCost": "2d6",
+    "notes": "",
+    "flavor": "Mount up to 2 extra arms. 25 SDP",
+    "cost": 1500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "ASHO",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.89"
+  },
+  "_id": "yuqPhcf7y667mTMx"
+}

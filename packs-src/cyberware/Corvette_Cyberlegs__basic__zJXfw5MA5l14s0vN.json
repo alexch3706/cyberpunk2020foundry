@@ -1,0 +1,24 @@
+{
+  "name": "Corvette Cyberlegs (basic)",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERLIMB",
+    "cyberwareSubtype": "",
+    "surgCode": "CR",
+    "humanityCost": "3d6",
+    "notes": "",
+    "flavor": "+3 MA; +1 on movement rolls",
+    "cost": 4500,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 4 pg.5"
+  },
+  "_id": "zJXfw5MA5l14s0vN"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Frequency Changer",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERAUDIO",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "up to 6 channels",
+    "cost": 100,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "FC",
+    "flags": {},
+    "source": "Chromebook 1 pg.39"
+  },
+  "_id": "A928Ig9OHvTygNsl"
+}

@@ -1,0 +1,52 @@
+{
+  "_id": "fN5A7MbsqmOTta7Q",
+  "name": "Texas Arms R-Shot .477",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "Heavy automatic shotgun made in USA",
+    "notes": "",
+    "cost": "750",
+    "weight": "3",
+    "equipped": true,
+    "source": "http://cyberpunk.asia",
+    "weaponType": "Rifle",
+    "accuracy": "-1",
+    "concealability": "",
+    "availability": "undefined",
+    "ammoType": "CAL477",
+    "damage": "5D6",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": "10",
+    "shots": "10",
+    "rof": "1",
+    "reliability": "Standard",
+    "range": "50",
+    "attackType": "Autoshotgun",
+    "attackSkill": "Rifle",
+    "name": "Common"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

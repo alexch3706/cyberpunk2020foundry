@@ -1,0 +1,24 @@
+{
+  "name": "Dermatech Mood Skin",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "FASHIONWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Changes color based on mood; cost eb/m; hc is per m",
+    "cost": 200,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Chromebook 3 pg.35"
+  },
+  "_id": "OLnmO8cNfiDhd6cW"
+}

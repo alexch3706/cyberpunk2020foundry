@@ -1,0 +1,24 @@
+{
+  "name": "Altering Voice Patterns",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CYBERVOCAL",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "M",
+    "humanityCost": "2d6+2",
+    "notes": "",
+    "flavor": "Requires Audio Vox and Voice Pattern.",
+    "cost": 1050,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "AVP",
+    "flags": {},
+    "source": "Wildside pg.65"
+  },
+  "_id": "gLNgNonWfuitIsp3"
+}

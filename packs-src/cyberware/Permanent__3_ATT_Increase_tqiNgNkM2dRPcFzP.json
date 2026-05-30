@@ -1,0 +1,24 @@
+{
+  "name": "Permanent +3 ATT Increase",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "BIOTECH",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "Temporary; Requires Prepatory DNA Mapping. If existing cyber HC10+ Double cost.",
+    "cost": 4800,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "",
+    "flags": {},
+    "source": "Eurosource Plus pg.105"
+  },
+  "_id": "tqiNgNkM2dRPcFzP"
+}

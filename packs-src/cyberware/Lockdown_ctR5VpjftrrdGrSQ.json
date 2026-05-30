@@ -1,0 +1,24 @@
+{
+  "name": "Lockdown",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "NEURALWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "1d6",
+    "notes": "",
+    "flavor": "Uses cyberaudio to locate snipers",
+    "cost": 300,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "LKDN",
+    "flags": {},
+    "source": "Chromebook 4 pg.15"
+  },
+  "_id": "ctR5VpjftrrdGrSQ"
+}

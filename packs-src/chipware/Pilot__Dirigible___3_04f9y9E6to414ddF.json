@@ -1,0 +1,24 @@
+{
+  "name": "Pilot (Dirigible) +3",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "CHIPWARE",
+    "cyberwareSubtype": "OPTION",
+    "surgCode": "N",
+    "humanityCost": "0",
+    "notes": "",
+    "flavor": "APTR Skill chip",
+    "cost": 900,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 1,
+    "abbrev": "",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.83"
+  },
+  "_id": "04f9y9E6to414ddF"
+}

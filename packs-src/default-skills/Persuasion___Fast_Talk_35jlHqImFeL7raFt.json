@@ -1,0 +1,25 @@
+{
+  "name": "Persuasion & Fast Talk",
+  "type": "skill",
+  "img": "icons/svg/item-bag.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "level": 0,
+    "chipLevel": 0,
+    "ip": 0,
+    "diffMod": 1,
+    "isChipped": false,
+    "isRoleSkill": false,
+    "stat": "emp"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "permission": {
+    "default": 0,
+    "5FFDbHSYUZjDW27U": 3
+  },
+  "flags": {},
+  "_id": "35jlHqImFeL7raFt"
+}

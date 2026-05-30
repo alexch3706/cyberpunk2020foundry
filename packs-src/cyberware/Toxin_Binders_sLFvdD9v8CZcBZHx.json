@@ -1,0 +1,24 @@
+{
+  "name": "Toxin Binders",
+  "permission": {
+    "default": 0
+  },
+  "type": "cyberware",
+  "data": {
+    "cyberwareType": "BIOWARE",
+    "cyberwareSubtype": "",
+    "surgCode": "N",
+    "humanityCost": "1d6/2",
+    "notes": "",
+    "flavor": "+4 to Poison/Drug Saves",
+    "cost": 3000,
+    "weight": 0,
+    "equipped": true,
+    "slots": 0,
+    "spaces": 0,
+    "abbrev": "TBN",
+    "flags": {},
+    "source": "Cyberpunk 2020 2nd ed. pg.85"
+  },
+  "_id": "sLFvdD9v8CZcBZHx"
+}
