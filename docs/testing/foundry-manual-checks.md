@@ -150,7 +150,12 @@ Verify that the core combat resolver faithfully applies the Cyberpunk 2020 damag
 4. Roll a hit:
    - If damage penetrates cover but does not penetrate personal armor, confirm staged penetration evidence includes `penetrated-manual-cover` and no embedded item update is planned.
    - If damage penetrates both cover and personal armor, confirm cover ablation evidence is present and exactly one item-backed personal layer is ablated.
+   - If the penetrated personal layer is actor-owned Skinweave/Subdermal cyberware, confirm staged penetration evidence includes `updatePath: "system.ablation"` and the embedded item update targets that cyberware item `_id`.
    - If cover fully stops damage, confirm no personal armor ablation is planned.
+5. Confirm the preview and chat evidence line up with persistence:
+   - Confirm the attack.
+   - Open the penetrated Skinweave/Subdermal item on the defender and verify `system.ablation` increased by 1.
+   - Repeat a second hit in the same attack flow where applicable and verify effective cyberware SP is reduced by the prior staged ablation.
 
 ### 6.3 Body Type Mitigation (BTM) & Minimum Damage
 1. Set Defender stats: **BODY 6** (BTM: `-2`).

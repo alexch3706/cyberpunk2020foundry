@@ -805,7 +805,7 @@
       "rolls": [
         {
           "id": "save",
-          "total": 5,
+          "total": 2,
           "die": {
             "faces": 10,
             "natural": 1
@@ -855,7 +855,7 @@
         },
         {
           "id": "save",
-          "total": 3,
+          "total": 2,
           "die": {
             "faces": 10,
             "natural": 1

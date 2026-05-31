@@ -175,6 +175,165 @@
   ],
   "singleShotCases": [
     {
+      "name": "structured cyberware staged penetration uses system-ablation update path",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "equippedArmor": [],
+              "equippedCyberware": [
+                {
+                  "id": "cyber-subdermal",
+                  "name": "Subdermal Armor SP8",
+                  "equipped": true,
+                  "system": {
+                    "equipped": true,
+                    "ablation": 2,
+                    "flavor": "8 SP"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": { "faces": 10, "natural": 9, "results": [9], "exploded": false }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 12,
+          "die": { "faces": 6, "natural": 12, "results": [3, 3, 3, 3] }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-item-backed-armor",
+                  "itemId": "cyber-subdermal",
+                  "updatePath": "system.ablation",
+                  "before": 2,
+                  "after": 3
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "cyber-subdermal",
+                "system.ablation": 3
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.105-106: Penetrated cyberware armor must stage-ablate through persisted item updates"
+    },
+    {
+      "name": "structured outer armor stop does not prematurely ablate cyberware",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "equippedArmor": [
+                {
+                  "id": "armor-vest-stop",
+                  "name": "Kevlar Vest",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 12,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ],
+              "equippedCyberware": [
+                {
+                  "id": "cyber-skinweave",
+                  "name": "Skinweave SP8",
+                  "equipped": true,
+                  "system": {
+                    "equipped": true,
+                    "ablation": 1,
+                    "flavor": "8 SP"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": { "faces": 10, "natural": 9, "results": [9], "exploded": false }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 10,
+          "die": { "faces": 6, "natural": 10, "results": [3, 3, 2, 2] }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": []
+      },
+      "ruleReference": "CP2020 p.105-106: Cyberware ablation only occurs after penetration reaches personal armor stage"
+    },
+    {
       "name": "structured hit with ranged modifier evidence",
       "context": {
         "action": {
@@ -199,9 +358,7 @@
                   "total": 8
                 }
               },
-              "skill": {
-                "handgun": 6
-              }
+              "attackSkillBonus": 6
             }
           },
           "total": 21,
@@ -289,11 +446,11 @@
           {
             "attack": {
               "roll": {
-                "formula": "1d10x10 + @stats.ref.total + @skill.handgun + @modifier.aimRounds + @modifier.targetsCount + @modifier.blinded + @modifier.extraMod + @weapon.accuracy",
+                "formula": "1d10x10 + @stats.ref.total + @attackSkillBonus + @modifier.aimRounds + @modifier.targetsCount + @modifier.blinded + @modifier.extraMod + @weapon.accuracy",
                 "terms": [
                   "1d10x10",
                   "@stats.ref.total",
-                  "@skill.handgun",
+                  "@attackSkillBonus",
                   "@modifier.aimRounds",
                   "@modifier.targetsCount",
                   "@modifier.blinded",
@@ -513,7 +670,7 @@
                 "minimumDamageApplied": false,
                 "finalDamage": 0,
                 "armor": {
-                  "effectiveStoppingPower": 17,
+                  "effectiveStoppingPower": 22,
                   "layers": [
                     {
                       "id": "armor-vest",
@@ -1499,7 +1656,7 @@
       "rolls": [
         {
           "id": "attack",
-          "total": 18,
+          "total": 22,
           "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
         },
         {
@@ -1553,7 +1710,7 @@
       "rolls": [
         {
           "id": "attack",
-          "total": 18,
+          "total": 22,
           "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
         },
         {

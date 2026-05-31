@@ -74,6 +74,7 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
         stoppingPower: sp,
         baseStoppingPower: baseSP,
         ablation,
+        updatePath: "system.ablation",
         layer: getCyberwareLayer(item, system),
         equipped: true,
         source: system.source || ""

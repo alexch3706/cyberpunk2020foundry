@@ -825,10 +825,6 @@
               "value": "FullAuto"
             },
             {
-              "code": "fullAuto",
-              "value": 0
-            },
-            {
               "code": "weaponAccuracy",
               "value": 0
             }

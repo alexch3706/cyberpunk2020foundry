@@ -401,9 +401,10 @@ export async function resolveSuppressiveFire(context, options = {}, roller = und
   // Save DC: Math.max(2, Math.floor(finalRoundsFired / fireZoneWidth))
   const saveDC = Math.max(2, Math.floor(finalRoundsFired / zoneWidth));
 
-  const targets = await Promise.all((context.targets || []).map(async target =>
-    await resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options)
-  ));
+  const targets = [];
+  for(const target of (context.targets || [])) {
+    targets.push(await resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options));
+  }
 
   const manualTargets = targets.filter(t => t.manualResolution?.required);
 
@@ -1539,9 +1540,11 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
   const remainingAfterCover = Math.max(0, Number(rawDamage || 0) - Math.min(Number(rawDamage || 0), coverEffective));
   const personalEffective = Number(armor.personalArmor?.effectiveStoppingPower || 0);
   const penetratedPersonalArmor = remainingAfterCover > personalEffective;
+  const personalLayers = armor.personalArmor?.layers || armor.layers || [];
+  const hasPersonalLayers = personalLayers.length > 0;
 
-  const affectedLayer = [...(armor.personalArmor?.layers || armor.layers || [])].reverse().find(layer => {
-    return layer.type === "armor" && layer.id && layer.updatePath;
+  const affectedLayer = [...personalLayers].reverse().find(layer => {
+    return (layer.type === "armor" || layer.type === "cyberware") && layer.id && layer.updatePath;
   });
 
   if(!penetratedPersonalArmor) {
@@ -1570,6 +1573,21 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
   }
 
   if(!affectedLayer) {
+    if(coverEvidence && !hasPersonalLayers) {
+      return {
+        evidence: {
+          enabled: true,
+          applied: true,
+          reason: "penetrated-manual-cover",
+          cover: {
+            id: armor.cover?.id || "cover",
+            name: armor.cover?.name || "Cover",
+            source: armor.cover?.source || "manual cover",
+            ablation: coverEvidence
+          }
+        }
+      };
+    }
     const message = "Staged penetration penetrated armor, but no item-backed armor coverage update path was available.";
     return {
       evidence: {

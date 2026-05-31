@@ -31,7 +31,6 @@ This file tracks technical debt and deferred items from code reviews.
 
 - **Duplication of `woundStateLabel` function**: Duplicate implementations in `module/combat/state-planner.js` and `module/combat/save-resolver.js`.
 - **Duplication of `normalizeDamageValue` function**: Duplicate implementations in `module/combat/state-planner.js` and `module/combat/save-resolver.js`.
-- **Skinweave and Subdermal Armor ignored during staged armor ablation**: Cyberware items with stopping power are ignored when updates are generated for armor ablation.
 - **Hardcoded limb keys in `LIMB_LOCATION_KEYS`**: Key limb locations like hands and feet are not recognized as limbs for severing/crushing warnings.
 - **Missing check for stabilized status in Mortal target reminders**: Recurring death save reminders are created even if the Mortal target is already stabilized.
 - **Death saves generated for guaranteed dead targets**: Death saves are generated for targets above Mortal 6 who should be considered deceased automatically.

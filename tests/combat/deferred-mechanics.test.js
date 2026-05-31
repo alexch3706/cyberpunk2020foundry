@@ -48,7 +48,7 @@ export function runDeferredMechanicsTests() {
   });
 
   test("baseline entry count is correct", () => {
-    assert.equal(DEFERRED_MECHANICS.length, 17, "Registry baseline count changed — update this test if entries were intentionally added/removed.");
+    assert.equal(DEFERRED_MECHANICS.length, 16, "Registry baseline count changed — update this test if entries were intentionally added/removed.");
   });
 
   // ── Lookup helpers ──

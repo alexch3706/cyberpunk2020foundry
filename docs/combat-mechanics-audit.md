@@ -44,7 +44,7 @@ According to the `deferred-mechanics.js` registry and codebase scans, the follow
 **Armor & Cover:**
 - **Cover Modifiers:** Modifiers dialog now accepts manual Cover SP and forwards structured cover input to resolver action options.
 - **Ablation Routing:** Manual cover penetration now emits cover ablation evidence; personal armor ablation occurs only when personal armor stage is penetrated.
-- **Subdermal/Skinweave Ablation:** Cyberware items with inherent stopping power are currently skipped during staged ablation (still deferred).
+- **Subdermal/Skinweave Ablation:** Implemented. Penetrated cyberware armor now emits staged penetration evidence and plans persisted `system.ablation` embedded item updates.
 
 **Combat Tracking & Flow:**
 - **Initiative Automation:** Rolling initiative does not automatically add the token to the Foundry encounter combat tracker.

@@ -1173,12 +1173,15 @@ function assertArmorResolver() {
   assert.equal(cyberLayer.stoppingPower, 2, "cyberware SP");
   assert.equal(cyberLayer.type, "cyberware", "cyberware type");
   assert.equal(cyberLayer.layer, "hard", "cyberware material");
+  assert.equal(cyberLayer.ablation, 0, "cyberware layer preserves current ablation");
+  assert.equal(cyberLayer.updatePath, "system.ablation", "cyberware layer exposes ablation update path");
 
   const skinweaveLayer = torsoLayers.find(l => l.id === "cyberware-skinweave");
   assert.ok(skinweaveLayer, "skinweave layer exists");
   assert.equal(skinweaveLayer.stoppingPower, 12, "skinweave SP is parsed from existing pack-style text");
   assert.equal(skinweaveLayer.layer, "soft", "pack-style skinweave defaults to soft layer");
   assert.equal(skinweaveLayer.source, "Cyberpunk 2020 2nd ed. pg.85", "skinweave source is preserved");
+  assert.equal(skinweaveLayer.updatePath, "system.ablation", "skinweave layer exposes cyberware ablation update path");
   assert.ok(!torsoLayers.some(l => l.id === "cyberware-skull"), "skull-only subdermal armor does not cover torso");
 
   const headLayers = getEquippedArmorForLocation(targetSnapshot, "Head");
