@@ -1,0 +1,51 @@
+{
+  "_id": "4bb845220d1648a3",
+  "name": "SPM-1 Battleglove",
+  "permission": {
+    "default": 0,
+    "VTdezBIy0FQgKDge": 3
+  },
+  "type": "weapon",
+  "data": {
+    "name": "Standard",
+    "flavor": "Large gauntlet covering the hand and forearm. Does 3D6 crush damage, 2D6 punch damage. Has three spaces for standard cyberarm options.",
+    "notes": "Can store any standard cyberarm option (3 spaces).",
+    "cost": "900",
+    "weight": "4",
+    "equipped": true,
+    "source": "Core Rulebook, p.67",
+    "weaponType": "Melee",
+    "accuracy": "-2",
+    "concealability": "ConcealNoHide",
+    "availability": "Poor",
+    "ammoType": "",
+    "damage": "3D6",
+    "rangeDamages": {
+      "pointBlank": "",
+      "close": "",
+      "medium": "",
+      "far": "",
+      "short": "",
+      "extreme": ""
+    },
+    "ap": false,
+    "shotsLeft": 1,
+    "shots": 1,
+    "rof": 1,
+    "reliability": "VeryReliable",
+    "range": "",
+    "attackType": "Melee",
+    "attackSkill": "Brawling"
+  },
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.3.12"
+    }
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "effects": [],
+  "_key": "!items!4bb845220d1648a3"
+}

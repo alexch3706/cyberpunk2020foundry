@@ -178,6 +178,13 @@
       "type": "Item"
     },
     {
+      "name": "melee",
+      "label": "Melee Weapons",
+      "path": "./packs/melee",
+      "system": "cyberpunk2020-rilerena",
+      "type": "Item"
+    },
+    {
       "name": "smgs",
       "label": "SMGs",
       "path": "./packs/smgs",
