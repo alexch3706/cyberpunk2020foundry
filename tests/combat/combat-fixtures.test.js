@@ -1205,6 +1205,10 @@ function assertArmorResolver() {
     applied: true,
     rawStoppingPower: 28,
     effectiveStoppingPower: 14,
+    coverRawStoppingPower: 0,
+    coverEffectiveStoppingPower: 0,
+    personalRawStoppingPower: 28,
+    personalEffectiveStoppingPower: 14,
     armorDivisor: 2,
     penetratingDamageDivisor: 2
   }, "AP evidence describes both armor and penetrating-damage divisors");
@@ -1260,7 +1264,7 @@ function assertArmorResolver() {
       source: "manual cover"
     }
   });
-  assert.equal(coveredArmor.effectiveStoppingPower, 20, "cover is combined as the outer protection layer");
+  assert.equal(coveredArmor.effectiveStoppingPower, 25, "cover is resolved first, then personal armor mitigation is added sequentially");
   assert.equal(coveredArmor.layers.at(-1).type, "cover", "manual cover is appended as a cover layer");
   assert.equal(coveredArmor.layers.at(-1).source, "manual cover", "manual cover source is preserved");
 
@@ -1329,8 +1333,8 @@ function assertArmorResolver() {
       source: "manual cover"
     }
   });
-  assert.equal(warningArmor.warnings.length, 2, "four layers with multiple hard layers produce warning evidence");
-  assert.deepEqual(warningArmor.warnings.map(warning => warning.code), ["armor-too-many-layers", "armor-multiple-hard-layers"]);
+  assert.equal(warningArmor.warnings.length, 1, "cover-specific hard layers do not create false multi-hard warnings against personal armor");
+  assert.deepEqual(warningArmor.warnings.map(warning => warning.code), ["armor-multiple-hard-layers"]);
 
   const casePreservingArmor = resolveArmor(false, {
     equippedArmor: [

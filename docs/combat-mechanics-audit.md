@@ -31,7 +31,7 @@ The system currently implements a robust set of the Corebook mechanics within th
 To integrate seamlessly with a Virtual Tabletop environment, several rules have been simplified or adapted:
 
 - **State Planner Architecture:** Instead of directly modifying character sheets, all attack results are collected into a `CombatOutcome` object, then run through a `state-planner` to create a Preview/Confirm dialog. This ensures a "single source of truth" and allows the GM/Player to intervene.
-- **Cover as Standard Armor:** Currently, cover is mathematically treated as a proportional standard armor layer rather than resolving sequentially before personal armor (noted as deferred in FR10).
+- **Cover Resolution Updated:** Manual cover now resolves as a separate first stage before personal armor; personal armor is evaluated only against remaining damage.
 - **Death Saves Bound to Attacks:** Rather than keeping track of time/turns (which is complex in a VTT), Death Save reminders are triggered organically by attack events.
 
 ## 3. Missing Mechanics & Gaps (Deferred)
@@ -42,9 +42,9 @@ According to the `deferred-mechanics.js` registry and codebase scans, the follow
 - **Autoshotguns:** Basic full-auto path works, but shotgun-specific rules are not applied.
 
 **Armor & Cover:**
-- **Cover Modifiers:** The armor resolver supports cover SP, but the Modifiers Dialog does not currently collect manual cover SP input.
-- **Ablation Routing:** When cover is bypassed, ablation updates target personal armor instead of the cover itself.
-- **Subdermal/Skinweave Ablation:** Cyberware items with inherent stopping power are currently skipped during staged ablation.
+- **Cover Modifiers:** Modifiers dialog now accepts manual Cover SP and forwards structured cover input to resolver action options.
+- **Ablation Routing:** Manual cover penetration now emits cover ablation evidence; personal armor ablation occurs only when personal armor stage is penetrated.
+- **Subdermal/Skinweave Ablation:** Cyberware items with inherent stopping power are currently skipped during staged ablation (still deferred).
 
 **Combat Tracking & Flow:**
 - **Initiative Automation:** Rolling initiative does not automatically add the token to the Foundry encounter combat tracker.

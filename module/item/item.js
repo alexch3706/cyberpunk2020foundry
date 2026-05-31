@@ -345,10 +345,29 @@ export class CyberpunkItem extends Item {
   }
 
   __buildCombatActionOptions(attackMods) {
+    const normalizedCover = this.__normalizeManualCover(attackMods);
     return this.__compactResolverData({
       ...(this.__cloneResolverData(attackMods) || {}),
+      ...(normalizedCover ? { cover: normalizedCover } : {}),
       stagedPenetration: this.__getStagedPenetrationSetting()
     });
+  }
+
+  __normalizeManualCover(attackMods = {}) {
+    const rawCover = typeof attackMods.cover === "object" && attackMods.cover !== null
+      ? (attackMods.cover.stoppingPower ?? attackMods.cover.sp)
+      : (attackMods.cover ?? attackMods.coverSp);
+    const numericCover = Number(rawCover);
+    if(!Number.isFinite(numericCover) || numericCover <= 0) {
+      return undefined;
+    }
+    return {
+      id: "cover",
+      name: "Cover",
+      source: "manual cover",
+      layer: "hard",
+      stoppingPower: Math.max(0, Math.floor(numericCover))
+    };
   }
 
   __getStagedPenetrationSetting() {

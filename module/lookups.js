@@ -227,7 +227,8 @@ export function rangedModifiers(weapon, targetTokens=[]) {
         {localKey:"Hipfire", dataPath:"hipfire",defaultValue: false},
         {localKey:"Ricochet", dataPath:"ricochet",defaultValue: false},
         {localKey:"Running", dataPath:"running",defaultValue: false},
-        {localKey:"TurnFace", dataPath:"turningToFace",defaultValue: false}]
+        {localKey:"TurnFace", dataPath:"turningToFace",defaultValue: false},
+        {localKey:"CoverSP", dataPath:"coverSp", defaultValue: 0}]
     ];
 }
 

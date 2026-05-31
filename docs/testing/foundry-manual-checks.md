@@ -145,11 +145,12 @@ Verify that the core combat resolver faithfully applies the Cyberpunk 2020 damag
 1. Equip the Defender with multiple armor layers (e.g., **Skinweave SP 8** and **Kevlar Vest SP 12**).
 2. Set up a Ranged Attack option with cover (e.g., **Concrete Barrier SP 10**).
 3. Verify the effective stopping power calculation:
-   - The outer cover layer (Concrete Barrier, SP 10) resolves first.
-   - The armor layers combine using proportional layering rules.
+   - Cover resolves as a separate first stage (Concrete Barrier, SP 10).
+   - Only remaining damage is evaluated against personal armor (equipped armor/cyberware proportional layering).
 4. Roll a hit:
-   - Confirm that only the outermost penetrated layer (e.g., Cover, or Kevlar Vest if cover is bypassed) is ablated.
-   - Confirm that inner layers (like Skinweave) are left unablated on confirmation.
+   - If damage penetrates cover but does not penetrate personal armor, confirm staged penetration evidence includes `penetrated-manual-cover` and no embedded item update is planned.
+   - If damage penetrates both cover and personal armor, confirm cover ablation evidence is present and exactly one item-backed personal layer is ablated.
+   - If cover fully stops damage, confirm no personal armor ablation is planned.
 
 ### 6.3 Body Type Mitigation (BTM) & Minimum Damage
 1. Set Defender stats: **BODY 6** (BTM: `-2`).

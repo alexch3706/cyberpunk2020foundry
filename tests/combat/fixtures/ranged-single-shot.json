@@ -437,7 +437,7 @@
       "ruleReference": "CP2020 p.99: Attack roll vs DC; CP2020 p.99: miss skips location/damage rolls"
     },
     {
-      "name": "structured hit applies manual cover as armor layer",
+      "name": "structured hit applies manual cover before personal armor",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -505,13 +505,13 @@
               {
                 "location": "torso",
                 "rawDamage": 20,
-                "effectiveStoppingPower": 17,
-                "armorMitigation": 17,
-                "penetratingDamage": 3,
+                "effectiveStoppingPower": 22,
+                "armorMitigation": 20,
+                "penetratingDamage": 0,
                 "bodyTypeModifier": 2,
-                "bodyTypeMitigation": 2,
+                "bodyTypeMitigation": 0,
                 "minimumDamageApplied": false,
-                "finalDamage": 1,
+                "finalDamage": 0,
                 "armor": {
                   "effectiveStoppingPower": 17,
                   "layers": [
@@ -542,7 +542,7 @@
           "required": false
         }
       },
-      "ruleReference": "CP2020 p.105: Cover stopping power; CP2020 p.105: Proportional armor layering"
+      "ruleReference": "CP2020 p.105: Cover stopping power resolves first; personal armor applies only to remaining damage"
     },
     {
       "name": "structured AP penetration plans staged armor ablation",
@@ -1375,7 +1375,7 @@
       "ruleReference": "CP2020 p.108: Limb > 8 damage = severed/crushed"
     },
     {
-      "name": "structured manual cover penetration has no staged armor target",
+      "name": "structured manual cover penetration emits cover ablation evidence",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -1458,15 +1458,17 @@
                 "finalDamage": 3,
                 "stagedPenetration": {
                   "enabled": true,
-                  "applied": false,
-                  "reason": "no-item-backed-armor"
-                },
-                "warnings": [
-                  {
-                    "code": "staged-penetration-no-update-target",
-                    "severity": "warning"
+                  "applied": true,
+                  "reason": "penetrated-manual-cover",
+                  "cover": {
+                    "ablation": {
+                      "before": 0,
+                      "after": 1,
+                      "applied": true
+                    }
                   }
-                ]
+                },
+                "warnings": []
               }
             ]
           }
@@ -1476,7 +1478,111 @@
         "embeddedItemUpdates": [],
         "warnings": []
       },
-      "ruleReference": "CP2020 p.106: Staged Penetration only applies to item-backed armor"
+      "ruleReference": "CP2020 p.106: Manual cover ablation evidence is tracked without item updates"
+    },
+    {
+      "name": "structured cover penetration can continue into personal armor",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true,
+            "cover": {
+              "name": "Thin Door",
+              "stoppingPower": 4,
+              "layer": "hard",
+              "source": "manual cover"
+            }
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 17,
+          "die": { "faces": 6, "natural": 17, "results": [5, 4, 4, 4] }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "armorMitigation": 16,
+                "penetratingDamage": 1,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-manual-cover-and-item-backed-armor",
+                  "cover": {
+                    "ablation": {
+                      "applied": true
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.105-106: Cover can be penetrated first, then personal armor can still stage-ablate when penetrated"
+    },
+    {
+      "name": "structured cover stop does not stage-ablate personal armor",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true,
+            "cover": {
+              "name": "Concrete Wall",
+              "stoppingPower": 30,
+              "layer": "hard",
+              "source": "manual cover"
+            }
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 12,
+          "die": { "faces": 6, "natural": 12, "results": [3, 3, 3, 3] }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "penetratingDamage": 0,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": []
+      },
+      "ruleReference": "CP2020 p.105-106: When cover fully stops damage, personal armor is not penetrated and receives no staged ablation"
     },
     {
       "name": "structured hit uses options-only aimed location",

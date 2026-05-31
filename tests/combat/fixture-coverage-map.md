@@ -19,9 +19,9 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Misc Modifiers | ✅ 1 | `ranged-single-shot.json` → structured hit with ranged modifier evidence |
 | Weapon Accuracy | ✅ 1 | `ranged-single-shot.json` → structured hit with ranged modifier evidence |
 | Hit Location | ✅ 1 | `ranged-single-shot.json` → structured hit uses options-only aimed location |
-| Cover Stopping Power | ✅ 1 | `ranged-single-shot.json` → structured hit applies manual cover as armor layer |
-| Armor & AP | ✅ 7 | `ranged-single-shot.json` → structured hit applies manual cover as armor layer<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured layered armor ablates outer item-backed layer<br>`ranged-single-shot.json` → structured manual cover penetration has no staged armor target<br>`three-round-burst.json` → three-round burst success with 2 hits and progressive ablation (7 total, showing 5) |
-| Staged Penetration | ✅ 6 | `ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured layered armor ablates outer item-backed layer<br>`ranged-single-shot.json` → structured stopped hit does not plan staged armor ablation<br>`ranged-single-shot.json` → structured manual cover penetration has no staged armor target (6 total, showing 5) |
+| Cover Stopping Power | ✅ 3 | `ranged-single-shot.json` → structured hit applies manual cover before personal armor<br>`ranged-single-shot.json` → structured cover penetration can continue into personal armor<br>`ranged-single-shot.json` → structured cover stop does not stage-ablate personal armor |
+| Armor & AP | ✅ 7 | `ranged-single-shot.json` → structured hit applies manual cover before personal armor<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured layered armor ablates outer item-backed layer<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`three-round-burst.json` → three-round burst success with 2 hits and progressive ablation (7 total, showing 5) |
+| Staged Penetration | ✅ 7 | `ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured layered armor ablates outer item-backed layer<br>`ranged-single-shot.json` → structured stopped hit does not plan staged armor ablation<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence (7 total, showing 5) |
 | Progressive Ablation | ✅ 5 | `ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured stopped hit does not plan staged armor ablation<br>`three-round-burst.json` → three-round burst success with 2 hits and progressive ablation<br>`ranged-full-auto.json` → full auto success with 3 hits and progressive ablation at close range (+3 mod) |
 | Body Type Modifier | ✅ 5 | `ranged-single-shot.json` → structured penetrating hit applies minimum damage after BTM<br>`melee-baseline.json` → melee-bt13-vs-bt14<br>`melee-baseline.json` → melee-bt15-vs-bt15<br>`melee-baseline.json` → melee-bt10-vs-bt10<br>`melee-baseline.json` → melee-bt11-vs-bt11 |
 | Minimum Damage (1 after BTM) | ✅ 1 | `ranged-single-shot.json` → structured penetrating hit applies minimum damage after BTM |
@@ -56,7 +56,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 |---|---|---|
 | `ranged-single-shot.json` | structured hit with ranged modifier evidence | CP2020 p.99: Range DC table (Medium=20); CP2020 p.99: Aiming rounds; CP2020 p... |
 | `ranged-single-shot.json` | structured miss skips location | CP2020 p.99: Attack roll vs DC; CP2020 p.99: miss skips location/damage rolls |
-| `ranged-single-shot.json` | structured hit applies manual cover as armor layer | CP2020 p.105: Cover stopping power; CP2020 p.105: Proportional armor layering |
+| `ranged-single-shot.json` | structured hit applies manual cover before personal armor | CP2020 p.105: Cover stopping power resolves first; personal armor applies to remaining damage |
 | `ranged-single-shot.json` | structured AP penetration plans staged armor ablation | CP2020 p.106: Armor Piercing halving; CP2020 p.106: Staged Penetration; Audit... |
 | `ranged-single-shot.json` | structured AP penetration respects staged penetration disabled | Audit 6.4: stagedPenetration setting disabled; CP2020 p.106: AP halving witho... |
 | `ranged-single-shot.json` | structured layered armor ablates outer item-backed layer | CP2020 p.105: Proportional Armor Layering; CP2020 p.106: Staged Penetration o... |
@@ -64,7 +64,9 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `ranged-single-shot.json` | structured penetrating hit applies minimum damage after BTM | CP2020 p.106: Minimum 1 damage after BTM |
 | `ranged-single-shot.json` | structured head hit doubles wound damage | CP2020 p.102: Head hit doubles damage; CP2020 p.108: Head hit > 8 damage = sp... |
 | `ranged-single-shot.json` | structured limb hit over threshold surfaces severing warning | CP2020 p.108: Limb > 8 damage = severed/crushed |
-| `ranged-single-shot.json` | structured manual cover penetration has no staged armor target | CP2020 p.106: Staged Penetration only applies to item-backed armor |
+| `ranged-single-shot.json` | structured manual cover penetration emits cover ablation evidence | CP2020 p.106: Manual cover ablation is tracked in evidence without item updates |
+| `ranged-single-shot.json` | structured cover penetration can continue into personal armor | CP2020 p.105-106: Cover is resolved first; remaining damage can still penetrate personal armor |
+| `ranged-single-shot.json` | structured cover stop does not stage-ablate personal armor | CP2020 p.105-106: No personal ablation when cover fully stops damage |
 | `ranged-single-shot.json` | structured hit uses options-only aimed location | CP2020 p.99: Aimed shot (-4 to hit); CP2020 p.102: Hit Location table |
 | `ranged-single-shot.json` | structured hit without location model is manual | Audit 6.4: missing hit-location model blocks automated resolution |
 | `ranged-single-shot.json` | structured outcome warns when ammo is insufficient | Audit 6.4: Awaited update discipline — insufficient ammo blocks automated update |
@@ -167,4 +169,4 @@ by JSON fixture files:
 
 ---
 
-*Last updated: 2026-05-30*
+*Last updated: 2026-05-31*

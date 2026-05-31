@@ -6,8 +6,7 @@
 const ARMOR_WARNING_SEVERITY = "warning";
 const LAYER_ORDER = Object.freeze({
   cyberware: 0,
-  armor: 1,
-  cover: 2
+  armor: 1
 });
 
 /**
@@ -96,30 +95,54 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
  * @returns {Object} Resolution details with layers, warnings, and effectiveStoppingPower.
  */
 export function resolveArmor(weaponAP, targetSnapshot, location, options = {}) {
-  const layers = orderArmorLayers([
-    ...getEquippedArmorForLocation(targetSnapshot, location),
-    ...getManualCoverLayers(options.cover)
-  ]);
-  const warnings = buildArmorWarnings(layers);
-  const rawSP = calculateProportionalStoppingPower(layers);
-
-  const effectiveStoppingPower = weaponAP ? Math.floor(rawSP / 2) : rawSP;
+  const personalLayers = orderArmorLayers(getEquippedArmorForLocation(targetSnapshot, location));
+  const coverLayer = getManualCoverLayer(options.cover);
+  const warnings = buildArmorWarnings(personalLayers);
+  const personalRawSP = calculateProportionalStoppingPower(personalLayers);
+  const coverRawSP = coverLayer ? normalizeStoppingPower(coverLayer.stoppingPower) : 0;
+  const personalEffectiveSP = weaponAP ? Math.floor(personalRawSP / 2) : personalRawSP;
+  const coverEffectiveSP = weaponAP ? Math.floor(coverRawSP / 2) : coverRawSP;
+  const rawSP = personalRawSP + coverRawSP;
+  const effectiveStoppingPower = personalEffectiveSP + coverEffectiveSP;
+  const layers = coverLayer ? [...personalLayers, coverLayer] : personalLayers;
 
   return {
     layers,
     rawStoppingPower: rawSP,
     effectiveStoppingPower,
+    personalArmor: {
+      layers: personalLayers,
+      rawStoppingPower: personalRawSP,
+      effectiveStoppingPower: personalEffectiveSP
+    },
+    cover: {
+      present: !!coverLayer,
+      ...(coverLayer || {}),
+      rawStoppingPower: coverRawSP,
+      effectiveStoppingPower: coverEffectiveSP
+    },
     armorPiercing: !!weaponAP,
-    armorPiercingEvidence: buildArmorPiercingEvidence(weaponAP, rawSP, effectiveStoppingPower),
+    armorPiercingEvidence: buildArmorPiercingEvidence(weaponAP, {
+      rawStoppingPower: rawSP,
+      effectiveStoppingPower,
+      coverRawStoppingPower: coverRawSP,
+      coverEffectiveStoppingPower: coverEffectiveSP,
+      personalRawStoppingPower: personalRawSP,
+      personalEffectiveStoppingPower: personalEffectiveSP
+    }),
     warnings
   };
 }
 
-function buildArmorPiercingEvidence(weaponAP, rawStoppingPower, effectiveStoppingPower) {
+function buildArmorPiercingEvidence(weaponAP, values) {
   return {
     applied: !!weaponAP,
-    rawStoppingPower,
-    effectiveStoppingPower,
+    rawStoppingPower: values.rawStoppingPower,
+    effectiveStoppingPower: values.effectiveStoppingPower,
+    coverRawStoppingPower: values.coverRawStoppingPower,
+    coverEffectiveStoppingPower: values.coverEffectiveStoppingPower,
+    personalRawStoppingPower: values.personalRawStoppingPower,
+    personalEffectiveStoppingPower: values.personalEffectiveStoppingPower,
     armorDivisor: weaponAP ? 2 : 1,
     penetratingDamageDivisor: weaponAP ? 2 : 1
   };
@@ -170,24 +193,22 @@ function orderArmorLayers(layers) {
     .map(entry => entry.layer);
 }
 
-function getManualCoverLayers(cover) {
+function getManualCoverLayer(cover) {
   const coverSP = normalizeStoppingPower(cover?.stoppingPower ?? cover?.sp);
   if(coverSP <= 0) {
-    return [];
+    return null;
   }
-  return [
-    {
-      id: cover.id || "cover",
-      name: cover.name || "Cover",
-      type: "cover",
-      stoppingPower: coverSP,
-      ablation: Number(cover.ablation || 0),
-      layer: cover.layer || "hard",
-      equipped: true,
-      source: cover.source || "manual cover",
-      manual: true
-    }
-  ];
+  return {
+    id: cover.id || "cover",
+    name: cover.name || "Cover",
+    type: "cover",
+    stoppingPower: coverSP,
+    ablation: Number(cover.ablation || 0),
+    layer: cover.layer || "hard",
+    equipped: true,
+    source: cover.source || "manual cover",
+    manual: true
+  };
 }
 
 function buildArmorWarnings(layers) {

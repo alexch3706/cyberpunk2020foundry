@@ -519,6 +519,7 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
     const accumulatedAblations = {};
+    let accumulatedCoverAblation = 0;
 
     for(let i = 0; i < numHits; i++) {
       const locationResult = await resolveHitLocation(target, { ...action, targetArea: undefined }, roller);
@@ -546,13 +547,18 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         const damageRoll = await roll(roller, damageRequest);
 
         const weaponAP = !!weapon?.snapshot?.ap;
-        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
-          cover: action?.cover || action?.options?.cover
-        });
+        const coverInput = clonePlainData(action?.cover || action?.options?.cover);
+        if(coverInput && Number.isFinite(Number(coverInput.stoppingPower ?? coverInput.sp))) {
+          coverInput.ablation = accumulatedCoverAblation;
+        }
+        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, { cover: coverInput });
         const effectiveStoppingPower = armor.effectiveStoppingPower;
 
         const rawDamage = damageRoll.total;
-        const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+        const coverMitigation = Math.min(rawDamage, armor.cover?.effectiveStoppingPower || 0);
+        const remainingAfterCover = rawDamage - coverMitigation;
+        const personalMitigation = Math.min(remainingAfterCover, armor.personalArmor?.effectiveStoppingPower || 0);
+        const armorMitigation = coverMitigation + personalMitigation;
         const penetratingDamageBeforeAP = rawDamage - armorMitigation;
         let penetratingDamage = penetratingDamageBeforeAP;
 
@@ -565,9 +571,14 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         const stagedPenetration = buildStagedPenetrationEvidence({
           enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
           penetrated: rawDamage > effectiveStoppingPower,
+          rawDamage,
           armor,
           target
         });
+
+        if(stagedPenetration.evidence?.cover?.ablation?.after !== undefined) {
+          accumulatedCoverAblation = stagedPenetration.evidence.cover.ablation.after;
+        }
 
         if(stagedPenetration.plannedUpdate) {
           const update = stagedPenetration.plannedUpdate.updates[0];
@@ -922,7 +933,10 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
     cover: context.action?.cover || context.action?.options?.cover
   });
   const effectiveStoppingPower = armor.effectiveStoppingPower;
-  const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+  const coverMitigation = Math.min(rawDamage, armor.cover?.effectiveStoppingPower || 0);
+  const remainingAfterCover = rawDamage - coverMitigation;
+  const personalMitigation = Math.min(remainingAfterCover, armor.personalArmor?.effectiveStoppingPower || 0);
+  const armorMitigation = coverMitigation + personalMitigation;
   const penetratingDamageBeforeAP = rawDamage - armorMitigation;
   let penetratingDamage = penetratingDamageBeforeAP;
   if (armor.armorPiercing && penetratingDamage > 0) {
@@ -936,6 +950,7 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
   const stagedPenetration = buildStagedPenetrationEvidence({
     enabled: resolveStagedPenetrationEnabled(context.action, options),
     penetrated: rawDamage > effectiveStoppingPower,
+    rawDamage,
     armor,
     target
   });
@@ -1307,6 +1322,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
     const accumulatedAblations = {};
+    let accumulatedCoverAblation = 0;
 
     for (let i = 0; i < numHits; i++) {
       const hitAction = { ...action };
@@ -1344,13 +1360,18 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         const damageRoll = await roller(damageRequest);
 
         const weaponAP = !!weapon?.snapshot?.ap;
-        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, {
-          cover: action.cover || action.options?.cover
-        });
+        const coverInput = clonePlainData(action.cover || action.options?.cover);
+        if(coverInput && Number.isFinite(Number(coverInput.stoppingPower ?? coverInput.sp))) {
+          coverInput.ablation = accumulatedCoverAblation;
+        }
+        const armor = resolveArmor(weaponAP, targetSnapshotCopy, hitDetail.location, { cover: coverInput });
         const effectiveStoppingPower = armor.effectiveStoppingPower;
 
         const rawDamage = damageRoll.total;
-        const armorMitigation = Math.min(rawDamage, effectiveStoppingPower);
+        const coverMitigation = Math.min(rawDamage, armor.cover?.effectiveStoppingPower || 0);
+        const remainingAfterCover = rawDamage - coverMitigation;
+        const personalMitigation = Math.min(remainingAfterCover, armor.personalArmor?.effectiveStoppingPower || 0);
+        const armorMitigation = coverMitigation + personalMitigation;
         const penetratingDamageBeforeAP = rawDamage - armorMitigation;
         let penetratingDamage = penetratingDamageBeforeAP;
 
@@ -1363,9 +1384,14 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         const stagedPenetration = buildStagedPenetrationEvidence({
           enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
           penetrated: rawDamage > effectiveStoppingPower,
+          rawDamage,
           armor,
           target
         });
+
+        if(stagedPenetration.evidence?.cover?.ablation?.after !== undefined) {
+          accumulatedCoverAblation = stagedPenetration.evidence.cover.ablation.after;
+        }
 
         if(stagedPenetration.plannedUpdate) {
           const update = stagedPenetration.plannedUpdate.updates[0];
@@ -1479,7 +1505,7 @@ function resolveStagedPenetrationEnabled(action, resolverOptions) {
   return true;
 }
 
-function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) {
+function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor, target }) {
   if(!enabled) {
     return {
       evidence: {
@@ -1500,9 +1526,48 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
     };
   }
 
-  const affectedLayer = [...(armor.layers || [])].reverse().find(layer => {
+  const coverEffective = Number(armor.cover?.effectiveStoppingPower || 0);
+  const parsedCoverAblation = Number(armor.cover?.ablation);
+  const rawCoverAblation = Number.isFinite(parsedCoverAblation) ? parsedCoverAblation : 0;
+  const coverPenetrated = !!armor.cover?.present && rawDamage > coverEffective;
+  const coverEvidence = coverPenetrated ? {
+    before: rawCoverAblation,
+    after: rawCoverAblation + 1,
+    applied: true
+  } : undefined;
+
+  const remainingAfterCover = Math.max(0, Number(rawDamage || 0) - Math.min(Number(rawDamage || 0), coverEffective));
+  const personalEffective = Number(armor.personalArmor?.effectiveStoppingPower || 0);
+  const penetratedPersonalArmor = remainingAfterCover > personalEffective;
+
+  const affectedLayer = [...(armor.personalArmor?.layers || armor.layers || [])].reverse().find(layer => {
     return layer.type === "armor" && layer.id && layer.updatePath;
   });
+
+  if(!penetratedPersonalArmor) {
+    if(coverEvidence) {
+      return {
+        evidence: {
+          enabled: true,
+          applied: true,
+          reason: "penetrated-manual-cover",
+          cover: {
+            id: armor.cover?.id || "cover",
+            name: armor.cover?.name || "Cover",
+            source: armor.cover?.source || "manual cover",
+            ablation: coverEvidence
+          }
+        }
+      };
+    }
+    return {
+      evidence: {
+        enabled: true,
+        applied: false,
+        reason: "no-penetration"
+      }
+    };
+  }
 
   if(!affectedLayer) {
     const message = "Staged penetration penetrated armor, but no item-backed armor coverage update path was available.";
@@ -1510,7 +1575,8 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
       evidence: {
         enabled: true,
         applied: false,
-        reason: "no-item-backed-armor"
+        reason: "no-item-backed-armor",
+        ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
       },
       warning: {
         code: "staged-penetration-no-update-target",
@@ -1529,7 +1595,8 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
         reason: "missing-target-actor-uuid",
         itemId: affectedLayer.id,
         coverageKey: affectedLayer.coverageKey,
-        updatePath: affectedLayer.updatePath
+        updatePath: affectedLayer.updatePath,
+        ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
       },
       warning: {
         code: "staged-penetration-missing-actor-uuid",
@@ -1550,12 +1617,13 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, armor, target }) 
     evidence: {
       enabled: true,
       applied: true,
-      reason: "penetrated-item-backed-armor",
+      reason: coverEvidence ? "penetrated-manual-cover-and-item-backed-armor" : "penetrated-item-backed-armor",
       itemId: affectedLayer.id,
       coverageKey: affectedLayer.coverageKey,
       updatePath: affectedLayer.updatePath,
       before,
-      after
+      after,
+      ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
     },
     plannedUpdate: {
       actorUuid: target.actorUuid,
