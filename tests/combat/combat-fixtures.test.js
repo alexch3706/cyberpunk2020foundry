@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
 import { resolveBodyTypeDamage } from "../../module/combat/attack-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
-import { resolveSavePromptsForTarget } from "../../module/combat/save-resolver.js";
+import { isActorDeadForDeathSaves, isActorStabilizedForDeathSaves, requiresRecurringDeathSave, resolveSavePromptsForTarget } from "../../module/combat/save-resolver.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
@@ -27,6 +27,7 @@ export async function runCombatFixtures() {
   assertBodyTypeDamageResolver();
   assertWoundPlanning();
   assertSavePromptResolution();
+  assertDeathSaveStateHelpers();
   assertArmorResolver();
   await assertCombatResolverRouting();
   assertSettingsHelpers();
@@ -845,33 +846,55 @@ function assertSavePromptResolution() {
     location: "torso",
     finalDamage: 0
   }).targets[0]), {
+    saves: [],
+    warnings: []
+  }, "Existing Mortal target does not receive attack-time recurring Death Save reminder");
+
+  assert.deepEqual(resolveSavePromptsForTarget(buildWoundOutcome({
+    currentDamage: 41,
+    location: "torso",
+    finalDamage: 2
+  }).targets[0]), {
+    saves: [],
+    warnings: [
+      {
+        code: "target-already-dead",
+        severity: "warning",
+        message: "Target is dead or Mortal 7+; do not generate a new Death Save prompt."
+      }
+    ]
+  }, "Mortal 7+ target receives no new Stun/Shock or Death prompt");
+
+  assert.deepEqual(resolveSavePromptsForTarget(buildWoundOutcome({
+    currentDamage: 13,
+    location: "torso",
+    finalDamage: 2,
+    deathSaveState: {
+      stabilized: true
+    }
+  }).targets[0]), {
     saves: [
       {
-        type: "death",
+        type: "stun",
         status: "pending",
-        reason: "recurring-mortal-save",
+        reason: "damage-taken",
         bodyType: 6,
-        threshold: 6,
-        targetNumber: 6,
-        penalty: 0,
-        mortalLevel: 0,
+        threshold: 3,
+        targetNumber: 3,
+        penalty: 3,
         woundState: {
           level: 4,
           label: "Mortal 0"
         },
-        reminder: {
-          recurring: true,
-          requiresStabilization: true
-        },
         evidence: {
           previousDamage: 13,
-          nextDamage: 13,
-          damageDelta: 0
+          nextDamage: 15,
+          damageDelta: 2
         }
       }
     ],
     warnings: []
-  }, "Existing Mortal target receives recurring Death Save reminder");
+  }, "Stabilized Mortal target suppresses attack-time Death prompts while preserving Stun/Shock");
 
   const noDamageOutcome = buildWoundOutcome({
     currentDamage: 4,
@@ -927,7 +950,16 @@ function assertSavePromptResolution() {
   assert.deepEqual(buildCombatChatData(criticalOutcome, criticalPlan).targets[0].saves, criticalOutcome.targets[0].saves, "chat data exposes save prompts");
 }
 
-function buildWoundOutcome({ currentDamage, location, locationLabel = undefined, finalDamage, specialCases = undefined, bodyType = 6 }) {
+function assertDeathSaveStateHelpers() {
+  assert.equal(requiresRecurringDeathSave({ system: { damage: 13, stats: { bt: { total: 6 } } } }), true, "Mortal actor requires recurring Death Save");
+  assert.equal(requiresRecurringDeathSave({ system: { damage: 12, stats: { bt: { total: 6 } } } }), false, "Critical actor does not require recurring Death Save");
+  assert.equal(requiresRecurringDeathSave({ system: { damage: 13, deathSave: { stabilized: true }, stats: { bt: { total: 6 } } } }), false, "stabilized Mortal actor suppresses recurring Death Save");
+  assert.equal(requiresRecurringDeathSave({ system: { damage: 41, stats: { bt: { total: 6 } } } }), false, "Mortal 7+ actor is treated as dead");
+  assert.equal(isActorDeadForDeathSaves({ system: { deathSave: { failed: true } } }), true, "failed death save state is dead");
+  assert.equal(isActorStabilizedForDeathSaves({ system: { deathSave: { stabilized: true } } }), true, "deathSave.stabilized is recognized");
+}
+
+function buildWoundOutcome({ currentDamage, location, locationLabel = undefined, finalDamage, specialCases = undefined, bodyType = 6, deathSaveState = undefined }) {
   const stats = bodyType === undefined
     ? {}
     : {
@@ -942,7 +974,8 @@ function buildWoundOutcome({ currentDamage, location, locationLabel = undefined,
           actorUuid: "Actor.target",
           snapshot: {
             stats,
-            damage: currentDamage
+            damage: currentDamage,
+            ...(deathSaveState ? { deathSave: deathSaveState } : {})
           }
         },
         manualResolution: {

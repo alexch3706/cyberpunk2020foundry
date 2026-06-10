@@ -360,6 +360,11 @@
     "CYBERPUNK.Rolls": "Tiradas",
     "CYBERPUNK.Initiative": "Iniciativa",
     "CYBERPUNK.StunDeathSave": "Salvación contra Aturdimiento/Muerte",
+    "CYBERPUNK.DeathSaveReminderTitle": "Recordatorio de Tirada de Muerte",
+    "CYBERPUNK.DeathSaveReminderBody": "{actor}: {woundState}, Tipo Corporal {bodyType}, Penalizador {penalty}, Umbral {threshold}, {state}",
+    "CYBERPUNK.DeathSaveReminderPending": "Pendiente",
+    "CYBERPUNK.DeathSaveReminderDead": "Muerto/manual",
+    "CYBERPUNK.DeathSaveReminderStabilized": "Estabilizado/manual",
     "CYBERPUNK.UnderThresholdMessage": "Realiza una tirada por debajo de los umbrales para tener éxito",
     "CYBERPUNK.Save": "Guardar",
     

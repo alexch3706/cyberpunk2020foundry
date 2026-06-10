@@ -6,7 +6,7 @@ This file tracks technical debt and deferred items from code reviews.
 
 - **Incomplete Test Coverage for Failure Paths**: The current test coverage does not verify error handling during adapter rendering or ChatMessage creations/updates.
 - **Redundant Adapter Parameter Defaults**: `options.adapter || createFoundryCombatAdapter()` is duplicated across functions.
-- **Concurrency - Double Click on Confirm**: Double clicking the Dialog buttons could trigger mutations multiple times before the message state settles.
+- **Concurrency - Double Click on Confirm**: **Resolved in Story 7.4 (2026-05-31)** via one-shot commit guard in `combat-commit.js`.
 
 ## Deferred from: code review of 2-6-add-single-shot-fixtures-and-foundry-manual-checks.md (2026-05-27)
 
@@ -17,11 +17,11 @@ This file tracks technical debt and deferred items from code reviews.
 ## Deferred from: code review of 3-3-apply-armor-piercing-and-staged-penetration.md (2026-05-27)
 
 - **Multiple penetrations against the same armor item can collapse to one ablation**: Future multi-hit outcomes should plan cumulative armor ablation instead of repeated absolute `before + 1` updates from one snapshot.
-- **Stale preview can overwrite newer armor ablation on confirm**: Broader preview/confirm concurrency needs a current-value check, version guard, or delta-style update for armor ablation.
+- **Stale preview can overwrite newer armor ablation on confirm**: **Resolved in Story 7.4 (2026-05-31)** via baseline freshness validation before commit.
 
 ## Deferred from: code review of 3-5-apply-wound-state-and-special-damage-cases.md (2026-05-27)
 
-- **Stale preview can overwrite newer target damage on confirm**: Broader preview/confirm concurrency needs a current-value check, version guard, or delta-style update before absolute `system.damage` updates are applied.
+- **Stale preview can overwrite newer target damage on confirm**: **Resolved in Story 7.4 (2026-05-31)** via baseline freshness validation before commit.
 
 ## Deferred from: code review of 3-6-generate-stun-and-death-save-prompts.md (2026-05-28)
 
@@ -83,3 +83,7 @@ This file tracks technical debt and deferred items from code reviews.
 - Synchronous dice evaluation is deprecated [module/combat/combat-resolver.js]: Deprecated in V10+, but required by current architecture.
 - activeRoller formula extraction and exploding dice logic [module/combat/combat-resolver.js]: Dice logic is brittle but functional for MVP.
 - Hardcoded module ID for settings [module/item/item.js]: cyberpunk2020-rilerena is the pre-existing module key.
+
+## Deferred from: code review of 7-5-wounds-and-death-saves-refactor.md (2026-06-10)
+
+- [x] [Review][Defer] Magic numbers for wound levels [module/combat/save-resolver.js] — deferred, pre-existing

@@ -254,7 +254,8 @@ export class CyberpunkItem extends Item {
               resolved = true;
               resolve(await previewAndApplyCombatOutcome(outcome, {
                 decision: "confirm",
-                messageId: previewResult.messageId
+                messageId: previewResult.messageId,
+                plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates
               }));
             }
           },
@@ -265,7 +266,8 @@ export class CyberpunkItem extends Item {
               resolved = true;
               resolve(await previewAndApplyCombatOutcome(outcome, {
                 decision: "cancel",
-                messageId: previewResult.messageId
+                messageId: previewResult.messageId,
+                plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates
               }));
             }
           }
@@ -276,7 +278,8 @@ export class CyberpunkItem extends Item {
             resolved = true;
             previewAndApplyCombatOutcome(outcome, {
               decision: "cancel",
-              messageId: previewResult.messageId
+              messageId: previewResult.messageId,
+              plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates
             }).then(resolve);
           }
         }

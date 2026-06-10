@@ -363,6 +363,11 @@
     "CYBERPUNK.Rolls": "Rolls",
     "CYBERPUNK.Initiative": "Initiative",
     "CYBERPUNK.StunDeathSave": "Stun/Death Save",
+    "CYBERPUNK.DeathSaveReminderTitle": "Death Save Reminder",
+    "CYBERPUNK.DeathSaveReminderBody": "{actor}: {woundState}, Body Type {bodyType}, Penalty {penalty}, Threshold {threshold}, {state}",
+    "CYBERPUNK.DeathSaveReminderPending": "Pending",
+    "CYBERPUNK.DeathSaveReminderDead": "Dead/manual",
+    "CYBERPUNK.DeathSaveReminderStabilized": "Stabilized/manual",
     "CYBERPUNK.UnderThresholdMessage": "Roll under the thresholds to succeed",
     "CYBERPUNK.Save": "Save",
     

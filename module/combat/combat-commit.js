@@ -12,6 +12,9 @@ const UNSAFE_PLAN_WARNING_CODES = Object.freeze([
   "conflicting-update-path",
   "conflicting-embedded-update-path"
 ]);
+const COMMIT_GUARD_REGISTRY = new Map();
+const COMMIT_GUARD_TTL_MS = 5 * 60 * 1000;
+const COMMIT_GUARD_MAX_ENTRIES = 2000;
 
 export function buildCombatPreviewData(outcome = {}, plannedUpdates = undefined, options = {}) {
   const plan = plannedUpdates || planCombatUpdates(outcome);
@@ -42,9 +45,11 @@ export function buildCombatPreviewData(outcome = {}, plannedUpdates = undefined,
 }
 
 export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
-  const plan = options.plannedUpdates || planCombatUpdates(outcome);
-  const preview = buildCombatPreviewData(outcome, plan, options);
   const adapter = options.adapter || createFoundryCombatAdapter();
+  const rawPlan = options.plannedUpdates || planCombatUpdates(outcome);
+  const plan = await ensureCommitPlanPrepared(rawPlan, adapter);
+  const preview = buildCombatPreviewData(outcome, plan, options);
+  const commitKey = resolveCommitKey(options, outcome, plan);
 
   let messageId = options.messageId;
   const warnings = [];
@@ -96,7 +101,33 @@ export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
       };
     }
 
-    const result = await applyCombatUpdates(plan, adapter);
+    if(commitKey) {
+      const duplicateWarning = acquireCommitGuard(commitKey);
+      if(duplicateWarning) {
+        return {
+          status: COMBAT_CHAT_STATUS.manual,
+          chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
+          preview,
+          messageId,
+          applied: createEmptyCounts(),
+          skipped: countPlanUpdates(plan),
+          warnings: [duplicateWarning, ...preview.warnings, ...warnings]
+        };
+      }
+    }
+
+    let result;
+    try {
+      result = await applyCombatUpdates(plan, adapter);
+    } finally {
+      if(commitKey) {
+        if(result?.status !== COMBAT_CHAT_STATUS.committed) {
+          releaseCommitGuard(commitKey);
+        } else {
+          markCommitGuardCommitted(commitKey);
+        }
+      }
+    }
 
     try {
       messageId = await createOrUpdateCombatChatMessage(outcome, result.status, {
@@ -136,7 +167,10 @@ export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
   return {
     status: preview.status,
     chatData: buildFinalChatData(outcome, plan, preview.status),
-    preview,
+    preview: {
+      ...preview,
+      plan
+    },
     messageId,
     applied: createEmptyCounts(),
     skipped: countPlanUpdates(plan),
@@ -153,6 +187,10 @@ export async function applyCombatUpdates(plan = {}, adapter = createFoundryComba
   const preflight = await preflightCombatUpdates(plan, adapter);
   if(preflight.warnings.length > 0) {
     return blockedResult(plan, preflight.warnings);
+  }
+  const freshnessWarnings = validatePlanFreshness(plan, preflight);
+  if(freshnessWarnings.length > 0) {
+    return blockedResult(plan, freshnessWarnings);
   }
 
   const applied = createEmptyCounts();
@@ -212,6 +250,129 @@ export async function applyCombatUpdates(plan = {}, adapter = createFoundryComba
     skipped: createEmptyCounts(),
     warnings: []
   };
+}
+
+async function ensureCommitPlanPrepared(plan = {}, adapter = createFoundryCombatAdapter()) {
+  const clonedPlan = clonePlainData(plan || {});
+  if(!clonedPlan.commitNonce) {
+    clonedPlan.commitNonce = typeof globalThis.crypto?.randomUUID === "function" ? globalThis.crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+  if(clonedPlan?.freshnessChecks?.prepared) {
+    return clonedPlan;
+  }
+
+  const checks = {
+    itemUpdates: [],
+    actorUpdates: [],
+    embeddedItemUpdates: []
+  };
+  for(const entry of clonedPlan.itemUpdates || []) {
+    const item = await adapter.resolveItem(entry.itemUuid).catch(() => undefined);
+    if(!item) {
+      continue;
+    }
+    for(const path of Object.keys(entry.update || {})) {
+      checks.itemUpdates.push({
+        itemUuid: entry.itemUuid,
+        path,
+        baselineValue: clonePlainData(readDataPath(item, path))
+      });
+    }
+  }
+  for(const entry of clonedPlan.actorUpdates || []) {
+    const actor = await adapter.resolveActor(entry.actorUuid).catch(() => undefined);
+    if(!actor) {
+      continue;
+    }
+    for(const path of Object.keys(entry.update || {})) {
+      checks.actorUpdates.push({
+        actorUuid: entry.actorUuid,
+        path,
+        baselineValue: clonePlainData(readDataPath(actor, path))
+      });
+    }
+  }
+  for(const batch of clonedPlan.embeddedItemUpdates || []) {
+    const actor = await adapter.resolveActor(batch.actorUuid).catch(() => undefined);
+    if(!actor) {
+      continue;
+    }
+    for(const update of batch.updates || []) {
+      const itemId = update?._id;
+      const embedded = resolveEmbeddedDocument(actor, batch.type, itemId);
+      if(!embedded) {
+        continue;
+      }
+      for(const path of Object.keys(update || {})) {
+        if(path === "_id") {
+          continue;
+        }
+        checks.embeddedItemUpdates.push({
+          actorUuid: batch.actorUuid,
+          type: batch.type,
+          itemId,
+          path,
+          baselineValue: clonePlainData(readDataPath(embedded, path))
+        });
+      }
+    }
+  }
+  clonedPlan.freshnessChecks = {
+    prepared: true,
+    ...checks
+  };
+  return clonedPlan;
+}
+
+function validatePlanFreshness(plan, preflight) {
+  const warnings = [];
+  const checks = plan?.freshnessChecks;
+  if(!checks?.prepared) {
+    return warnings;
+  }
+
+  for(const check of checks.itemUpdates || []) {
+    const item = preflight.items.get(check.itemUuid);
+    if(!item) {
+      warnings.push(commitWarning("stale-preview-blocked", `Item missing before confirm (${check.itemUuid}). Commit was blocked.`));
+      return warnings;
+    }
+    const currentValue = clonePlainData(readDataPath(item, check.path));
+    if(!isFreshnessValueEqual(currentValue, check.baselineValue)) {
+      warnings.push(commitWarning("stale-preview-blocked", `Item state changed before confirm (${check.itemUuid} ${check.path}). Commit was blocked.`));
+      return warnings;
+    }
+  }
+  for(const check of checks.actorUpdates || []) {
+    const actor = preflight.actors.get(check.actorUuid);
+    if(!actor) {
+      warnings.push(commitWarning("stale-preview-blocked", `Actor missing before confirm (${check.actorUuid}). Commit was blocked.`));
+      return warnings;
+    }
+    const currentValue = clonePlainData(readDataPath(actor, check.path));
+    if(!isFreshnessValueEqual(currentValue, check.baselineValue)) {
+      warnings.push(commitWarning("stale-preview-blocked", `Actor state changed before confirm (${check.actorUuid} ${check.path}). Commit was blocked.`));
+      return warnings;
+    }
+  }
+  for(const check of checks.embeddedItemUpdates || []) {
+    const actor = preflight.actors.get(check.actorUuid);
+    if(!actor) {
+      warnings.push(commitWarning("stale-preview-blocked", `Actor missing before confirm (${check.actorUuid}). Commit was blocked.`));
+      return warnings;
+    }
+    const embedded = resolveEmbeddedDocument(actor, check.type, check.itemId);
+    if(!embedded) {
+      warnings.push(commitWarning("stale-preview-blocked", `Embedded item is missing before confirm (${check.actorUuid} ${check.itemId}). Commit was blocked.`));
+      return warnings;
+    }
+    const currentValue = clonePlainData(readDataPath(embedded, check.path));
+    if(!isFreshnessValueEqual(currentValue, check.baselineValue)) {
+      warnings.push(commitWarning("stale-preview-blocked", `Embedded item state changed before confirm (${check.actorUuid} ${check.itemId} ${check.path}). Commit was blocked.`));
+      return warnings;
+    }
+  }
+  return warnings;
 }
 
 export function createFoundryCombatAdapter() {
@@ -470,6 +631,105 @@ function clonePlainData(data) {
     return undefined;
   }
   return JSON.parse(JSON.stringify(data));
+}
+
+function isFreshnessValueEqual(a, b) {
+  if (typeof globalThis.foundry?.utils?.objectsEqual === "function") {
+    return globalThis.foundry.utils.objectsEqual(a, b);
+  }
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function readDataPath(document, path) {
+  if(!path || typeof path !== "string") {
+    return undefined;
+  }
+  if (typeof globalThis.foundry?.utils?.getProperty === "function") {
+    return globalThis.foundry.utils.getProperty(document, path);
+  }
+  const parts = path.split(".");
+  let current = document;
+  for(const part of parts) {
+    if(current == null || typeof current !== "object") {
+      return undefined;
+    }
+    current = current[part];
+  }
+  return current;
+}
+
+function resolveEmbeddedDocument(actor, type, itemId) {
+  if(!actor || !type || !itemId) {
+    return undefined;
+  }
+  const collection = actor.items;
+  if(collection && typeof collection.get === "function") {
+    const found = collection.get(itemId);
+    if(found) {
+      return found;
+    }
+  }
+  const fallback = actor[type];
+  if(fallback && typeof fallback.get === "function") {
+    return fallback.get(itemId);
+  }
+  if(Array.isArray(fallback)) {
+    return fallback.find(entry => entry?._id === itemId || entry?.id === itemId);
+  }
+  return undefined;
+}
+
+function resolveCommitKey(options, outcome, plan) {
+  if(typeof options.commitKey === "string" && options.commitKey.length > 0) {
+    return options.commitKey;
+  }
+  const commitNonce = typeof plan?.commitNonce === "string" && plan.commitNonce.length > 0 ? plan.commitNonce : "";
+  if(typeof options.messageId === "string" && options.messageId.length > 0 && commitNonce) {
+    return `message:${options.messageId}:${commitNonce}`;
+  }
+  if(commitNonce) {
+    return `preview:${commitNonce}`;
+  }
+  const fallbackNonce = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  return `ephemeral:${fallbackNonce}`;
+}
+
+function acquireCommitGuard(commitKey) {
+  pruneCommitGuardRegistry();
+  const existing = COMMIT_GUARD_REGISTRY.get(commitKey);
+  if(existing?.committed || existing?.pending) {
+    return commitWarning("duplicate-confirm-blocked", "Duplicate confirm attempt was blocked. This preview can only be committed once.");
+  }
+  COMMIT_GUARD_REGISTRY.set(commitKey, { pending: true, committed: false, touchedAt: Date.now() });
+  return null;
+}
+
+function markCommitGuardCommitted(commitKey) {
+  COMMIT_GUARD_REGISTRY.set(commitKey, { pending: false, committed: true, touchedAt: Date.now() });
+}
+
+function releaseCommitGuard(commitKey) {
+  COMMIT_GUARD_REGISTRY.delete(commitKey);
+}
+
+function pruneCommitGuardRegistry() {
+  const now = Date.now();
+  for(const [key, entry] of COMMIT_GUARD_REGISTRY.entries()) {
+    if(!entry?.pending && (now - (entry?.touchedAt || 0)) > COMMIT_GUARD_TTL_MS) {
+      COMMIT_GUARD_REGISTRY.delete(key);
+    }
+  }
+
+  if(COMMIT_GUARD_REGISTRY.size <= COMMIT_GUARD_MAX_ENTRIES) {
+    return;
+  }
+  const sortedByTouchedAt = [...COMMIT_GUARD_REGISTRY.entries()]
+    .filter(([, entry]) => !entry?.pending)
+    .sort((a, b) => (a[1]?.touchedAt || 0) - (b[1]?.touchedAt || 0));
+  const overflow = COMMIT_GUARD_REGISTRY.size - COMMIT_GUARD_MAX_ENTRIES;
+  for(let index = 0; index < overflow && index < sortedByTouchedAt.length; index += 1) {
+    COMMIT_GUARD_REGISTRY.delete(sortedByTouchedAt[index][0]);
+  }
 }
 
 async function resolveFoundryDocument(uuid) {

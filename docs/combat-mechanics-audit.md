@@ -24,7 +24,7 @@ The system currently implements a robust set of the Corebook mechanics within th
 
 **Saves & Wound States:**
 - **Stun/Shock Saves:** Properly triggered based on incoming damage and current wound state.
-- **Death Saves:** Triggered upon entering mortal states, dynamically calculating penalties.
+- **Death Saves:** Triggered upon entering mortal states, dynamically calculating penalties. Recurring Mortal Death Save reminders are tied to active Combat turn start and GM-only reminder emission.
 - **Wound Track Transition:** Smooth transition through Light, Critical, Mortal states.
 
 ## 2. Simplifications & Architecture Adjustments
@@ -32,7 +32,7 @@ To integrate seamlessly with a Virtual Tabletop environment, several rules have 
 
 - **State Planner Architecture:** Instead of directly modifying character sheets, all attack results are collected into a `CombatOutcome` object, then run through a `state-planner` to create a Preview/Confirm dialog. This ensures a "single source of truth" and allows the GM/Player to intervene.
 - **Cover Resolution Updated:** Manual cover now resolves as a separate first stage before personal armor; personal armor is evaluated only against remaining damage.
-- **Death Saves Bound to Attacks:** Rather than keeping track of time/turns (which is complex in a VTT), Death Save reminders are triggered organically by attack events.
+- **Death Save Reminder Boundary:** Attack resolution keeps immediate Stun/Shock and first Mortal-entry Death Save evidence. Recurring Mortal reminders are emitted from the combat turn hook instead of attack events.
 
 ## 3. Missing Mechanics & Gaps (Deferred)
 According to the `deferred-mechanics.js` registry and codebase scans, the following mechanics are missing, deferred, or partially implemented:
@@ -52,10 +52,9 @@ According to the `deferred-mechanics.js` registry and codebase scans, the follow
 **Health & Status Tracking:**
 - **Key Techniques (Martial Arts):** Bonus is incorrectly applied even when the martial art skill level is 0.
 - **Death Save Logic:** 
-  - Save prompts are generated for already-dead targets.
-  - Recurring death save reminders are created even when the target is stabilized.
-  - Targets taking Mortal 7+ damage should automatically be deceased, but saves are still generated.
+  - Failed/dead and stabilized states are checked before creating new Death Save prompts or recurring turn reminders.
+  - Mortal 7+ suppresses new save prompts as a dead/manual state; persistent dead-state automation remains manual.
 - **Hardcoded Limbs:** The system's limb location keys do not currently include hands or feet for specific crushing/severing warnings.
 
 ## Conclusion
-The current Combat Resolver accurately models the majority of essential Friday Night Firefight mechanics (single target/burst attacks, basic armor layering, BTM, wounds). Future development should prioritize the deferred mechanics—particularly the precise handling of Death Saves and Shotgun/Area of Effect rules—to achieve complete Corebook fidelity.
+The current Combat Resolver accurately models the majority of essential Friday Night Firefight mechanics (single target/burst attacks, basic armor layering, BTM, wounds). Future development should prioritize the remaining deferred mechanics, particularly persistent dead-state automation and Shotgun/Area of Effect rules, to achieve complete Corebook fidelity.

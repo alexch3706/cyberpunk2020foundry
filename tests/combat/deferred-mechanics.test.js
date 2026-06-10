@@ -69,8 +69,10 @@ export function runDeferredMechanicsTests() {
     assert.ok(manualEntries.every(e => e.status === "manual"));
   });
 
-  test("getDeferredByStatus returns empty array for unused status", () => {
-    assert.deepEqual(getDeferredByStatus("wired"), []);
+  test("getDeferredByStatus returns wired entries when implemented mechanics are marked wired", () => {
+    const wiredEntries = getDeferredByStatus("wired");
+    assert.ok(wiredEntries.length >= 1);
+    assert.ok(wiredEntries.every(e => e.status === "wired"));
   });
 
   const passed = results.filter(r => r.passed).length;

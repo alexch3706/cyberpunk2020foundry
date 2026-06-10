@@ -93,6 +93,17 @@ Verify that canceling a roll updates the chat card status in-place and leaves da
    - Confirm the banner status is updated in-place to **[CANCELED] - Discarded** in a red border.
    - Confirm no database changes were applied.
 
+## 3.3 Concurrency Race Checks (Story 7.4)
+
+1. Run a normal preview and rapidly click **Confirm** twice (or press Enter repeatedly if confirm is focused).
+2. Verify only one state commit happens:
+   - Attacker ammo decrements exactly once.
+   - Target damage and armor ablation update exactly once.
+   - Chat card does not show duplicate mutation effects.
+3. Open two overlapping previews that would mutate the same attacker ammo and target actor/armor state.
+4. Confirm the first preview, then confirm the older second preview.
+5. Verify the second confirm is blocked/manualized with a stale-state warning and does not overwrite newer values.
+
 ---
 
 ## 4. Manual Resolution Fallbacks
@@ -178,8 +189,14 @@ Verify that the core combat resolver faithfully applies the Cyberpunk 2020 damag
 2. Roll an attack that puts the target into a **Mortal** wound state (damage >= 13):
    - Verify that the preview lists both a pending **Stun Save** (penalty `-3`) and a pending **Death Save** (penalty `0`).
 3. Target an already **Mortal** defender and roll a stopped hit (0 damage):
-   - Verify that the preview lists a pending **recurring Death Save reminder** (to remind the GM/player to roll death saves each turn).
-4. Verify that confirming these states persists the damage updates on the target sheet, and the pending saves are printed to the chat card for player/GM resolution.
+   - Verify that the preview does **not** list an attack-time recurring Death Save reminder.
+4. Put a Mortal defender into an active Combat encounter and advance to that combatant's turn as GM:
+   - Verify that exactly one turn-start **Death Save Reminder** chat message appears.
+   - Verify that the reminder identifies the actor, Mortal level, Body Type, penalty, and threshold.
+   - Verify that refreshing or advancing on a non-GM client does not duplicate the reminder.
+5. Mark or represent the defender as stabilized/dead where supported, or set damage to Mortal 7+:
+   - Verify turn-start reminders are suppressed and Mortal 7+ damage surfaces as dead/manual state rather than a new Death Save prompt.
+6. Verify that confirming attack states persists the damage updates on the target sheet, and pending attack-time saves are printed to the chat card for player/GM resolution.
 
 ---
 

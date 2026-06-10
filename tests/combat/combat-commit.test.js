@@ -18,6 +18,8 @@ export async function runCombatCommitTests() {
   await assertResolverRejectionBlocksCommit();
   await assertEmbeddedUpdateWithoutIdBlocksCommit();
   await assertWriteRejectionReturnsPartialFailure();
+  await assertDuplicateConfirmIsBlocked();
+  await assertStalePreviewIsBlocked();
   await assertChatOutcomeLifecycle();
 
   return {
@@ -350,9 +352,30 @@ function buildOutcome(overrides = {}) {
 function createFakeAdapter(options = {}) {
   const calls = [];
   let nextMessageId = 1;
+  const state = {
+    items: clonePlainData(options.initialItems || {}),
+    actors: clonePlainData(options.initialActors || {})
+  };
+
+  const ensureItemState = (itemUuid) => {
+    if(!state.items[itemUuid]) {
+      state.items[itemUuid] = {};
+    }
+    return state.items[itemUuid];
+  };
+  const ensureActorState = (actorUuid) => {
+    if(!state.actors[actorUuid]) {
+      state.actors[actorUuid] = { system: {}, items: {} };
+    }
+    if(!state.actors[actorUuid].items) {
+      state.actors[actorUuid].items = {};
+    }
+    return state.actors[actorUuid];
+  };
 
   return {
     calls,
+    state,
     async resolveItem(itemUuid) {
       if((options.rejectItems || []).includes(itemUuid)) {
         throw new Error(`Cannot resolve ${itemUuid}`);
@@ -360,8 +383,11 @@ function createFakeAdapter(options = {}) {
       if((options.missingItems || []).includes(itemUuid)) {
         return undefined;
       }
+      const itemState = ensureItemState(itemUuid);
       return {
+        system: itemState.system || (itemState.system = {}),
         async update(update) {
+          applyUpdateData(itemState, update);
           calls.push({
             type: "item.update",
             uuid: itemUuid,
@@ -377,10 +403,27 @@ function createFakeAdapter(options = {}) {
       if((options.missingActors || []).includes(actorUuid)) {
         return undefined;
       }
+      const actorState = ensureActorState(actorUuid);
       return {
+        system: actorState.system || (actorState.system = {}),
+        items: {
+          get(itemId) {
+            return actorState.items[itemId] ? { ...actorState.items[itemId], system: actorState.items[itemId].system || {} } : undefined;
+          }
+        },
         async updateEmbeddedDocuments(documentType, updates) {
           if((options.rejectEmbeddedActors || []).includes(actorUuid)) {
             throw new Error(`Cannot update embedded documents for ${actorUuid}`);
+          }
+          for(const update of updates || []) {
+            const itemId = update?._id;
+            if(!itemId) {
+              continue;
+            }
+            if(!actorState.items[itemId]) {
+              actorState.items[itemId] = { _id: itemId, system: {} };
+            }
+            applyUpdateData(actorState.items[itemId], update);
           }
           calls.push({
             type: "actor.updateEmbeddedDocuments",
@@ -393,6 +436,7 @@ function createFakeAdapter(options = {}) {
           if((options.rejectActorUpdates || []).includes(actorUuid)) {
             throw new Error(`Cannot update actor ${actorUuid}`);
           }
+          applyUpdateData(actorState, update);
           calls.push({
             type: "actor.update",
             uuid: actorUuid,
@@ -426,6 +470,75 @@ function createFakeAdapter(options = {}) {
       });
     }
   };
+}
+
+async function assertDuplicateConfirmIsBlocked() {
+  const outcome = buildOutcome();
+  const adapter = createFakeAdapter({
+    initialItems: {
+      "Actor.attacker.Item.heavy-pistol": { system: { shotsLeft: 10 } }
+    },
+    initialActors: {
+      "Actor.target": {
+        system: { damage: 0 },
+        items: {
+          "armor-jacket": { _id: "armor-jacket", system: { coverage: { torso: { ablation: 0 } } } }
+        }
+      }
+    }
+  });
+  const previewResult = await previewAndApplyCombatOutcome(outcome, { adapter });
+  const firstConfirm = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "confirm",
+    messageId: previewResult.messageId,
+    plannedUpdates: previewResult.preview.plan
+  });
+  const secondConfirm = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "confirm",
+    messageId: previewResult.messageId,
+    plannedUpdates: previewResult.preview.plan
+  });
+
+  assert.equal(firstConfirm.status, COMBAT_CHAT_STATUS.committed, "first confirm should commit");
+  assert.equal(secondConfirm.status, COMBAT_CHAT_STATUS.manual, "duplicate confirm should be blocked");
+  assert.equal(secondConfirm.warnings[0].code, "duplicate-confirm-blocked", "duplicate confirm warning code");
+  const mutations = adapter.calls.filter(call => call.type === "item.update" || call.type === "actor.update" || call.type === "actor.updateEmbeddedDocuments");
+  assert.equal(mutations.length, 3, "duplicate confirm must not add extra mutations");
+  const chatUpdates = adapter.calls.filter(call => call.type === "chatMessage.update");
+  assert.equal(chatUpdates.length, 2, "duplicate confirm should still update chat message to manual status");
+}
+
+async function assertStalePreviewIsBlocked() {
+  const outcome = buildOutcome();
+  const adapter = createFakeAdapter({
+    initialItems: {
+      "Actor.attacker.Item.heavy-pistol": { system: { shotsLeft: 10 } }
+    },
+    initialActors: {
+      "Actor.target": {
+        system: { damage: 0 },
+        items: {
+          "armor-jacket": { _id: "armor-jacket", system: { coverage: { torso: { ablation: 0 } } } }
+        }
+      }
+    }
+  });
+  const previewResult = await previewAndApplyCombatOutcome(outcome, { adapter });
+  adapter.state.items["Actor.attacker.Item.heavy-pistol"].system.shotsLeft = 8;
+
+  const result = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "confirm",
+    messageId: previewResult.messageId,
+    plannedUpdates: previewResult.preview.plan
+  });
+
+  assert.equal(result.status, COMBAT_CHAT_STATUS.manual, "stale preview should be blocked");
+  assert.equal(result.warnings[0].code, "stale-preview-blocked", "stale preview warning code");
+  const mutations = adapter.calls.filter(call => call.type === "item.update" || call.type === "actor.update" || call.type === "actor.updateEmbeddedDocuments");
+  assert.deepEqual(mutations, [], "stale confirm must not mutate documents");
 }
 
 async function assertChatOutcomeLifecycle() {
@@ -538,4 +651,26 @@ function clonePlainData(data) {
 
 function isPlainObject(value) {
   return !!value && typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype;
+}
+
+function applyUpdateData(target, update) {
+  for(const [path, value] of Object.entries(update || {})) {
+    if(path === "_id") {
+      continue;
+    }
+    setByPath(target, path, value);
+  }
+}
+
+function setByPath(target, path, value) {
+  const parts = String(path).split(".");
+  let current = target;
+  for(let index = 0; index < parts.length - 1; index += 1) {
+    const part = parts[index];
+    if(!current[part] || typeof current[part] !== "object") {
+      current[part] = {};
+    }
+    current = current[part];
+  }
+  current[parts[parts.length - 1]] = clonePlainData(value);
 }

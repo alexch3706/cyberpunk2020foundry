@@ -2,7 +2,7 @@
 
 > Generated: 2026-05-30
 > Owner: @maintainer
-> Status: Active
+> Status: Partially Resolved
 
 ---
 
@@ -42,11 +42,11 @@
 
 **Root Cause:** `previewData` is computed once at preview time and applied at commit time. There is no version guard or merge mechanism between preview capture and commit application.
 
-**Acceptability:** Deferred from audit because the scenario (simultaneous independent attacks) is rare in Foundry's single-user session model. In shared-world sessions with multiple GMs this could manifest.
+**Acceptability:** Resolved for structured preview/confirm in Story 7.4 (2026-05-31): commit now validates preview baselines against live actor/item state and blocks stale confirms.
 
 **Owner:** @maintainer
 
-**Follow-up:** Post-MVP / combat commit hardening. Add a version guard (`system._updateEpoch`) or switch to delta-only updates rather than snapshot-overwrite.
+**Follow-up:** Monitor live-world reports; if additional stale paths appear outside structured commit flow, extend baseline coverage to those paths.
 
 ---
 
@@ -56,11 +56,11 @@
 
 **Description:** `resolveCombatAction` does not prevent concurrent invocations from the same attacker. A player clicking "Fire" twice in rapid succession launches two resolver pipelines, both of which can mutate the same actor's ammo, wounds, and SP. This can produce double-ammo-spend, double-damage, or inconsistent save prompts.
 
-**Acceptability:** Low-latency double-click is a UX issue rather than a data-integrity crisis in single-user mode. The structured resolver's awaited update chain serialises per-document mutations via Foundry, but the resolver itself does not gate on an in-flight flag.
+**Acceptability:** Resolved for structured preview/confirm in Story 7.4 (2026-05-31): duplicate confirm attempts for one preview are now blocked by commit guard in orchestration.
 
 **Owner:** @maintainer
 
-**Follow-up:** Post-MVP / combat UX hardening. Add an in-flight flag on the attacker actor (`system._combatInFlight`) checked at resolver entry, cleared after commit resolves.
+**Follow-up:** Keep under observation for non-preview paths; current guard targets the shared preview/confirm commit pipeline.
 
 ---
 

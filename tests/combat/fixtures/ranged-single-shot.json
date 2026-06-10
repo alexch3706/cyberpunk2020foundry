@@ -2458,7 +2458,7 @@
       "ruleReference": "CP2020 p.107: Mortal wound state (13+); CP2020 p.108: Death Saves"
     },
     {
-      "name": "structured stopped hit on already Mortal target resolves recurring death save reminder",
+      "name": "structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder",
       "context": {
         "action": {
           "range": "RangeClose"
@@ -2557,33 +2557,14 @@
                 "finalDamage": 0
               }
             ],
-            "saves": [
-              {
-                "type": "death",
-                "status": "pending",
-                "reason": "recurring-mortal-save",
-                "bodyType": 6,
-                "threshold": 6,
-                "targetNumber": 6,
-                "penalty": 0,
-                "mortalLevel": 0,
-                "woundState": {
-                  "level": 4,
-                  "label": "Mortal 0"
-                },
-                "reminder": {
-                  "recurring": true,
-                  "requiresStabilization": true
-                }
-              }
-            ]
+            "saves": []
           }
         ]
       },
       "expectedPlan": {
         "actorUpdates": []
       },
-      "ruleReference": "CP2020 p.108: Recurring Death Save at Mortal"
+      "ruleReference": "CP2020 p.108: Recurring Death Saves are turn-start reminders, not attack-time zero-damage prompts"
     },
     {
       "name": "structured PointBlank range hit",
@@ -2842,8 +2823,8 @@
       }
     },
     {
-      "name": "structured mortal 7+ triggers death save not auto-death",
-      "ruleReference": "CP2020 p.108: Mortal 7+ auto-death is deferred (FR14); CP2020 p.108: death save is still generated",
+      "name": "structured mortal 7+ suppresses death save as dead/manual state",
+      "ruleReference": "CP2020 p.108: Mortal 7+ is treated as dead/manual state; no new Death Save prompt is generated",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -2941,35 +2922,7 @@
                 "label": "Mortal 11"
               }
             },
-            "saves": [
-              {
-                "type": "stun",
-                "status": "pending",
-                "reason": "damage-taken",
-                "bodyType": 6,
-                "threshold": 1,
-                "targetNumber": 1,
-                "penalty": 14,
-                "woundState": {
-                  "level": 15,
-                  "label": "Mortal 11"
-                }
-              },
-              {
-                "type": "death",
-                "status": "pending",
-                "reason": "mortal-wound",
-                "bodyType": 6,
-                "threshold": 1,
-                "targetNumber": 1,
-                "penalty": 11,
-                "mortalLevel": 11,
-                "woundState": {
-                  "level": 15,
-                  "label": "Mortal 11"
-                }
-              }
-            ]
+            "saves": []
           }
         ]
       },
@@ -2982,7 +2935,13 @@
             }
           }
         ],
-        "warnings": []
+        "warnings": [
+          {
+            "code": "target-already-dead",
+            "severity": "warning",
+            "message": "Target is dead or Mortal 7+; do not generate a new Death Save prompt."
+          }
+        ]
       }
     }
   ],

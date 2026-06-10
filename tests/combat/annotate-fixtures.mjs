@@ -52,8 +52,8 @@ const ANNOTATIONS = {
         "CP2020 p.107: Wound State table; CP2020 p.108: Stun/Shock save",
       "structured hit causing Mortal wound state generates stun and death saves":
         "CP2020 p.107: Mortal wound state (13+); CP2020 p.108: Death Saves",
-      "structured stopped hit on already Mortal target resolves recurring death save reminder":
-        "CP2020 p.108: Recurring Death Save at Mortal"
+      "structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder":
+        "CP2020 p.108: Recurring Death Saves are turn-start reminders, not attack-time zero-damage prompts"
     }
   },
   "three-round-burst.json": {

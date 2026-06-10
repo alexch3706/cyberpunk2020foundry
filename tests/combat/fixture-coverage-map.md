@@ -1,6 +1,6 @@
 # Fixture Coverage Map
 
-**Generated:** 2026-05-31
+**Generated:** 2026-06-10
 **Total fixture cases:** 92
 
 This map documents every rule and audit area covered by the fixture suite.
@@ -28,9 +28,9 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Wound State | ✅ 2 | `ranged-single-shot.json` → structured unarmored hit resolves damage and stun save<br>`ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves |
 | Head Hit Specials | ✅ 1 | `ranged-single-shot.json` → structured head hit doubles wound damage |
 | Limb Loss Threshold | ✅ 1 | `ranged-single-shot.json` → structured limb hit over threshold surfaces severing warning |
-| Save Prompts (Stun/Death) | ✅ 9 | `ranged-single-shot.json` → structured head hit doubles wound damage<br>`ranged-single-shot.json` → structured unarmored hit resolves damage and stun save<br>`ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured stopped hit on already Mortal target resolves recurring death save reminder<br>`ranged-single-shot.json` → structured mortal 7+ triggers death save not auto-death (9 total, showing 5) |
-| Mortal Wound & Death Saves | ✅ 3 | `ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured stopped hit on already Mortal target resolves recurring death save reminder<br>`ranged-single-shot.json` → structured mortal 7+ triggers death save not auto-death |
-| Recurring Death Save | ✅ 1 | `ranged-single-shot.json` → structured stopped hit on already Mortal target resolves recurring death save reminder |
+| Save Prompts (Stun/Death) | ✅ 9 | `ranged-single-shot.json` → structured head hit doubles wound damage<br>`ranged-single-shot.json` → structured unarmored hit resolves damage and stun save<br>`ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder<br>`ranged-single-shot.json` → structured mortal 7+ suppresses death save as dead/manual state (9 total, showing 5) |
+| Mortal Wound & Death Saves | ✅ 2 | `ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured mortal 7+ suppresses death save as dead/manual state |
+| Recurring Death Save | ✅ 1 | `ranged-single-shot.json` → structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder |
 | Three-Round Burst | ✅ 8 | `three-round-burst.json` → three-round burst success with 2 hits and progressive ablation<br>`three-round-burst.json` → three-round burst success with 1 bullet remaining in weapon<br>`three-round-burst.json` → three-round burst miss skips location/damage rolls and subtracts 3 ammo<br>`three-round-burst.json` → three-round-burst-close-range-advantage<br>`three-round-burst.json` → three-round-burst-aimed-location (8 total, showing 5) |
 | Full Auto | ✅ 8 | `ranged-full-auto.json` → full auto success with 3 hits and progressive ablation at close range (+3 mod)<br>`ranged-full-auto.json` → full auto success at medium range with 10 bullets (-1 mod) and 1 hit<br>`ranged-full-auto.json` → full auto success with 5 bullets left at close range (0 mod) and 5 hits<br>`ranged-full-auto.json` → full-auto-single-target-miss<br>`ranged-full-auto.json` → full-auto-long-range (8 total, showing 5) |
 | ROF & Ammo | ✅ 5 | `ranged-full-auto.json` → full auto success at medium range with 10 bullets (-1 mod) and 1 hit<br>`ranged-full-auto.json` → full auto success with 5 bullets left at close range (0 mod) and 5 hits<br>`ranged-full-auto.json` → full auto multi-target success with 25 shots on 2 targets<br>`ranged-full-auto.json` → full-auto-single-target-miss<br>`suppressive-fire.json` → suppressive-fire-high-rof |
@@ -43,7 +43,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Grapple Prerequisites | ✅ 3 | `melee-baseline.json` → martial-disarm-aikido<br>`melee-baseline.json` → martial-choke-requires-hold<br>`melee-baseline.json` → martial-throw-requires-grapple-without-state |
 | Attack Type Classification | ❌ 0 | — |
 | Humanity & EMP | ❌ 0 | — |
-| Edge Case / Manual Resolution | ✅ 28 | `ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing (28 total, showing 5) |
+| Edge Case / Manual Resolution | ✅ 30 | `ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing (30 total, showing 5) |
 | Ammo State & Updates | ✅ 11 | `ranged-single-shot.json` → structured outcome warns when ammo is insufficient<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing<br>`ranged-single-shot.json` → structured outcome warns when ammo state is fractional<br>`ranged-single-shot.json` → structured outcome warns when ammo update target is missing<br>`three-round-burst.json` → three-round burst success with 1 bullet remaining in weapon (11 total, showing 5) |
 | Audit Compliance | ✅ 19 | `ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured outcome warns when ammo is insufficient<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing (19 total, showing 5) |
 | Corebook Fidelity Mode | ✅ 4 | `ranged-single-shot.json` → structured weapon conformance label in snapshot<br>`unsupported-modes.json` → suppressive-no-inputs-fidelity - reject to legacy warning<br>`unsupported-modes.json` → full-auto-fidelity-supported<br>`unsupported-modes.json` → three-round-burst-fidelity-supported |
@@ -78,11 +78,11 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `ranged-single-shot.json` | structured path falls back when range data is missing | Audit 6.4: Missing range data triggers legacy fallback |
 | `ranged-single-shot.json` | structured unarmored hit resolves damage and stun save | CP2020 p.107: Wound State table; CP2020 p.108: Stun/Shock save |
 | `ranged-single-shot.json` | structured hit causing Mortal wound state generates stun and death saves | CP2020 p.107: Mortal wound state (13+); CP2020 p.108: Death Saves |
-| `ranged-single-shot.json` | structured stopped hit on already Mortal target resolves recurring death save reminder | CP2020 p.108: Recurring Death Save at Mortal |
+| `ranged-single-shot.json` | structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder | CP2020 p.108: Recurring Death Saves are turn-start reminders, not attack-time... |
 | `ranged-single-shot.json` | structured PointBlank range hit | CP2020 p.99: Range DC table (PointBlank=10); CP2020 p.99: point-blank always ... |
 | `ranged-single-shot.json` | structured Extreme range miss | CP2020 p.99: Range DC table (Extreme=30); CP2020 p.99: miss at DC 30 with 1d1... |
 | `ranged-single-shot.json` | structured weapon conformance label in snapshot | Audit 6.1: source-based conformance — CP2020 Corebook source classifies as co... |
-| `ranged-single-shot.json` | structured mortal 7+ triggers death save not auto-death | CP2020 p.108: Mortal 7+ auto-death is deferred (FR14); CP2020 p.108: death sa... |
+| `ranged-single-shot.json` | structured mortal 7+ suppresses death save as dead/manual state | CP2020 p.108: Mortal 7+ is treated as dead/manual state; no new Death Save pr... |
 | `three-round-burst.json` | three-round burst success with 2 hits and progressive ablation | CP2020 p.99: Three-Round Burst; CP2020 p.106: Progressive armor ablation (sta... |
 | `three-round-burst.json` | three-round burst success with 1 bullet remaining in weapon | CP2020 p.99: Burst with limited ammo; CP2020 p.99: ammo delta = min(shotsLeft... |
 | `three-round-burst.json` | three-round burst miss skips location/damage rolls and subtracts 3 ammo | CP2020 p.99: Burst miss consumes 3 ammo; CP2020 p.99: skip damage rolls |
@@ -171,4 +171,4 @@ by JSON fixture files:
 
 ---
 
-*Last updated: 2026-05-31*
+*Last updated: 2026-06-10*

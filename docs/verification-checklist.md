@@ -59,9 +59,9 @@ Detailed steps in `docs/testing/foundry-manual-checks.md §6.1–§6.5`.
 - [ ] D6: Limb hit over 8 → severing/crushing warning surfaces (§6.4)
 - [ ] D7: Stun save prompt when entering Serious/Critical (§6.5)
 - [ ] D8: Death save prompt when entering Mortal (§6.5)
-- [ ] D9: Recurring death save reminder on already-Mortal target (§6.5)
+- [ ] D9: Recurring death save reminder appears once at start of already-Mortal actor's active Combat turn (§6.5)
 - [ ] D10: Reload world after confirm → armor SP persisted (§6.1)
-- [ ] D11: Mortal 7+ → death save surfaces (auto-death not enforced — deferred) (§6.5)
+- [ ] D11: Mortal 7+ → no new death save prompt; dead/manual state is surfaced (§6.5)
 
 ### Section E: Automatic Fire (§7)
 
@@ -113,7 +113,7 @@ Detailed steps in `docs/testing/foundry-manual-checks.md §8.1–§8.12`.
 - [ ] G2a: With Corebook Fidelity ON — fire mode dropdown shows only Semi-Auto, Three-Round Burst, Full Auto. Suppressive Fire is NOT visible.
 - [ ] G2b: With Corebook Fidelity ON — exotic weapon types produce a warning or manual-resolution chat card
 - [ ] G2c: With Corebook Fidelity OFF — all fire modes visible; selecting an unsupported mode produces a warning/notification
-- [ ] G2d: Deferred mechanics documented in `docs/deferred-risks-6.4.md` are visible to maintainers (e.g., stale preview data, concurrent roll locking, serial migration perf)
+- [ ] G2d: Deferred mechanics documented in `docs/deferred-risks-6.4.md` are visible to maintainers (remaining deferred items and resolved concurrency hardening notes are accurate)
 
 #### G3: Humanity Persistence (§6.5)
 
@@ -171,9 +171,7 @@ The following areas cannot be fully verified by pure fixtures or existing manual
 
 | Gap ID | Area | Description | Owner | Follow-up |
 |--------|------|-------------|-------|-----------|
-| GAP-6.7-1 | Stale Preview Data Overwrite | Simultaneous combat actions can produce cancel-then-confirm that overwrites a later action's armor SP changes. Rare in single-user Foundry. | @alexch3706 | Post-MVP: Add `system._updateEpoch` or delta-only updates |
-| GAP-6.7-2 | Concurrent Roll Locking | Double-click fires two resolver pipelines, allowing double-ammo/double-damage. Not gated by in-flight flag. | @alexch3706 | Post-MVP: Add `system._combatInFlight` resolver guard |
-| GAP-6.7-3 | Mortal 7+ Auto-Death | Current implementation surfaces a death save instead of enforcing automatic death. Deferred per review feedback. | @alexch3706 | Post-MVP: Implement auto-death mechanic |
+| GAP-6.7-3 | Mortal 7+ Persistent Dead State | Current implementation suppresses new save prompts as dead/manual state but does not persist an explicit dead status. | @alexch3706 | Post-MVP: Implement persisted dead-state automation |
 | GAP-6.7-4 | Serial Migration Performance | All migrations run sequentially in `ready` hook. Acceptable for MVP. | @alexch3706 | Post-MVP: Batch/concurrent migration if >5s |
 | GAP-6.7-5 | Armor Coverage Morphing in `prepareData()` | `_prepareArmorData` mutates coverage inside `prepareData()` — gated by threshold, unlikely to trigger. | @alexch3706 | Epic 6 post-MVP: Move to explicit event handler |
 | GAP-6.7-6 | Foundry v12 Maximum Compatibility | Manifest declares `maximum: 12` but `verified: 11`. v12 behavior not fully tested. | @alexch3706 | Verify on Foundry v12 before full release |

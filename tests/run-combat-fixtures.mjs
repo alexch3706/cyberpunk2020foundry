@@ -6,6 +6,7 @@ import { runCombatCommitTests } from "./combat/combat-commit.test.js";
 import { runMartialArtsDataTests } from "./combat/martial-arts-data.test.js";
 import { runConformanceHelpersTests } from "./combat/conformance-helpers.test.js";
 import { runDeferredMechanicsTests } from "./combat/deferred-mechanics.test.js";
+import { runDeathSaveTurnTests } from "./combat/death-save-turn.test.js";
 import { runAttackTypeClassificationTests } from "./combat/attack-type-classification.test.js";
 
 import { runHumanityPersistenceTests } from "./combat/humanity-persistence.test.js";
@@ -17,6 +18,7 @@ const results = [
   await runMartialArtsDataTests(),
   ...await runConformanceHelpersTests(),
   ...await runDeferredMechanicsTests(),
+  ...await runDeathSaveTurnTests(),
   ...await runAttackTypeClassificationTests(),
   ...await runHumanityPersistenceTests(),
   ...await runRangeDcTests()
@@ -35,4 +37,3 @@ const passed = results.length - failed;
 console.log(`\n${results.length} fixture(s): ${passed} passed, ${failed} failed`);
 
 if (failed > 0) process.exit(1);
-

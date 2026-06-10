@@ -7,6 +7,7 @@ import { preloadHandlebarsTemplates } from "./templates.js";
 import { registerHandlebarsHelpers } from "./handlebars-helpers.js"
 import * as migrations from "./migrate.js";
 import { registerSystemSettings } from "./settings.js"
+import { registerCombatTurnDeathSaveHook } from "./combat/death-save-turn.js";
 
 Hooks.once('init', async function () {
 
@@ -34,6 +35,7 @@ Hooks.once('init', async function () {
     registerSystemSettings();
 
     registerHandlebarsHelpers();
+    registerCombatTurnDeathSaveHook();
 
     // Register and preload templates with Foundry. See templates.js for usage
     preloadHandlebarsTemplates();
