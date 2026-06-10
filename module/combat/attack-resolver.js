@@ -174,6 +174,7 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
       roundsFired = finalMaxRoundsFired;
     }
   }
+  action.roundsFired = roundsFired;
 
   let targets = [];
   let modifierEvidence;
@@ -1783,7 +1784,11 @@ function buildModifierEvidence(action, weapon) {
   }
 
   const fireMode = String(action.fireMode || "").toLowerCase();
-  if (fireMode === "threeroundburst" && (range === ranges.close || range === ranges.medium)) {
+  if (
+    fireMode === "threeroundburst"
+    && (range === ranges.close || range === ranges.medium)
+    && Number(action.roundsFired || 0) >= 3
+  ) {
     evidence.push({
       code: "threeRoundBurst",
       label: "Three-Round Burst",

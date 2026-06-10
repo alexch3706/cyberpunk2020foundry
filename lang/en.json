@@ -174,6 +174,10 @@
     "CYBERPUNK.Accuracy": "Accuracy",
     "CYBERPUNK.Damage": "Damage",
     "CYBERPUNK.DamageShort": "Dmg",
+    "CYBERPUNK.RawDamage": "Raw Damage",
+    "CYBERPUNK.FinalDamage": "Final Damage",
+    "CYBERPUNK.WoundDamage": "Wound Damage",
+    "CYBERPUNK.Hits": "Hits",
     "CYBERPUNK.Shots": "Shots",
     "CYBERPUNK.ShotsLeft": "Shots Left",
     "CYBERPUNK.AP": "AP",
@@ -398,6 +402,7 @@
     "SETTINGS.CombatDamageCommitModeHint": "How damage state changes are applied. 'Preview + Confirm' shows a dialog before persisting changes. 'Direct' applies changes immediately. Reserved for future use.",
     "SETTINGS.CombatDamageCommitModePreviewConfirm": "Preview + Confirm",
     "SETTINGS.CombatDamageCommitModeDirect": "Direct (no preview)",
+    "CYBERPUNK.SuppressiveFireManualWarning": "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.",
     "SuppressiveFireManualWarning": "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.",
     
     "CYBERPUNK.NoCombatError": "There's currently no combat encounter present; you'll need to start one",

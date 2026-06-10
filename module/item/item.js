@@ -166,8 +166,12 @@ export class CyberpunkItem extends Item {
     }
 
     // +3 mod for 3-round-burst at close or medium range
+    const burstRoundsAvailable = Number.isFinite(Number(this.system.shotsLeft))
+      ? Math.min(Number(this.system.shotsLeft), 3)
+      : 3;
     if(fireMode === fireModes.threeRoundBurst
-      && (range === ranges.close || range === ranges.medium)) {
+      && (range === ranges.close || range === ranges.medium)
+      && burstRoundsAvailable >= 3) {
         terms.push(+3);
     }
 
@@ -211,7 +215,7 @@ export class CyberpunkItem extends Item {
     const result = await resolveCombatAction(this.__buildCombatResolverContext(attackMods, targetTokens), options);
 
     // Structured resolver outcome — handle commit via dialog or direct
-    if (options.structured === true && !result?.manualResolution?.required && result?.action && result?.targets) {
+    if (options.structured === true && result?.action && result?.targets) {
       return await this.__handleStructuredOutcome(result);
     }
 
@@ -220,6 +224,10 @@ export class CyberpunkItem extends Item {
 
   async __handleStructuredOutcome(outcome) {
     const commitMode = this.__getDamageCommitMode();
+
+    if (outcome?.manualResolution?.required) {
+      return await previewAndApplyCombatOutcome(outcome);
+    }
 
     if (commitMode === "direct") {
       return await previewAndApplyCombatOutcome(outcome, { decision: "confirm" });

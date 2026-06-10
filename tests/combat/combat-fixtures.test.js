@@ -1420,6 +1420,7 @@ async function assertCombatResolverRouting() {
       snapshot: {
         attackSkill: "rifle",
         shotsLeft: 10,
+        rof: 10,
         attackType: "Auto"
       }
     },
@@ -1481,7 +1482,53 @@ async function assertCombatResolverRouting() {
     }
   };
   const insufficientResult = await resolveCombatAction(insufficientAmmoContext, { structured: true }, roller);
-  assert.equal(insufficientResult, "fallback-called", "Multi-target FullAuto with roundsFiredPerTarget < 1 should fall back to legacy resolver");
+  assert.notEqual(insufficientResult, "fallback-called", "Multi-target FullAuto with roundsFiredPerTarget < 1 should stay structured");
+  assert.equal(insufficientResult.manualResolution.required, true, "insufficient multi-target full-auto should be manual");
+  assert.equal(insufficientResult.chat.status, "manual", "insufficient multi-target full-auto should produce a manual chat outcome");
+  assert.equal(insufficientResult.ammo.delta, 0, "insufficient multi-target full-auto should not spend ammo");
+
+  const semiAutoMultiTargetContext = {
+    ...multiTargetContext,
+    action: {
+      type: "ranged",
+      fireMode: "SemiAuto",
+      range: "close",
+      targetNumber: 15
+    }
+  };
+  const semiAutoMultiResult = await resolveCombatAction(semiAutoMultiTargetContext, { structured: true }, roller);
+  assert.notEqual(semiAutoMultiResult, "fallback-called", "SemiAuto multi-target should stay structured");
+  assert.equal(semiAutoMultiResult.manualResolution.required, true, "SemiAuto multi-target should be manual");
+  assert.match(semiAutoMultiResult.manualResolution.message, /exactly one target/i, "SemiAuto multi-target should explain target count");
+
+  const noTargetContext = {
+    ...context,
+    action: {
+      type: "ranged",
+      fireMode: "SemiAuto",
+      range: "close",
+      targetNumber: 15
+    },
+    targets: []
+  };
+  const noTargetResult = await resolveCombatAction(noTargetContext, { structured: true }, roller);
+  assert.equal(noTargetResult.manualResolution.required, true, "missing ranged target should be manual");
+  assert.match(noTargetResult.manualResolution.message, /select a target/i, "missing target should explain required target selection");
+
+  const zeroRofContext = {
+    ...context,
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 10,
+        rof: 0,
+        attackType: "Auto"
+      }
+    }
+  };
+  const zeroRofResult = await resolveCombatAction(zeroRofContext, { structured: true }, roller);
+  assert.equal(zeroRofResult.manualResolution.required, true, "FullAuto with zero ROF should be manual");
+  assert.match(zeroRofResult.manualResolution.message, /positive weapon ROF/i, "zero ROF should explain invalid ROF");
 }
 
 function assertSettingsHelpers() {

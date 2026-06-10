@@ -104,6 +104,19 @@ export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
     if(commitKey) {
       const duplicateWarning = acquireCommitGuard(commitKey);
       if(duplicateWarning) {
+        warnings.push(duplicateWarning);
+        try {
+          messageId = await createOrUpdateCombatChatMessage(outcome, COMBAT_CHAT_STATUS.manual, {
+            ...options,
+            messageId,
+            plannedUpdates: plan,
+            adapter,
+            warnings
+          });
+        } catch (error) {
+          console.warn("Failed to update duplicate combat chat message:", error);
+          warnings.push(commitWarning("chat-update-failed", `Failed to update combat chat message: ${error.message}`));
+        }
         return {
           status: COMBAT_CHAT_STATUS.manual,
           chatData: buildFinalChatData(outcome, plan, COMBAT_CHAT_STATUS.manual),
@@ -111,7 +124,7 @@ export async function previewAndApplyCombatOutcome(outcome = {}, options = {}) {
           messageId,
           applied: createEmptyCounts(),
           skipped: countPlanUpdates(plan),
-          warnings: [duplicateWarning, ...preview.warnings, ...warnings]
+          warnings: [...warnings, ...preview.warnings]
         };
       }
     }

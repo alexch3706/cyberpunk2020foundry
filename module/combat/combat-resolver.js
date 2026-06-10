@@ -2,7 +2,7 @@ import { rangeDCs, ranges } from "../lookups.js";
 import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 import { classifyAttackTypeSupport } from "./conformance-helpers.js";
-import { MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
+import { COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
 
 /**
  * Top-level combat resolver shell.
@@ -73,6 +73,10 @@ export async function resolveCombatAction(context, options = {}, roller = undefi
 
     if(canResolveSuppressiveFireContext(context, resolvedRoller)) {
       return await resolveSuppressiveFire(context, options, resolvedRoller);
+    }
+    const rangedManualOutcome = validateSupportedRangedContext(context, resolvedRoller);
+    if(rangedManualOutcome) {
+      return rangedManualOutcome;
     }
     if(canResolveSingleShotRangedContext(context, resolvedRoller)) {
       return await resolveSingleShotRangedAttack(context, options, resolvedRoller);
@@ -158,27 +162,11 @@ function canResolveSingleShotRangedContext(context, roller) {
 
   const fireMode = String(context.action?.fireMode || "").toLowerCase();
   if (fireMode === "threeroundburst" || fireMode === "fullauto") {
-    // 3-round burst is only against a single target
-    if (fireMode === "threeroundburst" && context.targets && context.targets.length > 1) {
-      return false;
-    }
     // Must have at least one remaining round if ammo tracking is enabled
     const shotsLeftVal = context.weapon?.snapshot?.shotsLeft;
     if (shotsLeftVal !== undefined && shotsLeftVal !== null && shotsLeftVal !== "") {
       const value = Number(shotsLeftVal);
       if (Number.isFinite(value) && value <= 0) {
-        return false;
-      }
-    }
-    // Full auto must have at least 1 round per target
-    if (fireMode === "fullauto" && context.targets && context.targets.length > 1) {
-      const rawShotsLeft = normalizeAmmoState(shotsLeftVal);
-      const rof = Math.max(0, Number(context.weapon?.snapshot?.rof) || 0);
-      const maxRoundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
-      const finalMaxRoundsFired = (maxRoundsFired <= 0 && rawShotsLeft.valid) ? 0 : maxRoundsFired;
-      const targetCount = context.targets.length;
-      const roundsFiredPerTarget = Math.floor(finalMaxRoundsFired / targetCount);
-      if (roundsFiredPerTarget < 1) {
         return false;
       }
     }
@@ -193,6 +181,89 @@ function canResolveSingleShotRangedContext(context, roller) {
     && context.targets.length > 0;
 }
 
+function validateSupportedRangedContext(context, roller) {
+  if(!isSupportedSingleShotRangedContext(context)) {
+    return undefined;
+  }
+
+  if(typeof roller !== "function") {
+    return buildManualRangedOutcome(context, "Structured ranged attacks require an available roller.", ["attack-roll"]);
+  }
+
+  const targets = Array.isArray(context.targets) ? context.targets : [];
+  const fireMode = String(context.action?.fireMode || "").toLowerCase();
+  if(targets.length === 0) {
+    return buildManualRangedOutcome(context, "Select a target before resolving a ranged attack.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
+  }
+
+  if(fireMode === "semiauto" && targets.length !== 1) {
+    return buildManualRangedOutcome(context, "Semi-auto attacks require exactly one target; resolve multiple targets as separate attacks.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
+  }
+
+  if(fireMode === "threeroundburst" && targets.length !== 1) {
+    return buildManualRangedOutcome(context, "Three-round burst attacks require exactly one target.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
+  }
+
+  if(fireMode === "fullauto") {
+    const rof = Number(context.weapon?.snapshot?.rof);
+    if(!Number.isFinite(rof) || rof <= 0) {
+      return buildManualRangedOutcome(context, "Full-auto attacks require a positive weapon ROF.", ["attacker-ammo", "target-damage", "target-armor", "target-saves"]);
+    }
+    if(targets.length > 1) {
+      const rawShotsLeft = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+      const maxRoundsFired = rawShotsLeft.valid ? Math.min(rawShotsLeft.value, rof) : rof;
+      const finalMaxRoundsFired = (maxRoundsFired <= 0 && rawShotsLeft.valid) ? 0 : maxRoundsFired;
+      const roundsFiredPerTarget = Math.floor(finalMaxRoundsFired / targets.length);
+      if(roundsFiredPerTarget < 1) {
+        return buildManualRangedOutcome(context, "Full-auto multi-target attacks require at least one round per target.", ["attacker-ammo", "target-damage", "target-armor", "target-saves"]);
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function buildManualRangedOutcome(context, message, blockedUpdateCategories) {
+  const ammoState = normalizeAmmoState(context?.weapon?.snapshot?.shotsLeft);
+  const ammo = ammoState.valid
+    ? { before: ammoState.value, delta: 0, after: ammoState.value, source: "weapon.snapshot.shotsLeft" }
+    : { before: ammoState.evidence, delta: 0, after: ammoState.evidence, source: "weapon.snapshot.shotsLeft" };
+
+  return {
+    action: context?.action ? clone(context.action) : { type: "ranged" },
+    attacker: context?.attacker ? clone(context.attacker) : {},
+    weapon: context?.weapon ? clone(context.weapon) : {},
+    targets: (context?.targets || []).map(target => ({
+      target: clone(target),
+      attack: { hit: false, warnings: [] },
+      hits: [],
+      saves: [],
+      plannedUpdates: { embeddedItemUpdates: [], chatStatus: COMBAT_CHAT_STATUS.manual },
+      manualResolution: { required: false },
+      warnings: clone(target?.warnings || [])
+    })),
+    ammo,
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.manual
+    },
+    manualResolution: {
+      required: true,
+      reason: MANUAL_RESOLUTION_REASON.missingRuleData,
+      message,
+      blockedUpdateCategories
+    },
+    chat: { status: COMBAT_CHAT_STATUS.manual },
+    warnings: [
+      {
+        code: "structured-ranged-manual-resolution",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message
+      }
+    ]
+  };
+}
+
 /**
  * Build a manual-resolution outcome for an exotic attack type.
  * @param {Object} context — Combat context
@@ -203,8 +274,6 @@ function buildManualExoticOutcome(context, support) {
   const attackerName = context?.attacker?.name || "Unknown";
   const weaponName = context?.weapon?.name || "Unknown";
   const attackType = context?.weapon?.snapshot?.attackType || "";
-
-  const clone = obj => typeof foundry !== "undefined" ? foundry.utils.deepClone(obj) : JSON.parse(JSON.stringify(obj));
 
   const isPartial = support === "partial";
   const message = isPartial
@@ -248,6 +317,13 @@ function buildManualExoticOutcome(context, support) {
       }
     ]
   };
+}
+
+function clone(obj) {
+  if(obj === undefined) {
+    return undefined;
+  }
+  return typeof foundry !== "undefined" ? foundry.utils.deepClone(obj) : JSON.parse(JSON.stringify(obj));
 }
 
 function normalizeRange(range) {

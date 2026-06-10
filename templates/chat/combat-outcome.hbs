@@ -70,18 +70,62 @@
                     </span>
                 </div>
                 {{#if targetOutcome.attack.hit}}
+                    <div class="field">
+                        <span>{{CPLocal "Hits"}}: </span>
+                        <span class="flex-pad">{{targetOutcome.hits.length}}</span>
+                    </div>
+                    {{#if targetOutcome.attack.burstHitsRoll}}
+                    <div class="field">
+                        <span>{{CPLocal "ThreeRoundBurst"}}: </span>
+                        <span class="flex-pad">{{targetOutcome.attack.burstHitsRoll.total}}</span>
+                    </div>
+                    {{/if}}
                     {{#each targetOutcome.hits as |hit|}}
                         <div class="field">
                             <span>{{CPLocal "HitLocation"}}: </span>
                             <span class="flex-pad">{{CPLocal hit.location}}</span>
                         </div>
+                        {{#if hit.damageRoll}}
+                        <div class="field">
+                            <span>{{CPLocal "Damage"}}: </span>
+                            <span>{{hit.damageRoll.total}}</span>
+                            {{#if hit.damageRoll.formula}}
+                                <span class="formula" style="font-size: 0.85em; color: #888; margin-left: 5px;">({{hit.damageRoll.formula}})</span>
+                            {{/if}}
+                            <span class="flex-pad"></span>
+                        </div>
+                        {{/if}}
+                        {{#if (hasProperty hit "rawDamage")}}
+                        <div class="field">
+                            <span>{{CPLocal "RawDamage"}}: </span>
+                            <span class="flex-pad">{{hit.rawDamage}}</span>
+                        </div>
+                        {{/if}}
+                        {{#if (hasProperty hit "armorMitigation")}}
+                        <div class="field">
+                            <span>{{CPLocal "Armor"}}: </span>
+                            <span class="flex-pad">{{hit.armorMitigation}}</span>
+                        </div>
+                        {{/if}}
+                        {{#if (hasProperty hit "finalDamage")}}
+                        <div class="field">
+                            <span>{{CPLocal "FinalDamage"}}: </span>
+                            <span class="flex-pad">{{hit.finalDamage}}</span>
+                        </div>
+                        {{/if}}
+                        {{#if (hasProperty hit "woundDamage")}}
+                        <div class="field">
+                            <span>{{CPLocal "WoundDamage"}}: </span>
+                            <span class="flex-pad">{{hit.woundDamage}}</span>
+                        </div>
+                        {{/if}}
                     {{/each}}
                 {{/if}}
             {{/if}}
         </div>
     {{/each}}
 
-    {{#if ammo.delta}}
+    {{#if (hasProperty ammo "delta")}}
     <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
         <div class="field">
             <span>{{CPLocal "AmmoDelta"}}: </span>
