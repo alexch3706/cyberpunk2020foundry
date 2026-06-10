@@ -160,18 +160,6 @@ function canResolveSingleShotRangedContext(context, roller) {
     return false;
   }
 
-  const fireMode = String(context.action?.fireMode || "").toLowerCase();
-  if (fireMode === "threeroundburst" || fireMode === "fullauto") {
-    // Must have at least one remaining round if ammo tracking is enabled
-    const shotsLeftVal = context.weapon?.snapshot?.shotsLeft;
-    if (shotsLeftVal !== undefined && shotsLeftVal !== null && shotsLeftVal !== "") {
-      const value = Number(shotsLeftVal);
-      if (Number.isFinite(value) && value <= 0) {
-        return false;
-      }
-    }
-  }
-
   const range = normalizeRange(context.action?.range);
   const targetNumber = rangeDCs[range] || context.action?.targetNumber;
   return Number.isFinite(Number(targetNumber))

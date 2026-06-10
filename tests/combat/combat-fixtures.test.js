@@ -1529,6 +1529,44 @@ async function assertCombatResolverRouting() {
   const zeroRofResult = await resolveCombatAction(zeroRofContext, { structured: true }, roller);
   assert.equal(zeroRofResult.manualResolution.required, true, "FullAuto with zero ROF should be manual");
   assert.match(zeroRofResult.manualResolution.message, /positive weapon ROF/i, "zero ROF should explain invalid ROF");
+
+  const zeroAmmoFullAutoContext = {
+    ...context,
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 0,
+        rof: 10,
+        attackType: "Auto"
+      }
+    }
+  };
+  const zeroAmmoFullAutoResult = await resolveCombatAction(zeroAmmoFullAutoContext, { structured: true }, roller);
+  assert.notEqual(zeroAmmoFullAutoResult, "fallback-called", "FullAuto with zero ammo should stay structured");
+  assert.equal(zeroAmmoFullAutoResult.manualResolution.required, true, "FullAuto with zero ammo should be manual");
+  assert.equal(zeroAmmoFullAutoResult.warnings[0].code, "insufficient-ammo", "FullAuto with zero ammo should warn about ammo");
+
+  const zeroAmmoBurstContext = {
+    ...context,
+    action: {
+      type: "ranged",
+      fireMode: "ThreeRoundBurst",
+      range: "close",
+      targetNumber: 15
+    },
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 0,
+        rof: 10,
+        attackType: "Auto"
+      }
+    }
+  };
+  const zeroAmmoBurstResult = await resolveCombatAction(zeroAmmoBurstContext, { structured: true }, roller);
+  assert.notEqual(zeroAmmoBurstResult, "fallback-called", "ThreeRoundBurst with zero ammo should stay structured");
+  assert.equal(zeroAmmoBurstResult.manualResolution.required, true, "ThreeRoundBurst with zero ammo should be manual");
+  assert.equal(zeroAmmoBurstResult.warnings[0].code, "insufficient-ammo", "ThreeRoundBurst with zero ammo should warn about ammo");
 }
 
 function assertSettingsHelpers() {
