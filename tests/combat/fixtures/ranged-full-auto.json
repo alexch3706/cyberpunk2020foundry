@@ -1301,7 +1301,16 @@
           }
         }
       },
-      "rolls": [],
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 10,
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
+        }
+      ],
       "legacyExpected": {
         "manualResolution": {
           "required": true
@@ -1448,6 +1457,164 @@
         ]
       },
       "ruleReference": "CP2020 p.100: Full Auto multi-target jam aborts remaining targets"
+    },
+    {
+      "name": "ranged-full-auto-aimed-location",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto",
+          "range": "close",
+          "options": {
+            "targetArea": "torso"
+          }
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 8
+          }
+        },
+        {
+          "id": "damage",
+          "total": 15,
+          "die": {
+            "faces": 6,
+            "natural": 15
+          }
+        },
+        {
+          "id": "damage",
+          "total": 12,
+          "die": {
+            "faces": 6,
+            "natural": 12
+          }
+        },
+        {
+          "id": "damage",
+          "total": 10,
+          "die": {
+            "faces": 6,
+            "natural": 10
+          }
+        }
+      ],
+      "expected": {
+        "action": {
+          "type": "ranged",
+          "fireMode": "FullAuto",
+          "range": "RangeClose",
+          "modifiers": [
+            {
+              "code": "range",
+              "value": "RangeClose",
+              "targetNumber": 15
+            },
+            {
+              "code": "fireMode",
+              "value": "FullAuto"
+            },
+            {
+              "code": "targetArea",
+              "value": -4
+            },
+            {
+              "code": "fullAuto",
+              "value": 3
+            },
+            {
+              "code": "weaponAccuracy",
+              "value": 0
+            }
+          ]
+        },
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 3
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                },
+                "rawDamage": 15,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 12,
+                "penetratingDamage": 3,
+                "finalDamage": 1
+              },
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                },
+                "rawDamage": 12,
+                "effectiveStoppingPower": 11,
+                "armorMitigation": 11,
+                "penetratingDamage": 1,
+                "finalDamage": 1
+              },
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                },
+                "rawDamage": 10,
+                "effectiveStoppingPower": 10,
+                "armorMitigation": 10,
+                "penetratingDamage": 0,
+                "finalDamage": 0
+              }
+            ]
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                }
+              },
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                }
+              },
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.100: Full Auto; CP2020 p.99: Aimed shot (-4)"
     }
   ]
 }

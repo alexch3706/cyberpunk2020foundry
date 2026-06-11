@@ -445,14 +445,6 @@
           }
         },
         {
-          "id": "location",
-          "total": 3,
-          "die": {
-            "faces": 10,
-            "natural": 3
-          }
-        },
-        {
           "id": "damage",
           "total": 15,
           "die": {
@@ -504,6 +496,10 @@
             "hits": [
               {
                 "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                },
                 "rawDamage": 15,
                 "effectiveStoppingPower": 12,
                 "armorMitigation": 12,
@@ -518,6 +514,10 @@
               },
               {
                 "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                },
                 "rawDamage": 15,
                 "effectiveStoppingPower": 11,
                 "armorMitigation": 11,
@@ -895,14 +895,6 @@
           }
         },
         {
-          "id": "location",
-          "total": 4,
-          "die": {
-            "faces": 10,
-            "natural": 4
-          }
-        },
-        {
           "id": "damage",
           "total": 10,
           "die": {
@@ -972,6 +964,28 @@
           "delta": -3,
           "after": 7
         }
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                }
+              },
+              {
+                "location": "torso",
+                "locationRoll": {
+                  "formula": "aimed location",
+                  "location": "torso"
+                }
+              }
+            ]
+          }
+        ]
       },
       "ruleReference": "CP2020 p.99: Burst +3 at any range; CP2020 p.99: Aimed shot (-4)"
     },
@@ -1146,7 +1160,16 @@
           }
         }
       },
-      "rolls": [],
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 10,
+          "die": {
+            "faces": 10,
+            "natural": 5
+          }
+        }
+      ],
       "legacyExpected": {
         "manualResolution": {
           "required": true

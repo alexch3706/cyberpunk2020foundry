@@ -6,6 +6,7 @@ import { resolveCombatAction } from "../combat/combat-resolver.js";
 import { classifyAttackTypeSupport } from "../combat/conformance-helpers.js";
 import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
 import { buildCombatPreviewData, previewAndApplyCombatOutcome } from "../combat/combat-commit.js";
+import { buildActorCombatSnapshot, buildWeaponCombatSnapshot, clonePlainData, compactPlainObject } from "../combat/combat-snapshot.js";
 
 /**
  * Extend the basic Item with some very simple modifications.
@@ -325,27 +326,12 @@ export class CyberpunkItem extends Item {
       attacker: {
         actorUuid: owner?.uuid,
         name: owner?.name,
-        snapshot: {
-          stats: this.__cloneResolverData(owner?.system?.stats),
-          skills: this.__buildCombatSkillSnapshot(owner),
-          damage: owner?.system?.damage,
-          hitLocations: this.__cloneResolverData(owner?.system?.hitLocations)
-        }
+        snapshot: buildActorCombatSnapshot(owner, { includeEmptySkills: true })
       },
       weapon: {
         itemUuid: this.uuid,
         name: this.name,
-        snapshot: {
-          damage: system.damage,
-          ap: system.ap,
-          shotsLeft: system.shotsLeft,
-          rof: system.rof,
-          reliability: system.reliability,
-          range: system.range,
-          accuracy: system.accuracy,
-          attackType: system.attackType,
-          attackSkill: system.attackSkill
-        }
+        snapshot: buildWeaponCombatSnapshot(this)
       },
       targets: (targetTokens || []).map(target => this.__buildCombatTargetContext(target)),
       legacy: {
@@ -357,8 +343,8 @@ export class CyberpunkItem extends Item {
 
   __buildCombatActionOptions(attackMods) {
     const normalizedCover = this.__normalizeManualCover(attackMods);
-    return this.__compactResolverData({
-      ...(this.__cloneResolverData(attackMods) || {}),
+    return compactPlainObject({
+      ...(clonePlainData(attackMods) || {}),
       ...(normalizedCover ? { cover: normalizedCover } : {}),
       stagedPenetration: this.__getStagedPenetrationSetting()
     });
@@ -393,47 +379,16 @@ export class CyberpunkItem extends Item {
     return true;
   }
 
-  __buildCombatSkillSnapshot(actor) {
-    const skills = this.__cloneResolverData(actor?.system?.skills?.skills || actor?.system?.skills || {}) || {};
-
-    for(const skill of actor?.itemTypes?.skill || []) {
-      skills[skill.name] = {
-        ...(this.__cloneResolverData(skill.system || {}) || {}),
-        level: actor.getSkillVal(skill.name)
-      };
-    }
-
-    return skills;
-  }
-
   __buildCombatTargetContext(target) {
-    return this.__compactResolverData({
+    return compactPlainObject({
       id: target.id,
       tokenUuid: target.tokenUuid || target.uuid,
       actorUuid: target.actorUuid,
       name: target.name,
-      snapshot: this.__cloneResolverData(target.snapshot),
-      manualResolution: this.__cloneResolverData(target.manualResolution),
-      warnings: this.__cloneResolverData(target.warnings)
+      snapshot: clonePlainData(target.snapshot),
+      manualResolution: clonePlainData(target.manualResolution),
+      warnings: clonePlainData(target.warnings)
     });
-  }
-
-  __cloneResolverData(data) {
-    if(data === undefined || data === null) {
-      return data;
-    }
-    try {
-      return JSON.parse(JSON.stringify(data));
-    }
-    catch {
-      return undefined;
-    }
-  }
-
-  __compactResolverData(data) {
-    return Object.fromEntries(
-      Object.entries(data).filter(([, value]) => value !== undefined)
-    );
   }
 
   __legacyWeaponRoll(attackMods, targetTokens) {

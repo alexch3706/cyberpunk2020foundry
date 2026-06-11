@@ -2,6 +2,7 @@ import { defaultAreaLookup, rangeDCs, ranges, btmFromBT, strengthDamageBonus } f
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
 import { getKeyTechniqueBonus, getRequiresPrerequisite } from "./martial-arts-data.js";
+import { buildMultiHitLocationAction } from "./ranged-hit-location.js";
 
 const RANGED_MODIFIERS = Object.freeze([
   { code: "aimRounds", label: "Aiming", term: "@modifier.aimRounds", value: options => Number(options.aimRounds || 0), include: value => value !== 0 },
@@ -1327,18 +1328,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
     let accumulatedCoverAblation = 0;
 
     for (let i = 0; i < numHits; i++) {
-      const hitAction = { ...action };
-      if (i > 0) {
-        hitAction.targetArea = undefined;
-        if (hitAction.options) {
-          hitAction.options = {
-            ...hitAction.options,
-            targetArea: undefined
-          };
-        }
-      }
-
-      const locationResult = await resolveHitLocation(target, hitAction, roller);
+      const locationResult = await resolveHitLocation(target, buildMultiHitLocationAction(action, i), roller);
       if(locationResult.manualResolution) {
         if (!manualResolution.required) {
           manualResolution = clonePlainData(locationResult.manualResolution);
