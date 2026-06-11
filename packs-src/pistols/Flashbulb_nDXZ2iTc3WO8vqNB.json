@@ -1,0 +1,33 @@
+{
+  "_id": "nDXZ2iTc3WO8vqNB",
+  "name": "Flashbulb",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 250.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+0",
+    "concealability": "-",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "COOL 30, 1d6 min",
+    "shots": "-",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "6m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

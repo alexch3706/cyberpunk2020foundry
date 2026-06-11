@@ -1,0 +1,22 @@
+{
+  "_id": "0pRuFgfaLidjX5Wq",
+  "name": "Electrothermal -",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Ammunition Types<br><p>1.5x  Damage (cased) 2x Chr 2</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "dtPEkVJTpRQu8B62",
+  "name": "Militech Mini-GL (Pump)",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 225.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "-1",
+    "concealability": "L",
+    "availability": "C",
+    "ammoType": "B4",
+    "damage": "(25mm/10ga)(B4)",
+    "shots": "4",
+    "rof": "2",
+    "reliability": "ST",
+    "range": "150m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

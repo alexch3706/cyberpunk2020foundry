@@ -1,0 +1,33 @@
+{
+  "_id": "xuMT8q19VlFrclxq",
+  "name": "Towa Type-20 AICW",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 4200.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B7",
+    "damage": "5d6 (5.56)(B7)",
+    "shots": "100",
+    "rof": "3/45",
+    "reliability": "VR",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "AIURvO3ZRE4Zv8R1",
+  "name": "Front Optic Mount",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> MA<br><b>Humanity Loss:</b> 4d6<br><p>Allows up to 5 optics to be mounted. -1 ATTR</p>",
+    "source": "CP20",
+    "cost": 1000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "b9ZkTku9dhpY9HFj",
+  "name": "Gouge Master",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 2d6<br><p>2d6+3AP, 2d6*, 2 spaces, 20m cable and reel</p>",
+    "source": "P3",
+    "cost": 550.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "xnhPSvwp99hfsP9L",
+  "name": "Spinelli Auto Shiltron Twin Cab",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 70<br><b>Acc/Dec:</b> 15/50<br><b>Crew:</b> 1<br><b>Range:</b> 300<br><b>Passengers:</b> 3<br><b>Cargo:</b> 1056kg, 16<br><b>Maneuver:</b> -3<br><b>SDP:</b> 80 (4)<br><b>SP:</b> 10<br><b>Mass:</b> (0) 3200kg",
+    "source": "Chr4",
+    "cost": 55000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

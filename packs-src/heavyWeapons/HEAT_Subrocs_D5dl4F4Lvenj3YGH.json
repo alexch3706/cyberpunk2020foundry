@@ -1,0 +1,33 @@
+{
+  "_id": "D5dl4F4Lvenj3YGH",
+  "name": "HEAT Subrocs",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SF",
+    "cost": 0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "10d10HEAT",
+    "shots": "100",
+    "rof": "10",
+    "reliability": "VR",
+    "range": "800m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

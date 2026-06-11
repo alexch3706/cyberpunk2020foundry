@@ -1,0 +1,22 @@
+{
+  "_id": "nhjx6oHO0krHQO0C",
+  "name": "Ford 1/2-Ton Pickup Truck",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 100<br><b>Acc/Dec:</b> 15/40<br><b>Crew:</b> 1<br><b>Range:</b> 400<br><b>Passengers:</b> 2<br><b>Cargo:</b> 1000kg<br><b>Maneuver:</b> +1<br><b>SDP:</b> 40 (2)<br><b>SP:</b> 10<br><b>Mass:</b> (0) .5 ton",
+    "source": "NWP",
+    "cost": 30000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

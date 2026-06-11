@@ -1,0 +1,22 @@
+{
+  "_id": "pPduUrsJCrfvN6hC",
+  "name": "2) .............................",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> TOOLS<br><p>..1400eb/month Corp Apartment (24m2, moderate area) .....1200eb/month Corp Apartment (+ furnished) ....................1500eb/month Corp Apartment (furnished, corp area) .......2500eb/month Professional Apartment .............................2500eb/month Plaza West Tower Unit.............................. 3000eb/month Plaza West Tower Unit (to buy) .......................300,000eb Plaza East Tower Small Unit ...................5000eb+/month Plaza East Tower Large Unit/Suite .......20,000eb+/month Plaza East Tower Large Unit (to buy) .......... 2 Million eb+ Plaza East Tower Small Unit (to buy) ............500,000eb+ West Hill Gardens Apartment..................2800eb+/month Fallout Shelter ..........................................5000eb/person Luxury Penthouse/Conapts ...........................800,000eb+ 3 Bed, 2 Bath House .......................................850,000eb Coral Forest Estate Underwater Mansion .....3,000,000eb Domitic System .................................... 1D10/2x50eb/m 2 Williams Complex Service Contract .. 10-15% rent/month REMOTE/CYBERFORM EQUIPMENT Manual Controller (-2) ............................................300eb HUD Controller (-1)................................................ 500eb Cybernetic Controller (0/+1)...................................800eb Portable Unit (15km range)...................................Normal Stationary Panel (upto 100km range) ...................Normal Repeater Station (.33kg) ....................................... 100eb Wire-Guidance Option (1kg/.5 mile) ............. 50eb/.5 mile AI \"R-Brain\" Module (INT 6/2, skills +6) ...............2000eb Magnetic Induction Tap Dartgun (10m range).........250eb Cyberform Battery Pack (72 hours) .......................100eb Cyberform Skills (max 5) ...................... x2 skill chip cost ANIMALS & ANIMAL CARE Cloned animal with no personality or training ....... x1 cost Cloned animal that is raised from infant ............... x2 cost</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

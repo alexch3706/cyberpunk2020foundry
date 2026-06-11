@@ -1,0 +1,33 @@
+{
+  "_id": "AWhH25OtOpBTYdiO",
+  "name": "BSP Delayed Minelets",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 300.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+3",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "1",
+    "damage": "4d6 (1)",
+    "shots": "1x50",
+    "rof": "1d6",
+    "reliability": "VR",
+    "range": "50m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

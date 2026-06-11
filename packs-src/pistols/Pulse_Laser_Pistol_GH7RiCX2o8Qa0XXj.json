@@ -1,0 +1,33 @@
+{
+  "_id": "GH7RiCX2o8Qa0XXj",
+  "name": "Pulse Laser Pistol",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "WGF",
+    "cost": 900.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+1",
+    "concealability": "J",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "4d6+4",
+    "shots": "15",
+    "rof": "1/3/10",
+    "reliability": "ST",
+    "range": "75m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

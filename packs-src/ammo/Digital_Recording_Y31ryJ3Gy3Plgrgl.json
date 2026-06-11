@@ -1,0 +1,22 @@
+{
+  "_id": "Y31ryJ3Gy3Plgrgl",
+  "name": "Digital Recording",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> MUSICAL<br><p>Studio ....................................12,000eb</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "GVnskUz3bLkbEgRt",
+  "name": "60mm Mortar",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Artillery Shells<br><p>A relatively small (15 kg) infantry-carried mortar. It requires a two-man crew to achieve its rate-of-fire; with one man, it has an ROF of 1/2. HVY O N P 8010 1 2 VR 750 euro. Shells cost 50 euro apiece. 80mm Mortar: A large (40 kg) mortar firing medium-sized shells. It requires a minimum two-man crew and works best with three men. HVY O N P 9010 1 1 VR 1500 euro, 1 space. Shells cost 150 euro apiece and take up 1 space per 20 shells. 120mm Mortar: A very large mortar usually mounted in vehicles, this requires a three-man crew due to the size of the shells. HVY O N P 13010 1 1 VR 5000 euro. 3 space. Shells cost 250 euro apiece and take up 1 space per 10 shells. 105mm Howitzer: The smallest of field pieces. the standard 105 continues to soldier on. It takes a minimum crew of two men and works best with four. May use an autoloader and rock et-assisted shells. HVY + 1 N P 11010 1 1 VR 100,000 euro, 6 spaces. Shells cost 500 euro and take up 1 space per 5 shells. 150mm Howitzer: This gun may be up to 155mm; it works the same. It takes a crew of four to operate this go lia th. May use an autoloader and rocket-assisted shells. HVY + 1 N P 13010 1 1 VR 150,000 euro, 20 spaces. Shells cost 1000 euro and take up 1 space apiece. 200mm Howitzer: The 8\" monster cannon; few guns of this size are seen on the mobile battlefields of 2020. This cannon takes a four man crew. May use an autoloader and rocket\u00ad assisted shells. HVY O N P 28010 1 1/2 VR</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

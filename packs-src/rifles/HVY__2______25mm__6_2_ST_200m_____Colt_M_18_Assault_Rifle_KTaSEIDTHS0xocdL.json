@@ -1,0 +1,33 @@
+{
+  "_id": "KTaSEIDTHS0xocdL",
+  "name": "HVY -2 - - (25mm) 6 2 ST 200m - - Colt M-18 Assault Rifle",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CB3",
+    "cost": 750.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": "B5",
+    "damage": "5d6 (5.56)(B5)",
+    "shots": "35",
+    "rof": "3/30",
+    "reliability": "VR",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "xz11Mx7WKz8PAksT",
+  "name": "230mm Rocket",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Artillery Shells<br><p>This is a massive pod filled with a dozen massive rockets. These rockets are loaded with multiple-bomblet warheads, and can cover a huge area with grenade\u00ad equivalent bombs. It is purchased as a single pod; reloading can only be acco mpli shed witha special reloader vehicle that carries extra missiles and a crane. HVY O N P 401 OAP 12 12 VR 175,000 euro, 30 spaces. Extra rockets cost 2500 euro apiece (a full reload costs 30,000 euro). ARTILLERY AMMUNITION These alternative round fillers can be used by any artillery weapon but the grenade launchers. The 230mm rocket cannot use Armor-Piercing or Cluster-Bomblet rounds (it's both). Armor-Piercing: For howitzers only. Doubles the cost of the shell and reduces the Burst to 0. Doubles Penetration on the 105mm, triples the Penetration on the 150mm and 200mm. Chemical: The shell is fille d with gas or smoke. Triple the Burst, no Penetration. Smoke shells cost 1/3 normal. hot smoke (blocks IR and thermographs) costs normal, tear gas costs dou\u00ad ble, knock-out gas costs triple, and nerve gas costs 20 times normal. Cluster Bomblet: The shell is loaded with bomblets. Double the price, triple the Burst, reduce Penetration to 4. ROF REL RANGE VR 500m 20 VR 3200m 2 VR 2000m VR 3500m VR 6000m VR 17000m 1 VR 24000m 1/2 VR 20000m VR 2000m VR 2000m 1 VR 2000m 3 VR 28000m HEAT: This substitutes a shaped-charge war\u00ad head for the normal high-explosive. Double the shell cost, double the Penetration (and halve it again if attacking Composite Armor) and reduce the Burst to 4m. Works best when combined with Laser-Guided. Laser-Guided: A laser-guided shell follows a painting laser to its target. On the turn when the shell hits, if there is a laser painting the target spot, the shell strikes that spot on a 010 roll of 4-10, otherwise it scatters 2010 meters on the Grenade Table.Triple the base cost of the shell. Rocket-Assisted Shells: Artillery shells with rocket boosters. Double the range and number of spaces the shell takes up, triple the base cost of the shell. White Phosphorous: Anyone hit with WP sustains 306 burn damage to that location per turn for at least a half-hour. or until the WP frag\u00ad ments are removed. If the fragment hits body armor, it does its damage to the armor, doing full damage to kevlar and armorjackets (only flak jackets, doorgunner's vests, Metalgear\u2122 and Powered Armor is proof against it). For instance, an area protected by an SP 14 armor\u00ad jacket takes 11 points of damage from WP. The MAXIMUM METAL i!1</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

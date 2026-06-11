@@ -1,0 +1,33 @@
+{
+  "_id": "T1EZHHzQmorZJ0OV",
+  "name": "Qing Long Dao/Scimitar",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 250.0,
+    "weight": 1,
+    "weaponType": "MEL",
+    "accuracy": "-2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "3d6+3* -",
+    "shots": "-",
+    "rof": "-",
+    "reliability": null,
+    "range": "1m",
+    "attackType": "Melee"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

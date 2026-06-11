@@ -1,0 +1,22 @@
+{
+  "_id": "W9NylTGkQjdbbde5",
+  "name": "EBM",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Special Options:<br><p>Aside from being extremely intelligent, Jasmine is also extremely beautiful, and it it has been hazarded that some of the extraction attempts have been motivated by more than just her research potentials. As a result, she is under discrete 24-hour guard by three rotating teams of crack EBM commandos. INT 1 0, REF 5, TECH 1 0, COOL 8, ATTR 1 0, LUCK 6, MA 3, BODY 4, EMP 817</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

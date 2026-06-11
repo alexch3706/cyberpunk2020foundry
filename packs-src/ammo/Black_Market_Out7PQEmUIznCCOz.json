@@ -1,0 +1,22 @@
+{
+  "_id": "Out7PQEmUIznCCOz",
+  "name": "Black Market",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> ENTERTAINMENT<br><p>All of these nasty indi\u00ad viduals still make up a good portion of the Black Market but many more have joined in (see Blru:li Marketeers, pg. 20). Surgeons, sick of dealing with corpo\u00ad rations, medical insurers, and govern\u00ad mental regulation, set up illegal surgi\u00ad cal centers or do cybernetic installation procedures on the side, alongside Info Bros selling the most precious commodity of all. The few independent farms sell a large por\u00ad tion of their produce and meat on the black market. (Some people are still getting paid to destroy crops in the Midwestern states!) Whether it's explosives or eggs, memory or meat, the Black Market is the place to go. Agoras Agoras, coming from the Greek word for \"Market,\" are the ultimate in Black Markets. Believed to be found- ed by a radical Libertarian under\u00ad ground movement, the Agoras are large, organized Black Markets which are preferentially referred to as \"Free Markets\" or \"Counter-Economies.\" In essence, they are secret marketplaces which serve a private agenda and have thei1- own subversive philosophy. Ago\u00ad ras are always centered in some hid\u00ad den location, and entrance to these a gauntlet of passwords, recognition signs, secret handshakes, frisks and identity checks. Once admitted, an Agoras' customer finds himself in an environment which resembles an underground convention center. There are believed to be over a dozen recognized Agoras in the United States and Canada. The Agoras utilize gold as a purchasing standard; all offi\u00ad cial forms of cash are unusable in an \"I grok Glock - not your father's Plastic P. t II\" IS O. - Common Radio Adblip Agoras. This serves two purposes: first, it provides a small measure of protec\u00ad tion for the clients (gold is not legal tender in the US, so they are in fact bartering, not buying ... it just so hap\u00ad pens that everyone in an Agoras is in the market for gold). Second, using a gold standard goes along with the basic economic ideas behind the Ago\u00ad ras of old, which were free markets hideouts usually requires a running of which utilized a gold-backed econo- ,wi OQ\ufffd\ufffd\ufffdOQ\u00bb\u00bb\u2022\u2022\ufffd \ufffd\u00bb\ufffd\ufffdQ\u00bb\u00bb\ufffdQ2\u00bb&\u00a2Q\ufffd\u00bb\u00bb\u00a2& \ufffd\u00bb\u00bb\u00a2\ufffd2\u00bbD\u00a2Q\ufffd \u00bbDO\ufffd\ufffd\ufffd\u00bb\u00a2Q\ufffd\u00bb\u00bb\ufffdQ\ufffd\u00bbD\u00a2Q\ufffdbD\u00a2A\ufffd\u00bbD\u00a2&\u2022\u00bbo9a\u2022\u00bbo\u2666*\u2022\u00bbo\u2022 *\ufffd WILDSIDE</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

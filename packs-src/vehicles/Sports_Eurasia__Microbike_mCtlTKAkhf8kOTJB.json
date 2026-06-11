@@ -1,0 +1,22 @@
+{
+  "_id": "mCtlTKAkhf8kOTJB",
+  "name": "Sports Eurasia 'Microbike'",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 80<br><b>Acc/Dec:</b> 18/30<br><b>Crew:</b> 1<br><b>Range:</b> 135<br><b>Passengers:</b> 1<br><b>Cargo:</b> 20kg, 1<br><b>Maneuver:</b> +1<br><b>SDP:</b> 7 (0)<br><b>SP:</b> 0<br><b>Mass:</b> 15kg",
+    "source": "Chr3",
+    "cost": 100.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "h9jVPRxoHaDlt8SO",
+  "name": "Blitzkrieg Arc-Thrower",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> M<br><b>Humanity Loss:</b> 2d6<br><p>EX 0 - R 3d6 (1/2 R 1/2 S) 4 1 ST 10m</p>",
+    "source": "Chr4",
+    "cost": 1050.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

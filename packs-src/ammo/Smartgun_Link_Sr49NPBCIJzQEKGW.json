@@ -1,0 +1,22 @@
+{
+  "_id": "Sr49NPBCIJzQEKGW",
+  "name": "Smartgun Link",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Firearm Accessories<br><p>Smartguns are modified ver\u00ad sions of normal firearms, linked to an internal microcomputer, which in turn is jacked to a human operator. A smartgun uses a small sonic or laser projector to lock onto the target, scanning it thousands of times per second. As the gun traverses the desired target, the computer link picks up your mental fire signal (or incoming data from the target\u00ad ing reticule of your cyberoptic) and triggers the gun. Smartguns are far more accurate than most other guns; using them automati\u00ad cally gives you a +2 to any firearms attack you are making. The cost of adapting a normal gun to smartgun configuration is twice the normal cost of the gun. Machine/Tech Link: This allows the user to interface with (and control) any autofactory or heavy machine operating from a MLINK\u00ad based control system. You can also control small machines/appliances in non-factory situations. Data Term Link: This co-processor allows the user to directly access and store information from a DataTerm, transferring it to a Times Square Marquee, or a LCD screen for display (in game terms, this allows the character to access information as if a DataTerm were available, even if it isn't) Interface Plugs: These are the staple of Cy\u00ad berpunk culture. Usually installed in the bones of the wrist, spine or skull, they tap into major nerve trunks and interface with the neural proc- essor to send and receive signals. The plug itself can be used to insert information and reflex \"skill chips\", or as a plug In for a set of interface cables (allowing you to directly control any device you have the proper \"link\" with). In game terms, interface plugs allow the player to directly link to many types of machin~s. such as cybermodems or cybervehicles. Interface plugs are quite common; many com\u00ad panies will even pay for their installation. Quite a few factory and construction workers now \"stud\" directly into their machines. Interface plugs are critical to people like Netrunners (who must have them to gain the speed and ability to run the Net), and Solos (who use them to operate smartguns). Most people wear their plugs on wrists for ease of use. Occasionally, a true cybertechie will mount them at the temples (a plug head), just behind the ears (called a frankenstein) or in the back of the head (a puppethead). Some cover them with inlaid silver or gold caps, others with wristwarmers. Once again, a matter of style. Chipware There are a wide variety of cybernetic devices available to the man on the move in the 2000's. But the basis for all these newtechs is chipware (also known as wet\u00ad ware by some), bio-plastic circuitry that allows the human body to mesh with the power of silicon microprocessors. There are two types of chipware; reflex (APTR) chips .and memoryware (MRAM) chips. Each piece of chipware operates exactly like the skill of the same name. To use chips requires two separate installa\u00ad tions: a neural processor located at the base of the spine, which translates the chip data into useful information, and a set of interface plugs or chipware sockets. The chip itself is a small, transparent sliver about an inch long, often color-coded for identification. It is inserted into the inter\u00ad face plug point down. It takes one turn to change chips. You may \"run\" as many separate chip programs at one time as your current INT stat. Example: My /NT is 7. This means I can have up to seven different program chips operat\u00ad ing at one time. I could be chipped for Karate, AV-4 Piloting, Pistol, Assault Weapons, AV-4 repair, Play Instrument and Specific Know/-</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

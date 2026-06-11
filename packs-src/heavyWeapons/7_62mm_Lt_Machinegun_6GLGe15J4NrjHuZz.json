@@ -1,0 +1,33 @@
+{
+  "_id": "6GLGe15J4NrjHuZz",
+  "name": "7.62mm Lt Machinegun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 1200.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "7.62",
+    "damage": "6d6+2 (7.62)",
+    "shots": "100",
+    "rof": "10",
+    "reliability": "VR",
+    "range": "500m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

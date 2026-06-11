@@ -1,0 +1,33 @@
+{
+  "_id": "PQ5avXOpQa5Uw1FQ",
+  "name": "\"Big Boomer\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 550.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+1",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": ".477",
+    "damage": "5d6@ (.477)",
+    "shots": "8",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "100m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

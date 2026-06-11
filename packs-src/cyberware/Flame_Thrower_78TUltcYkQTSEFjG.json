@@ -1,0 +1,22 @@
+{
+  "_id": "78TUltcYkQTSEFjG",
+  "name": "Flame Thrower",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 2d6<br><p>Range 1m, 4 sh ots, Damage is 2d6, then 1d6/2</p>",
+    "source": "CP20",
+    "cost": 600.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

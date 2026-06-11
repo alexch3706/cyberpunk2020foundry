@@ -21,6 +21,10 @@ npm-debug.log
 docs/*.pdf
 docs/*core-rules-extracted.md
 
+# Compendium research pipeline (extracted PDF text, inventories)
+.research/
+.venv-research/
+
 # OpenClaw agent workspace (local infra, not part of Foundry system)
 .agents/
 .openclaw/
@@ -56,3 +60,4 @@ _bmad-output/
 
 # Design artifacts (UX, prototypes, WDS output)
 design-artifacts/
+__pycache__/

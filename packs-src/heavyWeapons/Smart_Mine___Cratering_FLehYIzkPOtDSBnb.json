@@ -1,0 +1,33 @@
+{
+  "_id": "FLehYIzkPOtDSBnb",
+  "name": "Smart Mine - Cratering",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SF",
+    "cost": 0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "1-16d10, x2 Pen 1 1 VR",
+    "shots": "1-16m",
+    "rof": "x30+",
+    "reliability": null,
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

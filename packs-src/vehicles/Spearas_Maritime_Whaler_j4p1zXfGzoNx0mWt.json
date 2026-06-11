@@ -1,0 +1,22 @@
+{
+  "_id": "j4p1zXfGzoNx0mWt",
+  "name": "Spearas Maritime Whaler",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 50<br><b>Acc/Dec:</b> 14/24<br><b>Crew:</b> 3<br><b>Range:</b> 1400<br><b>Passengers:</b> 3<br><b>Cargo:</b> 75m 3<br><b>Maneuver:</b> +0<br><b>SDP:</b> 150 (7)<br><b>SP:</b> 0<br><b>Mass:</b> 150 tons",
+    "source": "P3",
+    "cost": 30000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

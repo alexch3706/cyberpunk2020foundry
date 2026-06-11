@@ -1,0 +1,33 @@
+{
+  "_id": "1Vz35BOr6yVYeQ2v",
+  "name": "C6 \"Flatfire\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "LU",
+    "cost": 0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "P",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "8d10 per kilo 1 1 VR",
+    "shots": "5m",
+    "rof": "100/kg",
+    "reliability": null,
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

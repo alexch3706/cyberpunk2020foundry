@@ -1,0 +1,33 @@
+{
+  "_id": "7ZoV5gzUR846EqaY",
+  "name": "Constitution Hurricane",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "P&S",
+    "cost": 1000.0,
+    "weight": 1,
+    "weaponType": "SHT",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B6",
+    "damage": "4d6 (12ga)(B6)",
+    "shots": "40",
+    "rof": "4/20",
+    "reliability": "ST",
+    "range": "70m",
+    "attackType": "Autoshotgun"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

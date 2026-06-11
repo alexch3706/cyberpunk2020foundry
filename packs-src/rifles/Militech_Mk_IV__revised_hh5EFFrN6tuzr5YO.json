@@ -1,0 +1,33 @@
+{
+  "_id": "hh5EFFrN6tuzr5YO",
+  "name": "Militech Mk IV (revised)",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CB2",
+    "cost": 800.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": "B6",
+    "damage": "6d6-1/5d6 (B6)",
+    "shots": "35",
+    "rof": "3/30",
+    "reliability": "VR",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

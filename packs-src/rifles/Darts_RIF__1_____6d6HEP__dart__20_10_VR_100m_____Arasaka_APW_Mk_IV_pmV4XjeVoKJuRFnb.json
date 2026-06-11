@@ -1,0 +1,33 @@
+{
+  "_id": "pmV4XjeVoKJuRFnb",
+  "name": "- Darts RIF +1 - - 6d6HEP (dart) 20 10 VR 100m - - Arasaka APW Mk IV",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SF",
+    "cost": 6450.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "5000m",
+    "damage": "4d10API (5000m)",
+    "shots": "9+1",
+    "rof": "2",
+    "reliability": "ST",
+    "range": "100m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

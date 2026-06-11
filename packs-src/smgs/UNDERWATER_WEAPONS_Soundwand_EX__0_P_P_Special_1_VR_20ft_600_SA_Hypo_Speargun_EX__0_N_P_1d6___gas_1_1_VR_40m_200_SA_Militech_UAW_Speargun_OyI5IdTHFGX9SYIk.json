@@ -1,0 +1,33 @@
+{
+  "_id": "OyI5IdTHFGX9SYIk",
+  "name": "UNDERWATER WEAPONS Soundwand EX +0 P P Special 1 VR 20ft 600 SA Hypo Speargun EX +0 N P 1d6~ +gas 1 1 VR 40m 200 SA Militech UAW Speargun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SF",
+    "cost": 1500.0,
+    "weight": 1,
+    "weaponType": "SMG",
+    "accuracy": "+1",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": "500m",
+    "damage": "2d6+1~ (500m)",
+    "shots": "10",
+    "rof": "3",
+    "reliability": "VR",
+    "range": "50m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

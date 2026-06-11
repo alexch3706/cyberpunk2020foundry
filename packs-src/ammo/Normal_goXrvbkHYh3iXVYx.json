@@ -1,0 +1,22 @@
+{
+  "_id": "goXrvbkHYh3iXVYx",
+  "name": "Normal",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Ammunition Types<br><p>Armor piercing. Various damage ratings from 1 D6+ 1 to 2D6-1. See the weapons table in this section for load sizes, costs and damage. Common. Anti-Armor: Double the needle's natural armor piercing qualities. Armor's SP is 1/4 against this attack. 4x cost. Uncommon. Polson: Rounds which carry a drug or poi\u00ad son on the surface or in an internal reservoir. Advanced versions have needles made of water soluble crystals of the toxin or drug. These dissolve on contact with blood. 2x cost plus toxin cost per dose. Uncommon. Exploding: Made of solid explosive or metal with an explosive core. These can be rigged for explosion on impact or on contact with moisture. Impact rounds explode on contact with armor or flesh for 4D6 damage. Moisture rounds are armed by firing and explode on contact with water. They do nor\u00ad mal load damage to armor, exploding only if they penetrate and enter flesh. Once fired, moisture rounds can be triggered by any water source, including sweat, rain, etc. Don't touch undetonated rounds imbedded in armor or surfaces and don't fire these rounds in a rain storm. 5x cost. Uncommon.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

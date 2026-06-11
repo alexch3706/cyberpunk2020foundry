@@ -1,0 +1,33 @@
+{
+  "_id": "wSF5nP8PH63MSijn",
+  "name": "Tsunami \"Airhammer\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr2",
+    "cost": 0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+1",
+    "concealability": "J",
+    "availability": null,
+    "ammoType": null,
+    "damage": "Var Special (5.3mm) 5/7 2 ST",
+    "shots": "50m",
+    "rof": "325/400",
+    "reliability": null,
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

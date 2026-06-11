@@ -1,0 +1,22 @@
+{
+  "_id": "rG85yaGUCFPpDMfO",
+  "name": "Vosper/Wolf Riverine Patrol Boat",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 30<br><b>Acc/Dec:</b> 15/10<br><b>Crew:</b> 5<br><b>Range:</b> 400<br><b>Passengers:</b> 1<br><b>Cargo:</b> 1.6 tons<br><b>Maneuver:</b> +1<br><b>SDP:</b> 100 (5)<br><b>SP:</b> 40<br><b>Mass:</b> (2) 5 tons",
+    "source": "UK",
+    "cost": 600000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

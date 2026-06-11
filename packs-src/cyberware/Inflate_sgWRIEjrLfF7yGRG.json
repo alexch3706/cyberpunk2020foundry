@@ -1,0 +1,22 @@
+{
+  "_id": "sgWRIEjrLfF7yGRG",
+  "name": "Inflate",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 1d6<br><p>Gives apparent BOD 12, -10 SP, +2 Intimidation</p>",
+    "source": "KCJ",
+    "cost": 300.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

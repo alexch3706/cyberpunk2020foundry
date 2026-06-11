@@ -1,0 +1,22 @@
+{
+  "_id": "AvFktZcuvrDDge49",
+  "name": "Enviroscanner",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Businesswear:<br><p>(You knew they had to be good for something!) In regards to the water: Bay area pollution makes the chemical spill just as hard to see underwater as it is aboveground, but the spill seems to spread around the sinking tanker like a dark well of ink. It could be heavier than water, but it's too hard to tell at the moment. Does the character risk it and stay under water until his oxy- gen supply runs out or he starts to dissolve? Hydrofluoric Acid: The gaseous chemical toxin that spilled out of Arabia's Wish produces an effect similar to a nerve agent. If a character is exposed to the toxin, whether by breath or by skin exposure, he/she immediately takes 1d6 damage PER ROUND. Body Type Modifiers do not apply in this instance. Skinweave delays affects of the toxin for two rounds, because it takes longer for the gas to work its way into the victim's pores. The only combatant to the toxin is Toxin Binders, which subtract one point of damage from the result each round. The character makes the appropriate STUN and DEATH saves as damage accumulates. All attrib- utes are reduced by half. The affected character feels dizzy and nauseated dur- ing the first few rounds as the toxin takes effect. Vision blurs as the optical membrane is eaten away (in cases of \"real\" eyes). The character feels burning sensations from exposed portions of his body as the calcium in his bones is digested by the acid. Once the toxin has done enough damage to place the character in a \"mortal wound\" status, the character starts vomiting repeatedly. At a rate of 1d6 per round, death is soon to follow. Exposed characters receive this damage until they are dead or shower themselves in distilled water thor- oughly (3-4 hours). Even then, probability of death is fairly high. There is no specific treatment or cure for the aerosol acid produced by HF, except for a flushing of the system with water. The cloud has a concentration of hydrofluoric acid at approximately 5,000 ppm (parts per million). That's offi- cially nasty, ladies and gentlemen.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

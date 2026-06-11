@@ -1,0 +1,22 @@
+{
+  "_id": "hGybSNCdZAw4gc7z",
+  "name": "Modular Arm",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CR<br><b>Humanity Loss:</b> 1d6+3<br><p>25 SDP, 17 SP, 2 option spaces, 1d6 punch</p>",
+    "source": "KCJ",
+    "cost": 4000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

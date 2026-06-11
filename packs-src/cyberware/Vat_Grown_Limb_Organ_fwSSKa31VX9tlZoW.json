@@ -1,0 +1,22 @@
+{
+  "_id": "fwSSKa31VX9tlZoW",
+  "name": "Vat Grown Limb/Organ",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CR/MA<br><b>Humanity Loss:</b> -<br><p>Can match any genotype, but takes time to grow</p>",
+    "source": "CP20",
+    "cost": 4.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

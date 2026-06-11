@@ -1,0 +1,33 @@
+{
+  "_id": "N8qoJq9MObjZp94k",
+  "name": "Static Pistol",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "WGF",
+    "cost": 475.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "3d6 + Stun -4",
+    "shots": "20",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "50m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

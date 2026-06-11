@@ -1,0 +1,33 @@
+{
+  "_id": "vYWgnymCX4M3A8VR",
+  "name": "BLP Breech Spray",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 300.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "-1",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "3kg C-6",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "2m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

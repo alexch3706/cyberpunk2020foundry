@@ -1,0 +1,33 @@
+{
+  "_id": "p7wRmkDIaWLjaQfB",
+  "name": "Airfoil Rifle Grenades",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SW",
+    "cost": 0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "-2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "Varies - - -",
+    "shots": "300m",
+    "rof": "x2",
+    "reliability": null,
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

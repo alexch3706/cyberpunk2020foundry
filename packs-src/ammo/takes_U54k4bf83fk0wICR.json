@@ -1,0 +1,22 @@
+{
+  "_id": "U54k4bf83fk0wICR",
+  "name": "takes",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Explosive Effects<br><p>a liking to Arnold as a publicity stunt and the PCs are hired to take care of him. Once again, this plunges them in the middle of a rather bizarre crossfire. TECHIES: \u2022 Again, this will probably work best as an exchange of favors. Either the techie owed a favor to Arnold's dad or to Ken. The players were probably not expecting babysitting as one of the possible adventures, but indeed, these are make for different adventures in babysitting ...</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

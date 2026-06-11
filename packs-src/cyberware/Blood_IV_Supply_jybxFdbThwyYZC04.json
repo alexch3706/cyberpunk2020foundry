@@ -1,0 +1,22 @@
+{
+  "_id": "jybxFdbThwyYZC04",
+  "name": "Blood/IV Supply",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 1<br><p>4 x 1/4 litre containers. 1 space</p>",
+    "source": "Chr3",
+    "cost": 300.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

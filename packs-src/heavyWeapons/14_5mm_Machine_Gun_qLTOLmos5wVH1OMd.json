@@ -1,0 +1,33 @@
+{
+  "_id": "qLTOLmos5wVH1OMd",
+  "name": "14.5mm Machine Gun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 2500.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "14.5mm",
+    "damage": "7d10 (14.5mm)",
+    "shots": "100",
+    "rof": "3/5",
+    "reliability": "ST",
+    "range": "550m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

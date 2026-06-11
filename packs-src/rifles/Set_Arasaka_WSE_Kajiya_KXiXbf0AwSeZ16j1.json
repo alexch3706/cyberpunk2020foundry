@@ -1,0 +1,33 @@
+{
+  "_id": "KXiXbf0AwSeZ16j1",
+  "name": "Set-Arasaka WSE Kajiya",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SW",
+    "cost": 1000.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "B5",
+    "damage": "9d6+3 (7.62 ET)(B5)",
+    "shots": "5",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "500m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

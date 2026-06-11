@@ -1,0 +1,22 @@
+{
+  "_id": "4kPZQyNwgdp2c8YD",
+  "name": "Building Solenoid",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Advanced Weapon Modifications<br><p>Trigger Replaces trigger with firing stud .5x Aver 1hr</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

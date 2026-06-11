@@ -1,0 +1,22 @@
+{
+  "_id": "g693Ds4fX2wSJygH",
+  "name": "British Aerospace AV FAB",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 225<br><b>Acc/Dec:</b> 50/50<br><b>Crew:</b> 2<br><b>Range:</b> 1600<br><b>Passengers:</b> 4<br><b>Cargo:</b> 3333kg, 4<br><b>Maneuver:</b> +0<br><b>SDP:</b> 250 (12)<br><b>SP:</b> 25<br><b>Mass:</b> (1) 10 tons",
+    "source": "Chr4",
+    "cost": 840000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

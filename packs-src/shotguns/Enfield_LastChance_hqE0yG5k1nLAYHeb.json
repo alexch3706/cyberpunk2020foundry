@@ -1,0 +1,33 @@
+{
+  "_id": "hqE0yG5k1nLAYHeb",
+  "name": "Enfield LastChance",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "ES",
+    "cost": 60.0,
+    "weight": 1,
+    "weaponType": "SHT",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": "B12",
+    "damage": "4d6 (12ga)(B12)",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "UR",
+    "range": "25m",
+    "attackType": "Autoshotgun"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

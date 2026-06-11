@@ -1,0 +1,22 @@
+{
+  "_id": "APkwGRMZgBcsgkJC",
+  "name": "Anti-Tank",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Grenades<br><p>A HEAT warhead built into a bomb. If it hits, it destr oys whatever it hits ... Penetration is halved by Composite Armor. Cluster: Dual-purpose bomblets that carpet an area. Any vehicle within the burst radius has a 20% chance (9-10 on 1 d10) of sustaining a direct hit, with attendant Penetration (subtract ( ... scribble. scribble ... ) \"uh. leg in ditc:h ... (scribble. scribble ... ). \"ta\ufffd\u25a1 in alley;\u2022 [ ... scribble ... ) \"head in enterse ..... [rub. rub. rub. scribble). \"head in inter\u00ad sex ..... (rub. rub. rub. scrib\u00ad ble). \"head in inte\ufffdec:sh ... ... ah. frng!\" (rub. rub. BOOT!). \"head in ditc:h\" ( .. .5cribble. scribble.) -report being filled out by unident ified Night City paramedic. 3 from the bomb's normal Penetration, then multiply the result by 5 to get the direct-hit pen\u00ad etration. Composite Armor halves the final Penetration). Fuel-Air Explosive: This bomb covers its burst area with an explosive gas, which is sparked to cause a gigantic fireball/shockwave. It is the most destructive explosive in the world, short of thermonuclear ordnance. Any target caught in the burst area suffers a Penetration attack of 10. Only sealed armor offers any armor protec\u00ad tion or resistance! BDMB!i BOMBS WA PEN BURST #SHOTS ROF 100-lb -3 5 10m 1 250-lb -3 6 16m 500-lb -3 8 48m 750-lb -3 9 64m 1000-lb -3 10 72m 2000-lb -3 11 96m 3000-lb -3 12 104m OPTIONS WA PEN BURST COST Anti-Personnel x1/2 x2 x2 Anti-Tank x2 4m x3 Cluster -3 x2 x3 FAE x3 x10 Guided +2 x2 Incendiary x2 x3 Napalm 3 2x long, 1/2x wide x5 i!i! MAXIMUM METAL Guided: This option allows the bomb to be remote-controlled, as per the bombing rules. Incendiary: Anything flammable within the bomb 's burst area catches fire. Treat as a flamethrower attack that lasts 20 turns or until the burning chemical is removed from contact (2d10 damage/Penetration 1 per turn). Napalm: Jellied gasoline on fire, this is the most hideous bomb weapon. Anyone or any\u00ad thing caught in the burst area is covered in napalm, and sustains a Penetration 3 hit every turn for 20 turns. The stuff burns in water, too, so immersion is no help. Only sealed armor pro\u00ad vides any protection from this attack. LA5ER5 Vehicular lasers are primarily restricted to space warefare. Inside the atmosphere, rail\u00ad guns and electrothermal-enhanced weapons have the lion's share of developmental funds. At the moment, the only viable battlefield laser weapon is the Painting Laser, used to guide laser-guided weaponry. It can be blocked by anti-laser aerosols and smoke. HVY or RIF +3 N P No Damage (looking directly into it has a 90% chance of blinding; biological eyes are perma\u00ad nently blinded!) - 1 VR 1,000 euro. \u25a0 REL COST SPACES VR 250 1 VR 450 1 VR 500 2 VR 600 3 VR 700 4 VR 1000 5 VR 1500 6 \"Nice shot. Mendez. That one went 5t.-aight into the jaccuzi. I'd say we ju5t took out fifty perrent of Rana Co.-p's boarn of di.-ec\u00ad to.-s. Let's bombshell outta he.-e.\" -Lt. Lau.-a Ethf\"idge. Militech Ext.-actions.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

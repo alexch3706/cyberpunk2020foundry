@@ -1,0 +1,22 @@
+{
+  "_id": "ntMsv5BWKGaCmiA6",
+  "name": "ECM Scrambler",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> PHONE UPGRADES<br><p>This implant improves your radio or audio splice with a scrambler, so it cannot be listened into . In game terms, this makes all radio or audiosplice communications private, unless the interceptor has a descrambler unit and a lot of time on his hands. Bug Detector: This mini-receiver is designed to pick up signals transmitted by all types of radio bugs . When the bug is active, its transmissions \"I can see for 1 miles and miles 1 and miles and t miles and 1 miles ... \" -The Who '0 I 't I \"Hear me ... See me ... '1 Touch me ... Kill I me ... \" I I . -Sarah 0' Connor 1 ~ Tribute to Tommy, 1 t 2019</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

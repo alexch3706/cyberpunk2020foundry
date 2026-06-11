@@ -1,0 +1,22 @@
+{
+  "_id": "JHBz0VftWxZu5V7f",
+  "name": "Sharkman",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> MA+<br><b>Humanity Loss:</b> 12d6<br><p>Gills, sonar, skinweave & change, muzzle, etc</p>",
+    "source": "Chr2",
+    "cost": 17700.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

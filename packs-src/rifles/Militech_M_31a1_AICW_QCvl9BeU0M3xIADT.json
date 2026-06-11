@@ -1,0 +1,33 @@
+{
+  "_id": "QCvl9BeU0M3xIADT",
+  "name": "Militech M-31a1 AICW",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 1695.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "B4",
+    "damage": "4d6 (4.5mm)(B4)",
+    "shots": "150",
+    "rof": "3/30",
+    "reliability": "ST",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "nLFRm6FRQp8Ch6DJ",
+  "name": "Arasaka WXA Sentry",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CB1",
+    "cost": 3000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "7.62mm",
+    "damage": "6d6+2 (7.62mm)",
+    "shots": "500",
+    "rof": "20",
+    "reliability": "VR",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

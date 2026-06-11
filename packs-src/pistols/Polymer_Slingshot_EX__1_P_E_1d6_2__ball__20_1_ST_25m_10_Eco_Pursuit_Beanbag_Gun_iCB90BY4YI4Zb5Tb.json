@@ -1,0 +1,33 @@
+{
+  "_id": "iCB90BY4YI4Zb5Tb",
+  "name": "Polymer Slingshot EX -1 P E 1d6/2 (ball) 20 1 ST 25m 10 Eco Pursuit Beanbag Gun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 100.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "-2",
+    "concealability": "J",
+    "availability": "E",
+    "ammoType": null,
+    "damage": "Stun",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "3m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "Y95ssNdKa3RSF5Af",
+  "name": "Arasaka WSSX",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SF",
+    "cost": 3600.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+3/5",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "20mm FF",
+    "damage": "4d6x1d3* (20mm FF)",
+    "shots": "13",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "600m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

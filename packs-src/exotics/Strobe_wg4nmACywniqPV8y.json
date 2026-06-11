@@ -1,0 +1,33 @@
+{
+  "_id": "wg4nmACywniqPV8y",
+  "name": "Strobe",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "I1.4",
+    "cost": 150.0,
+    "weight": 1,
+    "weaponType": "EX",
+    "accuracy": "+0",
+    "concealability": "-",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "10/15 blind 1d6 hrs",
+    "shots": "-",
+    "rof": "1/2",
+    "reliability": "ST",
+    "range": "3m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

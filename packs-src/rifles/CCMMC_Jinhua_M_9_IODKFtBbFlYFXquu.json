@@ -1,0 +1,33 @@
+{
+  "_id": "IODKFtBbFlYFXquu",
+  "name": "CCMMC Jinhua M-9",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 125.0,
+    "weight": 1,
+    "weaponType": "RIF",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B7",
+    "damage": "6d6+2 (7.62)(B7)",
+    "shots": "35",
+    "rof": "1/25",
+    "reliability": "ST",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

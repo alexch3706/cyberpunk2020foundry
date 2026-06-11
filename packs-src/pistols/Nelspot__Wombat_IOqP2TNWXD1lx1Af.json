@@ -1,0 +1,33 @@
+{
+  "_id": "IOqP2TNWXD1lx1Af",
+  "name": "Nelspot \"Wombat\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 200.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "-1",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "D rugs",
+    "shots": "20",
+    "rof": "2",
+    "reliability": "UR",
+    "range": "40m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

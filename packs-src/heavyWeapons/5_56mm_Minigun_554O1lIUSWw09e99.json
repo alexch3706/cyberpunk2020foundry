@@ -1,0 +1,33 @@
+{
+  "_id": "554O1lIUSWw09e99",
+  "name": "5.56mm Minigun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 2000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "5.56",
+    "damage": "5d6 (5.56)",
+    "shots": "1000",
+    "rof": "100",
+    "reliability": "ST",
+    "range": "450m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

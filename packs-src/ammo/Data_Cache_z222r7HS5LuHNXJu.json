@@ -1,0 +1,22 @@
+{
+  "_id": "z222r7HS5LuHNXJu",
+  "name": "Data Cache",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> PERSONAL ELECTRONICS<br><p>Modeled on the proven security of the Arasaka Jetsetter Briefcase, the Whitegate is fitted with 100 or 200 MU of non-volatile memory which must be connected to a suitable main\u00ad frame for access. For added security, you can load your own choice of ICE into the access proto\u00ad cols. Only 8000eb for the 1 O0MU cache; 10,500eb for the 200MU cache, and 13,000eb for our maximum 300MU cache! Game notes: SOP 15, SP30. The Data Cache cannol be accev;ed by a cybermodem (insuffident processing power to address the memory). liiilfi 2'i'i@;j Q\u2022/Qj:f-J\u2022t-b\u00b7 ... \u00b7 &i f;f4 d ii; ilt1f- \u00a5 iiilliiiil()</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

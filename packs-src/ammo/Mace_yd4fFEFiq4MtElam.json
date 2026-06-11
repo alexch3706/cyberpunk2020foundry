@@ -1,0 +1,22 @@
+{
+  "_id": "yd4fFEFiq4MtElam",
+  "name": "Mace",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Artillery Shells<br><p>As any survivor of 1960s demon\u00ad strations will tell you, there's nothing like acrolein (trademarked MACE)for reducing a victim to a pain-blinded, bubbly mass of mucous. A shot of this stuff will reduce your INT and COOL to 1 and halve your REF and MA. Acrolein is easily made in a home laboratory with a TECH roll of 20 and the appropriate distilling equipment A shot will last about half an hour. Tear and Vomit Gas: The victim must make a BOD roll of 20 to avoid its effects, which are described above, under Gre\u00ad nades. Acid or Burn Gas: 06 bum damage to the opponent's face. Sleep Gas: Victim must make a BOD roll of 20 in order not tovisit slumberland. Neurotoxln: The victim must make a BOD roll of 20 in order not to drop dead. (And while we're on the subject) POISON Flechette rounds, as described above, can be poisoned, usually with either sleep drugs or neurotoxins. Since the drug enters the system through the muscle rather than directly, as with a gas or ingestion, there will be a delay before the drug takes effect: 010+30 seconds. If the attacker makes a critical hit, the flechette is assumed to have hit an artery or other vulnerable location and will take effect immediately. Roll for each flechette hit. Neurotoxin will cause a BOD roll to be made. Failure to make a roll of 15 results in death, failure to make 20 results in un\u00ad consciousness. Application of an antidote will allow any failed rolls to be rerolled, with a +3 to the total. The halving of the various stats will continue for 3010 min\u00ad utes. Sleep: will also require an immediate BOD roll. Failure to make 15 results in uncon\u00ad sciousness, failure to make 20 results in REF, INT, and BOD being halved for 2010 turns. Results of other types of poison- psy\u00ad chotropic drugs, say-should be impro\u00ad vised by the referee. SECURITY DEVICES With all this lethal hardware floating around, technology has responded. Even modest businesses can afford scanners at the door that will let the operators know if a cus\u00ad tomer is packing before they let him inside. Some of the scanners-required by law to display a warning- are equipped with le\u00ad thal weaponry that will fire lasers, shot\u00ad guns, flechette weapons, or whatever at anyone failing to pass the test. Most will just set off alarms, but still it isn't going to do your public cool a whole lot of good to startbells ringing every time you walk through a door. In some bad neighbor\u00ad hoods the business might have someone behind bulletproof glass who can collect weapons through a slit similar to those used at drive-up banks. Most implant hard\u00ad ware isn't detectable, though an SMG concealed in a cyberarm certainly is. And if you've got a flamethrower in there, you might be advised to leave the fuel canlster in the car. A plastic gun will pass the scan 60% of the time .. But why mess with it at all? Get hardwired instead, and leave the weap\u00ad onry at home. HARDWIRED \u25a0\u20221i\\lrfj:jfJ-)\u00a7j=@\ufffd</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

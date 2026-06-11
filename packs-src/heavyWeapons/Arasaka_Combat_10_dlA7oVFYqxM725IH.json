@@ -1,0 +1,33 @@
+{
+  "_id": "dlA7oVFYqxM725IH",
+  "name": "Arasaka Combat 10",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 10000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "B6",
+    "damage": "8D6 (40mm HE)(B6)",
+    "shots": "10",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "250m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

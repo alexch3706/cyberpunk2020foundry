@@ -1,0 +1,22 @@
+{
+  "_id": "GRabjsNpJ9b4RTkp",
+  "name": "Hip-mounted Powerpack",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Firearm Accessories<br><p>x2 shots, +5m to microwaver range, 4 kg 250 Chr2</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

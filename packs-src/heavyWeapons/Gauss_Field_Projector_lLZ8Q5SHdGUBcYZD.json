@@ -1,0 +1,33 @@
+{
+  "_id": "lLZ8Q5SHdGUBcYZD",
+  "name": "Gauss Field Projector",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr2",
+    "cost": 10000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "Stun (BOD-2)x10min",
+    "shots": "10",
+    "rof": "1",
+    "reliability": "ST",
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "Il8VQITciNhP8V6V",
+  "name": "Spraypaint Grenade",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr2",
+    "cost": 20.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "P",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "Special (4m) 1 1",
+    "shots": "ST",
+    "rof": "Throw",
+    "reliability": null,
+    "range": null,
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

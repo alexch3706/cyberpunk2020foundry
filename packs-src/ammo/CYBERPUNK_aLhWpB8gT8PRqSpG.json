@@ -1,0 +1,22 @@
+{
+  "_id": "aLhWpB8gT8PRqSpG",
+  "name": "CYBERPUNK",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> ENTERTAINMENT<br><p>CYBERPUNK The original game of the dari< futurel A world of corporate assassins, heavy metal heroes and brainburning cyberhack\u00ad ers; packed with cutting edge technology and intense urban action. In one box is everything you need to tackle the mean streets of the the year 2013! 3 books, dice, & reference sheet $20 SOLO OF FORTUNE Now, the inside story on the most dangerous CYBERPUNK charac\u00ad ter- the SOLO! Reviews for new weapons, job boards and scoops on world hot spots, plus other tips on how you can become a deadly member of the corporate elite. 80 pga. $10 R. TALSORIAN HARDWIRED\u2122 The total coverage of one of the Cyberpunk genre's most popular books. Deltas, cyber\u00ad snakes, panzerboys and dirtgirls, all up against the might of the Orbital Corporations! h's all here in this authorative sourcebook written by the creator of Hardwired himselfl100pgs. $12 NEAR ORBIT===- NEAR ORBIP-M A realistic space supplement for the CYBERPUNK universe, based on the real technologies of today\u00ad and tomorrow. Orbital colonies, spaceplanes, hypersonic fighters and complete rules for living, wori<ing and fighting on the High Frontier. For Fall, 1989. 80 pga. $10 GAMES INC. P.O. BOX 7356, BERKELEY, CA 94707-0356 Rockerboy 43</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "E83y3y3fZjLNkBO8",
+  "name": "Sternmeyer P-41",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CB1",
+    "cost": 425.0,
+    "weight": 1,
+    "weaponType": "P",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": "10mm",
+    "damage": "2d6+3 (10mm)",
+    "shots": "12",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "50m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "71tWAPsLY73wj7iK",
+  "name": "Large Power Saw",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 1250.0,
+    "weight": 1,
+    "weaponType": "MEL",
+    "accuracy": "-2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "1/3SP",
+    "damage": "8d6~ (1/3SP)",
+    "shots": "-",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "2m",
+    "attackType": "Melee"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "fh3RnzhSMFSNoPaf",
+  "name": "Militech Renegade SAW",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CB2",
+    "cost": 1100.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "B6",
+    "damage": "6d6-1 (6.5 H)(B6)",
+    "shots": "200/35",
+    "rof": "20",
+    "reliability": "ST",
+    "range": "400m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

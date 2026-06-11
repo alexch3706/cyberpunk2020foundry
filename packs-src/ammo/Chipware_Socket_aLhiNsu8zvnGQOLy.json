@@ -1,0 +1,22 @@
+{
+  "_id": "aLhiNsu8zvnGQOLy",
+  "name": "Chipware Socket",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Phoney Cyberware:<br><p>A small socket used only for inserting chipware (see above). With a chipwear socket, you can use your interface plugs to control other things (such as weapons or ve\u00ad hicles), while still having access to MRAM and APTR information. Holds 1 0 chips. Implants Implants are the useful little things you get plugged in to make living easier; things that you can't replace from a Body Bank, or that you may want for a specific job. Note: Motion detectors, radiation detectors, and chemical analysers are 360\u00b0 systems. Ra\u00ad dars/Sonars are 180\u00b0 systems. CHIPS & PRICES Type Price Per Level ATTR (MRAM) Personal Groomlng ............... 100 Wardrobe\u2022 Style ................. 100 BODY (APTR) Swimming ............................. 100 INT (MRAM) Accounting ....\u2022\u2022...................\u2022. 150 Anthropology \u2022..........\u2022........\u2022.. 150 Biology ...........\u2022.....\u2022\u2022...\u2022........... 150 Botany \u2022\u2022\u2022..\u2022.\u2022...\u2022.\u2022..........\u2022\u2022\u2022....... 150 Chemistry ..\u2022...\u2022\u2022\u2022..\u2022.\u2022............... 150 Education & Gen.Know ......... 200 Expert (pick subject) ................................ Ref Decision Geology .\u2022\u2022...\u2022...........\u2022\u2022.....\u2022.\u2022..... 150 History .................................. 150 Know Language (choo1e) .\u2022\u2022.\u2022 200 Mathematics ......................... 200 Physics .................................. 200 Programming ....................... 300 Stock Market ........................ 300 Wilderness Survival .............. 200 Zoology ................................. 150 Daytimer Chip ...................... 100 REF (APTR) Archery ................................. 300 Dance .................................... 150 Driving .................................. 150 Fencing ................................. 300 Handgun ...\u2022....\u2022...\u2022\u2022................\u2022 300 Heavy Weapon\u2022 ........\u2022\u2022\u2022......... 400 Martial Art (choo1e type) ...\u2022 350 Melee .................................... 150 Motorcycle ................\u2022.....\u2022\u2022\u2022... 150 Operate Hvy. Machinery ....... 200 Pilot (Gyro) ........................... 300 Pilot (Fixed Wing) ................ 300 Pilot (Dirigible) .................... 300 Pilot (Vect.Thru1tVehide) .... 350 Rifle ...................................... 300 Submachinegun .................... 300 TECH (APTR) Aero Tech ............................. 2S0 AV Tech ................................ 300 BAIie Tech ............................. 200 Cryotank Operation ............. 150 Cyberdeck Design ................. 200 CyberTech ............................. 300 Demolitions .......................... 300 Disguise ................................ 150 Electronio ............................ 1S0 Elect. Security ....................... 200 Fint Aid ................................ 150 Forgery ................................. 200 Gyro Tech ............................. 300 Ph\u2022rm\u2022ceuticals ................... 200 Pick Lock ............................... 150 Pick Pocket ........................... 150 Pl\u2022y Instrument .................... 150 Weapon smith ....................... 200 \ufffd</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "BKtDY9b0rAJDOCup",
+  "name": "cult",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> full medieval armor).<br><p>\" will create more friction than its worth. At these times, you will probably want to make the steps of the task clear by creating a Difficulty through stacking modifiers. In addition, modifiers allow you, as the Referee, to determine the relative difficulty of doing something and the ef\u00ad fect of prevailing conditions. Automatic Failure, Critical Success ; Trying to perform secretive task 1 while under observation ....... +4 On a natural die roll of 1, you have failed possibly master, (as op\u00ad posed to your stats, which only indicate a basic, natural ability at doing something). For example, if you had very good REF, you would probab ly pick up driving a car very easily. But you would not know how to drive a car until you had learned the skill of Driving. Each skill is related in some way to one of your basic stats. For example, the skill of Handgun is always related to the character's REF stat. Skills are always rated from 0 to 1 0, with 1 being a novice level of knowledge, and 10 being a master's level of ability. Skills are described on pgs.46 to 53, along with all pertinent notes and ~' gB .. i! .. ffi'iW~i!j~WE>tl1l!i'@?.m~:~~r\u00a7rtWi!f~J!ilitrfii '!fil!tlt!ll'&1!ffi\u2022i\u00b7 f[\u00b7<. \u00a7\u00b7ri\u00a7\u00b7\"'mJ1.~m; Roll an additional1 D1 0 and check the result</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

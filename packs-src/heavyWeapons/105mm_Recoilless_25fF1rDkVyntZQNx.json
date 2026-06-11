@@ -1,0 +1,33 @@
+{
+  "_id": "25fF1rDkVyntZQNx",
+  "name": "105mm Recoilless",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 30000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": null,
+    "ammoType": null,
+    "damage": "R/P 10d10HEAT, 2m",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "800m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

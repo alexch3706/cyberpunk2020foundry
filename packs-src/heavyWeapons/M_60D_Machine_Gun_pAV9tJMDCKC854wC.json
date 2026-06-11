@@ -1,0 +1,33 @@
+{
+  "_id": "pAV9tJMDCKC854wC",
+  "name": "M-60D Machine Gun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "HoB",
+    "cost": 1000.0,
+    "weight": 1,
+    "weaponType": "HVY",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B7",
+    "damage": "6d6+2 (7.62)(B7)",
+    "shots": "100",
+    "rof": "20",
+    "reliability": "VR",
+    "range": "500m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "d9o9NTB0eFrQjaXn",
+  "name": "MI-32 Hitter",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 180<br><b>Acc/Dec:</b> 16/16<br><b>Crew:</b> 2<br><b>Range:</b> 400<br><b>Passengers:</b> 0<br><b>Cargo:</b> None<br><b>Maneuver:</b> -2<br><b>SDP:</b> 80 (4)<br><b>SP:</b> 40<br><b>Mass:</b> (2) 8 tons",
+    "source": "SOF2",
+    "cost": 650000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

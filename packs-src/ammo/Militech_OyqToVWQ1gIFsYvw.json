@@ -1,0 +1,22 @@
+{
+  "_id": "OyqToVWQ1gIFsYvw",
+  "name": "Militech",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Webs and Nets<br><p>..there are some products that are outside the manufacturing giant's purview. Non-Militech products come from a variety of sources. Here are some items commonly carried or used by Lazarus personnel. MILITECH MK IV ASSAULT WEAPON (REVISED) The Mk IV is a potent, heavy duty, bullpup assault weapon only recently introduced to the Militech Cata- logue. Its recoil compensation system, and excellent design and balancing make it among the most control- lable weapons available. It has recently become the stan- dard issue weapon for all Lazarus non-airborne infantry units. It is also the standard issue rifle for U.S. infantry troops, complementing the Sternmeyer CG-13B, in ser- vice with special units, and theM-31al AICW just com- pleting trials. The Mk IV is based on the old Mk III design (therefore Revised), and chambers the new hybrid 6.5mm round (damage 6D6-1). The 6.5mm is a new concept that Militech is currently trying to market. It packs a wallop close to that of the heavy duty 7.62mm cartridge, while retaining a flat trajectory, controllability, and light cartridge weight reminiscent of the 5.56mm round. A big selling point of the Mk IV is that it comes with a quick change replacement barrel system that allows the weapon to be converted to 5.56mm within a few seconds, under battlefield conditions. 800eb. RIF +1 N C 6D6~1/5D6(6.5MM/5.56MM) 3S3O VR MILITECH DRAGON LIGHT ASSAULT WEAPON This is the standard Lazarus Group paratroop weapon, a light bullpup rifle chambered for the new 6.5mm round. It does not have a collapsing stock, but its compact design and light weight make it a practical weapon for airborne troops. The light weight of the hybrid 6.5mm cartridge means that paratroops can carry a large amount of ammunition on drops. It is designed to complement the Mk IV, and uses many of the same parts, including the sight, magazines, bolt and bolt carrier. 700eb. RIF 0 N C 6D6-1 (6.5MM) 35 3O VR MILITECH ARMS AVENGER As seen in Cyberpunk 2020. The standard issue sidearm for all Lazarus troops. 250eb. P 0 J E 2D6+1 (9MM) 1O 2 VR MILITECH VIPER SUB-MACHINEGUN 27</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

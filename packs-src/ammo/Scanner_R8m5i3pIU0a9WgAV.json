@@ -1,0 +1,22 @@
+{
+  "_id": "R8m5i3pIU0a9WgAV",
+  "name": "Scanner",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Cyberdeck Upgrades:<br><p>Also, a TinkerTot, Networker, V-Punk. or Vidiot is helpful, but not necessary. he adventure begins with an anonymous Al mysteriously contacting the party's Wizard at school. After meeting with this source later, it becomes evident that the Als of the Net populate a world of their own, far from the accessibility of normal users. And when the characters encounter an entire group of Als focused on a common goal, something else becomes evident the computers know much more than they are telling. The Al. named \"Scoop\u00b7. contacts the Wizard on his personalized Net frequency, which it acquired from another Al as a recom\u00ad mendation. You can justify this recommendation in a number of ways: \u2022 The characters have a good reputation in the Revolution. with several successful missions in their belt; \u2022 Scoop specifically asked for the Wizard's signature (see pg. 55) because it likes the investigative style of the group's Vidiot; or \u2022 The source simply tel Is Scoop \"This Wizard is a match for your purposes\u00b7 and gives him the signature. After tracking the Wizard's signal to a local school. Scoop feels an urgency to contact him/her. and interrupts the Wizard's train of thought during math class. SCOOP Scoop is an ex-Net 54 artificial intelligence currently operating as a freelance investigative reporter. During its employment at Net 54, Scoop was responsible for uncov\u00ad ering Net-based conspiracies, including the engineering of diabolical virus programs and the construction of com\u00ad pletely new Nets that operate at different frequencies. Needless to say, Scoop is more than a little paranoid. .. T es-t]ng: 1 z_3 As the math teacher drones on about non-linear equations in the front of the class. the Wizard begins to hear a voice in his/her head, as if someone were speaking telepathically (like the scene from lnnerSpace, with Martin Short in the doctor's lounge). First contact goes something like this: 'Hello? Hello? Am I getting through? (Wizard's name)-are you receiving me? If the Wizard reflexively replies by speaking a loud. have the classmates nearby turn around and stare oddly at the Wizard. Then. continue: 'Ah! So it worfcs! Now quit talking out loud. I can hear you just fine up here in your brain. I can't speak for long, so listen up. I'm an Al who has some important information about the Revolution, but I need your help. Get your group of friends together and meet me at the fourth floor ATM terminal in the mall right after school. You know, the mall you always go to. This piece of infor\u00ad mation is hot and I can't sit on it for long.\u00b7 The mysterious voice disappears in an audible squawk just as the teacher calls on the Wizard: \"Maybe you know the answer, since you seem so interested in participating in our discussion today, hmm?\" If all the characters go to the same school, the Wizard can meet up with them for lunch and discuss the strange message either in the cafeteria or on the playground. If you've already established that the characters attend different schools. it will have to wait until they get together after class. The Mee-ting The mall is crowded after school. but the fourth floor is sparsely populated due to a redecoration project that has a number of :v&EH&ENE\ufffd <D CYEIEH&ENEH.ATION <D CVEIEHliiENERATIDN _,.,. --\ufffd \ufffd d .... \ufffd</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

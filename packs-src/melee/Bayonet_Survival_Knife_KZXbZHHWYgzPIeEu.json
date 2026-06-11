@@ -1,0 +1,33 @@
+{
+  "_id": "KZXbZHHWYgzPIeEu",
+  "name": "Bayonet/Survival Knife",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "NEO",
+    "cost": 50.0,
+    "weight": 1,
+    "weaponType": "MEL",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "1d6* - -",
+    "shots": "VR",
+    "rof": "0.5m",
+    "reliability": null,
+    "range": null,
+    "attackType": "Melee"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

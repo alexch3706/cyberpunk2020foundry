@@ -1,0 +1,22 @@
+{
+  "_id": "AXpRRrgMkUjH90I6",
+  "name": "Darkwarrior Assault Motorcycle",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 100<br><b>Acc/Dec:</b> 18/30<br><b>Crew:</b> 1<br><b>Range:</b> 400<br><b>Passengers:</b> 0<br><b>Cargo:</b> 45kg<br><b>Maneuver:</b> +1<br><b>SDP:</b> 35 (2)<br><b>SP:</b> 5<br><b>Mass:</b> (0) 140kg",
+    "source": "MM",
+    "cost": 13350.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

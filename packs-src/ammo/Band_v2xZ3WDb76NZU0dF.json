@@ -1,0 +1,22 @@
+{
+  "_id": "v2xZ3WDb76NZU0dF",
+  "name": "Band",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Explosive Effects<br><p>A band mightgetto play a gig on KLSH, and then maybe to do a promotion for Flatline 2020. Then, they would most likely start to pick up on the graffiti art by Waxfire and might hear more and more about it through their street contacts. They might also get free passes to flatline and then start to wonder why they can't stop taking Awaken pills. Trauma Teamn-! A Trauma Team1Mmight dislike the Flatline 2020 company and want to find some dirt on them to put them out of business. Or, they might be curious about the methods and try it out themselves. Alternatively, they could discover a number of people addicted to Awaken. Mercenary: While between jobs, thecharacterscouldexperiencethe new fad in a variety of ways, and then get nervous when they start doing things that they cannot control. This type of team would probably go straight for the fight. which could be disastrous, so it is recommended that their weaponry be limited - otherwise be pre\u00ad pared for some major firefights. Gang: A gang would most likely find out about the whole plot from the bottom up. First, tliey would be sucked into the whole fad of taking Awaken and watching KLSH. Then, they might discover Waxfire's art, put the pieces together and work with other gangs against this menace. Nomad Pack: A pack looking for work might get a job with Orbis Pharmaceutical as security. Theywouldthen get free passes to Flatline 2020, as all employees do, and then, like other groups, discover something is amiss as they slowly lose control of their minds. Cop: Private investigators would probably be hired by someone to find out why their relatives are acting strangely after having visited Flatline 2020. Alternatively, they might get a hunch that there is more to it than meets the eye. City cops are as likely to investigate as private investigators, but most probably only after the addictive Awaken II drug has hit the streets and by then, be up against a very, very powerful enemy. Media Team: Much like private investigators, newsofbizarre behavior after visiting Flatline 2020 is likely to draw the media's attention. Strangely enough though, many of the editors at the various stations don't want to run the stories ... Strange since they too just visited Flatline 2020 with free passes. This group is likely to do a full investigation and turn up a lot of interesting facts.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

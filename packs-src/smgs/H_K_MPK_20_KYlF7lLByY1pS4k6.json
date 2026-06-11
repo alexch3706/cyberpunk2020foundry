@@ -1,0 +1,33 @@
+{
+  "_id": "KYlF7lLByY1pS4k6",
+  "name": "H&K MPK-20",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "UK",
+    "cost": 775.0,
+    "weight": 1,
+    "weaponType": "SMG",
+    "accuracy": "+2",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": "12mm",
+    "damage": "4d6+1 (12mm)",
+    "shots": "60",
+    "rof": "30",
+    "reliability": "ST",
+    "range": "200m",
+    "attackType": "Auto"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

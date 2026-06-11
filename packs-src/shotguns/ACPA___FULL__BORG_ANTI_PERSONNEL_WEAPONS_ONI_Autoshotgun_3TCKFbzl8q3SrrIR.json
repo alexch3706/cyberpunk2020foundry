@@ -1,0 +1,33 @@
+{
+  "_id": "3TCKFbzl8q3SrrIR",
+  "name": "ACPA / FULL 'BORG ANTI-PERSONNEL WEAPONS ONI Autoshotgun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 1350.0,
+    "weight": 1,
+    "weaponType": "SHT",
+    "accuracy": "+0",
+    "concealability": "P",
+    "availability": null,
+    "ammoType": "10ga",
+    "damage": "4d6+3 (10ga)",
+    "shots": "180",
+    "rof": "5/20",
+    "reliability": "VR",
+    "range": "75m",
+    "attackType": "Autoshotgun"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

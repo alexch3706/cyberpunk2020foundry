@@ -1,0 +1,22 @@
+{
+  "_id": "7VLHfwQqEWKU3dtL",
+  "name": "Slug",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Shotgun Rounds<br><p>A solid shotgun round , usin g one lar ge, rigid -core bul let ins tead of shot . The sl ug do es 4D 6+2 dam age at all ranges, ancl has no area effect. The round is AP, any damage that pene tra tes har d armor is not hal ved . AP FSD S: Armo r-Pie rc ing Fi n-S tabi\u00ad liz ed Discar din g Sabot is a sub-c aliber round, firin g a 5.5 mm pro jectile from a 12 or l0 gai shot gun. This sub-mun iti on moves at accele rated veloc iti es and easi ly punches thr ough armor. It costs lO eb per round, and does 6D6AP damage. It has an effect ive range of 25 meters. HE: Hi gh Explos ive rou nds turn the shot gun in to a mini -cannon . HE does 4D6 dama ge in a 1/2 m rad iu s, per she ll fired. So a barr age of 10 shells would do 4D6 dam age to everyth in g in a 5 met er radiu s of the po int of im pact . HE she l ls cost Seb apiece. HEAT: A shaped -ch arge she l l that does 4D6AP damage , but any dam age that sur passes target SP is passed on to the tar\u00ad get at fu U va lue, ju st lik e any othe r shaped-char ge muni tion. Non -Leth al: A non- lethal gel or rubb er round that does concus s ion da mage to the targe t. Con cus sion da mag e (other\u00ad wise known as brui sing) takes the form of a Stu n/Shock Sav e. If a target is hit by a gel round, roll 4D6 for damage. Subtract armor SP from the damage, up to half the da mag e total-t hat 's rig ht, at leas t half the damage goes thr ough any armor except har d armor s ( i. e., Meta lgea r \u2122, powe red armor , fu ll med ieval armor) . Then the target must make a Stu n/Shock Sav e as if it was damaged by the con cus \u00ad sion da mage that went throug h . FAX ON FILE 85 HOME OF THE BRAVE</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

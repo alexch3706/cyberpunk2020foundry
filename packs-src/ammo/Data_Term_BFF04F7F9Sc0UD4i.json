@@ -1,0 +1,22 @@
+{
+  "_id": "BFF04F7F9Sc0UD4i",
+  "name": "Data Term",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> ENTERTAINMENT<br><p>However, at 1 eb per minute plus long distance charges, this can be an expensive proposition. You also have to put the euro right up front to log on. This may be one reason why a favorite tactic of Netrunners is to sneak into a big corporate office building where they can log on using the corporation's phones to make their runs. This is illegal and dan\u00ad gerous( corporate guards aren't known for a sense of humor), but it is free. And that's a powerful incen-\u00b7 tive for some people. Got a Net Access code? Let's get busy. 4 140 4 140 3 4 1160 5 5 1240</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "y82I05oITmPOm69v",
+  "name": "Expert",
+  "type": "gear",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>You may use this skill to be an expert on one specific subject, such as rare postag e stamps, obscure weapons, a foreign language, etc. At +3, you are the local expert. At +6, you know enough to publish a few books on the subject. At +8 or better, your books are recognized as major texts on the subject, and you could do the talk show circ uit if you wanted to. IP multipliers may be applied at the Referee's discretion for more advanced, technical, or difficult levels of expertise, as the list below suggests. Examples of Expert Skills: Expert: Law Expert: Cars Expert: Shipping Lanes (2) Expert: Sports Teams Expert: Roleplaying Games Expert: Music Industry Expert: Terrorism (2) Expert: Pre-Gunpowder Weapons Expert: Modern Firearms (2) Expert: Global Telecommunications Networks (3) Expert: UFO Sightings</p>",
+    "source": "CP20",
+    "cost": 40020000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}
