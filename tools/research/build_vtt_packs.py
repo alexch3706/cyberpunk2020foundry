@@ -101,7 +101,18 @@ def process_weapons(items, out_dir):
         vtt["data"]["concealability"] = stats.get("conceal", "")
         vtt["data"]["availability"] = stats.get("availability", "")
         vtt["data"]["ammoType"] = stats.get("ammo", "")
-        vtt["data"]["damage"] = stats.get("damage", "")
+        raw_damage = str(stats.get("damage", ""))
+        # Remove anything in parentheses (e.g. ammo types)
+        clean_damage = re.sub(r'\(.*?\)', '', raw_damage)
+        # Remove ranges like "1-5d6" -> "5d6"
+        clean_damage = re.sub(r'\d+\s*-\s*(\d+[dD]\d+)', r'\1', clean_damage)
+        # Remove any non-math characters (allow numbers, d, D, +, -, *, /, x, spaces)
+        clean_damage = re.sub(r'[^0-9dD\+\-\*\/\x\s]', '', clean_damage).strip()
+        # Fallback if empty
+        if not clean_damage:
+            clean_damage = "0"
+            
+        vtt["data"]["damage"] = clean_damage
         vtt["data"]["shots"] = stats.get("shots", "")
         vtt["data"]["rof"] = stats.get("rof", "1")
         vtt["data"]["reliability"] = stats.get("reliability", "")
