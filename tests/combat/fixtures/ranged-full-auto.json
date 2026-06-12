@@ -616,6 +616,241 @@
       "ruleReference": "CP2020 p.100: Full Auto; CP2020 p.100: Close range +3; CP2020 p.106: Staged armor ablation"
     },
     {
+      "name": "full auto layered armor second hit recalculates degraded effective SP",
+      "context": {
+        "action": {
+          "fireMode": "FullAuto",
+          "range": "close",
+          "options": {
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "layered-inner",
+                  "name": "Layered Inner",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 10,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "layered-outer",
+                  "name": "Layered Outer",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 15,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 17,
+          "die": {
+            "faces": 10,
+            "natural": 7
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
+        },
+        {
+          "id": "damage",
+          "total": 20,
+          "die": {
+            "faces": 6,
+            "natural": 20
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
+        },
+        {
+          "id": "damage",
+          "total": 19,
+          "die": {
+            "faces": 6,
+            "natural": 19
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 15,
+              "hit": true,
+              "margin": 2
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 20,
+                "effectiveStoppingPower": 19,
+                "armorMitigation": 19,
+                "penetratingDamage": 1,
+                "minimumDamageApplied": true,
+                "finalDamage": 1,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "affectedLayers": [
+                    {
+                      "itemId": "layered-inner",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    },
+                    {
+                      "itemId": "layered-outer",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "location": "torso",
+                "rawDamage": 19,
+                "effectiveStoppingPower": 18,
+                "armorMitigation": 18,
+                "penetratingDamage": 1,
+                "minimumDamageApplied": true,
+                "finalDamage": 1,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "affectedLayers": [
+                    {
+                      "itemId": "layered-inner",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 1,
+                      "after": 2
+                    },
+                    {
+                      "itemId": "layered-outer",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 1,
+                      "after": 2
+                    }
+                  ]
+                }
+              }
+            ],
+            "plannedUpdates": {
+              "embeddedItemUpdates": [
+                {
+                  "actorUuid": "Actor.target",
+                  "type": "Item",
+                  "updates": [
+                    {
+                      "_id": "layered-inner",
+                      "system.coverage.torso.ablation": 2
+                    }
+                  ]
+                },
+                {
+                  "actorUuid": "Actor.target",
+                  "type": "Item",
+                  "updates": [
+                    {
+                      "_id": "layered-outer",
+                      "system.coverage.torso.ablation": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ammo": {
+          "before": 30,
+          "delta": -30,
+          "after": 0
+        }
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 2
+            }
+          }
+        ],
+        "itemUpdates": [
+          {
+            "itemUuid": "Actor.attacker.Item.auto-rifle",
+            "update": {
+              "system.shotsLeft": 0
+            }
+          }
+        ],
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "layered-inner",
+                "system.coverage.torso.ablation": 2
+              },
+              {
+                "_id": "layered-outer",
+                "system.coverage.torso.ablation": 2
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.100, p.105-106: Later full-auto hits use degraded layered SP and persist final ablation per layer"
+    },
+    {
       "name": "full auto success at medium range with 10 bullets (-1 mod) and 1 hit",
       "context": {
         "action": {

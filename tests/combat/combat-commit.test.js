@@ -11,7 +11,9 @@ import { planCombatUpdates } from "../../module/combat/state-planner.js";
 export async function runCombatCommitTests() {
   assertPreviewData();
   await assertConfirmAppliesUpdatesInOrder();
+  await assertConfirmPersistsMultipleLayerAblation();
   await assertCancelDoesNotApplyUpdates();
+  await assertCancelDoesNotApplyMultipleLayerAblation();
   await assertManualResolutionBlocksCommit();
   await assertInvalidPlanBlocksCommit();
   await assertUnresolvedDocumentBlocksCommit();
@@ -20,6 +22,7 @@ export async function runCombatCommitTests() {
   await assertWriteRejectionReturnsPartialFailure();
   await assertDuplicateConfirmIsBlocked();
   await assertStalePreviewIsBlocked();
+  await assertStaleLayeredArmorPreviewIsBlocked();
   await assertChatOutcomeLifecycle();
 
   return {
@@ -107,6 +110,25 @@ async function assertConfirmAppliesUpdatesInOrder() {
   }, "commit result");
 }
 
+async function assertConfirmPersistsMultipleLayerAblation() {
+  const outcome = buildLayeredArmorOutcome();
+  const plan = planCombatUpdates(outcome);
+  const adapter = createFakeAdapter({
+    initialActors: {
+      "Actor.target": {
+        system: { damage: 0 },
+        items: buildLayeredArmorItemState()
+      }
+    }
+  });
+  const result = await applyCombatUpdates(plan, adapter);
+
+  assert.equal(result.status, COMBAT_CHAT_STATUS.committed, "layered armor confirm commits");
+  assert.equal(result.applied.embeddedItemUpdates, 2, "both layered armor updates are applied");
+  assert.equal(adapter.state.actors["Actor.target"].items["armor-inner"].system.coverage.torso.ablation, 1, "inner layer ablation persists");
+  assert.equal(adapter.state.actors["Actor.target"].items["armor-outer"].system.coverage.torso.ablation, 1, "outer layer ablation persists");
+}
+
 async function assertCancelDoesNotApplyUpdates() {
   const outcome = buildOutcome();
   const adapter = createFakeAdapter();
@@ -120,6 +142,26 @@ async function assertCancelDoesNotApplyUpdates() {
   assert.equal(result.status, COMBAT_CHAT_STATUS.canceled, "cancel status");
   assert.equal(result.chatData.status, COMBAT_CHAT_STATUS.canceled, "cancel chat status");
   assert.equal(result.preview.canCommit, true, "cancel still exposes valid preview");
+}
+
+async function assertCancelDoesNotApplyMultipleLayerAblation() {
+  const outcome = buildLayeredArmorOutcome();
+  const adapter = createFakeAdapter({
+    initialActors: {
+      "Actor.target": {
+        system: { damage: 0 },
+        items: buildLayeredArmorItemState()
+      }
+    }
+  });
+  const result = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "cancel"
+  });
+
+  assert.equal(result.status, COMBAT_CHAT_STATUS.canceled, "layered armor cancel status");
+  assert.equal(adapter.state.actors["Actor.target"].items["armor-inner"].system.coverage.torso.ablation, 0, "cancel leaves inner layer unchanged");
+  assert.equal(adapter.state.actors["Actor.target"].items["armor-outer"].system.coverage.torso.ablation, 0, "cancel leaves outer layer unchanged");
 }
 
 async function assertManualResolutionBlocksCommit() {
@@ -349,6 +391,73 @@ function buildOutcome(overrides = {}) {
   }, overrides);
 }
 
+function buildLayeredArmorOutcome() {
+  return buildOutcome({
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.preview
+    },
+    targets: [
+      {
+        target: {
+          actorUuid: "Actor.target",
+          tokenUuid: "Scene.test.Token.target",
+          name: "Guard",
+          snapshot: {
+            stats: {
+              bt: {
+                total: 6
+              }
+            },
+            damage: 0
+          }
+        },
+        attack: {
+          roll: {
+            total: 18
+          },
+          targetNumber: 15,
+          hit: true,
+          margin: 3,
+          warnings: []
+        },
+        hits: [
+          {
+            location: "torso",
+            warnings: []
+          }
+        ],
+        plannedUpdates: {
+          embeddedItemUpdates: [
+            {
+              actorUuid: "Actor.target",
+              type: "Item",
+              updates: [
+                {
+                  _id: "armor-inner",
+                  "system.coverage.torso.ablation": 1
+                },
+                {
+                  _id: "armor-outer",
+                  "system.coverage.torso.ablation": 1
+                }
+              ]
+            }
+          ]
+        },
+        warnings: []
+      }
+    ]
+  });
+}
+
+function buildLayeredArmorItemState() {
+  return {
+    "armor-inner": { _id: "armor-inner", system: { coverage: { torso: { ablation: 0 } } } },
+    "armor-outer": { _id: "armor-outer", system: { coverage: { torso: { ablation: 0 } } } }
+  };
+}
+
 function createFakeAdapter(options = {}) {
   const calls = [];
   let nextMessageId = 1;
@@ -539,6 +648,31 @@ async function assertStalePreviewIsBlocked() {
   assert.equal(result.warnings[0].code, "stale-preview-blocked", "stale preview warning code");
   const mutations = adapter.calls.filter(call => call.type === "item.update" || call.type === "actor.update" || call.type === "actor.updateEmbeddedDocuments");
   assert.deepEqual(mutations, [], "stale confirm must not mutate documents");
+}
+
+async function assertStaleLayeredArmorPreviewIsBlocked() {
+  const outcome = buildLayeredArmorOutcome();
+  const adapter = createFakeAdapter({
+    initialActors: {
+      "Actor.target": {
+        system: { damage: 0 },
+        items: buildLayeredArmorItemState()
+      }
+    }
+  });
+  const previewResult = await previewAndApplyCombatOutcome(outcome, { adapter });
+  adapter.state.actors["Actor.target"].items["armor-inner"].system.coverage.torso.ablation = 1;
+
+  const result = await previewAndApplyCombatOutcome(outcome, {
+    adapter,
+    decision: "confirm",
+    messageId: previewResult.messageId,
+    plannedUpdates: previewResult.preview.plan
+  });
+
+  assert.equal(result.status, COMBAT_CHAT_STATUS.manual, "stale layered armor preview should be blocked");
+  assert.equal(result.warnings[0].code, "stale-preview-blocked", "stale layered armor warning code");
+  assert.equal(adapter.state.actors["Actor.target"].items["armor-outer"].system.coverage.torso.ablation, 0, "stale preview blocks remaining layer mutation");
 }
 
 async function assertChatOutcomeLifecycle() {

@@ -1603,6 +1603,16 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
   }
 
   const outerLayer = affectedLayers[affectedLayers.length - 1];
+  const affectedLayerEvidence = affectedLayers.map(layer => {
+    const before = Number(layer.ablation || 0);
+    return {
+      itemId: layer.id,
+      coverageKey: layer.coverageKey,
+      updatePath: layer.updatePath,
+      before,
+      after: before + 1
+    };
+  });
 
   if(!target.actorUuid) {
     const message = "Staged penetration penetrated armor, but target actor UUID is unavailable for an embedded item update.";
@@ -1614,6 +1624,7 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
         itemId: outerLayer.id,
         coverageKey: outerLayer.coverageKey,
         updatePath: outerLayer.updatePath,
+        affectedLayers: affectedLayerEvidence,
         ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
       },
       warning: {
@@ -1624,12 +1635,11 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
     };
   }
 
-  const updates = affectedLayers.map(layer => {
-    const before = Number(layer.ablation || 0);
-    const after = before + 1;
+  const updates = affectedLayers.map((layer, index) => {
+    const evidence = affectedLayerEvidence[index];
     return {
       _id: layer.id,
-      [layer.updatePath]: after
+      [layer.updatePath]: evidence.after
     };
   });
 
@@ -1643,6 +1653,7 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
       updatePath: outerLayer.updatePath,
       before: Number(outerLayer.ablation || 0),
       after: Number(outerLayer.ablation || 0) + 1,
+      affectedLayers: affectedLayerEvidence,
       ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
     },
     plannedUpdate: {

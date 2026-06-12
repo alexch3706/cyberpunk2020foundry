@@ -1091,7 +1091,23 @@
                   "coverageKey": "torso",
                   "updatePath": "system.coverage.torso.ablation",
                   "before": 1,
-                  "after": 2
+                  "after": 2,
+                  "affectedLayers": [
+                    {
+                      "itemId": "inner-vest",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    },
+                    {
+                      "itemId": "outer-jacket",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 1,
+                      "after": 2
+                    }
+                  ]
                 }
               }
             ],
@@ -3107,7 +3123,28 @@
                 "stagedPenetration": {
                   "enabled": true,
                   "applied": true,
-                  "reason": "penetrated-item-backed-armor"
+                  "reason": "penetrated-item-backed-armor",
+                  "itemId": "armor-outer",
+                  "coverageKey": "torso",
+                  "updatePath": "system.coverage.torso.ablation",
+                  "before": 0,
+                  "after": 1,
+                  "affectedLayers": [
+                    {
+                      "itemId": "armor-inner",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    },
+                    {
+                      "itemId": "armor-outer",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    }
+                  ]
                 }
               }
             ]
@@ -3133,6 +3170,312 @@
         ]
       },
       "ruleReference": "CP2020: Layered personal armor penetration ablates all participating layers"
+    },
+    {
+      "name": "structured AP layered armor penetration ablates all participating layers",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "ap": true,
+            "damage": "4d6",
+            "shotsLeft": 10
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "ap-inner",
+                  "name": "AP Inner Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 10,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "ap-outer",
+                  "name": "AP Outer Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 15,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "faces": 10,
+            "natural": 9,
+            "results": [
+              9
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 22,
+          "die": {
+            "faces": 6,
+            "natural": 22,
+            "results": [
+              6,
+              6,
+              5,
+              5
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 22,
+                "effectiveStoppingPower": 9,
+                "armorPiercing": true,
+                "penetratingDamage": 6,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-item-backed-armor",
+                  "affectedLayers": [
+                    {
+                      "itemId": "ap-inner",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    },
+                    {
+                      "itemId": "ap-outer",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    }
+                  ]
+                },
+                "armorPiercingEvidence": {
+                  "penetratingDamageBeforeAP": 13,
+                  "penetratingDamageAfterAP": 6
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "ap-inner",
+                "system.coverage.torso.ablation": 1
+              },
+              {
+                "_id": "ap-outer",
+                "system.coverage.torso.ablation": 1
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.105-106: AP layered armor penetration keeps AP math and ablates all participating personal layers"
+    },
+    {
+      "name": "structured cover and layered armor penetration ablates personal layers only",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true,
+            "cover": {
+              "name": "Thin Door",
+              "stoppingPower": 4,
+              "layer": "hard",
+              "source": "manual cover"
+            }
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "cover-inner",
+                  "name": "Cover Inner Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 10,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "cover-outer",
+                  "name": "Cover Outer Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 15,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 22,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 24,
+          "die": {
+            "faces": 6,
+            "natural": 24,
+            "results": [
+              6,
+              6,
+              6,
+              6
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 24,
+                "effectiveStoppingPower": 23,
+                "armorMitigation": 23,
+                "penetratingDamage": 1,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-manual-cover-and-item-backed-armor",
+                  "cover": {
+                    "ablation": {
+                      "before": 0,
+                      "after": 1,
+                      "applied": true
+                    }
+                  },
+                  "affectedLayers": [
+                    {
+                      "itemId": "cover-inner",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    },
+                    {
+                      "itemId": "cover-outer",
+                      "coverageKey": "torso",
+                      "updatePath": "system.coverage.torso.ablation",
+                      "before": 0,
+                      "after": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "cover-inner",
+                "system.coverage.torso.ablation": 1
+              },
+              {
+                "_id": "cover-outer",
+                "system.coverage.torso.ablation": 1
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.105-106: Cover ablation remains evidence-only while penetrated layered personal armor persists all layer ablations"
     }
   ],
   "invalidPlanCases": [
