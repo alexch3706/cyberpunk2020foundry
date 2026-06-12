@@ -186,13 +186,72 @@ def process_vehicles(items, out_dir):
         with open(file_path, "w") as f:
             json.dump(vtt, f, indent=2)
 
+def is_armor(name):
+    # Match "(SP 14)", "SP: 10", "SP 10"
+    m = re.search(r'(?i)SP\s*:?\s*(\d+)', name)
+    if m:
+        return True, int(m.group(1))
+    
+    if re.search(r'(?i)\b(armor|helmet|kevlar|flak|vest|jacket)\b', name):
+        return True, 0
+    return False, 0
+
+def guess_coverage(name):
+    name_lower = name.lower()
+    cov = { 
+        "Head": {"stoppingPower": 0, "ablation": 0}, 
+        "Torso": {"stoppingPower": 0, "ablation": 0}, 
+        "lArm": {"stoppingPower": 0, "ablation": 0}, 
+        "rArm": {"stoppingPower": 0, "ablation": 0}, 
+        "lLeg": {"stoppingPower": 0, "ablation": 0}, 
+        "rLeg": {"stoppingPower": 0, "ablation": 0} 
+    }
+    
+    has_cov = False
+    if "helmet" in name_lower or "head" in name_lower or "visor" in name_lower or "face" in name_lower:
+        cov["Head"]["stoppingPower"] = -1
+        has_cov = True
+    if "torso" in name_lower or "jacket" in name_lower or "vest" in name_lower or "coat" in name_lower or "suit" in name_lower or "armor" in name_lower:
+        cov["Torso"]["stoppingPower"] = -1
+        if "jacket" in name_lower or "coat" in name_lower or "suit" in name_lower:
+            cov["lArm"]["stoppingPower"] = -1
+            cov["rArm"]["stoppingPower"] = -1
+        has_cov = True
+    if "leg" in name_lower or "pants" in name_lower or "stocking" in name_lower or "suit" in name_lower:
+        cov["lLeg"]["stoppingPower"] = -1
+        cov["rLeg"]["stoppingPower"] = -1
+        has_cov = True
+        
+    if not has_cov:
+        # Default to Torso only
+        cov["Torso"]["stoppingPower"] = -1
+        
+    return cov
+
 def process_gear(items, out_dir, category_name):
     target_dir = out_dir / category_name
     target_dir.mkdir(parents=True, exist_ok=True)
+    
+    armor_dir = out_dir / "armor"
+    armor_dir.mkdir(parents=True, exist_ok=True)
+    
     for item in items:
         name = item.get("name", "Unknown Gear")
-        _id = generate_id(f"{category_name}:{name}")
-        vtt = get_base_item(name, "misc", item.get("source", "CP20"), _id)
+        
+        is_arm, sp_val = is_armor(name)
+        if is_arm:
+            _id = generate_id(f"armor:{name}")
+            vtt = get_base_item(name, "armor", item.get("source", "CP20"), _id)
+            cov = guess_coverage(name)
+            for k, v in cov.items():
+                if v["stoppingPower"] == -1:
+                    v["stoppingPower"] = sp_val
+            vtt["data"]["coverage"] = cov
+            file_path = armor_dir / f"{clean_filename(name)}_{_id}.json"
+        else:
+            _id = generate_id(f"{category_name}:{name}")
+            vtt = get_base_item(name, "misc", item.get("source", "CP20"), _id)
+            file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
         
         try:
             vtt["data"]["cost"] = float(re.sub(r'[^0-9\.]', '', str(item.get("cost", "0"))) or 0)
@@ -203,7 +262,6 @@ def process_gear(items, out_dir, category_name):
         if item.get("category"):
             vtt["data"]["notes"] = f"<b>Category:</b> {item.get('category')}<br>" + str(vtt["data"]["notes"])
         
-        file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
         with open(file_path, "w") as f:
             json.dump(vtt, f, indent=2)
 
@@ -213,7 +271,7 @@ def main():
     
     # We will only overwrite directories we are actively processing
     # Clean up old weapon directories that we are replacing
-    for d in ["pistols", "smgs", "rifles", "shotguns", "heavyWeapons", "melee", "bows", "exotics", "cyberware", "vehicles", "gear", "netware", "ammo"]:
+    for d in ["pistols", "smgs", "rifles", "shotguns", "heavyWeapons", "melee", "bows", "exotics", "cyberware", "vehicles", "gear", "netware", "ammo", "armor"]:
         path = out_dir / d
         if path.exists():
             shutil.rmtree(path)
