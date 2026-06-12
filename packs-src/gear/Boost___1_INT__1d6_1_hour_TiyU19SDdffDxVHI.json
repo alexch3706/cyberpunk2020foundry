@@ -1,7 +1,7 @@
 {
   "_id": "TiyU19SDdffDxVHI",
   "name": "Boost (+1 INT, 1d6+1 hour)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

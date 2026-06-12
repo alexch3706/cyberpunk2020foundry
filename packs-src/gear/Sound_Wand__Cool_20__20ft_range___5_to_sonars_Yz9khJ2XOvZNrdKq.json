@@ -1,7 +1,7 @@
 {
   "_id": "Yz9khJ2XOvZNrdKq",
   "name": "Sound Wand (Cool 20, 20ft range, -5 to sonars)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

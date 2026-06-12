@@ -1,7 +1,7 @@
 {
   "_id": "I5WdBb7khoJk8cGE",
   "name": "Climbing Spikes (+2 Climb, 1D6+3*)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "wlz8xyqt1fshmq3X",
   "name": "UHF Transmitter (25mi max, strong)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

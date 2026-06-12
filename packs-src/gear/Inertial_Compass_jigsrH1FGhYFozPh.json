@@ -1,7 +1,7 @@
 {
   "_id": "jigsrH1FGhYFozPh",
   "name": "Inertial Compass",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

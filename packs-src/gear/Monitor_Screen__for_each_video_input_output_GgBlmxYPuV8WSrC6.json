@@ -1,7 +1,7 @@
 {
   "_id": "GgBlmxYPuV8WSrC6",
   "name": "Monitor Screen (for each video input/output)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

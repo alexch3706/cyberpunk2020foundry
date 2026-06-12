@@ -1,7 +1,7 @@
 {
   "_id": "ASdoX6YoYilBmj5q",
   "name": "Data Cache (100MU,SDP 15, SP30)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

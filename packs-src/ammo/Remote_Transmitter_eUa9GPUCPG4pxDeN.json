@@ -1,7 +1,7 @@
 {
   "_id": "eUa9GPUCPG4pxDeN",
   "name": "Remote Transmitter",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

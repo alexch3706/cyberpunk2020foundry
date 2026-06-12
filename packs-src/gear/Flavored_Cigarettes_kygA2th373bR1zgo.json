@@ -1,7 +1,7 @@
 {
   "_id": "kygA2th373bR1zgo",
   "name": "Flavored Cigarettes",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

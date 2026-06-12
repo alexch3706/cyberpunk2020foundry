@@ -1,7 +1,7 @@
 {
   "_id": "YcAyVXarHxMhSLly",
   "name": "20mm Cannon",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

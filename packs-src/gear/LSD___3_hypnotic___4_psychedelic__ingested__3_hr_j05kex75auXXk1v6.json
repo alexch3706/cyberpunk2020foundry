@@ -1,7 +1,7 @@
 {
   "_id": "j05kex75auXXk1v6",
   "name": "LSD (+3 hypnotic, +4 psychedelic, ingested, 3 hr)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

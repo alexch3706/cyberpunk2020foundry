@@ -1,7 +1,7 @@
 {
   "_id": "fDf7HRkcNvAwu2S0",
   "name": "Custom Grip",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

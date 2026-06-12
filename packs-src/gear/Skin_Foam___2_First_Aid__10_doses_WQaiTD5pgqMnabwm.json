@@ -1,7 +1,7 @@
 {
   "_id": "WQaiTD5pgqMnabwm",
   "name": "Skin Foam (+2 First Aid, 10 doses)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

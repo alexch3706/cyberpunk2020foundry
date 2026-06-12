@@ -1,7 +1,7 @@
 {
   "_id": "bCdDEBC4m6Qjha5E",
   "name": "Peek-Through Flatcam (thermal)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

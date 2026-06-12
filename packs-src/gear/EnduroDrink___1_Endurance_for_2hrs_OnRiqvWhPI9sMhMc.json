@@ -1,7 +1,7 @@
 {
   "_id": "OnRiqvWhPI9sMhMc",
   "name": "EnduroDrink (+1 Endurance for 2hrs)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

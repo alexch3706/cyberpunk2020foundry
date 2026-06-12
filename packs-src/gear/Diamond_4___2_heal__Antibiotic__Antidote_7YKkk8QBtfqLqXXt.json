@@ -1,7 +1,7 @@
 {
   "_id": "7YKkk8QBtfqLqXXt",
   "name": "Diamond 4 (+2 heal, Antibiotic, Antidote)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

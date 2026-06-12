@@ -1,7 +1,7 @@
 {
   "_id": "Vmkh2392lY3IrIRn",
   "name": "Laser Sight",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

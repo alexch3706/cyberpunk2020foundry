@@ -1,7 +1,7 @@
 {
   "_id": "fh8JP2Dgfy9NzGvz",
   "name": "Minor Malfunction",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

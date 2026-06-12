@@ -1,7 +1,7 @@
 {
   "_id": "7eoc3HnMLeZjrp2q",
   "name": "Executive Transport Service (+driver)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

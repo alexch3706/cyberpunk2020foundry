@@ -1,7 +1,7 @@
 {
   "_id": "pY0w0vn550UzudLU",
   "name": "Non-Lethal",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

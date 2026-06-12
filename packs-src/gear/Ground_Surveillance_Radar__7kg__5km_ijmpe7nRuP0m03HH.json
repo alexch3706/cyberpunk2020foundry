@@ -1,7 +1,7 @@
 {
   "_id": "ijmpe7nRuP0m03HH",
   "name": "Ground Surveillance Radar (7kg, 5km)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

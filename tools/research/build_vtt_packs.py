@@ -192,7 +192,7 @@ def process_gear(items, out_dir, category_name):
     for item in items:
         name = item.get("name", "Unknown Gear")
         _id = generate_id(f"{category_name}:{name}")
-        vtt = get_base_item(name, "gear", item.get("source", "CP20"), _id)
+        vtt = get_base_item(name, "misc", item.get("source", "CP20"), _id)
         
         try:
             vtt["data"]["cost"] = float(re.sub(r'[^0-9\.]', '', str(item.get("cost", "0"))) or 0)

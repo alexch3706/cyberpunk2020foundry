@@ -1,7 +1,7 @@
 {
   "_id": "mbFG45i4tzsF9qSS",
   "name": "Video CDS Card (requires 10MU & permit)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "pIjkTd425WRxeTvb",
   "name": "Bug Detector (6m, 80%, 2MU)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

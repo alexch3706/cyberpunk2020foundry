@@ -1,7 +1,7 @@
 {
   "_id": "JoF3VBRDShJ2K34P",
   "name": "Speedheal (+2 heal, -1d6/3 REF, 1d6+1 hour)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

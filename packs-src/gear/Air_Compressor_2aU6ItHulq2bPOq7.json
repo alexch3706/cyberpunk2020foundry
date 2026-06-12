@@ -1,7 +1,7 @@
 {
   "_id": "2aU6ItHulq2bPOq7",
   "name": "Air Compressor",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

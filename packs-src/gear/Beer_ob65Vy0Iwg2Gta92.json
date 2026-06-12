@@ -1,7 +1,7 @@
 {
   "_id": "ob65Vy0Iwg2Gta92",
   "name": "Beer",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

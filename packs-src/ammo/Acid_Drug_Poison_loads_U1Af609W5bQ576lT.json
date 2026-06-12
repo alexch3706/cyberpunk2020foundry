@@ -1,7 +1,7 @@
 {
   "_id": "U1Af609W5bQ576lT",
   "name": "Acid/Drug/Poison loads",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

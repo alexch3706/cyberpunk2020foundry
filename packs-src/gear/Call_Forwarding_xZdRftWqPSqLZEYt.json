@@ -1,7 +1,7 @@
 {
   "_id": "xZdRftWqPSqLZEYt",
   "name": "Call Forwarding",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

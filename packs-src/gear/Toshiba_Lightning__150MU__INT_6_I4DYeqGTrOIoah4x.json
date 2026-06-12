@@ -1,7 +1,7 @@
 {
   "_id": "I4DYeqGTrOIoah4x",
   "name": "Toshiba Lightning (150MU, INT 6)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

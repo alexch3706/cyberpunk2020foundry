@@ -1,7 +1,7 @@
 {
   "_id": "NVYNyJBJII2y0dxC",
   "name": "Feeding Frenzy Refill (either gas or frenzy juice)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

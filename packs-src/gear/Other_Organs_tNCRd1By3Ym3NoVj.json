@@ -1,7 +1,7 @@
 {
   "_id": "tNCRd1By3Ym3NoVj",
   "name": "Other Organs",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "4cqSxBbYkwn5y1kG",
   "name": "Neutral Setting (can coast if engine stops)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

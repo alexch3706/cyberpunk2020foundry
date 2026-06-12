@@ -1,7 +1,7 @@
 {
   "_id": "Hx7PfKQG5TLjU5TE",
   "name": "Cybernetic \"E-Book\" (+2 INT/TECH skill rolls)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

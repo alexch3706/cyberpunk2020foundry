@@ -1,7 +1,7 @@
 {
   "_id": "YdfHgP49e8lTsdqt",
   "name": "Blue Glass (+1 hallucinogen, 1d6+1 min)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

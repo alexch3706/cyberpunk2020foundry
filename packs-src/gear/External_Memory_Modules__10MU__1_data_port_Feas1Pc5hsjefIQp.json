@@ -1,7 +1,7 @@
 {
   "_id": "Feas1Pc5hsjefIQp",
   "name": "External Memory Modules (10MU, 1 data port)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

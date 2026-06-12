@@ -1,7 +1,7 @@
 {
   "_id": "HZLSpQhe918I2AIu",
   "name": "Exploding Unit (3d6 over 5m radius)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

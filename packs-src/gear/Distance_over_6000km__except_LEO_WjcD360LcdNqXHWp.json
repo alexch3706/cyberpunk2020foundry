@@ -1,7 +1,7 @@
 {
   "_id": "WjcD360LcdNqXHWp",
   "name": "Distance over 6000km (except LEO)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

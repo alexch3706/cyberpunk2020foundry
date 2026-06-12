@@ -1,7 +1,7 @@
 {
   "_id": "pUN10hGUWl1ENOBR",
   "name": "Immersion Heater",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

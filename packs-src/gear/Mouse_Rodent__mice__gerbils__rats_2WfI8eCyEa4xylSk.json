@@ -1,7 +1,7 @@
 {
   "_id": "2WfI8eCyEa4xylSk",
   "name": "Mouse/Rodent (mice, gerbils, rats)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

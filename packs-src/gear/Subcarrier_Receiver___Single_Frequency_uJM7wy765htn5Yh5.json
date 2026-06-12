@@ -1,7 +1,7 @@
 {
   "_id": "uJM7wy765htn5Yh5",
   "name": "Subcarrier Receiver - Single Frequency",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

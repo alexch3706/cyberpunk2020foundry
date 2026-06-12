@@ -1,7 +1,7 @@
 {
   "_id": "sMwmgR5kaitGxMhq",
   "name": "Rope (holds upto 1000lbs)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "mad1GhgJQnYiuGPx",
   "name": "Automedic: Basic w/internal Biomonitor (100%)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "1IzD38kz6IJnTlNH",
   "name": "Leg",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

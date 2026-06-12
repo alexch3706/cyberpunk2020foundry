@@ -1,7 +1,7 @@
 {
   "_id": "0uWlBST83xwLD0Y2",
   "name": "Cellular Decks (moving=25% loss of link)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

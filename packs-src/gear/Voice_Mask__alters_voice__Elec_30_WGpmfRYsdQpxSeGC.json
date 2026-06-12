@@ -1,7 +1,7 @@
 {
   "_id": "WGpmfRYsdQpxSeGC",
   "name": "Voice Mask (alters voice, Elec 30)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

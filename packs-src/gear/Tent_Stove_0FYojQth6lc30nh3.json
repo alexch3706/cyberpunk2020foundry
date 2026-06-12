@@ -1,7 +1,7 @@
 {
   "_id": "0FYojQth6lc30nh3",
   "name": "Tent Stove",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

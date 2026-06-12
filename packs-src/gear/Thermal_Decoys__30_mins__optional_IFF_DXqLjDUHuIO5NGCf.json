@@ -1,7 +1,7 @@
 {
   "_id": "DXqLjDUHuIO5NGCf",
   "name": "Thermal Decoys (30 mins, optional IFF)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

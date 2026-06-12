@@ -1,7 +1,7 @@
 {
   "_id": "dgedXwcZm5chLSbL",
   "name": "Hardened Circuitry (imune to EMP, etc)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

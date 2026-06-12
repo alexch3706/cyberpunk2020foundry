@@ -1,7 +1,7 @@
 {
   "_id": "oXpQQrt50FJsatXo",
   "name": "AV Pad (70% at day, 20% at night)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

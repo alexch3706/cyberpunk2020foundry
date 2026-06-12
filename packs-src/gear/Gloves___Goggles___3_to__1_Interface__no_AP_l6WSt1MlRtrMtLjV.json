@@ -1,7 +1,7 @@
 {
   "_id": "l6WSt1MlRtrMtLjV",
   "name": "Gloves & Goggles (-3 to -1 Interface, no AP)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

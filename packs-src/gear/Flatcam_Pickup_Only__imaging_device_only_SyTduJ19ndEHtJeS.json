@@ -1,7 +1,7 @@
 {
   "_id": "SyTduJ19ndEHtJeS",
   "name": "Flatcam Pickup Only (imaging device only)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

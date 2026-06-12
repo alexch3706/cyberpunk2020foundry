@@ -1,7 +1,7 @@
 {
   "_id": "QsIg8LZzo25ES0qu",
   "name": "Satellite Dish",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

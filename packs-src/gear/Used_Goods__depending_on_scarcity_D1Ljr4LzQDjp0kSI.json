@@ -1,7 +1,7 @@
 {
   "_id": "D1Ljr4LzQDjp0kSI",
   "name": "Used Goods (depending on scarcity)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

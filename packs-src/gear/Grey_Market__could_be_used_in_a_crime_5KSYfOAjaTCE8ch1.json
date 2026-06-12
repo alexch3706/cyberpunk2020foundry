@@ -1,7 +1,7 @@
 {
   "_id": "5KSYfOAjaTCE8ch1",
   "name": "Grey Market (could be used in a crime)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

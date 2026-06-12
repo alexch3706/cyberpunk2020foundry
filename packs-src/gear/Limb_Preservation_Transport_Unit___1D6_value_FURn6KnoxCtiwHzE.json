@@ -1,7 +1,7 @@
 {
   "_id": "FURn6KnoxCtiwHzE",
   "name": "Limb Preservation/Transport Unit (+1D6 value)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

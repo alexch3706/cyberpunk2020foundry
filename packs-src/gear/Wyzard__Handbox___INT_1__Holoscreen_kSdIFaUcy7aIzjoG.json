@@ -1,7 +1,7 @@
 {
   "_id": "kSdIFaUcy7aIzjoG",
   "name": "Wyzard \"Handbox\" (INT 1, Holoscreen)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

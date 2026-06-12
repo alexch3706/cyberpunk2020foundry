@@ -1,7 +1,7 @@
 {
   "_id": "9qBLS2Wc6QxAlbbE",
   "name": "VHF Transmitter (50mi max, digital)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

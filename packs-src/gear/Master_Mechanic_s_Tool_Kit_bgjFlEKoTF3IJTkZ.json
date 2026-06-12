@@ -1,7 +1,7 @@
 {
   "_id": "bgjFlEKoTF3IJTkZ",
   "name": "Master Mechanic's Tool Kit",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

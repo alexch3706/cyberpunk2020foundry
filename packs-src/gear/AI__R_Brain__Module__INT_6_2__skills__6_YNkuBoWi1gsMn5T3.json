@@ -1,7 +1,7 @@
 {
   "_id": "YNkuBoWi1gsMn5T3",
   "name": "AI \"R-Brain\" Module (INT 6/2, skills +6)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "c4IEsJWMJn2ksiwV",
   "name": "Poor Condition (diseased or damaged)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

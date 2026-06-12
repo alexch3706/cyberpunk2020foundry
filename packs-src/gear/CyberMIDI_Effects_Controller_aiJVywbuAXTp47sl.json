@@ -1,7 +1,7 @@
 {
   "_id": "aiJVywbuAXTp47sl",
   "name": "CyberMIDI Effects Controller",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

@@ -1,7 +1,7 @@
 {
   "_id": "U8mE5SxeFChF8BXB",
   "name": "Register TV Station",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

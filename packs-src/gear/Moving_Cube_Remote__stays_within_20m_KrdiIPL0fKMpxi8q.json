@@ -1,7 +1,7 @@
 {
   "_id": "KrdiIPL0fKMpxi8q",
   "name": "Moving Cube Remote (stays within 20m)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

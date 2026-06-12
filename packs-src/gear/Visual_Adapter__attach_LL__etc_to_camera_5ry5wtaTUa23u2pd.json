@@ -1,7 +1,7 @@
 {
   "_id": "5ry5wtaTUa23u2pd",
   "name": "Visual Adapter (attach LL, etc to camera)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

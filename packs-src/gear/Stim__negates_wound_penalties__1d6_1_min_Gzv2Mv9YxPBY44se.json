@@ -1,7 +1,7 @@
 {
   "_id": "Gzv2Mv9YxPBY44se",
   "name": "Stim (negates wound penalties, 1d6+1 min)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",

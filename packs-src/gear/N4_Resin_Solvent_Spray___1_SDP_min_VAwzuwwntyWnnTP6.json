@@ -1,7 +1,7 @@
 {
   "_id": "VAwzuwwntyWnnTP6",
   "name": "N4 Resin Solvent Spray (-1 SDP/min)",
-  "type": "gear",
+  "type": "misc",
   "img": "icons/svg/mystery-man.svg",
   "data": {
     "flavor": "",
