@@ -9,7 +9,8 @@
     "source": "Chr2",
     "cost": 950.0,
     "weight": 1,
-    "weaponType": "RIF",
+    "attackType": "Auto",
+    "weaponType": "Rifle",
     "accuracy": "+2",
     "concealability": "-",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "2",
     "rof": "2",
     "reliability": "UR",
-    "range": "25m",
-    "attackType": "Auto"
+    "range": "25m"
   },
   "effects": [],
   "flags": {

@@ -9,7 +9,8 @@
     "source": "Chr2",
     "cost": 200.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+0",
     "concealability": "-",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "1",
     "rof": "1",
     "reliability": "ST",
-    "range": "7m",
-    "attackType": "Auto"
+    "range": "7m"
   },
   "effects": [],
   "flags": {

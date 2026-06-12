@@ -9,7 +9,8 @@
     "source": "NEO",
     "cost": 200.0,
     "weight": 1,
-    "weaponType": "SHT",
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
     "accuracy": "-3",
     "concealability": "J",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "2",
     "rof": "2",
     "reliability": "VR",
-    "range": "15m",
-    "attackType": "Autoshotgun"
+    "range": "15m"
   },
   "effects": [],
   "flags": {

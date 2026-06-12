@@ -9,7 +9,8 @@
     "source": "CB2",
     "cost": 1000.0,
     "weight": 1,
-    "weaponType": "SHT",
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
     "accuracy": "+0",
     "concealability": "L",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "21",
     "rof": "3/10",
     "reliability": "ST",
-    "range": "50m",
-    "attackType": "Autoshotgun"
+    "range": "50m"
   },
   "effects": [],
   "flags": {

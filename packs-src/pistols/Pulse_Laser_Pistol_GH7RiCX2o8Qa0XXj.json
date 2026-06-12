@@ -9,7 +9,8 @@
     "source": "WGF",
     "cost": 900.0,
     "weight": 1,
-    "weaponType": "P",
+    "attackType": "Auto",
+    "weaponType": "Pistol",
     "accuracy": "+1",
     "concealability": "J",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "15",
     "rof": "1/3/10",
     "reliability": "ST",
-    "range": "75m",
-    "attackType": "Auto"
+    "range": "75m"
   },
   "effects": [],
   "flags": {

@@ -9,7 +9,8 @@
     "source": "Chr1",
     "cost": 0,
     "weight": 1,
-    "weaponType": "MEL",
+    "attackType": "Melee",
+    "weaponType": "Melee",
     "accuracy": "+1",
     "concealability": "J/N",
     "availability": null,
@@ -18,8 +19,7 @@
     "shots": "1m",
     "rof": "650/700",
     "reliability": null,
-    "range": null,
-    "attackType": "Melee"
+    "range": null
   },
   "effects": [],
   "flags": {

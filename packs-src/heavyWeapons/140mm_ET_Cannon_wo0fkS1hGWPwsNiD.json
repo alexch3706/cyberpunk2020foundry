@@ -9,7 +9,8 @@
     "source": "SOF2",
     "cost": 0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+0",
     "concealability": "N",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "2250m",
     "rof": "1.5M",
     "reliability": null,
-    "range": null,
-    "attackType": "Auto"
+    "range": null
   },
   "effects": [],
   "flags": {

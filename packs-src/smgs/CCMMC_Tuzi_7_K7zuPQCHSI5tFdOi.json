@@ -9,6 +9,7 @@
     "source": "PAC",
     "cost": 125.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "-2",
     "concealability": "J",
@@ -18,8 +19,7 @@
     "shots": "30",
     "rof": "15",
     "reliability": "ST",
-    "range": "100m",
-    "attackType": "Auto"
+    "range": "100m"
   },
   "effects": [],
   "flags": {

@@ -9,7 +9,8 @@
     "source": "SOF",
     "cost": 1600.0,
     "weight": 1,
-    "weaponType": "RIF",
+    "attackType": "Auto",
+    "weaponType": "Rifle",
     "accuracy": "+2",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "180",
     "rof": "20/60",
     "reliability": "ST",
-    "range": "200m",
-    "attackType": "Auto"
+    "range": "200m"
   },
   "effects": [],
   "flags": {

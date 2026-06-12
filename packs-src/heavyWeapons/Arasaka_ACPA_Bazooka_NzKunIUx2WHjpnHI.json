@@ -9,7 +9,8 @@
     "source": "SW",
     "cost": 0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "-1",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "1",
     "rof": "1",
     "reliability": "VR",
-    "range": "350m",
-    "attackType": "Auto"
+    "range": "350m"
   },
   "effects": [],
   "flags": {

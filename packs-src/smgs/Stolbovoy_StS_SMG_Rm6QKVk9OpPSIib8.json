@@ -9,6 +9,7 @@
     "source": "CB3",
     "cost": 600.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "-1",
     "concealability": "J",
@@ -18,8 +19,7 @@
     "shots": "35",
     "rof": "30",
     "reliability": "VR*",
-    "range": "100m",
-    "attackType": "Auto"
+    "range": "100m"
   },
   "effects": [],
   "flags": {

@@ -9,6 +9,7 @@
     "source": "CGen",
     "cost": 6000.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+0",
     "concealability": "J",
@@ -18,8 +19,7 @@
     "shots": "8d6",
     "rof": "2",
     "reliability": "UR",
-    "range": "150m",
-    "attackType": "Auto"
+    "range": "150m"
   },
   "effects": [],
   "flags": {

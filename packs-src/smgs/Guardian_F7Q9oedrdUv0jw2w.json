@@ -9,6 +9,7 @@
     "source": "PB",
     "cost": 450.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+0",
     "concealability": "N",
@@ -18,8 +19,7 @@
     "shots": "35",
     "rof": "25",
     "reliability": "ST",
-    "range": "200m",
-    "attackType": "Auto"
+    "range": "200m"
   },
   "effects": [],
   "flags": {

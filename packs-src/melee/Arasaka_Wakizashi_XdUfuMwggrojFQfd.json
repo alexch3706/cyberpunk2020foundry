@@ -9,7 +9,8 @@
     "source": "SW",
     "cost": 0,
     "weight": 1,
-    "weaponType": "MEL",
+    "attackType": "Melee",
+    "weaponType": "Melee",
     "accuracy": "+1",
     "concealability": "L",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "VR",
     "rof": "1m",
     "reliability": null,
-    "range": "-",
-    "attackType": "Melee"
+    "range": "-"
   },
   "effects": [],
   "flags": {

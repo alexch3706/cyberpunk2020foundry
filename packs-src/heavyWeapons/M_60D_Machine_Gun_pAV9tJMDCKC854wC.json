@@ -9,7 +9,8 @@
     "source": "HoB",
     "cost": 1000.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+1",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "100",
     "rof": "20",
     "reliability": "VR",
-    "range": "500m",
-    "attackType": "Auto"
+    "range": "500m"
   },
   "effects": [],
   "flags": {

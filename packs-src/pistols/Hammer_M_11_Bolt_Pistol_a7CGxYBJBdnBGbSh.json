@@ -9,7 +9,8 @@
     "source": "DS",
     "cost": 320.0,
     "weight": 1,
-    "weaponType": "P",
+    "attackType": "Auto",
+    "weaponType": "Pistol",
     "accuracy": "+2",
     "concealability": "J",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "10",
     "rof": "2",
     "reliability": "ST",
-    "range": "30m",
-    "attackType": "Auto"
+    "range": "30m"
   },
   "effects": [],
   "flags": {

@@ -78,7 +78,25 @@ def process_weapons(items, out_dir):
         
         stats = item.get("stats", {})
         
-        vtt["data"]["weaponType"] = wtype
+        # We need a reverse map from 'wtype' string in PDF to 'weaponType' in lookups.js
+        vtt_type_map = {
+            "P": "Pistol",
+            "MP": "Pistol", # Machine Pistols use Pistol in Foundry? Wait, lookups.js has SMG. Let's map MP to SMG or Pistol? MP usually uses Handgun, but can be SMG. I'll map MP to SMG. No, let's map P to Pistol, SMG to SMG.
+            "SMG": "SMG",
+            "RIF": "Rifle",
+            "SHT": "Shotgun",
+            "HVY": "Heavy",
+            "MEL": "Melee",
+            "BOW": "Exotic", # Bows are Exotic in Cyberpunk 2020 usually
+            "EX": "Exotic"
+        }
+        
+        # Determine attackType
+        if wtype == "SHT": vtt["data"]["attackType"] = "Autoshotgun"
+        elif wtype == "MEL": vtt["data"]["attackType"] = "Melee"
+        else: vtt["data"]["attackType"] = "Auto"
+            
+        vtt["data"]["weaponType"] = vtt_type_map.get(wtype, "Pistol") # Default to Pistol if unknown
         vtt["data"]["accuracy"] = stats.get("wa", "0")
         vtt["data"]["concealability"] = stats.get("conceal", "")
         vtt["data"]["availability"] = stats.get("availability", "")

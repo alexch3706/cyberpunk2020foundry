@@ -9,7 +9,8 @@
     "source": "WGF",
     "cost": 12000.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+1",
     "concealability": "N",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "30",
     "rof": "1/3/10",
     "reliability": "ST",
-    "range": "750m",
-    "attackType": "Auto"
+    "range": "750m"
   },
   "effects": [],
   "flags": {

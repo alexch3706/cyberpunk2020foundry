@@ -9,6 +9,7 @@
     "source": "SOF2",
     "cost": 375.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+0",
     "concealability": "J/L",
@@ -18,8 +19,7 @@
     "shots": "25/50",
     "rof": "50",
     "reliability": "UR*",
-    "range": "150m",
-    "attackType": "Auto"
+    "range": "150m"
   },
   "effects": [],
   "flags": {

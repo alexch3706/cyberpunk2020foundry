@@ -9,7 +9,8 @@
     "source": "ES",
     "cost": 60.0,
     "weight": 1,
-    "weaponType": "SHT",
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
     "accuracy": "+0",
     "concealability": "J",
     "availability": "C",
@@ -18,8 +19,7 @@
     "shots": "1",
     "rof": "1",
     "reliability": "UR",
-    "range": "25m",
-    "attackType": "Autoshotgun"
+    "range": "25m"
   },
   "effects": [],
   "flags": {

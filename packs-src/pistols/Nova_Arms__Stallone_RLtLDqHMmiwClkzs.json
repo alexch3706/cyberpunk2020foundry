@@ -9,7 +9,8 @@
     "source": "SOF2",
     "cost": 999.0,
     "weight": 1,
-    "weaponType": "P",
+    "attackType": "Auto",
+    "weaponType": "Pistol",
     "accuracy": "+1",
     "concealability": "J",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "6",
     "rof": "2",
     "reliability": "VR",
-    "range": "60m",
-    "attackType": "Auto"
+    "range": "60m"
   },
   "effects": [],
   "flags": {

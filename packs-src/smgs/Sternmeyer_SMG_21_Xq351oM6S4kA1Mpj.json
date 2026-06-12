@@ -9,6 +9,7 @@
     "source": "CP20",
     "cost": 500.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "-1/0",
     "concealability": "L",
@@ -18,8 +19,7 @@
     "shots": "30",
     "rof": "3/15",
     "reliability": "VR",
-    "range": "200m",
-    "attackType": "Auto"
+    "range": "200m"
   },
   "effects": [],
   "flags": {

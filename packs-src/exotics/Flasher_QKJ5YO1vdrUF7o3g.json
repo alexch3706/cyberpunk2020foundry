@@ -9,7 +9,8 @@
     "source": "Chr3",
     "cost": 250.0,
     "weight": 1,
-    "weaponType": "EX",
+    "attackType": "Auto",
+    "weaponType": "Exotic",
     "accuracy": "+0",
     "concealability": "-",
     "availability": "C",
@@ -18,8 +19,7 @@
     "shots": "1",
     "rof": "1",
     "reliability": "ST",
-    "range": "2m",
-    "attackType": "Auto"
+    "range": "2m"
   },
   "effects": [],
   "flags": {

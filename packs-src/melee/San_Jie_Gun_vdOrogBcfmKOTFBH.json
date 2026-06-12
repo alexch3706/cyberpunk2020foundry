@@ -9,7 +9,8 @@
     "source": "PAC",
     "cost": 50.0,
     "weight": 1,
-    "weaponType": "MEL",
+    "attackType": "Melee",
+    "weaponType": "Melee",
     "accuracy": "+0",
     "concealability": "N",
     "availability": "C",
@@ -18,8 +19,7 @@
     "shots": "-",
     "rof": "-",
     "reliability": null,
-    "range": "2m",
-    "attackType": "Melee"
+    "range": "2m"
   },
   "effects": [],
   "flags": {

@@ -9,7 +9,8 @@
     "source": "SOF2",
     "cost": 15000.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+3",
     "concealability": "N",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "10",
     "rof": "1",
     "reliability": "ST",
-    "range": "1200m",
-    "attackType": "Auto"
+    "range": "1200m"
   },
   "effects": [],
   "flags": {

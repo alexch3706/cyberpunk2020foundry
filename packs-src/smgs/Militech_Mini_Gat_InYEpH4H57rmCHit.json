@@ -9,6 +9,7 @@
     "source": "Chr1",
     "cost": 695.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+0",
     "concealability": "L",
@@ -18,8 +19,7 @@
     "shots": "120",
     "rof": "40",
     "reliability": "ST",
-    "range": "150m",
-    "attackType": "Auto"
+    "range": "150m"
   },
   "effects": [],
   "flags": {

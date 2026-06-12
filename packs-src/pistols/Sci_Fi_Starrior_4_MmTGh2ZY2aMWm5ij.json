@@ -9,7 +9,8 @@
     "source": "SOF",
     "cost": 60.0,
     "weight": 1,
-    "weaponType": "P",
+    "attackType": "Auto",
+    "weaponType": "Pistol",
     "accuracy": "+0",
     "concealability": "J",
     "availability": "E",
@@ -18,8 +19,7 @@
     "shots": "12",
     "rof": "2",
     "reliability": "UR",
-    "range": "50m",
-    "attackType": "Auto"
+    "range": "50m"
   },
   "effects": [],
   "flags": {

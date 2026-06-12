@@ -9,6 +9,7 @@
     "source": "SOF",
     "cost": 160.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+1",
     "concealability": "J",
@@ -18,8 +19,7 @@
     "shots": "30",
     "rof": "10/30",
     "reliability": "UR*",
-    "range": "100m",
-    "attackType": "Auto"
+    "range": "100m"
   },
   "effects": [],
   "flags": {

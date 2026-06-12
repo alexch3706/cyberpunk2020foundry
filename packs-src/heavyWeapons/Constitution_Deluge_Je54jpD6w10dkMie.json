@@ -9,7 +9,8 @@
     "source": "P&S",
     "cost": 800.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+0",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "400",
     "rof": "35",
     "reliability": "ST",
-    "range": "60m",
-    "attackType": "Auto"
+    "range": "60m"
   },
   "effects": [],
   "flags": {

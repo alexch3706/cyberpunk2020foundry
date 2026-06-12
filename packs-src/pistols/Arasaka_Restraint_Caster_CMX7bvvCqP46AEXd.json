@@ -9,7 +9,8 @@
     "source": "P&S",
     "cost": 200.0,
     "weight": 1,
-    "weaponType": "P",
+    "attackType": "Auto",
+    "weaponType": "Pistol",
     "accuracy": "-1",
     "concealability": "J",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "4",
     "rof": "1",
     "reliability": "ST",
-    "range": "25m",
-    "attackType": "Auto"
+    "range": "25m"
   },
   "effects": [],
   "flags": {

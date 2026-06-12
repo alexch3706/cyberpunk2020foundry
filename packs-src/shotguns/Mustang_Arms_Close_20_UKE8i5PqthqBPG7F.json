@@ -9,7 +9,8 @@
     "source": "SOF2",
     "cost": 350.0,
     "weight": 1,
-    "weaponType": "SHT",
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
     "accuracy": "-1",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "15",
     "rof": "2",
     "reliability": "ST",
-    "range": "50m",
-    "attackType": "Autoshotgun"
+    "range": "50m"
   },
   "effects": [],
   "flags": {

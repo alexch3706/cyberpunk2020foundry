@@ -9,7 +9,8 @@
     "source": "MM",
     "cost": 1800.0,
     "weight": 1,
-    "weaponType": "RIF",
+    "attackType": "Auto",
+    "weaponType": "Rifle",
     "accuracy": "+2",
     "concealability": "N",
     "availability": "P",
@@ -18,8 +19,7 @@
     "shots": "300",
     "rof": "1/3/30",
     "reliability": "ST",
-    "range": "400m",
-    "attackType": "Auto"
+    "range": "400m"
   },
   "effects": [],
   "flags": {

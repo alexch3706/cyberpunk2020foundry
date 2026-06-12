@@ -9,6 +9,7 @@
     "source": "SF",
     "cost": 1500.0,
     "weight": 1,
+    "attackType": "Auto",
     "weaponType": "SMG",
     "accuracy": "+1",
     "concealability": "L",
@@ -18,8 +19,7 @@
     "shots": "10",
     "rof": "3",
     "reliability": "VR",
-    "range": "50m",
-    "attackType": "Auto"
+    "range": "50m"
   },
   "effects": [],
   "flags": {

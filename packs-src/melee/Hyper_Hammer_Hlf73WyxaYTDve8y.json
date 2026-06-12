@@ -9,7 +9,8 @@
     "source": "SOF2",
     "cost": 2000.0,
     "weight": 1,
-    "weaponType": "MEL",
+    "attackType": "Melee",
+    "weaponType": "Melee",
     "accuracy": "-2",
     "concealability": "L",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "2",
     "rof": "1",
     "reliability": "ST",
-    "range": "2m",
-    "attackType": "Melee"
+    "range": "2m"
   },
   "effects": [],
   "flags": {

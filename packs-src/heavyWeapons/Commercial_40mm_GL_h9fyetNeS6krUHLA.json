@@ -9,7 +9,8 @@
     "source": "CP20",
     "cost": 150.0,
     "weight": 1,
-    "weaponType": "HVY",
+    "attackType": "Auto",
+    "weaponType": "Heavy",
     "accuracy": "+0",
     "concealability": "L",
     "availability": "R",
@@ -18,8 +19,7 @@
     "shots": "1",
     "rof": "1",
     "reliability": "ST",
-    "range": "225m",
-    "attackType": "Auto"
+    "range": "225m"
   },
   "effects": [],
   "flags": {

@@ -9,7 +9,8 @@
     "source": "NEO",
     "cost": 50.0,
     "weight": 1,
-    "weaponType": "MEL",
+    "attackType": "Melee",
+    "weaponType": "Melee",
     "accuracy": "+0",
     "concealability": "J",
     "availability": "C",
@@ -18,8 +19,7 @@
     "shots": "VR",
     "rof": "0.5m",
     "reliability": null,
-    "range": null,
-    "attackType": "Melee"
+    "range": null
   },
   "effects": [],
   "flags": {
