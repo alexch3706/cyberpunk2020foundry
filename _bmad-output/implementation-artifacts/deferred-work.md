@@ -87,3 +87,6 @@ This file tracks technical debt and deferred items from code reviews.
 ## Deferred from: code review of 7-5-wounds-and-death-saves-refactor.md (2026-06-10)
 
 - [x] [Review][Defer] Magic numbers for wound levels [module/combat/save-resolver.js] — deferred, pre-existing
+
+## Deferred from: code review of 8-2-preserve-full-auto-evidence-modifiers-across-targets.md (2026-06-12)
+- Inclusion of unrelated dirty files (`tests/test-compendium.mjs`, `tools/research/parse_reference_extended.py` containing regex/parser issues) — deferred, pre-existing

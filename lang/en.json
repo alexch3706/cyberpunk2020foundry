@@ -9,7 +9,6 @@
     "CYBERPUNK.TabCyber": "Cyberware",
     "CYBERPUNK.TabGear": "Gear",
     "CYBERPUNK.TotalEBVal": "Total EB Value",
-
     "CYBERPUNK.Int": "INT",
     "CYBERPUNK.IntFull": "Intelligence",
     "CYBERPUNK.Ref": "REF",
@@ -29,7 +28,6 @@
     "CYBERPUNK.Emp": "EMP",
     "CYBERPUNK.EmpFull": "Empathy",
     "CYBERPUNK.Special": "Special",
-
     "CYBERPUNK.BTM": "Body Type Modifier",
     "CYBERPUNK.BTMShort": "BTM",
     "CYBERPUNK.Carry": "Carry",
@@ -38,18 +36,15 @@
     "CYBERPUNK.Leap": "Leap",
     "CYBERPUNK.Humanity": "Humanity",
     "CYBERPUNK.HumanityShort": "Hum.",
-
     "CYBERPUNK.Uninjured": "Uninjured",
     "CYBERPUNK.Light": "Light",
     "CYBERPUNK.Critical": "Critical",
     "CYBERPUNK.Serious": "Serious",
     "CYBERPUNK.Mortal": "Mortal {mortality}",
-
     "CYBERPUNK.Life": "Life",
-    "CYBERPUNK.SortBy": "Sort By",   
+    "CYBERPUNK.SortBy": "Sort By",
     "CYBERPUNK.Name": "Name",
     "CYBERPUNK.Stat": "Stat",
-
     "CYBERPUNK.Level": "Value",
     "CYBERPUNK.LevelChipped": "Value (chipped)",
     "CYBERPUNK.ImprovementPoints": "Improvement Points",
@@ -61,26 +56,22 @@
     "CYBERPUNK.SkillCharismaticLeadership": "Charismatic Leadership",
     "CYBERPUNK.SkillCombatSense": "Combat Sense",
     "CYBERPUNK.SkillCredibility": "Credibility",
-    "CYBERPUNK.SkillFamily": "Family", 
+    "CYBERPUNK.SkillFamily": "Family",
     "CYBERPUNK.SkillInterface": "Interface",
     "CYBERPUNK.SkillJuryRig": "Jury Rig",
     "CYBERPUNK.SkillMedicalTech": "Medical Tech",
     "CYBERPUNK.SkillResources": "Resources",
     "CYBERPUNK.SkillStreetdeal": "Streetdeal",
-
     "CYBERPUNK.SkillPersonalGrooming": "Personal Grooming",
     "CYBERPUNK.SkillWardrobeStyle": "Wardrobe & Style",
-
     "CYBERPUNK.SkillEndurance": "Endurance",
     "CYBERPUNK.SkillStrengthFeat": "Strength Feat",
     "CYBERPUNK.SkillSwimming": "Swimming",
-
     "CYBERPUNK.SkillInterrogation": "Interrogation",
     "CYBERPUNK.SkillIntimidate": "Intimidate",
     "CYBERPUNK.SkillOratory": "Oratory",
     "CYBERPUNK.SkillResistTortureDrugs": "Resist Torture/Drugs",
     "CYBERPUNK.SkillStreetwise": "Streetwise",
-
     "CYBERPUNK.SkillHumanPerception": "Human Perception",
     "CYBERPUNK.SkillInterview": "Interview",
     "CYBERPUNK.SkillLeadership": "Leadership",
@@ -88,7 +79,6 @@
     "CYBERPUNK.SkillSocial": "Social",
     "CYBERPUNK.SkillPersuasionFastTalk": "Persuasion & Fast Talk",
     "CYBERPUNK.SkillPerform": "Perform",
-
     "CYBERPUNK.SkillAccounting": "Accounting",
     "CYBERPUNK.SkillAnthropology": "Anthropology",
     "CYBERPUNK.SkillAwarenessNotice": "Awareness/Notice",
@@ -114,7 +104,6 @@
     "CYBERPUNK.SkillTeaching": "Teaching",
     "CYBERPUNK.SkillWildernessSurvival": "Wilderness Survival",
     "CYBERPUNK.SkillZoology": "Zoology",
-    
     "CYBERPUNK.SkillArchery": "Archery",
     "CYBERPUNK.SkillAthletics": "Athletics",
     "CYBERPUNK.SkillBrawling": "Brawling",
@@ -147,7 +136,6 @@
     "CYBERPUNK.SkillRifle": "Rifle",
     "CYBERPUNK.SkillStealth": "Stealth",
     "CYBERPUNK.SkillSubmachinegun": "Submachinegun",
-    
     "CYBERPUNK.SkillAeroTech": "Aero Tech",
     "CYBERPUNK.SkillAVTech": "AV Tech",
     "CYBERPUNK.SkillBasicTech": "Basic Tech",
@@ -168,7 +156,6 @@
     "CYBERPUNK.SkillPickPocket": "Pick Pocket",
     "CYBERPUNK.SkillPlayInstrument": "PlayInstrument",
     "CYBERPUNK.SkillWeaponsmith": "Weaponsmith",
-
     "CYBERPUNK.Summary": "Summary",
     "CYBERPUNK.Flavor": "Flavor",
     "CYBERPUNK.Accuracy": "Accuracy",
@@ -199,7 +186,6 @@
     "CYBERPUNK.Concealability": "Concealability",
     "CYBERPUNK.Availability": "Availability",
     "CYBERPUNK.Advanced": "Advanced",
-
     "CYBERPUNK.Pistol": "Pistol",
     "CYBERPUNK.SMG": "SMG",
     "CYBERPUNK.Shotgun": "Shotgun",
@@ -207,7 +193,6 @@
     "CYBERPUNK.Heavy": "Heavy",
     "CYBERPUNK.Melee": "Melee",
     "CYBERPUNK.Exotic": "Exotic",
-
     "CYBERPUNK.Gun": "Gun",
     "CYBERPUNK.Auto": "Auto",
     "CYBERPUNK.Paint": "Paint",
@@ -229,11 +214,9 @@
     "CYBERPUNK.RPG": "RPG",
     "CYBERPUNK.Missile": "Missile",
     "CYBERPUNK.Explocharge": "Explosive Charge",
-
     "CYBERPUNK.Martial": "Martial",
     "CYBERPUNK.Mono": "Mono",
     "CYBERPUNK.Beast": "Cyberbeast",
-
     "CYBERPUNK.Head": "Head",
     "CYBERPUNK.Torso": "Torso",
     "CYBERPUNK.lArm": "Left Arm",
@@ -249,7 +232,6 @@
     "CYBERPUNK.HitLoc": "Hit Location",
     "CYBERPUNK.Ablate": "Ablate",
     "CYBERPUNK.Repair": "Repair",
-
     "CYBERPUNK.Gear": "Gear",
     "CYBERPUNK.Weapon": "Weapon",
     "CYBERPUNK.Weapons": "Weapons",
@@ -257,7 +239,6 @@
     "CYBERPUNK.Cyberware": "Cyberware",
     "CYBERPUNK.Misc": "Misc",
     "CYBERPUNK.Eurobucks": "Eurobucks",
-
     "CYBERPUNK.Equipped": "Equipped",
     "CYBERPUNK.Details": "Details",
     "CYBERPUNK.Notes": "Notes",
@@ -276,7 +257,6 @@
     "CYBERPUNK.Source": "Source",
     "CYBERPUNK.Weight": "Weight",
     "CYBERPUNK.Encumbrance": "Encumbrance",
-
     "CYBERPUNK.MartialArt": "Martial Art",
     "CYBERPUNK.AttackSkill": "Attack Skill",
     "CYBERPUNK.Attack": "Attack",
@@ -300,16 +280,13 @@
     "CYBERPUNK.Grapple": "Grapple",
     "CYBERPUNK.GrappleText": "Succeed? Great, now you can try to Hold, Choke or Throw your opponent.",
     "CYBERPUNK.MartialTitle": "{action} ({martialArt})",
-
     "CYBERPUNK.Location": "Location",
     "CYBERPUNK.WeaponType": "Weapon Type",
     "CYBERPUNK.AttackType": "Attack Type",
-
     "CYBERPUNK.FullAuto": "Full Auto",
     "CYBERPUNK.ThreeRoundBurst": "Three-round Burst",
     "CYBERPUNK.Suppressive": "Suppressive Fire",
     "CYBERPUNK.SemiAuto": "Semi-Auto",
-
     "CYBERPUNK.AttackModifiers": "Attack Modifiers",
     "CYBERPUNK.ExtraModifiers": "Extra Modifiers",
     "CYBERPUNK.FireMode": "Fire Mode",
@@ -319,6 +296,10 @@
     "CYBERPUNK.TargetArea": "Target Area",
     "CYBERPUNK.TargetsCount": "Targets Count",
     "CYBERPUNK.Rounds": "{rounds} round(s)",
+    "CYBERPUNK.RoundsFired": "Rounds Fired",
+    "CYBERPUNK.RoundsPerTarget": "Rounds Per Target",
+    "CYBERPUNK.HitCount": "Hit Count",
+    "CYBERPUNK.NotFired": "Not Fired",
     "CYBERPUNK.Ambush": "Ambush",
     "CYBERPUNK.FastDraw": "Fast Draw",
     "CYBERPUNK.Blinded": "Blinded",
@@ -328,27 +309,22 @@
     "CYBERPUNK.Hipfire": "Hipfire",
     "CYBERPUNK.CoverSP": "Cover SP",
     "CYBERPUNK.Ricochet": "Ricochet",
-
     "CYBERPUNK.Autofire": "Autofire",
     "CYBERPUNK.ToHit": "To Hit",
     "CYBERPUNK.AutofireHitTally": "{hits} hit",
     "CYBERPUNK.AutofireFiredTally": "of {fired} fired",
     "CYBERPUNK.NoHits": "No Hits",
-
     "CYBERPUNK.ConcealPocket": "Pocket/Pants Leg/Sleeve",
     "CYBERPUNK.ConcealJacket": "Jacket/Coat/Shoulder Rig",
     "CYBERPUNK.ConcealLongcoat": "Long Coat",
     "CYBERPUNK.ConcealNoHide": "Can't be hidden",
-
     "CYBERPUNK.Excellent": "Excellent",
     "CYBERPUNK.Common": "Common",
     "CYBERPUNK.Poor": "Poor",
     "CYBERPUNK.Rare": "Rare",
-
     "CYBERPUNK.VeryReliable": "Very Reliable",
     "CYBERPUNK.Standard": "Standard",
     "CYBERPUNK.Unreliable": "Unreliable",
-
     "CYBERPUNK.Speed": "Speed",
     "CYBERPUNK.MPH": "mph",
     "CYBERPUNK.Accel": "Accel",
@@ -362,7 +338,6 @@
     "CYBERPUNK.SDPFull": "Structural Damage Points",
     "CYBERPUNK.Maneuverability": "Maneuv.",
     "CYBERPUNK.ManeuverabilityFull": "Maneuverability",
-
     "CYBERPUNK.Action": "Action",
     "CYBERPUNK.Rolls": "Rolls",
     "CYBERPUNK.Initiative": "Initiative",
@@ -374,23 +349,18 @@
     "CYBERPUNK.DeathSaveReminderStabilized": "Stabilized/manual",
     "CYBERPUNK.UnderThresholdMessage": "Roll under the thresholds to succeed",
     "CYBERPUNK.Save": "Save",
-    
     "CYBERPUNK.Description": "Description",
     "CYBERPUNK.Settings": "Settings",
-
     "CYBERPUNK.Yes": "Yes",
     "CYBERPUNK.No": "No",
     "CYBERPUNK.OK": "OK",
     "CYBERPUNK.ItemDeleteConfirmTitle": "Delete Item?",
     "CYBERPUNK.ItemDeleteConfirmText": "Are you sure you want to delete {itemName}?",
     "CYBERPUNK.DragItemsPrompt": "Drag items here to add (for now)",
-
     "CYBERPUNK.InitiativeTrackerWarning": "At the moment, rolling initiative from the sheet doesn't add to the encounter's combat tracker.",
-    "CYBERPUNK.ExoticAttackManualWarning": "Exotic weapon type requires manual resolution — special attack rules are not applied by the combat resolver.",
+    "CYBERPUNK.ExoticAttackManualWarning": "Exotic weapon type requires manual resolution \u2014 special attack rules are not applied by the combat resolver.",
     "CYBERPUNK.MigrateMessage": "Migrating data of {target}",
-
     "CYBERPUNK.NPC": "NPC",
-
     "SETTINGS.SysMigration": "System Migration Version",
     "SETTINGS.TrainedSkillsFirst": "Trained Skills First",
     "SETTINGS.TrainedSkillsFirstHint": "Whether trained skills always come first in the skills list",
@@ -404,7 +374,6 @@
     "SETTINGS.CombatDamageCommitModeDirect": "Direct (no preview)",
     "CYBERPUNK.SuppressiveFireManualWarning": "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.",
     "SuppressiveFireManualWarning": "Suppressive fire requires manual resolution. Select a different fire mode or resolve manually.",
-    
     "CYBERPUNK.NoCombatError": "There's currently no combat encounter present; you'll need to start one",
     "CYBERPUNK.AmmoDelta": "Ammo Spent",
     "CYBERPUNK.Warnings": "Warnings",
@@ -416,8 +385,8 @@
     "CYBERPUNK.CanceledStatusDesc": "Discarded",
     "CYBERPUNK.ManualStatus": "[MANUAL]",
     "CYBERPUNK.ManualStatusDesc": "Requires GM Resolution",
-
     "CYBERPUNK.ConformanceCorebook": "Corebook",
     "CYBERPUNK.ConformanceExtended": "Extended",
-    "CYBERPUNK.ConformanceUnknown": "Unknown"
+    "CYBERPUNK.ConformanceUnknown": "Unknown",
+    "CYBERPUNK.TargetNotFiredWeaponJam": "Full-auto attack stopped after a weapon jam before this target was fired on."
 }

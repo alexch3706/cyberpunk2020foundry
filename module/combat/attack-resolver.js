@@ -2,6 +2,7 @@ import { defaultAreaLookup, rangeDCs, ranges, btmFromBT, strengthDamageBonus } f
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
 import { getKeyTechniqueBonus, getRequiresPrerequisite } from "./martial-arts-data.js";
+import { buildFullAutoAttackEvidence, buildFullAutoTargetAction } from "./ranged-automatic-fire.js";
 import { buildMultiHitLocationAction } from "./ranged-hit-location.js";
 
 const RANGED_MODIFIERS = Object.freeze([
@@ -185,14 +186,21 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
 
   if (fireMode === "fullauto" && targetCount > 1) {
     let jamAborted = false;
-    let idx = 0;
-    for (const target of (context.targets || [])) {
+    for (const [idx, target] of (context.targets || []).entries()) {
       if (jamAborted) {
         targets.push({
           target: clonePlainData(target),
           attack: {
             hit: false,
-            warnings: []
+            hitCount: 0,
+            notFired: true,
+            roundsFired: 0,
+            roundsFiredPerTarget,
+            warnings: [{
+              code: "full-auto-jam-aborted",
+              severity: COMBAT_WARNING_SEVERITY.warning,
+              message: typeof game !== "undefined" && game?.i18n?.localize ? game.i18n.localize("CYBERPUNK.TargetNotFiredWeaponJam") : "Target not fired upon due to weapon jam"
+            }]
           },
           hits: [],
           saves: [],
@@ -200,24 +208,16 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
           manualResolution: { required: false },
           warnings: cloneArray(target.warnings)
         });
-        idx++;
         continue;
       }
 
-      const targetAction = {
-        ...action,
-        roundsFiredPerTarget
-      };
-      if (idx > 0) {
-        targetAction.targetArea = undefined;
-        if (targetAction.options) {
-          targetAction.options = {
-            ...targetAction.options,
-            targetArea: undefined
-          };
-        }
-      }
+      const targetAction = buildFullAutoTargetAction(action, idx, roundsFiredPerTarget);
       const targetModifierEvidence = buildModifierEvidence(targetAction, context.weapon);
+      const baseTargetAttackEvidence = buildFullAutoAttackEvidence({
+        modifiers: targetModifierEvidence,
+        roundsFired: roundsFiredPerTarget,
+        roundsFiredPerTarget,
+      });
       const targetAttackRequest = buildAttackRollRequest(
         { ...context, action: targetAction },
         targetModifierEvidence
@@ -262,7 +262,8 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
             targetNumber,
             hit: false,
             margin: 0,
-            warnings: []
+            warnings: [],
+            ...baseTargetAttackEvidence
           },
           hits: [],
           saves: [],
@@ -270,7 +271,6 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
           manualResolution: { required: false },
           warnings: cloneArray(target.warnings)
         });
-        idx++;
         continue;
       }
 
@@ -282,9 +282,9 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
         context.weapon,
         roller,
         options,
-        roundsFiredPerTarget
+        roundsFiredPerTarget,
+        baseTargetAttackEvidence
       ));
-      idx++;
     }
   } else {
     modifierEvidence = buildModifierEvidence(action, context.weapon);
@@ -1294,7 +1294,7 @@ function ammoWarning(code, message) {
   };
 }
 
-async function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1) {
+async function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1, attackEvidence = {}) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
   const targetWarnings = cloneArray(target.warnings);
@@ -1309,6 +1309,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
 
   const fireMode = String(action.fireMode || "").toLowerCase();
   let burstHitsRoll = null;
+  let hitCount = 0;
 
   if(hit && !manualResolution.required) {
     let numHits = 1;
@@ -1322,6 +1323,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
     } else if (fireMode === "fullauto") {
       numHits = Number.isFinite(roundsFired) && roundsFired > 0 ? Math.max(1, Math.min(roundsFired, margin)) : 0;
     }
+    hitCount = numHits;
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
     const accumulatedAblations = {};
@@ -1475,6 +1477,8 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
       hit,
       margin,
       warnings: [],
+      ...clonePlainData(attackEvidence),
+      hitCount,
       ...(burstHitsRoll ? { burstHitsRoll: clonePlainData(burstHitsRoll) } : {})
     },
     hits,

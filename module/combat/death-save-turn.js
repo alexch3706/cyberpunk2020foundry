@@ -28,12 +28,18 @@ export async function handleCombatTurnDeathSaveReminder(combat, updateData = {},
   if(!actor) {
     return { status: "skipped", reason: "no-actor" };
   }
-  
+
   const deathSaveState = getDeathSaveState(actor);
   if (deathSaveState.woundState?.level < 4) { // Not mortal
     return { status: "skipped", reason: "no-recurring-death-save" };
   }
-  // Dead and stabilized actors generate a "manual" status reminder rather than skipping
+
+  if (deathSaveState.dead) {
+    return { status: "skipped", reason: "dead" };
+  }
+  if (deathSaveState.stabilized) {
+    return { status: "skipped", reason: "stabilized" };
+  }
 
   const turnKey = buildTurnKey(combat, combatant, updateData);
   if(emittedTurnKeys.has(turnKey)) {

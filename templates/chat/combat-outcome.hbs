@@ -26,7 +26,7 @@
         </div>
         {{#each action.modifiers as |mod|}}
         <div class="field">
-            <span>{{CPLocal mod.label}}: </span>
+            <span>{{CPLocal mod.code}}: </span>
             <span class="flex-pad">{{mod.value}}</span>
         </div>
         {{/each}}
@@ -59,10 +59,41 @@
                     <span class="flex-pad">{{targetOutcome.attack.targetNumber}}</span>
                 </div>
                 {{/if}}
+                {{#if (hasProperty targetOutcome.attack "roundsFired")}}
+                <div class="field">
+                    <span>{{CPLocal "RoundsFired"}}: </span>
+                    <span class="flex-pad">{{targetOutcome.attack.roundsFired}}</span>
+                </div>
+                {{/if}}
+                {{#if (hasProperty targetOutcome.attack "roundsFiredPerTarget")}}
+                <div class="field">
+                    <span>{{CPLocal "RoundsPerTarget"}}: </span>
+                    <span class="flex-pad">{{targetOutcome.attack.roundsFiredPerTarget}}</span>
+                </div>
+                {{/if}}
+                {{#if (hasProperty targetOutcome.attack "hitCount")}}
+                <div class="field">
+                    <span>{{CPLocal "HitCount"}}: </span>
+                    <span class="flex-pad">{{targetOutcome.attack.hitCount}}</span>
+                </div>
+                {{/if}}
+                {{#if targetOutcome.attack.modifiers.length}}
+                <div class="field">
+                    <strong>{{CPLocal "AttackModifiers"}}:</strong>
+                </div>
+                    {{#each targetOutcome.attack.modifiers as |mod|}}
+                    <div class="field">
+                        <span>{{CPLocal mod.code}}: </span>
+                        <span class="flex-pad">{{mod.value}}</span>
+                    </div>
+                    {{/each}}
+                {{/if}}
                 <div class="field">
                     <span>{{CPLocal "Result"}}: </span>
                     <span class="flex-pad">
-                        {{#if targetOutcome.attack.hit}}
+                        {{#if targetOutcome.attack.notFired}}
+                            <strong class="outcome-not-fired">{{CPLocal "NotFired"}}</strong>
+                        {{else if targetOutcome.attack.hit}}
                             <strong style="color: #0f0; text-transform: uppercase;">{{CPLocal "Hit"}}</strong>
                         {{else}}
                             <strong style="color: #f00; text-transform: uppercase;">{{CPLocal "Miss"}}</strong>
