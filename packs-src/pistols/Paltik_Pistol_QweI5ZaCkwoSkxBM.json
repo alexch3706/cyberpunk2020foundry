@@ -1,0 +1,33 @@
+{
+  "_id": "QweI5ZaCkwoSkxBM",
+  "name": "Paltik Pistol",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 50.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": "12mm",
+    "damage": "4d6+1",
+    "shots": "10",
+    "rof": "1/5",
+    "reliability": "ST",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

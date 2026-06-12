@@ -1,0 +1,33 @@
+{
+  "_id": "CWAED1CF03leMLE2",
+  "name": "BudgetArms C-41",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF",
+    "cost": 600.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+1",
+    "concealability": "J",
+    "availability": "E",
+    "ammoType": ".41 C",
+    "damage": "2d6+1",
+    "shots": "10",
+    "rof": "3",
+    "reliability": "VR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

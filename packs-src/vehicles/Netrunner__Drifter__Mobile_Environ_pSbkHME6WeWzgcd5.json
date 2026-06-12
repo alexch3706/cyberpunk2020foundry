@@ -1,0 +1,22 @@
+{
+  "_id": "pSbkHME6WeWzgcd5",
+  "name": "Netrunner \"Drifter\" Mobile Environ.",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 80<br><b>Acc/Dec:</b> 15/40<br><b>Crew:</b> 1<br><b>Range:</b> 700<br><b>Passengers:</b> 1<br><b>Cargo:</b> 640kg, 3.5<br><b>Maneuver:</b> -2<br><b>SDP:</b> 80 (4)<br><b>SP:</b> 10<br><b>Mass:</b> (0) 3200kg",
+    "source": "BB",
+    "cost": 80000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "mXvI9297ihaJizLV",
+  "name": "ChainRipp",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 2d6+4<br><p>3d6AP</p>",
+    "source": "Chr3",
+    "cost": 1250.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

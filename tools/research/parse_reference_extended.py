@@ -28,6 +28,31 @@ def parse_gear_line(line):
     cost = parts[-1].strip().lstrip('.')
     return {"name": name, "cost": cost}
 
+def parse_armor_line(line):
+    match = re.search(r'\s(\d+(?:/\d+)*(?:\(s\))?(?:\s+vs\s+[A-Za-z]+)?)\s+([\+\-]\d+(?:\.\d+)?(?:/[a-z]+)?)\s+(.*)$', line)
+    if not match: return None
+    
+    sp = match.group(1).strip()
+    ev = match.group(2).strip()
+    rest = match.group(3).strip()
+    front = line[:match.start()].strip()
+    
+    covers_match = re.search(r'\b(Torso|Arms|Legs|Head|Whole Body|Any where|Any location|Feet|Arm)\b(.*)$', front, re.IGNORECASE)
+    if covers_match:
+        covers = covers_match.group(0).strip()
+        name = front[:covers_match.start()].strip()
+    else:
+        covers = ""
+        name = front
+        
+    return {
+        "name": name,
+        "covers": covers,
+        "sp": sp,
+        "ev": ev,
+        "cost_source_notes": rest
+    }
+
 def parse_netware_line(line):
     match = re.search(r'^(.+?)\s+(\d+(?:-\d+)?)\s+(\d+)\s+([\d,]+)\s+(.+?)\s+([A-Z0-9]+)$', line)
     if match:
@@ -48,6 +73,7 @@ def main():
     cyberware = []
     gear = []
     netware = []
+    armor = []
     
     for i, page in enumerate(reader.pages):
         if i < 30: continue
@@ -59,6 +85,8 @@ def main():
             mode = "cyberware"
         elif "NETWARE LISTING" in text:
             mode = "netware"
+        elif "ARMOR COVERS SP" in text or ("ARMOR" in text and "COVERS" in text and "EV" in text):
+            mode = "armor"
         elif "GEAR LISTING" in text:
             mode = "gear"
             
@@ -78,6 +106,9 @@ def main():
             elif mode == "netware":
                 parsed = parse_netware_line(line)
                 if parsed and parsed['name'].lower() != "netware": netware.append(parsed)
+            elif mode == "armor":
+                parsed = parse_armor_line(line)
+                if parsed: armor.append(parsed)
 
     out_dir = Path(".research/parsed")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -88,8 +119,10 @@ def main():
         json.dump(gear, f, indent=2)
     with open(out_dir / "reference-netware.json", "w") as f:
         json.dump(netware, f, indent=2)
+    with open(out_dir / "reference-armor.json", "w") as f:
+        json.dump(armor, f, indent=2)
         
-    print(f"Parsed {len(cyberware)} cyberware, {len(gear)} gear, {len(netware)} netware.")
+    print(f"Parsed {len(cyberware)} cyberware, {len(gear)} gear, {len(netware)} netware, {len(armor)} armor.")
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,33 @@
+{
+  "_id": "TrOk4hfpGmiE0ZM0",
+  "name": "Thompson M1",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 250.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "SMG",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": ".45 C",
+    "damage": "2d6+2",
+    "shots": "30/50",
+    "rof": "20",
+    "reliability": "ST",
+    "range": "200m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

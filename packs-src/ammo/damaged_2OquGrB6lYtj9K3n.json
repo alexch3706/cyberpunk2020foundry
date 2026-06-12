@@ -1,0 +1,22 @@
+{
+  "_id": "2OquGrB6lYtj9K3n",
+  "name": "damaged",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> addition damage.<br><p>Damage which exceeds the SOP of the External System can pass through to the armor of the suit itself. If no external systems are hit or if the damage was greater than the SOP and SP of the external system, another roll, called a</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

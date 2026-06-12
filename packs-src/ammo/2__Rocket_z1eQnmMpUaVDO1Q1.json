@@ -1,0 +1,22 @@
+{
+  "_id": "z1eQnmMpUaVDO1Q1",
+  "name": "2\" Rocket",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Rockets Reloads<br><p>6d10, 1 space\\12 100eb</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

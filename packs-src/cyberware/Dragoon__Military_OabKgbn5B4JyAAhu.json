@@ -1,0 +1,22 @@
+{
+  "_id": "OabKgbn5B4JyAAhu",
+  "name": "Dragoon (Military)",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CRx2<br><b>Humanity Loss:</b> 42d6+3<br><p>REF 15, MA 25, BOD 20, SP 40, SDP 40/50/60</p>",
+    "source": "Chr2",
+    "cost": 120000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

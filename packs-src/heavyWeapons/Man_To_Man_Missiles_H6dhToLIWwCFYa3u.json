@@ -1,0 +1,33 @@
+{
+  "_id": "H6dhToLIWwCFYa3u",
+  "name": "Man-To-Man Missiles",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "WGF",
+    "cost": 2000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "4d10+4",
+    "shots": "10",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "450m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

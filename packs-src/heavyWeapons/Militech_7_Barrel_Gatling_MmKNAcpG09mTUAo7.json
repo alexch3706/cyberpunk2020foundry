@@ -1,0 +1,33 @@
+{
+  "_id": "MmKNAcpG09mTUAo7",
+  "name": "Militech 7-Barrel Gatling",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SW",
+    "cost": 10000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "30 DPU",
+    "damage": "9d10",
+    "shots": "1000",
+    "rof": "100",
+    "reliability": "VR",
+    "range": "2000m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

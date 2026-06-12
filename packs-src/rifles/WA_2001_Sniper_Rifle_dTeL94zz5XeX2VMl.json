@@ -1,0 +1,33 @@
+{
+  "_id": "dTeL94zz5XeX2VMl",
+  "name": "WA 2001 Sniper Rifle",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "UK",
+    "cost": 900.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+3",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": "B4",
+    "damage": "6d6+2",
+    "shots": "10",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "1000m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

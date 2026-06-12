@@ -1,0 +1,22 @@
+{
+  "_id": "WS2Dke3mrrKVC3Ox",
+  "name": "Memory",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Cyberdeck Upgrades:<br><p>The result will be a character without any morality or self-restraint. Essentially the characterwill behave as a sociopath until unblocked. Latent Rule memory will take aver while Dominant Rule Memory is blocked, if there is one is pre.sait. \u2022 Destroy: A Destroyed Rule Memory will result in the character having no morality or self-restraints. Essentially the character will perma\u00ad nently behave as a sociopath as all Rule Memories, Latent and Dominant, are lost. No new Rule Memories can be encoded either. \u2022 Encode: Encoding a new Rule Memory. lf there is no existing Dominant Rule Memory (i.e.: it was Blocked), this new Rule Memory automatically becomes DominanL If there is an existing Rule Memory, roll ld6 and find the result on the Rule Memory Dominance Table. RULE MEMORY DOMINANCE TABLE: Roll Result Rejected. Old Rule Memory remains Dominant, no aspects of New Rule Memory integrated. 2 Partially Rejected. Old Rule Memory remains Domi\u00ad nant, New Rule Memory becomes Latent. 3-4 Merging. Old and New Rule Memory merge and create a mix of both, randomly determine which characteristics become Dominant others become Latent. 5 Successful. New Rule Memory becomes fully Domi\u00ad nant, Old Rule Memory becomes Latent. 6 Complete Success. New Rule Memory becomes fully Dominant, Old Rule Memory is lost (forgotten, no retrieval possible). \u2022 Enhonce: Rule Memory cannot be enhanced. \u2022 Erose: The Dominant Rule Memory is erased permanently. A random Latent Rule Memory (if any) will automatically become Domi\u00ad nant. If there is no Latent Rule Memory, the character will act soeiopathic (see Bloch above). \u2022 lmpoir: Rule Memory cannot be impaired. 51---\ufffd</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

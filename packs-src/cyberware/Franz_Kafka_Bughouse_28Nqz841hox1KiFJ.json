@@ -1,0 +1,22 @@
+{
+  "_id": "28Nqz841hox1KiFJ",
+  "name": "Franz Kafka Bughouse",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CR+<br><b>Humanity Loss:</b> 15d6<br><p>as above, + mandibles, exoskeleton, scratchers</p>",
+    "source": "Chr2",
+    "cost": 35500.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

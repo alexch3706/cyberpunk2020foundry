@@ -1,0 +1,33 @@
+{
+  "_id": "UWOjPqs72rQlqX2C",
+  "name": "Micro-Missile Launcher",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 900.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+2",
+    "concealability": "-",
+    "availability": "R",
+    "ammoType": "micromissile",
+    "damage": "4d6",
+    "shots": "4",
+    "rof": "2",
+    "reliability": "St",
+    "range": "200m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "h9fyetNeS6krUHLA",
+  "name": "Commercial 40mm GL",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 150.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+0",
+    "concealability": "L",
+    "availability": "R",
+    "ammoType": "B6",
+    "damage": "0",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "225m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

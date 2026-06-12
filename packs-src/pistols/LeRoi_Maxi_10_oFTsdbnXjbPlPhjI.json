@@ -1,0 +1,33 @@
+{
+  "_id": "oFTsdbnXjbPlPhjI",
+  "name": "LeRoi Maxi-10",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "ET",
+    "cost": 150.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "-1",
+    "concealability": "J",
+    "availability": "E",
+    "ammoType": "10mm",
+    "damage": "2d6+3",
+    "shots": "10",
+    "rof": "2",
+    "reliability": "UR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

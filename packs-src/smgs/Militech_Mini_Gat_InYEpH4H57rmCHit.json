@@ -1,0 +1,33 @@
+{
+  "_id": "InYEpH4H57rmCHit",
+  "name": "Militech Mini-Gat",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 695.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "SMG",
+    "accuracy": "+0",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": ".22/5mm",
+    "damage": "1d6",
+    "shots": "120",
+    "rof": "40",
+    "reliability": "ST",
+    "range": "150m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

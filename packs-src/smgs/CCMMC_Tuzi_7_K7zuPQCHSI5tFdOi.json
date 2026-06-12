@@ -1,0 +1,33 @@
+{
+  "_id": "K7zuPQCHSI5tFdOi",
+  "name": "CCMMC Tuzi-7",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 125.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "SMG",
+    "accuracy": "-2",
+    "concealability": "J",
+    "availability": "P",
+    "ammoType": "11mm",
+    "damage": "3d6",
+    "shots": "30",
+    "rof": "15",
+    "reliability": "ST",
+    "range": "100m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

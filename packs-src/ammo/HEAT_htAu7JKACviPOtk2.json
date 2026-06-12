@@ -1,0 +1,22 @@
+{
+  "_id": "htAu7JKACviPOtk2",
+  "name": "HEAT",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Shotgun Rounds<br><p>This substitutes a shaped-charge war\u00ad head for the normal high-explosive. Double the shell cost, double the Penetration (and halve it again if attacking Composite Armor) and reduce the Burst to 4m. Works best when combined with Laser-Guided. Laser-Guided: A laser-guided shell follows a painting laser to its target. On the turn when the shell hits, if there is a laser painting the target spot, the shell strikes that spot on a 010 roll of 4-10, otherwise it scatters 2010 meters on the Grenade Table.Triple the base cost of the shell. Rocket-Assisted Shells: Artillery shells with rocket boosters. Double the range and number of spaces the shell takes up, triple the base cost of the shell. White Phosphorous: Anyone hit with WP sustains 306 burn damage to that location per turn for at least a half-hour. or until the WP frag\u00ad ments are removed. If the fragment hits body armor, it does its damage to the armor, doing full damage to kevlar and armorjackets (only flak jackets, doorgunner's vests, Metalgear\u2122 and Powered Armor is proof against it). For instance, an area protected by an SP 14 armor\u00ad jacket takes 11 points of damage from WP. The MAXIMUM METAL i!1</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

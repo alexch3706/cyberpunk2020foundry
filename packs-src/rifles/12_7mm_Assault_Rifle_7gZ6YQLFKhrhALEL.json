@@ -1,0 +1,33 @@
+{
+  "_id": "7gZ6YQLFKhrhALEL",
+  "name": "12.7mm Assault Rifle",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 2000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B12",
+    "damage": "6d10",
+    "shots": "50",
+    "rof": "10",
+    "reliability": "VR",
+    "range": "400m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

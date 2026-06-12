@@ -1,0 +1,33 @@
+{
+  "_id": "MzheNvibrzNOUCit",
+  "name": "1 Handed Blade",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 550.0,
+    "weight": 1,
+    "attackType": "Melee",
+    "weaponType": "Melee",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "E",
+    "ammoType": null,
+    "damage": "4d6 +  -",
+    "shots": "1",
+    "rof": "10%",
+    "reliability": null,
+    "range": "2m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

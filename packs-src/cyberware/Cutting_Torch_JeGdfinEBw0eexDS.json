@@ -1,0 +1,22 @@
+{
+  "_id": "JeGdfinEBw0eexDS",
+  "name": "Cutting Torch",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 1d6/2+1<br><p>Can cut through SP20</p>",
+    "source": "Chr1",
+    "cost": 100.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

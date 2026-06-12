@@ -1,0 +1,33 @@
+{
+  "_id": "bhdLlIQGaciEY61D",
+  "name": "30mm HiVel Auto-GL",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 2000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B12",
+    "damage": "0",
+    "shots": "25",
+    "rof": "15",
+    "reliability": "VR",
+    "range": "300m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

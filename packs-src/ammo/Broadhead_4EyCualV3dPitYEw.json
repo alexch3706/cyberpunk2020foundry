@@ -1,0 +1,22 @@
+{
+  "_id": "4EyCualV3dPitYEw",
+  "name": "Broadhead",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Ammunition Types<br><p>An head consisting of two or more razor-sharp blades. Acts as a knife for armor penetration, penetrating damage is doubled. 12 arrows/40eb, 12 quarrels/S0eb. Stun: This arrowhead is a blunt ellipsoid. All damage is stun. 12 arrows/20eb, 12 quarrels/25eb. Spinner: A vicious arrow with a hardened target point that springs into a broadhead inside the victim. Furthermore, the arrow rotates in flight, drilling a 20mm+ hole through the victim's flesh! Acts as a knife for armor penetration, penetrating damage is tripled. 12 arrows/80eb, 12 quarrels/1 00eb. Warhead: A standard 25mm pistol grenade <Chromebook 2, pg.48) can be fitted onto an arrow and shot from any bow with a 20-kilo or greater pull. This reduces WA by -2 and halves the effective range of the bow. The ''.Arbelest\" and \"Scorpion\" cross\u00ad bows are exceptions to this; they suffer the -2 WA penalty, but retain their normal ranges <these monsters already throw mas\u00ad sive bolts; the grenade's not heavy enough to make a difference!. Constitution Arms Multiple-Purpmie 1i!mm Ammunition fur the CA MAP 1i!mm Pistol: Prices varg Being designed for the Multiple-Ammunition Pistol revolver, these rounds are brass-cased rounds and are thus not compatable with any other 12mm handgun. Furthermore, the bullets fired from these cartridges are, in fact, slightly larger than 12mm case\u00ad less bullets, to prevent them from being used in other 12mm weapons. See Constituion's Multiple-Ammunition Pistol <page 16 ) entry for further details. [Protect & Servel Standard Round: These are general purpose 12mm cased shells with a 50m effective range, causing 4d6+1 damage. A box of 50 sells for 20eb. Hyper-Penetration Round: Uses principle similar to Dual-Purpose ammunition, but designed for less lethality against unarmored targets. Consists of a lead slug surrounding a cadmium rod core with a higher than average propellant mass to provide an increase in velocity. If the round hits a soft target, it will mushroom like a standard round. However, upon impacting an armored target, the lead slug is halted, allowing the cadmium rod to penetrate the armor. The round does 4d6+ 1 and is treated as armor\u00ad piercing or normal, whichever does the most damage to the target. A box of 50 rounds sells for 60eb. Chemically Propelled Dart Round: This round has a reduced propellant load to accomodate a small dart in its tip, capable of delivering toxins of various types. A CPD has a range of 45m and inflicts 1 d6 damage plus any effects caused by the toxin pay\u00ad load. It is considered AP vs. Soft Armor (i.e., leather, Kevlar-T, Lt Armor jacket>. Constitution Arms only sells sleep darts (official\u00ad ly). A box of 50 rounds sells for 40eb. Chemically Propelled Capsule Round: Three types of CPC are available, each designed to release their payloads upon contact with a solid object, breaking the capsule within the slug body. The three types are a paint round used mostly for training, a sleep round favoured by many riot units around the world, and an acid round (with a variety of uses, not against human targets; treat acid capsule as airgun load, 2 rounds duration!. The round has a reduced propellant load, and thus only has a range of 45m. A box of 50 paint shells costs 25eb, while the sleep and acid rounds both sell for 40eb per 50 shells. It is also possible that other payloads could be used.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

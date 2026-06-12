@@ -1,0 +1,33 @@
+{
+  "_id": "SZCy4VvNHGYXiJsQ",
+  "name": "2\" Rocket (100eb)",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "-2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "6d10 3 1-19 1-19",
+    "shots": "500m",
+    "rof": "200ea",
+    "reliability": null,
+    "range": null
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

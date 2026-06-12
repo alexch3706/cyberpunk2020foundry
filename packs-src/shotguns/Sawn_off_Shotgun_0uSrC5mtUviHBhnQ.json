@@ -1,0 +1,33 @@
+{
+  "_id": "0uSrC5mtUviHBhnQ",
+  "name": "Sawn-off Shotgun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "UK",
+    "cost": 100.0,
+    "weight": 1,
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
+    "accuracy": "-1",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": "B6",
+    "damage": "4d6",
+    "shots": "2",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "10m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

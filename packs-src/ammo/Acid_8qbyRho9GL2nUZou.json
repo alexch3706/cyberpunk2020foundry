@@ -1,0 +1,22 @@
+{
+  "_id": "8qbyRho9GL2nUZou",
+  "name": "Acid",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Micromissiles<br><p>Acid causes 1D6/2 in acid damage per pellet. Although armor will stop this, the acid will eat away at the armor, reducing its SP by 1D6/2 per round, for a total of 3 rounds.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

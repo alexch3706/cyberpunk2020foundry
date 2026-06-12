@@ -1,0 +1,22 @@
+{
+  "_id": "tZDzdLA4E00T7zre",
+  "name": "Wolvers",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> M<br><b>Humanity Loss:</b> 3d6+1<br><p>Hands. 3d6* damage</p>",
+    "source": "CP20",
+    "cost": 600.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

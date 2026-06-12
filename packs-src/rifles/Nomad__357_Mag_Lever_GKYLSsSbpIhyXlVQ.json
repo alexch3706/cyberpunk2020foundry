@@ -1,0 +1,33 @@
+{
+  "_id": "GKYLSsSbpIhyXlVQ",
+  "name": "Nomad .357 Mag Lever",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "NEO",
+    "cost": 300.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+2",
+    "concealability": "L",
+    "availability": "C",
+    "ammoType": "B2",
+    "damage": "2d6+3",
+    "shots": "9",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "100m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

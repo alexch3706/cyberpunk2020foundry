@@ -1,0 +1,48 @@
+{
+  "_id": "ZUNNe0qVvKMP21sR",
+  "name": "Radsuit* 16",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>30,000 DS, 59 8+2 hours</p>",
+    "source": "CP20",
+    "cost": 30000.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 6,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 6,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 6,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 6,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 6,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

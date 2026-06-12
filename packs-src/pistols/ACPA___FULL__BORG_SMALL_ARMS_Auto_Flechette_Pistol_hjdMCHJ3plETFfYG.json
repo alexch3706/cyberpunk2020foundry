@@ -1,0 +1,33 @@
+{
+  "_id": "hjdMCHJ3plETFfYG",
+  "name": "ACPA / FULL 'BORG SMALL ARMS Auto-Flechette Pistol",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 900.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+2",
+    "concealability": "J",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "1d6x1d6*",
+    "shots": "100",
+    "rof": "1/3/30",
+    "reliability": "ST",
+    "range": "200m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

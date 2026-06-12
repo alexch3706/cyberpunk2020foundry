@@ -15,7 +15,7 @@
     "concealability": "J",
     "availability": "C",
     "ammoType": "10mm",
-    "damage": "2d6+3 (10mm)",
+    "damage": "2d6+3",
     "shots": "24",
     "rof": "3",
     "reliability": "ST",

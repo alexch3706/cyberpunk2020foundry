@@ -1,0 +1,22 @@
+{
+  "_id": "Gq8g57Gp29t0qrFS",
+  "name": "Increased SP",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 0<br><p>Max 40 SP, 10-50lbs weight increase</p>",
+    "source": "Chr2",
+    "cost": 20005.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

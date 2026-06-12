@@ -1,0 +1,33 @@
+{
+  "_id": "DnIMACYcu6bWPlGG",
+  "name": "454 Magnum Disposable",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "I1.1",
+    "cost": 100.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "-2",
+    "concealability": "P",
+    "availability": "R",
+    "ammoType": ".454",
+    "damage": "4d6+3",
+    "shots": "2",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "40m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

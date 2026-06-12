@@ -35,6 +35,13 @@ for (const folder of ALL_FOLDERS) {
                     console.error(`[ERROR] File ${folder}/${file}: Invalid weaponType '${wType}'. Must be one of: ${VALID_WEAPON_TYPES.join(', ')}`);
                     errors++;
                 }
+                
+                // Validate damage field for syntax errors in Roll
+                const damage = data.data?.damage || "";
+                if (damage && !/^[0-9dD\+\-\*\/\x\s]+$/.test(damage)) {
+                    console.error(`[ERROR] File ${folder}/${file}: Invalid damage formula '${damage}'. Contains forbidden characters.`);
+                    errors++;
+                }
             }
         } catch (e) {
             console.error(`[ERROR] Failed to read or parse ${folder}/${file}: ${e.message}`);

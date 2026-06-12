@@ -1,0 +1,48 @@
+{
+  "_id": "xOg39YZI2AMIO0yG",
+  "name": "OTEC \"Rahab II\" Hardshell",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>13,500 SF, 30 4hrs air</p>",
+    "source": "CP20",
+    "cost": 13500.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 25,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

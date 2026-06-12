@@ -1,0 +1,22 @@
+{
+  "_id": "4QiJr2D93oCKrAaS",
+  "name": "Alaska State Patrol Car",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 100<br><b>Acc/Dec:</b> 20/40<br><b>Crew:</b> 1<br><b>Range:</b> 400<br><b>Passengers:</b> 3<br><b>Cargo:</b> 400kg<br><b>Maneuver:</b> +1<br><b>SDP:</b> 60 (3)<br><b>SP:</b> 15<br><b>Mass:</b> (1) 1 ton",
+    "source": "NWP",
+    "cost": 80000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "1K2ueUVunsUUgTee",
+  "name": "EMP",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Shotgun Rounds<br><p>7 DESCRIPTION: TECH: 9 PSY: 8 Specialty: Communications COOL:8 ATIR: S LUCK: 7 Sex: M Age: 29 Ethnic Origin: African, Ashanti Hair Col or: Black MA:S Hair Style: Short, Curly Height: 5'8 Weight: 130lbs Eye Color(s): Brown Dress &: Style: Jeans&: T-Shirt Distinguishing Features: Sunglasses&: Walkman PSYCHOLOGICAL: Motivation: Personal Honor ExMode: Introvert, Secretive Disorders: None Quirks: Paranoid, Helpful SKILLS: Skill Level Skill Intelligence Analysis +7 Awareness Handgun +4 Driving Education +4 Basic Tech library Search +2 Electronics Cryptology +4 Hypnological CYBERWEAR: lnMode: Compassionate Dedication: NSA +6, USA +S Level +6 +2 +2 +7 +4 Neuralware Processor: Interface Plugs, DataTerm Link, Cybermodem Link; Voice Synthesizer. OUTFIT: Militech Arms Avenger, 2 Clips; Shoulder Holster: Kevlar Vest; Pocket Computer; Scooter; Cellular Phone. BACKGROUND: William Fischer was born in Chicago in 1991. His family was heavily involved in the government intell!gence agencies, which prompted him to follow the family tradition. He was certainly a patriot in his own right, and easily rose through the ranks in the National Security Agency. He excelled in electronics and soon got a position in the NSA installing line taps and bugs. He also was very good at detecting tension in people's voices, and was then put to work monitoring imponant lines. His loyalty to the United States was so clear he survived the purges of 2004 without any problem. His security clearance rose quickly, to the point where he was put onto highly sensitive cases, monitoring people that were so important they were never officially under surveillance. This has been changing as of late. William has been assigned to monitor for the CIA and is slowly learning more and more about their activities. He is becoming suspicious that their activities are not for the better good of the States. Their activities seem to be harming people, and this worries him. One aspect of William's life that few people know of Is his double life as a Dream Rider. He frequently taps into other people's dreams and follows along, only seldom actually changing Lhem, generally only helping them out of nightmares. Recently though. he has been following the character's dreams, and is trying to help them by giving them information through the dreams. He can also put people to sleep without too much effort.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

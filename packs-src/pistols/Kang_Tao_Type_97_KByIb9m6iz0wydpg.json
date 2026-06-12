@@ -1,0 +1,33 @@
+{
+  "_id": "KByIb9m6iz0wydpg",
+  "name": "Kang Tao Type 97",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF",
+    "cost": 35.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+1",
+    "concealability": "J",
+    "availability": "E",
+    "ammoType": "9mm",
+    "damage": "2d6+1",
+    "shots": "10",
+    "rof": "2",
+    "reliability": "UR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

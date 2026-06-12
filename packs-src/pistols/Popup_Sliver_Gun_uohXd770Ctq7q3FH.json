@@ -1,0 +1,33 @@
+{
+  "_id": "uohXd770Ctq7q3FH",
+  "name": "Popup Sliver Gun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 550.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "2d6x1d6/2*",
+    "shots": "7",
+    "rof": "2",
+    "reliability": "UR",
+    "range": "40m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

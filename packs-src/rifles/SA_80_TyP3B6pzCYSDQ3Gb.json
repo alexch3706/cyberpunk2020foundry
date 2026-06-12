@@ -1,0 +1,33 @@
+{
+  "_id": "TyP3B6pzCYSDQ3Gb",
+  "name": "SA-80",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "ES",
+    "cost": 600.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B5",
+    "damage": "5d6",
+    "shots": "30",
+    "rof": "20",
+    "reliability": "VR",
+    "range": "400m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

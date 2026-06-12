@@ -1,0 +1,33 @@
+{
+  "_id": "Xzpp8WLG8NkrE4X8",
+  "name": "Mini-Roc 15C",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 4500.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "-2",
+    "concealability": "N",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "6d10 3",
+    "shots": "15",
+    "rof": "1-15",
+    "reliability": "ST",
+    "range": "500m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "yGI0MaMJgWsevJx1",
+  "name": "Double Barrel Shotgun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "UK",
+    "cost": 200.0,
+    "weight": 1,
+    "attackType": "Autoshotgun",
+    "weaponType": "Shotgun",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": "B3",
+    "damage": "4d6",
+    "shots": "2",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

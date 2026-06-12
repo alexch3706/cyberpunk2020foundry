@@ -1,0 +1,22 @@
+{
+  "_id": "qXzanz8F7WrtHYrI",
+  "name": "Techscanner",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> CompuMods:<br><p>This device can be hooked up to the diagnostic systems of most vehicles, appli\u00ad ances and personal electronics to determine possible problems and troubleshoot breakdowns. Reliability is 60%. On a successful roll, the difficulty of a repair task is reduced by -3 (you know what's wrong, and you just have to fix it). Cyberweapons One advantage of cyberlimbs is the ability to mount weapons with in theirfram ework. Most cyberweapons of this sort are de\u00ad signedforstealth and co nceala bility, rather thah raw firepower, and have a 60% chance of escaping detection when hidden under Realskinn1M or other suitable coverings. Weapons include: Popup Gun: This is a standard automatic hand\u00ad gun concealed in a cyberarm. The action is mounted inside a pop-up housing whjch is covered when not in use. For this reason, you must always remember to uncover your arm when using a popup. Clips are inserted in the side of the action; popup guns are designed to use caseless ammunition only. The size of the cyberarm (based on Body Type) limits the size of weapon which may be mounted (similar to hidden holsters). Note: you may elect to mount any pistol of the correct size listed in the Outfitting section. A light SMG equals a Med. pistol and a medium SMG equals a Hvy. Pistol for this purpose. Flamethrower: This is a small, high-pressure flame jet with a range of 1 meter, and 4 shots. Damage is 206 the 1st rnd., 1 06/2 for 2 rnds. afterwards. Soft armor is reduced 2 levels per attack. Micromlsslle Launcher: This launcher contains four miniature missiles (explosive tipped gyro rounds with heat seeking guidance and steering vents). like the popup gun, the micromisslle POPUP GUN SIZES V.Weak to Weak: Light Pistol only Average to Strong: Medium Pistol or light SMG Very Strong: Heavy to Very Heavy Pistol, Med. SMG or built-In Shotgun (2sht., 1 /2 range)</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

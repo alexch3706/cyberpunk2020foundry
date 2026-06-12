@@ -1,0 +1,22 @@
+{
+  "_id": "nm6MsO13iPEB5YpL",
+  "name": "Flechette",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Micromissiles<br><p>This round does 2-12 1 D6AP hits to the target Fragmentatjon: This round does 2D6+ 1 damage to all targets in a 5 meter diameter. HEP: High-Explosive Penetration is actually a squash-head round, splashing a pat of plastic explosive onto the target before det\u00ad onating. This round does 5D6 damage; armor has no effect and half of the damage is applied as concussion, half as real. Armor hit by an HEP round loses 2 points of SP. Concussion damage is a Stun/Shock Save. Subtract armor SP <if allowed> from the dam\u00ad age, up to half the damage total-that's right, at least half the damage goes through any armor except hard armors (i.e., Metalgear\"', powered armor, full medieval armor>. Then target must make a Stun/Shock Save as if it was damaged by the con\u00ad cussion damage that went through. The concussion damage is not entered on the character sheet as damage points! Rigid armor prevents any concussion damage from hitting the target; Skinweave has no effect on concussion damage. Militech i!Smm Pistol Grenades These are similar to DCR's rifle-tired grenades, but they are designed to be fired from pistol-caliber weapons. Any pistol or sub\u00ad machinegun's barrel can be fitted with a Militech-produced muzzle adaptor (200ebl in the appropriate caliber by a weaponsmith or techie <for about 50ebl. The adaptor's bullet trap design allows the shooter to fire conventional ammunition and also launch a pistol grenade up to 1 00m away. These small, barrel-shaped (25x50mml projectiles carry warheads with capabilities equal to standard 25mm Mini-Grenades. Note: Pistol Grenades cannot be launched by weapons of less power than 9mm, and 9mm through .45-caliber weapons will only have a Long Range of 15m! .357, 10 mm and other, more powerful rounds will have a Long Range of 50m. (Chromebook 21 \u2022 CONCUSSION: 3D6, 4M RADIUS, 15EB. DAMAGE IS STUN ONLY, ARMOR PROTECTS AT ONLY 1 /3 EFFECTIVENESS. \u2022 DEFENSIVE FRAG: 2D6+1, 3M RADIUS, 20EB. REDUCED EXPLOSIVE; SAFER FOR USE IN TIGHT CONFINES CuKE ROOMS, HALLWAYS, ETd. \u2022 FLASH BOMB: -5 REF & AWA, 5M RADIUS, 15ED. STUN SAVE EACH PERSON; -5 TO REF & AWARENESS FOR 5 TURNS. \u2022 HEP (CRATERING): 506, NO RADIUS, 30EB, DAMAGE IS 1 /2 REAL, 1 /2 SllJN ONLY; ARMOR HAS NO EFFECT AND IS DAMAGED 2 SP. \u2022 INCENDIARV: 406 FIRST TURN, 3D6 SECOND TURN, 206 TiilRD TURN; FlAMMABLES IN 1 M RADIUS BURN; 30EB. \u2022 OFFENSIVE fRAG: 506, 3M RADIUS, 25EB. HIGH-EXPLOSIVE FRAGMENTATION; VERY MESSY IN CLOSED AREAS. \u2022 SMOKE OR TEAR GAS: 3M RADIUS, 20EB. SEE CP2020 RULES FOR GAS; TEAR GAS-TEARING & -2 REF, SMOKE OBSCURES VISION. ls+eWiH&ilB\u25a0i\u25ba1Bt-n\u00b7t-l\u00b7-\u00b7Mt;fi3il&#:1W- :& ..,_eO</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

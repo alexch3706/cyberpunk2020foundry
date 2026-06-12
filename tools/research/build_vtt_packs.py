@@ -107,7 +107,7 @@ def process_weapons(items, out_dir):
         # Remove ranges like "1-5d6" -> "5d6"
         clean_damage = re.sub(r'\d+\s*-\s*(\d+[dD]\d+)', r'\1', clean_damage)
         # Remove any non-math characters (allow numbers, d, D, +, -, *, /, x, spaces)
-        clean_damage = re.sub(r'[^0-9dD\+\-\*\/\x\s]', '', clean_damage).strip()
+        clean_damage = re.sub(r'[^0-9dD\+\-\*\/x\s]', '', clean_damage).strip()
         # Fallback if empty
         if not clean_damage:
             clean_damage = "0"
@@ -219,12 +219,21 @@ def guess_coverage(name):
     }
     
     has_cov = False
+    if "whole body" in name_lower or "any where" in name_lower or "any location" in name_lower:
+        cov["Head"]["stoppingPower"] = -1
+        cov["Torso"]["stoppingPower"] = -1
+        cov["lArm"]["stoppingPower"] = -1
+        cov["rArm"]["stoppingPower"] = -1
+        cov["lLeg"]["stoppingPower"] = -1
+        cov["rLeg"]["stoppingPower"] = -1
+        return cov
+        
     if "helmet" in name_lower or "head" in name_lower or "visor" in name_lower or "face" in name_lower:
         cov["Head"]["stoppingPower"] = -1
         has_cov = True
     if "torso" in name_lower or "jacket" in name_lower or "vest" in name_lower or "coat" in name_lower or "suit" in name_lower or "armor" in name_lower:
         cov["Torso"]["stoppingPower"] = -1
-        if "jacket" in name_lower or "coat" in name_lower or "suit" in name_lower:
+        if "jacket" in name_lower or "coat" in name_lower or "suit" in name_lower or "arm" in name_lower:
             cov["lArm"]["stoppingPower"] = -1
             cov["rArm"]["stoppingPower"] = -1
         has_cov = True
@@ -276,6 +285,38 @@ def process_gear(items, out_dir, category_name):
         with open(file_path, "w") as f:
             json.dump(vtt, f, indent=2)
 
+def process_armor_list(items, out_dir):
+    target_dir = out_dir / "armor"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    
+    for item in items:
+        name = item.get("name", "Unknown Armor")
+        _id = generate_id(f"armor:{name}")
+        vtt = get_base_item(name, "armor", "CP20", _id)
+        
+        sp_str = str(item.get("sp", "0"))
+        m = re.search(r'\d+', sp_str)
+        sp_val = int(m.group(0)) if m else 0
+        
+        cov = guess_coverage(name + " " + str(item.get("covers", "")))
+        for k, v in cov.items():
+            if v["stoppingPower"] == -1:
+                v["stoppingPower"] = sp_val
+        vtt["data"]["coverage"] = cov
+        
+        notes = item.get("cost_source_notes", "")
+        if notes:
+            vtt["data"]["notes"] = f"<p>{notes}</p>"
+            m_cost = re.search(r'^([\d,]+)', notes)
+            if m_cost:
+                try:
+                    vtt["data"]["cost"] = float(m_cost.group(1).replace(',', ''))
+                except: pass
+                
+        file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
+        with open(file_path, "w") as f:
+            json.dump(vtt, f, indent=2)
+
 def main():
     in_dir = Path(".research/parsed")
     out_dir = Path("packs-src")
@@ -310,6 +351,11 @@ def main():
     print("Converting Ammo...")
     with open(in_dir / "reference-ammo.json", "r") as f:
         process_gear(json.load(f), out_dir, "ammo")
+        
+    print("Converting Armor...")
+    if (in_dir / "reference-armor.json").exists():
+        with open(in_dir / "reference-armor.json", "r") as f:
+            process_armor_list(json.load(f), out_dir)
         
     print("Conversion complete. Generated packs-src JSON files.")
 

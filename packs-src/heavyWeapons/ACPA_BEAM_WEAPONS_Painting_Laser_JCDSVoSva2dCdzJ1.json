@@ -1,0 +1,33 @@
+{
+  "_id": "JCDSVoSva2dCdzJ1",
+  "name": "ACPA BEAM WEAPONS Painting Laser",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "MM",
+    "cost": 1000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+3",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "0",
+    "shots": "VR",
+    "rof": "LOS",
+    "reliability": null,
+    "range": null
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

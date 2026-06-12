@@ -1,0 +1,22 @@
+{
+  "_id": "nENV8xvukIxnAKK9",
+  "name": "Militech 'Spyder' Recon",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CRx2<br><b>Humanity Loss:</b> 39d6<br><p>REF 12, MA 20, BOD 12, SP 30, SDP 20/30/40</p>",
+    "source": "Chr3",
+    "cost": 118105.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

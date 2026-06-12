@@ -1,0 +1,33 @@
+{
+  "_id": "LyQS3kzX2IjofLwV",
+  "name": "- Flamer RIF +0 - - 2d10 5 2 ST 25m - - Nomad 7.62 Bolt-Action",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "NEO",
+    "cost": 500.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "C",
+    "ammoType": "B4",
+    "damage": "6d6+2",
+    "shots": "6",
+    "rof": "1",
+    "reliability": "VR",
+    "range": "400m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

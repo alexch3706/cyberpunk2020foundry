@@ -1,0 +1,22 @@
+{
+  "_id": "tP1bgHlxWhVD0Okc",
+  "name": "Amplifier",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> MUSICAL<br><p>see electron ic keyboard. (For more on the instruments of the 201 Os-20s, check out the supplement Rockerboy.) Data Systems laptop Computer : the common portable, with interna l hard drive, video board (detachable), and slots for data/ programm ing chips. These units do not have the advanced CPUs and memory spaces available in a regular computer system; they cannot be used for Netrunning. Pocket Computer: the classic 6' x3' x1 /2' programmable calculator with keyboard and chip slots, up to 100 pages of alphanumeric memory. \"Sure, you got yer cyberwear. 't You got yer 1 guns and yer ' armor. But you gotta sleep somewhere. You gotta eat somethin' besides kibble and bits. An' it don't hurt if I you catch an 11 occasional braindance or 1 a little video 1t action.\" 1 I I -The Bag Lady</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "HBDZAwS8bQ3uk7QF",
+  "name": "Retractable Spitting Cobra",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> MA<br><b>Humanity Loss:</b> 4d6<br><p>Retractable vampires that spit chemicals 6ft</p>",
+    "source": "Chr3",
+    "cost": 700.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

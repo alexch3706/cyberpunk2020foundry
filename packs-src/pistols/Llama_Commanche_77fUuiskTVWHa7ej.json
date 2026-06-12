@@ -1,0 +1,33 @@
+{
+  "_id": "77fUuiskTVWHa7ej",
+  "name": "Llama Commanche",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 250.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": ".44 C",
+    "damage": "4d6",
+    "shots": "6",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

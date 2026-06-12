@@ -1,0 +1,48 @@
+{
+  "_id": "JRaZulFDNEBtwDMJ",
+  "name": "Spiked Boots*",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>20 Pac, 149 1d6+2 damage</p>",
+    "source": "CP20",
+    "cost": 20.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 5,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 5,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "41QWNoqaB4VTgSou",
+  "name": "IMI \"Gamdaii\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 950.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "SMG",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "E",
+    "ammoType": "10mm",
+    "damage": "2d6+3",
+    "shots": "35x2",
+    "rof": "25",
+    "reliability": "VR",
+    "range": "200m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_id": "zUvEtdtaNmisuA0J",
+  "name": "Ballistic Nylon Helmet",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>100 CP20, 57 90% have faceshield</p>",
+    "source": "CP20",
+    "cost": 100.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 20,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

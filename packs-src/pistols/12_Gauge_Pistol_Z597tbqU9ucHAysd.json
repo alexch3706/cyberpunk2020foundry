@@ -1,0 +1,33 @@
+{
+  "_id": "Z597tbqU9ucHAysd",
+  "name": "12-Gauge Pistol",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 1000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "-2",
+    "concealability": "J/L",
+    "availability": "P",
+    "ammoType": "B12",
+    "damage": "4d6",
+    "shots": "9",
+    "rof": "2",
+    "reliability": "ST",
+    "range": "30m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

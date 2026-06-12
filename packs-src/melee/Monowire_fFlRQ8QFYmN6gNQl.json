@@ -1,0 +1,33 @@
+{
+  "_id": "fFlRQ8QFYmN6gNQl",
+  "name": "Monowire",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr2",
+    "cost": 0,
+    "weight": 1,
+    "attackType": "Melee",
+    "weaponType": "Melee",
+    "accuracy": "+0",
+    "concealability": "P",
+    "availability": "R",
+    "ammoType": null,
+    "damage": "3d6 - -",
+    "shots": "1m",
+    "rof": "60/m",
+    "reliability": null,
+    "range": null
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

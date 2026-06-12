@@ -1,0 +1,33 @@
+{
+  "_id": "CVOtjHZhPC4oVQqI",
+  "name": "Dai Lung Cybermag 15",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 50.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "-1",
+    "concealability": "P",
+    "availability": "C",
+    "ammoType": "6mm",
+    "damage": "1d6+1",
+    "shots": "10",
+    "rof": "2",
+    "reliability": "UR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

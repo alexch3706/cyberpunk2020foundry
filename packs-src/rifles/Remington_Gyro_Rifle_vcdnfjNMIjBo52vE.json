@@ -1,0 +1,33 @@
+{
+  "_id": "vcdnfjNMIjBo52vE",
+  "name": "Remington Gyro-Rifle",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "P&S",
+    "cost": 1000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "18mm G",
+    "damage": "7d6",
+    "shots": "6",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "600m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

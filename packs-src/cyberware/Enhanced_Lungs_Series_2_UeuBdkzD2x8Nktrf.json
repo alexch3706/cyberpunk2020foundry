@@ -1,0 +1,22 @@
+{
+  "_id": "UeuBdkzD2x8Nktrf",
+  "name": "Enhanced Lungs Series 2",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> CR<br><b>Humanity Loss:</b> 1d6<br><p>Can hold breath for 5-30 mins. 200m depth</p>",
+    "source": "SF",
+    "cost": 5000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

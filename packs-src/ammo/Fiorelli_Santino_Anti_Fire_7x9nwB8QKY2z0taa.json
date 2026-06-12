@@ -1,0 +1,22 @@
+{
+  "_id": "7x9nwB8QKY2z0taa",
+  "name": "Fiorelli-Santino Anti-Fire",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Specialized Clothing:<br><p>Suit (427 to 1370\u00b0C) ..... 1500eb</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

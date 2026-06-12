@@ -1,0 +1,22 @@
+{
+  "_id": "IxC5h4SdFThNnpXa",
+  "name": "Cyberjaw",
+  "type": "cyberware",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Surgery Code:</b> -<br><b>Humanity Loss:</b> 3d6+2<br><p>T-Rex MA SP 6 metal jaw. 3d6* bite damage</p>",
+    "source": "P2",
+    "cost": 3000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

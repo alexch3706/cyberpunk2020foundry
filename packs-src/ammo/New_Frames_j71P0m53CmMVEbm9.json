@@ -1,0 +1,22 @@
+{
+  "_id": "j71P0m53CmMVEbm9",
+  "name": "New Frames",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Firearm Accessories<br><p>Many new frames exist for old standards, converting these weapons to bullpup or other configurations. The old parts are simply screwed into the new frames, with the various adapters built in. $100-300 Better Cooling: Older SMGs and assault rifles suffer from massive overheating prob\u00ad lems on full auto. These aftermarket cooling barrels combine better heat dispersion with streamlining and better protection from the elements (increase REL by one class). $50. 1</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "V5GBgbfFaNzmWKr0",
+  "name": "Video Camera",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> From Dark Metropolis:<br><p>Combat Scores Initiative: +12 Stun/Death Save: 5 Body Type Modifier: -2 AK-47 Rifle ONE 5d6 (7.565) 30 20 VR Armor: Flack Vest (SP= 20) Polar Bear & Cubs [2] Contrary to the cute, animated images of polar bears portrayed in Coca Cola \u00ae com \u00ad mer cials, polar be ars are nei ther friendly nor partic\u00ad ul arly good nat ured . These large, carnivorous mammals range from 7 to 12 feet in length, though some bears have been recorded as large as 20 feet from snout to tail. When food is scarce, polar bears become violent predators, and often resort to atta ckin g humans within the city limits of small towns. These creatures possess keen senses and are fast on their feet in spite of their size and weight. Their attacks usually consist of crushing in the classic \"bear hug\" and mauling with their huge, sharp claws. Polar bears also use their knife-like teeth to gore their victims. The stats presented here are for the mother bear only. Stats are not needed for the cubs, as they do not enter combat with the PCs, even if their mother is killed. It is the beginning of winter and these two cubs, who where born in the spring, now weigh 200 pounds each. This makes them formidable only in a playful wrestling match. They are cubs and lack the experience to really threaten anyone. They do not help their mother in any melee, as they would be far too frightened to be of any use. enrage the mother. The mother is asleep in her den, which is carved into the snow and ice of the hill where the cubs are playing. It is common for bears to create dens like this in snow, and they are nearly undetectable. The mother rushes at the closest person with no regard for her own safety and does not stop attacking until the team has been driven away. Keep in mind that a bear can outsprint a horse, and may be able to outpace Kolchenko's overloaded snowmobile. 3. Ambush: Three of Thorne's hired bounty hunters have spotted the 'punks. They have rushed to out flank them, and have set up an ambush and are waiting for them to arrive. The bounty hunters' snowmobile has been left behind a hill, out of sight, and they have dug a blind into the snow of the same hill. Using a ground sheet as a roof, the bounty hunters have covered it with snow to make it nearly undetectable (Difficult task check). Use the stats for the bounty hunters on page 32; their equipment and snowmobiles are listed in the Appendix. The PCs have a chance to detect the bounty hunters waiting in ambush via the following means: \u2022 An average Detection check reveals the snowmobile if infrared sensors are used (and properly calibrated; see the \"Hypothermia\" section in the Appendix). \u2022 A difficult Vision check reveals that the snow over the ground sheet has been disturbed. \u2022 If any PC has a functional hovering remote, it automatical\u00ad ly detects the heat emissions of the snowmobile behind the hill. Of course, it isn't as easy to locate the drivers of the vehi\u00ad cle (Difficult check). If the team captures the bounty hunters, they can find out (easy Interrogation or Intimidation check) that the ambushers have been hired to kill the 'punks. They may also learn that it was Thorne who hired the locals. 4. Pursuit: Three local bounty hunters, each on his own snowmobile, have spotted the group and are giving chase. They rush toward the PCs and stop when they come within range of their rifles. From this stationary position, the bounty hunters try to bring the 'punks down with their hunting rifles. Run this any way you like, but give the team the impression that they are being herded away from the observatory and away from Nome. Use the stats for the local bounty hunters listed on page 32. 5. Reindeer: A large herd of reindeer is grazing in this area, blocking the team's passage. This is one of the larger local herds, and is quite accustomed to man's presence. The team and the snowmobile do not spook them. If a gun is fired around the reindeer, however, the herd runs.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

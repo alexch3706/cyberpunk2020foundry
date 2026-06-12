@@ -1,0 +1,48 @@
+{
+  "_id": "SD3futn9h8sGEsO5",
+  "name": "Militech EMA-1 \"Softshell\"",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>8500 SW, 35 48hrs power</p>",
+    "source": "CP20",
+    "cost": 8500.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 25,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 25,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

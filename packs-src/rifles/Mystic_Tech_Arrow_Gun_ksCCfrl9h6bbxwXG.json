@@ -1,0 +1,33 @@
+{
+  "_id": "ksCCfrl9h6bbxwXG",
+  "name": "Mystic Tech Arrow Gun",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 1000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+1",
+    "concealability": "J/L",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "3d6*",
+    "shots": "1",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "70m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "SJ5BX4dAJWY2Tpsd",
+  "name": "Compensation",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Advanced Weapon Modifications<br><p>5,000eb per team member, 20% in advance. Own expenses payable by team members. Notes: Damage to spurious equipment and personnel is not required. After two minutes the plastic sheet disintegrates quietly, literally falling apart without warning into a fine dust. If the characters enquire about the money contained in the enve\u00ad lope Carlo will reply. ''This is to ensure your silence.\" Carlo is rather impatient. He requires an answer and will try to obtain one before he leaves. If the character(s) DEEP SPACE \u2022d3\u20221%\u2022Ula!t\u00a7 \u25a0 Carlo. Santos ROLE: FIXER \u00b7 INT 8, REF 7, COOL 8, MA 5, BODY 5, TECH 6, ATT 7, EMP 6 CYBERNETICS: One Cyberoptic with low.light and carpera; One set of plugs (ri9'1t wrist); Cyberaudlo with radio .splice, digiul record\u00ab and amplified he\u2022ring. SKILLS: Strtttdeal +5, Streetwi\ufffd +6, Wardrobe & Style +2, Persuasion & F1ut Talk +4, Human Perception +3, Seduction +2, C.mble +6, Handgun +2. OUTFIT: Trauma Team .... card, Federated Arms X-22 one-shot. July ICeyn ROLE: SOLO INT 6, REF 9 (11), COOL 7, MA 6, BODY 6, TECH 3, ATT 6, EMP 3 CYBERNETICS: Two Cyberoptics, Left: with IR. Targeting scope and Anti\u2022 dazzle, Right: Dartgun and Anli\ufffdazzJe; One set of plugs (left wrist); Kerenzikov Booster (+2); Rippers. SKILLS; Combat Sense +3, Handgun +5, Rifle +2, Melee +7, Brawling +5, Athletic.s +'4, Wardrobe & Style +2, Shadow +5, Streetwise +2. OUTFIT: Smart-chipped \ufffderated Arms X-9mm Medium Autopistol. COMMENTS: luly is a nasty piece of busine$s 21nd ls particularly unpleasant, and skllled, at ha11d-to-hand combaL She is e.xtremely fond of using whatever dirty trfc.k will give her the edge in a combat and is equally at home with an 11uto-pistol or a jag\ufffd broken bottie.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

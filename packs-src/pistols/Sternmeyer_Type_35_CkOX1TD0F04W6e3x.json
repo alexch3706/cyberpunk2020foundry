@@ -1,0 +1,33 @@
+{
+  "_id": "CkOX1TD0F04W6e3x",
+  "name": "Sternmeyer Type 35",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 400.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": "11mm",
+    "damage": "3d6",
+    "shots": "8",
+    "rof": "2",
+    "reliability": "VR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

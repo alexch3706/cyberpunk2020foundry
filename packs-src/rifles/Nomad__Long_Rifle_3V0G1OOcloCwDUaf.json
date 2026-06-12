@@ -1,0 +1,33 @@
+{
+  "_id": "3V0G1OOcloCwDUaf",
+  "name": "Nomad \"Long Rifle\"",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "NEO",
+    "cost": 3000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+1",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B7",
+    "damage": "7d10",
+    "shots": "9",
+    "rof": "1",
+    "reliability": "ST",
+    "range": "900m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

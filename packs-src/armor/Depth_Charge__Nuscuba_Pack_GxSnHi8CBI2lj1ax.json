@@ -1,0 +1,48 @@
+{
+  "_id": "GxSnHi8CBI2lj1ax",
+  "name": "\"Depth Charge\" Nuscuba Pack",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>3250 SF, 30 10hrs air</p>",
+    "source": "CP20",
+    "cost": 3250.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 15,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 15,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

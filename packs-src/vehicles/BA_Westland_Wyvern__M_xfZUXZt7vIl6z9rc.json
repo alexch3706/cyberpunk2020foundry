@@ -1,0 +1,22 @@
+{
+  "_id": "xfZUXZt7vIl6z9rc",
+  "name": "BA/Westland Wyvern (M)",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 315<br><b>Acc/Dec:</b> 10/20<br><b>Crew:</b> 2<br><b>Range:</b> 1200<br><b>Passengers:</b> 20<br><b>Cargo:</b> or 5 tons, 20<br><b>Maneuver:</b> +0<br><b>SDP:</b> 120 (6)<br><b>SP:</b> 20<br><b>Mass:</b> (1) 15 tons",
+    "source": "UK",
+    "cost": 407000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

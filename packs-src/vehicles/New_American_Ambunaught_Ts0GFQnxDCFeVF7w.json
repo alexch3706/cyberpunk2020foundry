@@ -1,0 +1,22 @@
+{
+  "_id": "Ts0GFQnxDCFeVF7w",
+  "name": "New American Ambunaught",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Top Speed:</b> 72<br><b>Acc/Dec:</b> 10/30<br><b>Crew:</b> 1<br><b>Range:</b> 300<br><b>Passengers:</b> 5<br><b>Cargo:</b> 3000kg<br><b>Maneuver:</b> -3<br><b>SDP:</b> 120 (6)<br><b>SP:</b> 40<br><b>Mass:</b> (2) 4.8 tons",
+    "source": "Chr1",
+    "cost": 76000.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_id": "B2Eg24yn2ngRq2sd",
+  "name": "Orbital Subdermal Armor",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<p>28,000 Chr 2, 7 10 to spot</p>",
+    "source": "CP20",
+    "cost": 28000.0,
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 22,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 22,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 22,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

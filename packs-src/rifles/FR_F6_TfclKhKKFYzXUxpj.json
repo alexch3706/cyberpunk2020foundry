@@ -1,0 +1,33 @@
+{
+  "_id": "TfclKhKKFYzXUxpj",
+  "name": "FR-F6",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "ES",
+    "cost": 1100.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+3",
+    "concealability": "N",
+    "availability": "P",
+    "ammoType": "B4",
+    "damage": "6d6+2",
+    "shots": "10",
+    "rof": "2",
+    "reliability": "ST",
+    "range": "500m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

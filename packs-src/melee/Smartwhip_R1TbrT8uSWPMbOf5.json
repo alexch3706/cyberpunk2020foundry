@@ -1,0 +1,33 @@
+{
+  "_id": "R1TbrT8uSWPMbOf5",
+  "name": "Smartwhip",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "NEO",
+    "cost": 600.0,
+    "weight": 1,
+    "attackType": "Melee",
+    "weaponType": "Melee",
+    "accuracy": "+0",
+    "concealability": "J",
+    "availability": "C",
+    "ammoType": null,
+    "damage": "1d6+2",
+    "shots": "-",
+    "rof": "-",
+    "reliability": "ST",
+    "range": "1m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

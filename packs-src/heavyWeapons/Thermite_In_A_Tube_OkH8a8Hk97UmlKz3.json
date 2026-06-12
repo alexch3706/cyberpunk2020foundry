@@ -1,0 +1,33 @@
+{
+  "_id": "OkH8a8Hk97UmlKz3",
+  "name": "Thermite-In-A-Tube",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr4",
+    "cost": 30.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Heavy",
+    "accuracy": "+0",
+    "concealability": "P",
+    "availability": "P",
+    "ammoType": null,
+    "damage": "4d4x3 15x3  40 1",
+    "shots": "VR",
+    "rof": ".",
+    "reliability": null,
+    "range": "5m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

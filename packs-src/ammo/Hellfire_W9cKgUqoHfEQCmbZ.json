@@ -1,0 +1,22 @@
+{
+  "_id": "W9cKgUqoHfEQCmbZ",
+  "name": "Hellfire",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Missile Reloads<br><p>Laser-guided, extremely heavy and lethal. To use it, the target is painted with a laser. The missile(s) is fired before testing to see if the laser hits. If the laser hits the target, each missile fired at the target hits the target on a d10 roll of 2-10 (a 1 misses). Hellfire missiles cost 10,000 euro apiece. 1 space apiece. HVY special N P 2001 OAP 1 1 VR. Surface-to-Air Missile (SAM): The Scorpion is representative of these missiles. When tracking an aerial target, they ignore to-hit penalties for tar\u00ad get movement. Hitting a non-aerial target is + 10 Difficulty. HVY -1 N P 7D10 1 1 VR 1000 euro. Vehicle-Mounted SAM (VSAM): Essentially vehicle-mounted versions of Air-to-Air missiles, these heavy missiles ignore target movement to\u00ad hit penalties when firing at aerial targets. They are Active missiles with a Skill of + 15, using either radar or infra-red homing, so the operator's skill doesn't enter into hitting the target. Hitting a non-aerial target is+ 10 Difficulty. Special special N P 15010 1 1 VR 10,000 euro. 1 space apiece. Air-to-Air Missile (AAM): A dogfighting mis\u00ad sile, this missile tracks using infra-red or some other active method (Active missile; Skill + 15). It ignores target movement to-hit penalties when fired at aerial targets. Hitting a non-aeri\u00ad al target is +20 Difficulty (practically impossi\u00ad ble). Its speed is 1400 mph. Special special N P 15D 10 1 1 VR 15,000 euro. 1 space apiece. Air-to-Air Medium Ranged Activ e-hom\u00ad ing Missile (AAMRAM): An active radar\u00ad tracking missile (Skill +20). this monster reaches out 50 miles at Mach 2 (1500 mph) to attack its target. It does not use the normal range To-hit Difficulty, having a set To-hit of 10. The modifiers for the target's size and ECM are the only modifiers used to the to-hit die roll. The firer's skill, reflexes, computers, etc., do not apply to the AAMRAM's to-hit roll. Target movement modifiers are ignored as well. Special special N P 17010 1 1 VR 250,000 euro. 3 spaces apiece. 2\" Rocket A small bombardment rocket intend\u00ad ed to injure infantry and other light targets. Normally mounted in 1, 3, 6, and 19-shot pods. Any number of rockets can be fired from a pod in one turn. Pods cost 200 euro per rocket space. Rockets cost 100 euro apiece. 1 space per 12 rockets (round off). HVY -2 N P 6010 1 1 VR. MAXIMUM METAL 19</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

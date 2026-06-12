@@ -1,0 +1,22 @@
+{
+  "_id": "ZfNygl3lrLqVW6BK",
+  "name": "Under-Barrel Micro-Missile",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Firearm Accessories<br><p>e Pod HVY  +1  L  P  4d6  1  1  ST  200m 200 Chr2</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

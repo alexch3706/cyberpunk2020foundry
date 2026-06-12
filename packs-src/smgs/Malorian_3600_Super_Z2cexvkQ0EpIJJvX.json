@@ -1,0 +1,33 @@
+{
+  "_id": "Z2cexvkQ0EpIJJvX",
+  "name": "Malorian 3600 Super",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "SOF2",
+    "cost": 3000.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "SMG",
+    "accuracy": "+0/-1",
+    "concealability": "L",
+    "availability": "P",
+    "ammoType": "B11",
+    "damage": "6d6",
+    "shots": "20",
+    "rof": "1/3",
+    "reliability": "VR",
+    "range": "50m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

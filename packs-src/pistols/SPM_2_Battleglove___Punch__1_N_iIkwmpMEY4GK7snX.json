@@ -1,0 +1,33 @@
+{
+  "_id": "iIkwmpMEY4GK7snX",
+  "name": "SPM-2 Battleglove + Punch -1 N",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "PAC",
+    "cost": 970.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Pistol",
+    "accuracy": null,
+    "concealability": null,
+    "availability": null,
+    "ammoType": null,
+    "damage": "2d6*/3d6",
+    "shots": "-",
+    "rof": "-",
+    "reliability": "VR",
+    "range": "1m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

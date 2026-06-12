@@ -1,0 +1,33 @@
+{
+  "_id": "oxebhWzJjLC9t2Hf",
+  "name": "AK-47, AKM, AKMS",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP20",
+    "cost": 300.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+0",
+    "concealability": "N",
+    "availability": "E",
+    "ammoType": "B5",
+    "damage": "5d6",
+    "shots": "30",
+    "rof": "20",
+    "reliability": "VR",
+    "range": "400m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

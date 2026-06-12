@@ -1,0 +1,33 @@
+{
+  "_id": "CVYgzDJ7V5I99XXb",
+  "name": "Winchester .30-.30",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "CP13",
+    "cost": 250.0,
+    "weight": 1,
+    "attackType": "Auto",
+    "weaponType": "Rifle",
+    "accuracy": "+2",
+    "concealability": "N",
+    "availability": "E",
+    "ammoType": "B3",
+    "damage": "5d6+1",
+    "shots": "5",
+    "rof": "2",
+    "reliability": "ST",
+    "range": "400m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "VWwgw7yKONI6e5RR",
+  "name": "Kendachi Powersword",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "",
+    "source": "Chr1",
+    "cost": 860.0,
+    "weight": 1,
+    "attackType": "Melee",
+    "weaponType": "Melee",
+    "accuracy": "+0",
+    "concealability": "L",
+    "availability": "R",
+    "ammoType": "Sx1/4, Hx1/2",
+    "damage": "4d6",
+    "shots": "-",
+    "rof": "-",
+    "reliability": "ST",
+    "range": "1m"
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}

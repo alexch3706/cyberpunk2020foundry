@@ -1,0 +1,22 @@
+{
+  "_id": "YpQEC1mHqk6ZNUjY",
+  "name": "Stundart",
+  "type": "misc",
+  "img": "icons/svg/mystery-man.svg",
+  "data": {
+    "flavor": "",
+    "notes": "<b>Category:</b> Shotgun Rounds<br><p>Improved product design from Pursuit Security, Inc. A Stundart round that can be fired from any shotgun or 25mm mini-grenade launcher up to 1 OOm. Its larger capacitor results in a -2 to Stun saves, and soft armor up to 1 OSP can be pene\u00ad trated. Cost: 20eb <per pack of four). Thermite: Thermite rounds shoot a narrow spray < 1 /2 width of a shotgun pattern) of the burning metal into the target The mate\u00ad rial burns into the target at over 3,000 degrees, melting through almost anything. The round does 8D6AP. This damage is healed at 1 /3 the normal rate. For every thermite shell <over five) fired through a specific shotgun barrel there is a 1 in 10 additive chance of warping and ruining the barrel. Thermite rounds cost 30eb apiece. lliridiiH9;1Q1it'Bt-l\u00b7t-N\u00b7-\u00b7Mtriit-1,;l=iflC- 1-Hilrllli.O,.</p>",
+    "source": "CP20",
+    "cost": 0.0,
+    "weight": 1
+  },
+  "effects": [],
+  "flags": {
+    "exportSource": {
+      "world": "cyberpunk_2020",
+      "system": "cyberpunk2020-rilerena",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.2.6"
+    }
+  }
+}
