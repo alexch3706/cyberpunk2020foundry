@@ -138,6 +138,14 @@
                             <span class="flex-pad">{{hit.armorMitigation}}</span>
                         </div>
                         {{/if}}
+                        {{#if (hasProperty hit "bodyTypeMitigation")}}
+                        {{#if (compare hit.bodyTypeMitigation "!==" null)}}
+                        <div class="field">
+                            <span>{{CPLocal "BTMShort"}}: </span>
+                            <span class="flex-pad">{{hit.bodyTypeMitigation}}</span>
+                        </div>
+                        {{/if}}
+                        {{/if}}
                         {{#if (hasProperty hit "finalDamage")}}
                         <div class="field">
                             <span>{{CPLocal "FinalDamage"}}: </span>

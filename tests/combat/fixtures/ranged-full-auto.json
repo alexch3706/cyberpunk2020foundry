@@ -2041,21 +2041,33 @@
                 "locationRoll": {
                   "formula": "aimed location",
                   "location": "torso"
-                }
+                },
+                "rawDamage": 15,
+                "armorMitigation": 12,
+                "bodyTypeMitigation": 2,
+                "finalDamage": 1
               },
               {
                 "location": "torso",
                 "locationRoll": {
                   "formula": "aimed location",
                   "location": "torso"
-                }
+                },
+                "rawDamage": 12,
+                "armorMitigation": 11,
+                "bodyTypeMitigation": 0,
+                "finalDamage": 1
               },
               {
                 "location": "torso",
                 "locationRoll": {
                   "formula": "aimed location",
                   "location": "torso"
-                }
+                },
+                "rawDamage": 10,
+                "armorMitigation": 10,
+                "bodyTypeMitigation": 0,
+                "finalDamage": 0
               }
             ]
           }

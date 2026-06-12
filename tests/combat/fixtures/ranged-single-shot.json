@@ -1239,6 +1239,8 @@
           {
             "hits": [
               {
+                "rawDamage": 13,
+                "armorMitigation": 12,
                 "penetratingDamage": 1,
                 "bodyTypeModifier": 2,
                 "bodyTypeMitigation": 0,
