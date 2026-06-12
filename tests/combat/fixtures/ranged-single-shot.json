@@ -210,13 +210,29 @@
         {
           "id": "attack",
           "total": 21,
-          "die": { "faces": 10, "natural": 9, "results": [9], "exploded": false }
+          "die": {
+            "faces": 10,
+            "natural": 9,
+            "results": [
+              9
+            ],
+            "exploded": false
+          }
         },
         {
           "id": "damage",
           "formula": "4d6",
           "total": 12,
-          "die": { "faces": 6, "natural": 12, "results": [3, 3, 3, 3] }
+          "die": {
+            "faces": 6,
+            "natural": 12,
+            "results": [
+              3,
+              3,
+              3,
+              3
+            ]
+          }
         }
       ],
       "expected": {
@@ -304,13 +320,29 @@
         {
           "id": "attack",
           "total": 21,
-          "die": { "faces": 10, "natural": 9, "results": [9], "exploded": false }
+          "die": {
+            "faces": 10,
+            "natural": 9,
+            "results": [
+              9
+            ],
+            "exploded": false
+          }
         },
         {
           "id": "damage",
           "formula": "4d6",
           "total": 10,
-          "die": { "faces": 6, "natural": 10, "results": [3, 3, 2, 2] }
+          "die": {
+            "faces": 6,
+            "natural": 10,
+            "results": [
+              3,
+              3,
+              2,
+              2
+            ]
+          }
         }
       ],
       "expected": {
@@ -951,7 +983,7 @@
       "ruleReference": "Audit 6.4: stagedPenetration setting disabled; CP2020 p.106: AP halving without ablation"
     },
     {
-      "name": "structured layered armor ablates outer item-backed layer",
+      "name": "structured layered armor ablates all participating layers",
       "context": {
         "action": {
           "fireMode": "SemiAuto",
@@ -1070,6 +1102,16 @@
                   "type": "Item",
                   "updates": [
                     {
+                      "_id": "inner-vest",
+                      "system.coverage.torso.ablation": 1
+                    }
+                  ]
+                },
+                {
+                  "actorUuid": "Actor.target",
+                  "type": "Item",
+                  "updates": [
+                    {
                       "_id": "outer-jacket",
                       "system.coverage.torso.ablation": 2
                     }
@@ -1086,6 +1128,10 @@
             "actorUuid": "Actor.target",
             "type": "Item",
             "updates": [
+              {
+                "_id": "inner-vest",
+                "system.coverage.torso.ablation": 1
+              },
               {
                 "_id": "outer-jacket",
                 "system.coverage.torso.ablation": 2
@@ -1659,13 +1705,29 @@
         {
           "id": "attack",
           "total": 22,
-          "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
         },
         {
           "id": "damage",
           "formula": "4d6",
           "total": 17,
-          "die": { "faces": 6, "natural": 17, "results": [5, 4, 4, 4] }
+          "die": {
+            "faces": 6,
+            "natural": 17,
+            "results": [
+              5,
+              4,
+              4,
+              4
+            ]
+          }
         }
       ],
       "expected": {
@@ -1713,13 +1775,29 @@
         {
           "id": "attack",
           "total": 22,
-          "die": { "faces": 10, "natural": 6, "results": [6], "exploded": false }
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
         },
         {
           "id": "damage",
           "formula": "4d6",
           "total": 12,
-          "die": { "faces": 6, "natural": 12, "results": [3, 3, 3, 3] }
+          "die": {
+            "faces": 6,
+            "natural": 12,
+            "results": [
+              3,
+              3,
+              3,
+              3
+            ]
+          }
         }
       ],
       "expected": {
@@ -2945,6 +3023,116 @@
           }
         ]
       }
+    },
+    {
+      "name": "structured layered armor penetration ablates all participating layers",
+      "context": {
+        "action": {
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "equippedArmor": [
+                {
+                  "id": "armor-inner",
+                  "name": "Inner Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 10,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "armor-outer",
+                  "name": "Outer Armor",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "sp": 15,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "faces": 10,
+            "natural": 9,
+            "results": [
+              9
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 20,
+          "die": {
+            "faces": 6,
+            "natural": 20,
+            "results": [
+              5,
+              5,
+              5,
+              5
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "penetrated-item-backed-armor"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "armor-inner",
+                "system.coverage.torso.ablation": 1
+              },
+              {
+                "_id": "armor-outer",
+                "system.coverage.torso.ablation": 1
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020: Layered personal armor penetration ablates all participating layers"
     }
   ],
   "invalidPlanCases": [

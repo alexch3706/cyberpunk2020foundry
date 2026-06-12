@@ -584,36 +584,37 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         }
 
         if(stagedPenetration.plannedUpdate) {
-          const update = stagedPenetration.plannedUpdate.updates[0];
-          const armorId = update._id;
-          const updatePath = Object.keys(update).find(k => k !== "_id");
+          for (const update of stagedPenetration.plannedUpdate.updates) {
+            const armorId = update._id;
+            const updatePath = Object.keys(update).find(k => k !== "_id");
 
-          const ablationKey = `${armorId}-${updatePath}`;
-          accumulatedAblations[ablationKey] = {
-            actorUuid: stagedPenetration.plannedUpdate.actorUuid,
-            type: "Item",
-            _id: armorId,
-            updatePath,
-            value: update[updatePath]
-          };
+            const ablationKey = `${armorId}-${updatePath}`;
+            accumulatedAblations[ablationKey] = {
+              actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+              type: "Item",
+              _id: armorId,
+              updatePath,
+              value: update[updatePath]
+            };
 
-          const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
-          if(armorItem) {
-            const armorSystem = armorItem.system || armorItem;
-            const coverageKey = Object.keys(armorSystem.coverage || {}).find(
-              k => k.toLowerCase() === hitDetail.location.toLowerCase()
-            );
-            if(coverageKey) {
-              if(!armorSystem.coverage[coverageKey]) {
-                armorSystem.coverage[coverageKey] = {};
+            const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+            if(armorItem) {
+              const armorSystem = armorItem.system || armorItem;
+              const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+                k => k.toLowerCase() === hitDetail.location.toLowerCase()
+              );
+              if(coverageKey) {
+                if(!armorSystem.coverage[coverageKey]) {
+                  armorSystem.coverage[coverageKey] = {};
+                }
+                armorSystem.coverage[coverageKey].ablation = update[updatePath];
               }
-              armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
-            }
-          } else {
-            const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
-            if(cyberwareItem) {
-              const cyberwareSystem = cyberwareItem.system || cyberwareItem;
-              cyberwareSystem.ablation = stagedPenetration.evidence.after;
+            } else {
+              const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+              if(cyberwareItem) {
+                const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+                cyberwareSystem.ablation = update[updatePath];
+              }
             }
           }
         }
@@ -960,35 +961,36 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
 
   // Collect staged penetration updates (same pattern as buildTargetOutcome)
   if (stagedPenetration.plannedUpdate) {
-    const update = stagedPenetration.plannedUpdate.updates[0];
-    const armorId = update._id;
-    const updatePath = Object.keys(update).find(k => k !== "_id");
-    const targetSnapshotCopy = clonePlainData(targetSnapshot);
-    const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
-    if (armorItem) {
-      const armorSystem = armorItem.system || armorItem;
-      const coverageKey = Object.keys(armorSystem.coverage || {}).find(
-        k => k.toLowerCase() === hitLocationResult.location.toLowerCase()
-      );
-      if (coverageKey) {
-        if (!armorSystem.coverage[coverageKey]) armorSystem.coverage[coverageKey] = {};
-        armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
+    for (const update of stagedPenetration.plannedUpdate.updates) {
+      const armorId = update._id;
+      const updatePath = Object.keys(update).find(k => k !== "_id");
+      const targetSnapshotCopy = clonePlainData(targetSnapshot);
+      const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+      if (armorItem) {
+        const armorSystem = armorItem.system || armorItem;
+        const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+          k => k.toLowerCase() === hitLocationResult.location.toLowerCase()
+        );
+        if (coverageKey) {
+          if (!armorSystem.coverage[coverageKey]) armorSystem.coverage[coverageKey] = {};
+          armorSystem.coverage[coverageKey].ablation = update[updatePath];
+        }
+      } else {
+        const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+        if (cyberwareItem) {
+          const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+          cyberwareSystem.ablation = update[updatePath];
+        }
       }
-    } else {
-      const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
-      if (cyberwareItem) {
-        const cyberwareSystem = cyberwareItem.system || cyberwareItem;
-        cyberwareSystem.ablation = stagedPenetration.evidence.after;
-      }
+      plannedUpdates.embeddedItemUpdates.push({
+        actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+        type: "Item",
+        updates: [{
+          _id: armorId,
+          [updatePath]: update[updatePath]
+        }]
+      });
     }
-    plannedUpdates.embeddedItemUpdates.push({
-      actorUuid: stagedPenetration.plannedUpdate.actorUuid,
-      type: "Item",
-      updates: [{
-        _id: armorId,
-        [updatePath]: update[updatePath]
-      }]
-    });
   }
 
   const hitDetail = {
@@ -1388,36 +1390,37 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         }
 
         if(stagedPenetration.plannedUpdate) {
-          const update = stagedPenetration.plannedUpdate.updates[0];
-          const armorId = update._id;
-          const updatePath = Object.keys(update).find(k => k !== "_id");
+          for (const update of stagedPenetration.plannedUpdate.updates) {
+            const armorId = update._id;
+            const updatePath = Object.keys(update).find(k => k !== "_id");
 
-          const ablationKey = `${armorId}-${updatePath}`;
-          accumulatedAblations[ablationKey] = {
-            actorUuid: stagedPenetration.plannedUpdate.actorUuid,
-            type: "Item",
-            _id: armorId,
-            updatePath,
-            value: update[updatePath]
-          };
+            const ablationKey = `${armorId}-${updatePath}`;
+            accumulatedAblations[ablationKey] = {
+              actorUuid: stagedPenetration.plannedUpdate.actorUuid,
+              type: "Item",
+              _id: armorId,
+              updatePath,
+              value: update[updatePath]
+            };
 
-          const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
-          if(armorItem) {
-            const armorSystem = armorItem.system || armorItem;
-            const coverageKey = Object.keys(armorSystem.coverage || {}).find(
-              k => k.toLowerCase() === hitDetail.location.toLowerCase()
-            );
-            if(coverageKey) {
-              if(!armorSystem.coverage[coverageKey]) {
-                armorSystem.coverage[coverageKey] = {};
+            const armorItem = targetSnapshotCopy.equippedArmor?.find(a => a.id === armorId);
+            if(armorItem) {
+              const armorSystem = armorItem.system || armorItem;
+              const coverageKey = Object.keys(armorSystem.coverage || {}).find(
+                k => k.toLowerCase() === hitDetail.location.toLowerCase()
+              );
+              if(coverageKey) {
+                if(!armorSystem.coverage[coverageKey]) {
+                  armorSystem.coverage[coverageKey] = {};
+                }
+                armorSystem.coverage[coverageKey].ablation = update[updatePath];
               }
-              armorSystem.coverage[coverageKey].ablation = stagedPenetration.evidence.after;
-            }
-          } else {
-            const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
-            if(cyberwareItem) {
-              const cyberwareSystem = cyberwareItem.system || cyberwareItem;
-              cyberwareSystem.ablation = stagedPenetration.evidence.after;
+            } else {
+              const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
+              if(cyberwareItem) {
+                const cyberwareSystem = cyberwareItem.system || cyberwareItem;
+                cyberwareSystem.ablation = update[updatePath];
+              }
             }
           }
         }
@@ -1538,7 +1541,7 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
   const personalLayers = armor.personalArmor?.layers || armor.layers || [];
   const hasPersonalLayers = personalLayers.length > 0;
 
-  const affectedLayer = [...personalLayers].reverse().find(layer => {
+  const affectedLayers = personalLayers.filter(layer => {
     return (layer.type === "armor" || layer.type === "cyberware") && layer.id && layer.updatePath;
   });
 
@@ -1567,7 +1570,7 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
     };
   }
 
-  if(!affectedLayer) {
+  if(affectedLayers.length === 0) {
     if(coverEvidence && !hasPersonalLayers) {
       return {
         evidence: {
@@ -1599,6 +1602,8 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
     };
   }
 
+  const outerLayer = affectedLayers[affectedLayers.length - 1];
+
   if(!target.actorUuid) {
     const message = "Staged penetration penetrated armor, but target actor UUID is unavailable for an embedded item update.";
     return {
@@ -1606,9 +1611,9 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
         enabled: true,
         applied: false,
         reason: "missing-target-actor-uuid",
-        itemId: affectedLayer.id,
-        coverageKey: affectedLayer.coverageKey,
-        updatePath: affectedLayer.updatePath,
+        itemId: outerLayer.id,
+        coverageKey: outerLayer.coverageKey,
+        updatePath: outerLayer.updatePath,
         ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
       },
       warning: {
@@ -1619,29 +1624,31 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
     };
   }
 
-  const before = Number(affectedLayer.ablation || 0);
-  const after = before + 1;
-  const update = {
-    _id: affectedLayer.id,
-    [affectedLayer.updatePath]: after
-  };
+  const updates = affectedLayers.map(layer => {
+    const before = Number(layer.ablation || 0);
+    const after = before + 1;
+    return {
+      _id: layer.id,
+      [layer.updatePath]: after
+    };
+  });
 
   return {
     evidence: {
       enabled: true,
       applied: true,
       reason: coverEvidence ? "penetrated-manual-cover-and-item-backed-armor" : "penetrated-item-backed-armor",
-      itemId: affectedLayer.id,
-      coverageKey: affectedLayer.coverageKey,
-      updatePath: affectedLayer.updatePath,
-      before,
-      after,
+      itemId: outerLayer.id,
+      coverageKey: outerLayer.coverageKey,
+      updatePath: outerLayer.updatePath,
+      before: Number(outerLayer.ablation || 0),
+      after: Number(outerLayer.ablation || 0) + 1,
       ...(coverEvidence ? { cover: { ablation: coverEvidence } } : {})
     },
     plannedUpdate: {
       actorUuid: target.actorUuid,
       type: "Item",
-      updates: [update]
+      updates
     }
   };
 }
