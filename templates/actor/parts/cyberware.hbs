@@ -29,7 +29,13 @@
                 </span>
                 {{/if}}
             {{/with}}
-            <span class="item-delete" data-item-id="{{id}}">X</span>
+            {{#if cyber.armorStatus.isArmor}}
+                <span title="{{CPLocal "ArmorCyberwareStatus"}}" class="inactive">{{CPLocal "SPFull"}} {{cyber.armorStatus.currentStoppingPower}}/{{cyber.armorStatus.baseStoppingPower}}</span>
+                {{#if cyber.armorStatus.repairable}}
+                    <button type="button" class="repair-cyberware-armor" data-item-id="{{cyber.id}}" title="{{CPLocal "RepairArmor"}}">{{CPLocal "Repair"}}</button>
+                {{/if}}
+            {{/if}}
+            <span class="item-delete" data-item-id="{{cyber.id}}">X</span>
         </div>
     {{/each}}
 </div>

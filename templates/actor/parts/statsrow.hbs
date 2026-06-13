@@ -21,29 +21,35 @@
         <div class="field">
             <label title="{{CPLocal "BTM"}}">{{CPLocal 'BTMShort'}}</label>
             <input class="value not-editable" value="{{bt.modifier}}" readonly>
+            <input class="derived-override" name="system.stats.bt.modifierOverride" type="number" value="{{bt.modifierOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         <div class="field">
             <label>{{CPLocal "Carry"}}</label>
             <input class="value not-editable" value="{{bt.carry}}" readonly>
+            <input class="derived-override" name="system.stats.bt.carryOverride" type="number" value="{{bt.carryOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         {{!-- Tends to be a bigger number than most others --}}
         <div class="field liftstat" style="flex-grow: 4;">
             <label>{{CPLocal "Lift"}}</label>
             <input class="rightborder not-editable" value="{{bt.lift}}" readonly>
+            <input class="derived-override" name="system.stats.bt.liftOverride" type="number" value="{{bt.liftOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         <div class="field">
             <label>{{CPLocal "Leap"}}</label>
             <input class="not-editable" value="{{ma.leap}}" readonly>
+            <input class="derived-override" name="system.stats.ma.leapOverride" type="number" value="{{ma.leapOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         <div class="field">
             <label>{{CPLocal "Run"}}</label>
             <input class="rightborder not-editable" value="{{ma.run}}" readonly>
+            <input class="derived-override" name="system.stats.ma.runOverride" type="number" value="{{ma.runOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         {{!-- Humanity is a whole X/Y value, so needs more of the extra space --}}
         <div class="field" style="flex-grow: 6;">
             {{!-- This is only short so the sheet isn't distorted --}}
             <label title={{CPLocal "Humanity"}}>{{CPLocal "HumanityShort"}}</label>
             <input type="text" class="rightborder not-editable" value="{{emp.humanity.total}}/{{emp.humanity.base}}" readonly>
+            <input class="derived-override" name="system.stats.emp.humanityTotalOverride" type="number" value="{{emp.humanityTotalOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
         </div>
         {{/with}}
     </div>

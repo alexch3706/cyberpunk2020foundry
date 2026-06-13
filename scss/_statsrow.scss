@@ -80,6 +80,12 @@ $stats-divider-thickness: 1px;
             flex-grow: 2;
             flex-shrink: 2;
         }
+        .derived-override {
+            max-width: 4.5em;
+            flex-grow: 1;
+            color: $text-colour-inverted;
+            background: $inactive-colour;
+        }
 
         &.ma {
             align-self: flex-end;

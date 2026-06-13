@@ -263,7 +263,7 @@ function getArmorCoverageForLocation(armorSystem, targetKey) {
   return entry ? { key: entry[0], value: entry[1] } : null;
 }
 
-function getCyberwareStoppingPower(item, system) {
+export function getCyberwareStoppingPower(item, system) {
   const explicitSP = system.stoppingPower !== undefined ? system.stoppingPower : system.sp;
   const numericSP = Number(explicitSP);
   if (Number.isFinite(numericSP) && numericSP > 0) {
@@ -285,7 +285,7 @@ function getCyberwareLayer(item, system) {
   return "hard";
 }
 
-function cyberwareCoversLocation(item, system, targetKey) {
+export function cyberwareCoversLocation(item, system, targetKey) {
   if (system.coverage) {
     return !!getArmorCoverageForLocation(system, targetKey);
   }
@@ -306,11 +306,11 @@ function cyberwareCoversLocation(item, system, targetKey) {
   return true;
 }
 
-function isArmorCyberware(searchText) {
+export function isArmorCyberware(searchText) {
   return /\b(subdermal\s+armor|skin\s*weave|skinweave|body\s+plating)\b/i.test(searchText);
 }
 
-function getCyberwareSearchText(item, system) {
+export function getCyberwareSearchText(item, system) {
   return [
     item.name,
     system.name,

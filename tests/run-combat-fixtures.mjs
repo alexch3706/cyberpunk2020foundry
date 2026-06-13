@@ -11,6 +11,9 @@ import { runAttackTypeClassificationTests } from "./combat/attack-type-classific
 
 import { runHumanityPersistenceTests } from "./combat/humanity-persistence.test.js";
 import { runRangeDcTests } from "./combat/range-dcs.test.js";
+import { runArmorMaintenanceTests } from "./combat/armor-maintenance.test.js";
+import { runDerivedStatOverrideTests } from "./combat/derived-stat-overrides.test.js";
+import { runWoundHintTests } from "./combat/wound-hints.test.js";
 
 const results = [
   ...await runCombatFixtures(),
@@ -21,7 +24,10 @@ const results = [
   ...await runDeathSaveTurnTests(),
   ...await runAttackTypeClassificationTests(),
   ...await runHumanityPersistenceTests(),
-  ...await runRangeDcTests()
+  ...await runRangeDcTests(),
+  ...runArmorMaintenanceTests(),
+  ...runDerivedStatOverrideTests(),
+  ...runWoundHintTests()
 ];
 
 for(const result of results) {

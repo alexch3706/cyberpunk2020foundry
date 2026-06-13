@@ -1,6 +1,6 @@
 # Fixture Coverage Map
 
-**Generated:** 2026-06-12
+**Generated:** 2026-06-13
 **Total fixture cases:** 98
 
 This map documents every rule and audit area covered by the fixture suite.
@@ -177,4 +177,4 @@ by JSON fixture files:
 
 ---
 
-*Last updated: 2026-06-12*
+*Last updated: 2026-06-13*

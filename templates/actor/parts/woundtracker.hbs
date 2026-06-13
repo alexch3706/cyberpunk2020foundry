@@ -2,7 +2,7 @@
     {{!-- 10 wound states - Light, Serious, Critical, Mortal0-6 --}}
     {{#each woundStates as |stateName stateNo|}}
     <div class="wound-state">
-        <div class="wound-state-label">{{stateName}}</div>
+        <div class="wound-state-label" title="{{stateName.hint}}">{{stateName.label}}</div>
         <div class="damageholder">
             {{!-- damageBoxes gives context. WoundNo is which wound, classes dictate which are filled and which have left/right borders --}}
             {{#damageBoxes stateNo ../system.damage}}

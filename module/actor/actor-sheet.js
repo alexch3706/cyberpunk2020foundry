@@ -4,6 +4,8 @@ import { ModifiersDialog } from "../dialog/modifiers.js"
 import { SortOrders } from "./skill-sort.js";
 import { normalizeSelectedTargets } from "../combat/target-normalizer.js";
 import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
+import { buildWoundStateHints } from "./wound-hints.js";
+import { buildArmorRepairUpdate, getCyberwareArmorStatus } from "../combat/armor-maintenance.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -87,7 +89,7 @@ export class CyberpunkActorSheet extends ActorSheet {
     // Add localized wound states, excluding uninjured. All non-mortal, plus mortal
     const nonMortals = ["Light", "Serious", "Critical"].map(e => game.i18n.localize("CYBERPUNK."+e));
     const mortals = Array(7).fill().map((_,index) => game.i18n.format("CYBERPUNK.Mortal", {mortality: index}));
-    sheetData.woundStates = nonMortals.concat(mortals);
+    sheetData.woundStates = buildWoundStateHints(nonMortals.concat(mortals), sheetData.system.stats.bt.total);
   }
   
   /**
@@ -122,7 +124,13 @@ export class CyberpunkActorSheet extends ActorSheet {
     sheetData.gear = {
       weapons: sortedItems.weapon,
       armor: sortedItems.armor,
-      cyberware: sortedItems.cyberware,
+      cyberware: sortedItems.cyberware.map(cyber => ({
+        id: cyber.id,
+        name: cyber.name,
+        img: cyber.img,
+        system: cyber.system,
+        armorStatus: getCyberwareArmorStatus(cyber)
+      })),
       misc: sortedItems.misc,
       cyberCost: sortedItems.cyberware.reduce((a,b) => a + b.system.cost, 0)
     };
@@ -208,6 +216,14 @@ export class CyberpunkActorSheet extends ActorSheet {
     });
     html.find(".stun-death-save").click(ev => {
       this.actor.rollStunDeath();
+    });
+    html.find(".repair-cyberware-armor").click(async ev => {
+      ev.stopPropagation();
+      const item = getEventItem(this, ev);
+      const update = buildArmorRepairUpdate(item);
+      if(update) {
+        await item.update(update);
+      }
     });
 
     html.find('.item-roll').click(ev => {

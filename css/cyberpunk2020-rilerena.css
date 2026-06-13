@@ -408,6 +408,12 @@ details[open] summary ~ * {
   flex-grow: 2;
   flex-shrink: 2;
 }
+.stats > .derivedrow > .field .derived-override {
+  max-width: 4.5em;
+  flex-grow: 1;
+  color: whitesmoke;
+  background: #5a5a5a;
+}
 .stats > .derivedrow > .field.ma {
   align-self: flex-end;
 }

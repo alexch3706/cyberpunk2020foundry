@@ -32,15 +32,21 @@
 					},
 					"ma": {
 						"base": 5,
-						"tempMod": 0
+						"tempMod": 0,
+						"runOverride": "",
+						"leapOverride": ""
 					},
 					"bt": {
 						"base": 5,
-						"tempMod": 0
+						"tempMod": 0,
+						"modifierOverride": "",
+						"carryOverride": "",
+						"liftOverride": ""
 					},
 					"emp": {
 						"base": 5,
-						"tempMod": 0
+						"tempMod": 0,
+						"humanityTotalOverride": ""
 					}
 				}
 			},

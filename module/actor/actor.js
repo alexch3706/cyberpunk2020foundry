@@ -3,6 +3,7 @@ import { SortOrders, sortSkills } from "./skill-sort.js";
 import { btmFromBT } from "../lookups.js";
 import { properCase, localize, getDefaultSkills } from "../utils.js"
 import { resolveArmor } from "../combat/armor-resolver.js";
+import { applyDerivedStatOverrides } from "./derived-stats.js";
 
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -149,6 +150,7 @@ export class CyberpunkActor extends Actor {
     // calculate current Humanity and current EMP
     emp.humanity.total = emp.humanity.base - emp.humanity.loss;
     emp.total = emp.base + emp.tempMod - Math.floor(emp.humanity.loss/10);
+    applyDerivedStatOverrides(system);
   }
 
   /**
