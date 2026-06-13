@@ -1,56 +1,44 @@
 {{!-- Container for all the stats --}}
-<div class="stats flexcol">
-    <div class="statsrow">
+<div class="stats flexrow" style="width: 100%; align-items: center; justify-content: space-between;">
+    <div class="footer-stats" style="display: flex; flex-wrap: wrap; gap: 5px; width: 100%;">
         {{#each system.stats as |stat key|}}
-        <div class="field stat">
-            <label>{{localize (localizeStat key)}}</label>
-            <div class="flexrow">
-                <input type="number" name="system.stats.{{key}}.base" value="{{stat.base}}" class="stat-base"/>
-                <div class="stat-mod">+</div>
-                <input class="stat-temp" type="number" name="system.stats.{{key}}.tempMod" value="{{stat.tempMod}}"/>
+        {{#unless (or (equals key "save") (equals key "bt") (equals key "ma") (equals key "emp"))}}
+        <div class="footer-stat field stat" style="display: flex; align-items: center; background: #12121a; border: 1px solid #1a1a28; padding: 2px 5px;">
+            <label style="color: #ff2d7b; font-weight: bold; margin-right: 5px;">{{localize (localizeStat key)}}</label>
+            <div class="stat-inputs" style="display: flex; gap: 2px;">
+                <input type="number" name="system.stats.{{key}}.base" value="{{stat.base}}" class="stat-base" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace; text-align: right;"/>
+                <span style="color: #667788;">+</span>
+                <input class="stat-temp" type="number" name="system.stats.{{key}}.tempMod" value="{{stat.tempMod}}" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace;"/>
             </div>
-            <input class="stat-total action stat-roll" data-stat-name="{{key}}" value="{{stat.total}}" readonly>
+            <input class="stat-total action stat-roll val" data-stat-name="{{key}}" value="{{stat.total}}" readonly style="background: transparent; border: none; width: 25px; text-align: center; cursor: pointer; color: #00e5ff; font-weight: bold;">
         </div>
+        {{/unless}}
         {{/each}}
-    </div>
-    
-    {{!-- Run, Leap etc. These are below, cos we're a lot less starved for vertical space than horizontal --}}
-    {{!-- If I had horizontal space, I'd just slap these against their relevant stats --}}
-    <div class="derivedrow">
-        {{#with system.stats}}
-        <div class="field">
-            <label title="{{CPLocal "BTM"}}">{{CPLocal 'BTMShort'}}</label>
-            <input class="value not-editable" value="{{bt.modifier}}" readonly>
-            <input class="derived-override" name="system.stats.bt.modifierOverride" type="number" value="{{bt.modifierOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
+        
+        {{!-- MA Stats --}}
+        <div class="footer-stat field stat" style="display: flex; align-items: center; background: #12121a; border: 1px solid #1a1a28; padding: 2px 5px;">
+            <label style="color: #ff2d7b; font-weight: bold; margin-right: 5px;">MA</label>
+            <div class="stat-inputs" style="display: flex; gap: 2px;">
+                <input type="number" name="system.stats.ma.base" value="{{system.stats.ma.base}}" class="stat-base" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace; text-align: right;"/>
+                <span style="color: #667788;">+</span>
+                <input class="stat-temp" type="number" name="system.stats.ma.tempMod" value="{{system.stats.ma.tempMod}}" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace;"/>
+            </div>
+            <input class="stat-total action stat-roll val" data-stat-name="ma" value="{{system.stats.ma.total}}" readonly style="background: transparent; border: none; width: 25px; text-align: center; cursor: pointer; color: #00e5ff; font-weight: bold;">
         </div>
-        <div class="field">
-            <label>{{CPLocal "Carry"}}</label>
-            <input class="value not-editable" value="{{bt.carry}}" readonly>
-            <input class="derived-override" name="system.stats.bt.carryOverride" type="number" value="{{bt.carryOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
+
+        {{!-- EMP / Humanity --}}
+        <div class="footer-stat field stat" style="display: flex; align-items: center; background: #12121a; border: 1px solid #1a1a28; border-left: 2px solid #ff2d7b; padding: 2px 5px;">
+            <label style="color: #ff2d7b; font-weight: bold; margin-right: 5px;">EMP</label>
+            <div class="stat-inputs" style="display: flex; gap: 2px;">
+                <input type="number" name="system.stats.emp.base" value="{{system.stats.emp.base}}" class="stat-base" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace; text-align: right;"/>
+                <span style="color: #667788;">+</span>
+                <input class="stat-temp" type="number" name="system.stats.emp.tempMod" value="{{system.stats.emp.tempMod}}" style="width: 20px; background: transparent; border: none; color: #e0e0e8; font-family: monospace;"/>
+            </div>
+            <input class="stat-total action stat-roll val" data-stat-name="emp" value="{{system.stats.emp.total}}" readonly style="background: transparent; border: none; width: 25px; text-align: center; cursor: pointer; color: #00e5ff; font-weight: bold;">
         </div>
-        {{!-- Tends to be a bigger number than most others --}}
-        <div class="field liftstat" style="flex-grow: 4;">
-            <label>{{CPLocal "Lift"}}</label>
-            <input class="rightborder not-editable" value="{{bt.lift}}" readonly>
-            <input class="derived-override" name="system.stats.bt.liftOverride" type="number" value="{{bt.liftOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
+        <div class="footer-stat field" style="display: flex; align-items: center; background: transparent; padding: 2px 5px;">
+            <label title="{{CPLocal "Humanity"}}" style="color: #ff2d7b; font-weight: bold; margin-right: 5px;">HUM</label>
+            <input type="text" class="val not-editable" value="{{system.stats.emp.humanity.total}}/{{system.stats.emp.humanity.base}}" readonly style="width: 45px; color: #e0e0e8; background: transparent; border: none; font-family: monospace;">
         </div>
-        <div class="field">
-            <label>{{CPLocal "Leap"}}</label>
-            <input class="not-editable" value="{{ma.leap}}" readonly>
-            <input class="derived-override" name="system.stats.ma.leapOverride" type="number" value="{{ma.leapOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
-        </div>
-        <div class="field">
-            <label>{{CPLocal "Run"}}</label>
-            <input class="rightborder not-editable" value="{{ma.run}}" readonly>
-            <input class="derived-override" name="system.stats.ma.runOverride" type="number" value="{{ma.runOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
-        </div>
-        {{!-- Humanity is a whole X/Y value, so needs more of the extra space --}}
-        <div class="field" style="flex-grow: 6;">
-            {{!-- This is only short so the sheet isn't distorted --}}
-            <label title={{CPLocal "Humanity"}}>{{CPLocal "HumanityShort"}}</label>
-            <input type="text" class="rightborder not-editable" value="{{emp.humanity.total}}/{{emp.humanity.base}}" readonly>
-            <input class="derived-override" name="system.stats.emp.humanityTotalOverride" type="number" value="{{emp.humanityTotalOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}">
-        </div>
-        {{/with}}
     </div>
 </div>

@@ -1,73 +1,104 @@
+// ============================================
+// STATSROW — Character attribute grid
+// ============================================
+// Magenta stat abbreviations, cyan totals with optional glow,
+// dark elevated backgrounds for base/mod/temp values.
+// ============================================
+
 $stats-divider-thickness: 1px;
 
-// The grid that lists player stats
+// ── Main stats row layout ──
 .statsrow {
     display: flex;
     flex-direction: row;
     margin-bottom: 5px;
 }
 
-.statsrow>div.stat {
+// ── Individual stat column ──
+.statsrow > div.stat {
     display: flex;
     flex-direction: column;
     width: 2em;
     flex-grow: 1;
     flex-shrink: 1;
     font-weight: bold;
-    
     border: 0 none;
 
-    +.stat {
+    // Gap between adjacent stats
+    + .stat {
         margin-left: 3px;
     }
 
-    div,input {
+    // Reset all child inputs/divs
+    div, input {
         @include reset-input;
         text-align: center;
     }
+
+    // ── Stat abbreviation label (INT, REF, etc.) ──
     label {
         padding: 3px 0px 3px 0px;
         text-align: center;
+        color: $accent-magenta;
+        font-family: $font-ui;
+        font-weight: 700;
+        text-transform: uppercase;
     }
+
+    // ── Total value — prominent cyan ──
     .stat-total {
-        border-color: $text-colour;
+        font-family: $font-mono;
+        font-size: 14pt;
+        font-weight: 700;
+        color: $accent-cyan;
+        background-color: $bg-surface;
+        border: 1px solid $border-primary;
         border-style: none solid solid solid;
-        border-width: 2px;
-        font-size: 13pt;
-        font-weight: bold;
+
+        // Glow effect when fx-glow is enabled
+        .fx-glow & {
+            text-shadow: $glow-cyan;
+        }
     }
+
+    // ── Base value — small, subdued ──
     .stat-base {
         font-size: 9pt;
-        color: $text-colour-inverted;
-        background: $text-colour;
-        border-color: $text-colour;
+        font-family: $font-mono;
+        color: $text-secondary;
+        background-color: $bg-elevated;
+        border-color: $border-primary;
         border-style: none solid none solid;
-        border-width: 2px;
+        border-width: $stats-divider-thickness;
     }
+
+    // ── Modifier — dim, compact ──
     .stat-mod {
         font-size: 9pt;
-        background: $inactive-colour;
-        color: $text-colour-inverted;
+        color: $text-dim;
+        background-color: $bg-elevated;
         padding: 0px 1px 0px 1px;
     }
+
+    // ── Temporary value — right-bordered ──
     .stat-temp {
         font-size: 9pt;
-        background: $inactive-colour;
-        color: $text-colour-inverted;
-        // Is on right, so we don't want middle (left) border
+        color: $text-secondary;
+        background-color: $bg-elevated;
         border-right-style: solid;
-        border-right-color: $text-colour;
-        border-width: 2px;
+        border-right-color: $border-primary;
+        border-width: $stats-divider-thickness;
     }
 }
 
-.stats>.derivedrow {
+// ── Derived stats row (Run, Leap, Carry, etc.) ──
+.stats > .derivedrow {
     margin-top: -3px;
     margin-bottom: 8px;
     display: flex;
     font-size: smaller;
 
-    >.field {
+    > .field {
         flex-grow: 1;
         * {
             font-size: small;
@@ -75,28 +106,30 @@ $stats-divider-thickness: 1px;
             padding-bottom: 0px;
         }
         input {
-            // We grow from here
             width: 2em;
             flex-grow: 2;
             flex-shrink: 2;
         }
+
+        // ── Override input — dim, elevated ──
         .derived-override {
             max-width: 4.5em;
             flex-grow: 1;
-            color: $text-colour-inverted;
-            background: $inactive-colour;
+            color: $text-dim;
+            background: $bg-input;
         }
 
         &.ma {
             align-self: flex-end;
         }
-        // For gap between BT and MA-derived stats
-        +.statderive.liftstat {
+        // Gap between BT and MA-derived stats
+        + .statderive.liftstat {
             margin-right: 3px;
         }
     }
 }
 
+// ── Derived stat display container ──
 div.statderive {
     display: flex;
     align-items: center;
@@ -104,13 +137,13 @@ div.statderive {
     flex-grow: 1;
     font-size: smaller;
 
-    >input {
+    > input {
         padding-left: 3px;
         padding-right: 3px;
     }
 
-    // Used in the derived stats row - no right borders means consistent chaining, but the end ones do need to be given a border
+    // End-of-chain border for derived stats
     .value.rightborder {
-        border-right-width: 2px;
+        border-right-width: $stats-divider-thickness;
     }
 }

@@ -1,19 +1,14 @@
 @import "resets";
+@import "tokens";
 
-// I'd have loved to give Stone Sans with this, but I don't have the license
-// Open Sans ExtraBold seems to do okay though
-$font-primary: "Noto Sans", sans-serif;
-$font-secondary: "Open Sans ExtraBold", sans-serif;
-$text-colour: black;
-$text-colour-inverted: whitesmoke;
-$fa-colour: rgb(255 255 255 / 70%);
-$inactive-colour: rgb(90, 90, 90);
-$meter-colour: green;
-$meter-danger-colour: darkorange;
-// Transition period between colours
-$transition-period: 0.25s;
+// ============================================
+// Google Fonts — Terminal mono + UI sans-serif
+// ============================================
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
 
-$field-border-width: 2px;
+// ============================================
+// Global Styles
+// ============================================
 
 * {
     scrollbar-width: thin;
@@ -22,53 +17,92 @@ $field-border-width: 2px;
     width: 4px;
 }
 *::-webkit-scrollbar-track {
-    background-color: $inactive-colour;
+    background-color: $bg-deep;
     border-radius: 0px;
 }
 *::-webkit-scrollbar-thumb {
     border-width: 0px;
-    background-color: $text-colour;
+    background-color: $accent-cyan;
 }
 
-// Make the regular font bold n primary
-.cyberpunk section.window-content {
-    font-family: $font-primary;
-    font-weight: bold;
-    overflow-y: scroll;
+// ============================================
+// CRT Scanlines — optional, toggled via .fx-scanlines on body
+// ============================================
+.fx-scanlines .cyberpunk section.window-content::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.12) 0px,
+        rgba(0, 0, 0, 0.12) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
 
-    // Notes editing, we want to at least have a distinction between bold and not
+// ============================================
+// Main sheet content area
+// ============================================
+.cyberpunk section.window-content {
+    font-family: $font-ui;
+    font-weight: 600;
+    overflow-y: scroll;
+    background-color: $bg-deep;
+    color: $text-primary;
+
+    // Notes editing
     .editor-content {
         font-weight: normal;
-        border: 2px solid $text-colour;
-        // With a border, we don't want content hitting the border so close
-        padding-left: 2px;
-        padding-right: 2px;
+        border: 1px solid $border-primary;
+        padding-left: $spacing-sm;
+        padding-right: $spacing-sm;
+        background-color: $bg-input;
+        color: $text-primary;
     }
 
+    // ── Tab navigation ───────────────────────
     nav.tabs {
-        border-bottom: 2px solid $text-colour;
-        // Without these, tabs extend weirdly below the tab container itseld
+        border-bottom: 1px solid $border-primary;
         box-sizing: content-box;
-        // Let's not have the tabs grow to consume everything please
         flex: 0;
         padding-top: 0px;
         padding-bottom: 0px;
+        background-color: $bg-surface;
 
-        // A tab itself
         > .item {
-            padding-top: 4px;
-            padding-bottom: 4px;
+            padding-top: $spacing-sm;
+            padding-bottom: $spacing-sm;
             flex-grow: 1;
+            color: $text-secondary;
+            font-family: $font-ui;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color $transition-fast, border-color $transition-fast;
+
+            &:hover {
+                color: $text-primary;
+            }
+
             &.active {
-                color: $text-colour-inverted;
-                background-color: $text-colour;
-                text-shadow: unset;
+                color: $accent-cyan;
+                background-color: transparent;
+                text-shadow: none;
+                border-bottom: 2px solid $accent-cyan;
             }
         }
     }
 
+    // ── Meter gauge (generic progress bar) ───
     .meter-gauge {
-        border: 2px solid $text-colour;
+        border: 1px solid $border-primary;
+        background-color: $bg-input;
         > span {
             display: block;
             min-height: 6px;
@@ -81,30 +115,32 @@ $field-border-width: 2px;
 }
 
 
-/* Overall sheet structure */
+// ============================================
+// Sheet structure
+// ============================================
 .sheet header.cyberheader {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
-    // Bad header, stop taking up space the tabs should have.
     flex-grow: 0;
 
     > div {
-        margin-bottom: 3px;
+        margin-bottom: $spacing-xs;
     }
 }
 
 @mixin image-bg {
-    border:0px;
+    border: 0px;
     border-radius: 0px;
     background-size: cover;
 }
 
 .cyberpunk h2 {
-    font-family: $font-primary;
+    font-family: $font-ui;
     font-variant: small-caps;
-    font-weight: bold;
+    font-weight: 700;
+    color: $accent-magenta;
+    border-bottom: 1px solid $border-primary;
 }
 
 .cyberpunk .fieldrow {
@@ -131,12 +167,19 @@ $field-border-width: 2px;
     flex-grow: 2;
     > input {
         @include reset-input;
-        color: $text-colour;
-        font-family: $font-secondary;
-        font-weight: bold;
+        color: $accent-cyan;
+        font-family: $font-ui;
+        font-weight: 700;
+        letter-spacing: 0.02em;
     }
 }
-// Overides
+
+// ── Glow effect for title ────────────────────
+.fx-glow .cyberpunk h1.title > input {
+    text-shadow: $glow-cyan;
+}
+
+// ── Utility overrides ────────────────────────
 // !important cos this is used as an override
 .cyberpunk .flexwrap {
     flex-wrap: wrap !important;
@@ -151,13 +194,14 @@ $field-border-width: 2px;
     flex-grow: 0!important;
 }
 
-// More specific bits
+// ── Profile image ────────────────────────────
 .profile-img {
     max-height: 170px;
     max-width: 20%;
     flex-shrink: 2;
-    width:15%;
-    margin-right: 4px;
+    width: 15%;
+    margin-right: $spacing-sm;
+    border: 1px solid $border-primary;
 }
 
 .sheet-body .tab {
@@ -171,17 +215,14 @@ $field-border-width: 2px;
     flex-grow: 1;
     flex-shrink: 1;
 }
+
 .field-list {
     // I'd have done flexbox here, but Foundry's electron doesn't support gap yet 
     width: 100%;
     display: grid;
-    // grid-template-areas: "field field";
     grid-template-columns: 1fr 1fr;
-    gap: 3px;
+    gap: $spacing-xs;
     grid-auto-rows: auto;
-
-    // Compensate for rightmost items having a 5px margin
-    // margin-right: -5px;
     flex-grow: 0;
 
     +.spacer {
@@ -202,10 +243,10 @@ $field-border-width: 2px;
 }
 
 .field-list + * {
-    margin-top: 10px;
+    margin-top: $spacing-md;
 }
 .margin-bottom {
-    margin-bottom: 10px;
+    margin-bottom: $spacing-md;
 }
 
 .roll-image {
@@ -227,8 +268,7 @@ $field-border-width: 2px;
     }
 }
 
-// Only pull this animation when details is open
-// Do this to all elements after the *
+// ── Details animation ────────────────────────
 // Nabbed from https://stackoverflow.com/a/38215801/5708707
 details[open] summary ~ * {
     animation: sweep .5s ease-in-out;
@@ -238,6 +278,9 @@ details[open] summary ~ * {
     100%  {opacity: 1; margin-left: 0px}
 }
 
+// ============================================
+// Component imports
+// ============================================
 @import "_fields";
 @import "interactivityHints";
 @import "statsrow";
@@ -246,4 +289,5 @@ details[open] summary ~ * {
 @import "itemSheets";
 @import "gear";
 @import "cards";
-@import "combat-tab"
+@import "combat-tab";
+@import "layout_v2";

@@ -1,0 +1,173 @@
+// ============================================
+// V2 THREE-PANE TERMINAL CSS
+// ============================================
+
+.cyberpunk.sheet-terminal {
+    display: grid;
+    grid-template-columns: 260px 1fr 340px;
+    grid-template-rows: 1fr auto;
+    grid-template-areas: 
+      "left center right"
+      "footer footer footer";
+    height: 100%;
+    background: $bg-deep;
+    gap: 0;
+    min-height: 600px; /* Ensure there is room */
+
+    &.sheet {
+        padding: 0;
+    }
+
+    /* Left Pane */
+    .pane-left {
+        grid-area: left;
+        border-right: 1px solid $border-primary;
+        background: $bg-input;
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-md;
+        gap: $spacing-md;
+        overflow-y: auto;
+        
+        .portrait-wrapper {
+            position: relative;
+            border: 1px solid $border-primary;
+            background: $bg-deep;
+            text-align: center;
+            padding: 5px;
+            
+            img {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                object-fit: cover;
+                filter: sepia(1) hue-rotate(140deg) saturate(2) brightness(0.8) contrast(1.2);
+            }
+
+            &::after {
+                content: "OP-LINK ACTIVE";
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                background: $accent-cyan;
+                color: $bg-deep;
+                font-family: $font-mono;
+                font-size: 10px;
+                padding: 2px 4px;
+                font-weight: bold;
+            }
+        }
+
+        .system-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+            border-bottom: none;
+            background: transparent;
+
+            .nav-cmd {
+                font-family: $font-mono;
+                color: $text-secondary;
+                padding: 8px 10px;
+                cursor: pointer;
+                border-left: 2px solid transparent;
+                transition: all $transition-fast;
+                text-transform: lowercase;
+
+                &:hover {
+                    color: $accent-cyan;
+                    background: rgba(0, 229, 255, 0.05);
+                }
+
+                &.active {
+                    color: $accent-cyan;
+                    border-bottom: none;
+                    border-left-color: $accent-cyan;
+                    background: rgba(0, 229, 255, 0.1);
+                }
+            }
+        }
+    }
+
+    /* Right Pane */
+    .pane-right {
+        grid-area: right;
+        border-left: 1px solid $border-primary;
+        background: $bg-deep;
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-md;
+        gap: 20px;
+        overflow-y: auto;
+    }
+
+    /* Center Pane */
+    .pane-center {
+        grid-area: center;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .terminal-header {
+            padding: $spacing-md 20px;
+            border-bottom: 1px solid $border-primary;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            h1.title {
+                margin: 0;
+                color: $accent-magenta;
+                font-size: 28px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                flex-grow: 1;
+                border: none;
+                
+                input {
+                    background: transparent;
+                    border: none;
+                    color: inherit;
+                    width: 100%;
+                    outline: none;
+                }
+            }
+        }
+
+        .dynamic-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background: $bg-deep;
+
+            .terminal-tab-title {
+                color: $accent-cyan;
+                margin-top: 0;
+                font-size: 1.2em;
+                border-bottom: 1px solid $border-primary;
+                margin-bottom: 15px;
+                font-family: $font-mono;
+            }
+
+            .terminal-warning {
+                color: $accent-amber;
+                border: 1px dashed $accent-amber;
+                padding: 10px;
+                text-align: center;
+                margin-bottom: 15px;
+                font-family: $font-mono;
+            }
+        }
+    }
+
+    /* Footer Stats */
+    .pane-footer {
+        grid-area: footer;
+        border-top: 1px solid $border-primary;
+        background: $bg-deep;
+        display: flex;
+        align-items: center;
+        padding: 5px 15px;
+    }
+}

@@ -1,63 +1,106 @@
-<form class="{{cssClass}} flexcol" autocomplete="off">
-    {{!-- Sheet Header --}}
-    <header class="cyberheader">
-        <div class="fieldrow">
-            <h1 class="title">
-                <input type="text" class="field-value" name="name"  value="{{actor.name}}"/>
-            </h1>
+<form class="{{cssClass}} sheet-terminal cyberpunk" autocomplete="off">
+    <!-- LEFT PANE -->
+    <aside class="pane-left">
+        <div class="portrait-wrapper">
+            <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+        </div>
+        
+        <div class="biometrics">
             {{#if (equals actor.type "npc")}}
-                <div class="field">
-                    <label>{{CPLocal "NPC"}}</label>
-                </div>
+            <div class="field"><label>{{CPLocal "NPC"}}</label></div>
             {{/if}}
             {{> (template "fields/string") label="Role" edit="system.role.value"}}
             {{> (template "fields/number") label="Age" edit="system.age" isNum=true}}
             {{> (template "fields/number") label="Points" edit="system.points"}}
+            
+            <div class="derived-biometrics" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px;">
+                <div class="field">
+                    <label>{{CPLocal "Run"}}</label>
+                    <input class="not-editable" value="{{system.stats.ma.run}}" readonly style="width: 25px; text-align: center;">
+                    <input class="derived-override" name="system.stats.ma.runOverride" type="number" value="{{system.stats.ma.runOverride}}" style="width: 25px;">
+                </div>
+                <div class="field">
+                    <label>{{CPLocal "Leap"}}</label>
+                    <input class="not-editable" value="{{system.stats.ma.leap}}" readonly style="width: 25px; text-align: center;">
+                    <input class="derived-override" name="system.stats.ma.leapOverride" type="number" value="{{system.stats.ma.leapOverride}}" style="width: 25px;">
+                </div>
+                <div class="field">
+                    <label>{{CPLocal "Carry"}}</label>
+                    <input class="not-editable" value="{{system.stats.bt.carry}}" readonly style="width: 25px; text-align: center;">
+                    <input class="derived-override" name="system.stats.bt.carryOverride" type="number" value="{{system.stats.bt.carryOverride}}" style="width: 25px;">
+                </div>
+                <div class="field">
+                    <label>{{CPLocal "Lift"}}</label>
+                    <input class="not-editable" value="{{system.stats.bt.lift}}" readonly style="width: 35px; text-align: center;">
+                    <input class="derived-override" name="system.stats.bt.liftOverride" type="number" value="{{system.stats.bt.liftOverride}}" style="width: 25px;">
+                </div>
             </div>
         </div>
-        
-        <div class="flexrow">
-            <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
-            <div class="flexcol">
-                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/statsrow.hbs"}}
-                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/woundtracker.hbs"}}
+
+        {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/woundtracker.hbs"}}
+
+        <nav class="system-nav sheet-tabs tabs" data-group="primary">
+            <a class="nav-cmd item" data-tab="skills">&gt; cd /sys/skills</a>
+            <a class="nav-cmd item" data-tab="combat">&gt; cd /sys/combat</a>
+            <a class="nav-cmd item" data-tab="gear">&gt; cd /sys/gear</a>
+            <a class="nav-cmd item" data-tab="cyber">&gt; cd /sys/cyberware</a>
+            <a class="nav-cmd item" data-tab="life">&gt; cd /sys/life_log</a>
+        </nav>
+    </aside>
+
+    <!-- CENTER PANE -->
+    <main class="pane-center">
+        <div class="terminal-header">
+            <h1 class="title">
+                <input type="text" class="field-value" name="name" value="{{actor.name}}"/>
+            </h1>
+        </div>
+
+        <section class="dynamic-content sheet-body">
+            <!-- Skills Tab -->
+            <div class="tab skills flexcol" data-group="primary" data-tab="skills">
+                <h2 class="terminal-tab-title">[ /sys/skills ]</h2>
+                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/skills.hbs"}}
             </div>
-        </div>
-    </header>
 
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="skills">{{localize 'CYBERPUNK.TabSkills'}}</a>
-        <a class="item" data-tab="combat">{{localize 'CYBERPUNK.TabCombat'}}</a>
-        <a class="item" data-tab="gear">{{localize 'CYBERPUNK.TabGear'}}</a>
-        <a class="item" data-tab="cyber">{{localize 'CYBERPUNK.TabCyber'}}</a>
-        <a class="item" data-tab="life">{{localize 'CYBERPUNK.Life'}}</a>
-    </nav>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body">
-        <div class="tab skills flexcol" data-group="primary" data-tab="skills">
-            {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/skills.hbs"}}
-        </div>
-
-        <div class="tab combat flexcol" data-group="primary" data-tab="combat">
-            {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/combat.hbs"}}
-        </div>
-
-        <div class="tab gear flexcol" data-group="primary" data-tab="gear">
-            {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/gear.hbs"}}
-        </div>
-        
-        <div class="tab gear flexcol" data-group="primary" data-tab="cyber">
-            {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/cyberware.hbs"}}
-        </div>
-
-        {{!-- Biography Tab --}}
-        <div class="tab life flexcol" data-group="primary" data-tab="life">
-            <div class="biography">
-                {{editor system.notes target="system.notes" button=true owner=owner editable=options.editable}}
+            <!-- Combat Tab (Leftover specific to tab) -->
+            <div class="tab combat flexcol" data-group="primary" data-tab="combat">
+                <h2 class="terminal-tab-title">[ /sys/combat ]</h2>
+                <div class="terminal-warning">CRITICAL: TACTICAL BUS REROUTED TO RIGHT PANE.</div>
+                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/combat.hbs"}}
             </div>
-        </div>
-    </section>
+            
+            <!-- Cyberware Tab -->
+            <div class="tab cyber flexcol" data-group="primary" data-tab="cyber">
+                <h2 class="terminal-tab-title">[ /sys/cyberware ]</h2>
+                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/cyberware.hbs"}}
+            </div>
+
+            <!-- Gear Tab -->
+            <div class="tab gear flexcol" data-group="primary" data-tab="gear">
+                <h2 class="terminal-tab-title">[ /sys/gear ]</h2>
+                {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/gear.hbs"}}
+            </div>
+
+            <!-- Life/Biography Tab -->
+            <div class="tab life flexcol" data-group="primary" data-tab="life">
+                <h2 class="terminal-tab-title">[ /sys/life_log ]</h2>
+                <div class="biography">
+                    {{editor system.notes target="system.notes" button=true owner=owner editable=options.editable}}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- RIGHT PANE (Persistent Combat HUD) -->
+    <aside class="pane-right">
+        <!-- We duplicate the combat partial here so it's always visible -->
+        {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/combat.hbs"}}
+    </aside>
+
+    <!-- FOOTER -->
+    <footer class="pane-footer">
+        {{> "systems/cyberpunk2020-rilerena/templates/actor/parts/statsrow.hbs"}}
+    </footer>
 </form>
 

@@ -1,8 +1,11 @@
-@use "sass:color";
+// ============================================
+// WOUND TRACKER — Damage state display
+// ============================================
+// Thin cyan borders, elevated-dark labels,
+// damage colors from tokens ($damage-filled etc.)
+// ============================================
 
-$damage-colour: firebrick;
-$damage-will-unfill-colour: color.change($damage-colour, $alpha: 0.7);
-$damage-will-fill-colour: color.change($damage-colour, $alpha: 0.3);
+@use "sass:color";
 
 .wound-tracker {
     display: flex;
@@ -11,29 +14,37 @@ $damage-will-fill-colour: color.change($damage-colour, $alpha: 0.3);
     // Compensate for rightmost items having a 3px margin
     margin-right: -3px;
 
+    // ── Individual wound state column ──
     .wound-state {
         display: flex;
         flex-grow: 1;
-        height:fit-content;
+        height: fit-content;
         flex-direction: column;
         margin-right: 3px;
         margin-top: 5px;
-        border: solid black;
-        border-width: 0px 2px 2px 2px;
+        border: $border-width solid $border-primary;
+        border-width: 0px $border-width $border-width $border-width;
     }
+
+    // ── Wound state label (Light, Serious, Critical, etc.) ──
     .wound-state-label {
-        background-color: $text-colour;
-        color: $text-colour-inverted;
+        background-color: $bg-elevated;
+        color: $accent-cyan;
+        font-family: $font-ui;
         font-size: smaller;
         font-variant: small-caps;
         padding: 2px;
         padding-left: 2px;
     }
+
+    // ── Damage checkbox row ──
     .damageholder {
         display: flex;
         flex-grow: 1;
-        height:0.5em;
+        height: 0.5em;
     }
+
+    // ── Individual damage box ──
     .damage {
         @include reset-radio;
 
@@ -43,24 +54,30 @@ $damage-will-fill-colour: color.change($damage-colour, $alpha: 0.3);
 
         border-style: solid;
         border-width: 0px 1px 0px 1px;
-        border-color: $text-colour;
+        border-color: $border-primary;
 
         transition: background-color $transition-period;
+
+        // Hover: show unfill preview
         &.filled:hover {
-            background-color: $damage-will-unfill-colour;
+            background-color: $damage-will-unfill;
         }
+        // Hover: show fill preview
         &.unfilled:hover {
-            background-color: $damage-will-fill-colour;
+            background-color: $damage-will-fill;
         }
     }
+
+    // Collapse double borders between adjacent boxes
     .damage + .damage { border-left-width: 0px; }
-    .damage.leftmost { border-left-width: 0px; }
+    .damage.leftmost  { border-left-width: 0px; }
     .damage.rightmost { border-right-width: 0px; }
 
-    .filled { 
-        background-color: $damage-colour;
+    // ── Filled / unfilled states ──
+    .filled {
+        background-color: $damage-filled;
     }
-    .unfilled { 
+    .unfilled {
         background-color: transparent;
     }
 }

@@ -1,15 +1,25 @@
+// ============================================
+// GEAR LIST — Cyberpunk CRT Terminal Theme
+// ============================================
+// Gear item rows with hover-reveal delete action.
+// Tokens imported globally — no local @import needed.
+// ============================================
+
 .gear {
-    // width: 100%;
-    
+    // Gear name label
     label {
         min-width: 128px;
         padding-right: 10px;
+        color: $text-primary;
     }
 
-    >span.item-delete {
+    // Delete icon — hidden by default, revealed on hover
+    > span.item-delete {
         display: none;
+        transition: color $transition-fast;
     }
-    &:hover>span.item-delete {
+    &:hover > span.item-delete {
         display: inline;
+        color: $accent-magenta;
     }
 }

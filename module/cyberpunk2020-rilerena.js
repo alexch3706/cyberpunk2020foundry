@@ -6,7 +6,7 @@ import { CyberpunkItemSheet } from "./item/item-sheet.js";
 import { preloadHandlebarsTemplates } from "./templates.js";
 import { registerHandlebarsHelpers } from "./handlebars-helpers.js"
 import * as migrations from "./migrate.js";
-import { registerSystemSettings } from "./settings.js"
+import { registerSystemSettings, applyVisualEffectSettings } from "./settings.js"
 import { registerCombatTurnDeathSaveHook } from "./combat/death-save-turn.js";
 
 Hooks.once('init', async function () {
@@ -33,6 +33,7 @@ Hooks.once('init', async function () {
 
     // Register System Settings
     registerSystemSettings();
+    applyVisualEffectSettings();
 
     registerHandlebarsHelpers();
     registerCombatTurnDeathSaveHook();

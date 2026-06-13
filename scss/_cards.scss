@@ -1,29 +1,151 @@
-$crit-color: #77b968b8;
-$fail-color: #d1502fb8;
+// ============================================
+// CHAT CARDS — Cyberpunk CRT Terminal Theme
+// ============================================
+// Styles for Foundry chat roll cards, combat outcomes,
+// status banners, and inline result formatting.
+// Tokens imported globally — no local @import needed.
+// ============================================
 
+// ── Crit / Fumble highlight colors ───────────
+$crit-color: rgba($status-crit, 0.25);
+$fail-color: rgba($status-fumble, 0.25);
+
+// ── Main chat card container ─────────────────
 .cyberpunk-card {
+    background: $bg-surface;
+
+    // Card heading — magenta accent, uppercase
     h2 {
-        font-family: $font-primary;
-        font-variant: small-caps;
+        font-family: $font-ui;
         font-weight: bold;
-        border-bottom: 2px solid $text-colour;
-        // margin: 0px;
+        color: $accent-magenta;
+        border-bottom: $border-width solid $border-primary;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        // Glow effect when CRT glow is enabled
+        .fx-glow & {
+            text-shadow: $glow-magenta;
+        }
     }
 
+    // Roll image thumbnail
     .roll-image {
         margin-right: 5px;
     }
 
+    // ── Critical / fumble result highlights ──
     .part-total.crit {
         background-color: $crit-color;
+        color: $status-crit;
     }
     .part-total.fumble {
         background-color: $fail-color;
+        color: $status-fumble;
     }
 
+    // Autofire damage indentation
     &.autofire {
         .damage-tally {
             margin-left: 3em;
         }
     }
+
+    // ── Die result in mono ───────────────────
+    .roll-result.die {
+        font-family: $font-mono;
+    }
+}
+
+// ============================================
+// COMBAT OUTCOME CLASSES
+// ============================================
+// Semantic classes to replace inline styles in
+// combat-outcome.hbs and similar templates.
+// ============================================
+
+// ── Hit / Miss / Not-Fired outcomes ──────────
+.outcome-hit {
+    color: $status-hit;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    .fx-glow & {
+        text-shadow: $glow-hit;
+    }
+}
+
+.outcome-miss {
+    color: $status-miss;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    .fx-glow & {
+        text-shadow: $glow-miss;
+    }
+}
+
+.outcome-not-fired {
+    color: $text-secondary;
+    text-transform: uppercase;
+}
+
+// ── Section divider (replaces inline border-top) ──
+.section-divider {
+    margin-top: 5px;
+    border-top: $border-width solid $accent-magenta;
+    padding-top: 5px;
+}
+
+// ── Formula text (e.g. "1d10 + 5") ──────────
+.formula-text {
+    font-size: 0.85em;
+    color: $text-secondary;
+    margin-left: 5px;
+}
+
+// ── Warning block (jams, penalties, etc.) ────
+.warning-block {
+    color: $accent-amber;
+    margin-top: 5px;
+    font-size: 0.9em;
+    border-top: $border-width solid $accent-amber;
+    padding-top: 5px;
+
+    ul {
+        margin: 3px 0;
+        padding-left: 15px;
+    }
+}
+
+// ── Status banners (preview, committed, etc.) ──
+.status-banner {
+    margin-top: 10px;
+    padding: 5px 8px;
+    text-align: center;
+    font-weight: bold;
+    border: $border-width solid;
+    font-family: $font-ui;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-preview {
+    color: $accent-blue;
+    border-color: $accent-blue;
+}
+
+.status-committed {
+    color: $status-committed;
+    border-color: $status-committed;
+}
+
+.status-canceled {
+    color: $status-canceled;
+    border-color: $status-canceled;
+}
+
+.status-manual {
+    color: $status-manual;
+    border-color: $status-manual;
 }

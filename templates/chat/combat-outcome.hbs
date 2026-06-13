@@ -20,7 +20,7 @@
     </div>
 
     {{#if action.modifiers.length}}
-    <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+    <div class="field-list one-col section-divider">
         <div class="field">
             <strong>{{CPLocal "AttackModifiers"}}:</strong>
         </div>
@@ -34,7 +34,7 @@
     {{/if}}
 
     {{#each targets as |targetOutcome|}}
-        <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+        <div class="field-list one-col section-divider">
             <div class="field">
                 <span>{{CPLocal "Target"}}: </span>
                 <span class="flex-pad">{{targetOutcome.target.name}}</span>
@@ -44,7 +44,7 @@
                     <span>{{CPLocal "Attack"}}: </span>
                     <span>{{targetOutcome.attack.total}}</span>
                     {{#if targetOutcome.attack.formula}}
-                        <span class="formula" style="font-size: 0.85em; color: #888; margin-left: 5px;">({{targetOutcome.attack.formula}})</span>
+                        <span class="formula formula-text">({{targetOutcome.attack.formula}})</span>
                     {{/if}}
                     <span class="flex-pad"></span>
                     <span class="roll-results">
@@ -94,9 +94,9 @@
                         {{#if targetOutcome.attack.notFired}}
                             <strong class="outcome-not-fired">{{CPLocal "NotFired"}}</strong>
                         {{else if targetOutcome.attack.hit}}
-                            <strong style="color: #0f0; text-transform: uppercase;">{{CPLocal "Hit"}}</strong>
+                            <strong class="outcome-hit">{{CPLocal "Hit"}}</strong>
                         {{else}}
-                            <strong style="color: #f00; text-transform: uppercase;">{{CPLocal "Miss"}}</strong>
+                            <strong class="outcome-miss">{{CPLocal "Miss"}}</strong>
                         {{/if}}
                     </span>
                 </div>
@@ -121,7 +121,7 @@
                             <span>{{CPLocal "Damage"}}: </span>
                             <span>{{hit.damageRoll.total}}</span>
                             {{#if hit.damageRoll.formula}}
-                                <span class="formula" style="font-size: 0.85em; color: #888; margin-left: 5px;">({{hit.damageRoll.formula}})</span>
+                                <span class="formula formula-text">({{hit.damageRoll.formula}})</span>
                             {{/if}}
                             <span class="flex-pad"></span>
                         </div>
@@ -165,7 +165,7 @@
     {{/each}}
 
     {{#if (hasProperty ammo "delta")}}
-    <div class="field-list one-col" style="margin-top: 5px; border-top: 1px solid #c00; padding-top: 5px;">
+    <div class="field-list one-col section-divider">
         <div class="field">
             <span>{{CPLocal "AmmoDelta"}}: </span>
             <span class="flex-pad">{{ammo.delta}} ({{ammo.after}} / {{ammo.before}})</span>
@@ -174,9 +174,9 @@
     {{/if}}
 
     {{#if warnings.length}}
-        <div class="warnings" style="color: #ffaa00; margin-top: 5px; font-size: 0.9em; border-top: 1px solid #ffaa00; padding-top: 5px;">
+        <div class="warnings warning-block">
             <strong>{{CPLocal "Warnings"}}:</strong>
-            <ul style="margin: 3px 0; padding-left: 15px;">
+            <ul>
                 {{#each warnings as |warning|}}
                     <li>{{warning.message}}</li>
                 {{/each}}
@@ -184,7 +184,7 @@
         </div>
     {{/if}}
 
-    <div class="status-banner status-{{status}}" style="margin-top: 10px; padding: 5px; text-align: center; font-weight: bold; border: 1px solid; {{#if isPreview}}color: #3498db; border-color: #3498db;{{/if}}{{#if isCommitted}}color: #2ecc71; border-color: #2ecc71;{{/if}}{{#if isCanceled}}color: #e74c3c; border-color: #e74c3c;{{/if}}{{#if isManual}}color: #f1c40f; border-color: #f1c40f;{{/if}}">
+    <div class="status-banner status-{{status}}">
         {{#if isPreview}}
             <span>{{CPLocal "PreviewStatus"}} - {{CPLocal "PreviewStatusDesc"}}</span>
         {{/if}}

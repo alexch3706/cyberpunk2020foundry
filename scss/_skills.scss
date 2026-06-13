@@ -1,61 +1,87 @@
-// Top bar above the list of skills itself
+// ============================================
+// SKILLS — Skill list and chip toggles
+// ============================================
+// Dark elevated backgrounds, mono-font skill levels,
+// tinted search icon, themed chip toggles.
+// ============================================
+
+// ── Top bar above the skill list ──
 .skill-top-matter {
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
     margin-bottom: 3px;
     flex-grow: 0;
+
     > * {
         flex-grow: 1;
     }
-    
+
+    // Search icon — elevated bg, tinted via filter
     div.search-icon {
-        background-color: $text-colour;
+        background-color: $bg-elevated;
         background-image: url(../img/search.png);
+        filter: brightness(0.7) sepia(1) hue-rotate(150deg) saturate(3);
     }
 }
 
-// Each individual skill in the list
+// ── Individual skill row ──
 .field.skill {
-    // Make them a little taller
-    >* {
-        padding-top:3px; 
+    // Slightly taller rows for readability
+    > * {
+        padding-top: 3px;
         padding-bottom: 3px;
     }
-    >label {
+
+    // ── Skill name label (clickable for rolls) ──
+    > label {
         &.skill-roll {
             flex: 4;
+            color: $text-primary;
         }
     }
 
-
+    // ── Chip toggle (chipped-in indicator) ──
     label.chip-toggle {
-        background-color: $text-colour;
+        background-color: $bg-elevated;
+        color: $text-primary;
         display: flex;
         flex: 1;
         flex-direction: row;
         align-items: center;
         padding-right: 3px;
-        >* {
+
+        > * {
             font-variant: all-small-caps;
         }
+
+        // Stat abbreviation next to chip icon
         .skill-stat-display {
             flex: 1;
+            color: $text-secondary;
         }
     }
-        
+
+    // Hidden checkbox — toggled via label click
     input[type="checkbox"] {
         display: none;
-    } 
+    }
+
+    // ── Chip icon ──
     .chip-icon {
-        // This just has to be less than the initial height of the bars...
         @include image-bg;
-        height:1.5em;
+        height: 1.5em;
         width: 1.5em;
         background-image: url(../img/chip.png);
     }
+
+    // ── Skill level input — mono font for numbers ──
+    .skill-level input {
+        font-family: $font-mono;
+    }
 }
 
+// ── Skills within a skill group fill width ──
 .skill-group .field.skill {
     width: 100%;
 }

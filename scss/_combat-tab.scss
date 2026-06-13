@@ -1,15 +1,54 @@
+// ============================================
+// COMBAT TAB — Cyberpunk CRT Terminal Theme
+// ============================================
+// Grid layout for rolls, weapons, and armor segments.
+// Tokens imported globally — no local @import needed.
+// ============================================
+
+// ── Main combat tab grid ─────────────────────
 .combat-tab {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 10fr;
-    grid-template-areas: 
+    grid-template-areas:
         "rolls rolls"
         "weapons armor";
     column-gap: 10px;
     row-gap: 10px;
     align-items: start;
 
+    // ── Combat rolls (initiative, stun/death saves) ──
+    .combat-rolls {
+        grid-area: rolls;
+        display: flex;
+        flex-flow: column nowrap;
 
+        .field + .field {
+            margin-left: 5px;
+        }
+
+        // Individual roll fields — subtle surface with cyan border
+        .field {
+            background: $bg-surface;
+            border: $border-width solid $accent-cyan;
+            transition: border-color $transition-fast, background $transition-fast;
+
+            &:hover {
+                border-color: lighten($accent-cyan, 12%);
+                background: $bg-elevated;
+            }
+
+            // Roll labels — uppercase cyan with tracking
+            label {
+                color: $accent-cyan;
+                font-family: $font-ui;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+        }
+    }
+
+    // ── Armor section ────────────────────────────
     .armor-section {
         grid-area: armor;
 
@@ -20,28 +59,37 @@
         }
     }
 
-    .combat-rolls {
-        grid-area: rolls;
-        display: flex;
-        flex-flow: column nowrap;
-
-        .field+.field {
-            margin-left: 5px;
-        }
-    }
-
+    // ── Weapons list ─────────────────────────────
     .weapons-list {
         grid-area: weapons;
         display: flex;
         flex-flow: column nowrap;
 
-        >.field{
+        > .field {
             margin-bottom: 3px;
+            background: $bg-surface;
+            border: $border-width solid $border-primary;
+            transition: border-color $transition-fast, background $transition-fast;
+
+            &:hover {
+                border-color: $accent-cyan;
+                background: $bg-elevated;
+            }
+
+            // Weapon name — primary text
+            .name label {
+                color: $text-primary;
+            }
+
+            // Inactive weapon fields — dimmed
+            &.inactive label {
+                color: $text-secondary;
+            }
         }
     }
 }
 
-// This can be used elsewhere
+// ── Armor display (used in combat tab & elsewhere) ──
 .cyberpunk .armor-display {
     max-height: 200px;
     max-width: 25em;
@@ -52,7 +100,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
            ". Head ."
         "lArm Torso rArm"
         "lLeg . rLeg";
@@ -60,18 +108,21 @@
     row-gap: 3px;
     justify-items: center;
 
+    // ── Individual armor segment (head, torso, etc.) ──
     .armor-segment {
-        width:100%; 
-        border: solid $text-colour;
+        width: 100%;
+        background: $bg-surface;
+        border: solid $border-primary;
         border-width: $field-border-width $field-border-width 0px $field-border-width;
         display: grid;
         grid-template-rows: auto auto 1fr;
         grid-template-columns: 1fr 2fr 1fr;
-        grid-template-areas: 
+        grid-template-areas:
             "loc loc loc"
             "ablate sp repair"
             "name name name";
 
+        // SP value — cyan mono, bold
         .segment-sp {
             grid-area: sp;
             display: flex;
@@ -81,12 +132,13 @@
             padding-left: 0px;
             padding-right: 0px;
             width: 100%;
-
             background-color: transparent;
-            color: $text-colour;
-            // ExtraBold here just doesn't work
-            font-family: $font-primary;
+            color: $accent-cyan;
+            font-family: $font-mono;
+            font-weight: 700;
         }
+
+        // Ablate / Repair buttons — hidden until hover
         .segment-ablate { grid-area: ablate; }
         .segment-repair { grid-area: repair; }
         .segment-ablate, .segment-repair {
@@ -94,27 +146,35 @@
             justify-content: center;
             text-align: center;
             line-height: 100%;
-            // width: 15%;
             display: none;
         }
         &:hover .segment-ablate, &:hover .segment-repair {
             display: inline;
         }
 
+        // Armor name — secondary text, small
         .segment-name {
             grid-area: name;
             text-align: center;
             padding: 0px;
+            color: $text-secondary;
+            font-size: small;
         }
+
+        // Location label — magenta on elevated bg
         .segment-loc {
             grid-area: loc;
             text-align: center;
-            // Avoid scrolling with the small area
             line-height: 100%;
             padding-left: 0px;
             padding-right: 0px;
             border-top: 0px;
             margin-top: -$field-border-width;
+
+            label {
+                color: $accent-magenta;
+                background: $bg-elevated;
+            }
         }
     }
 }

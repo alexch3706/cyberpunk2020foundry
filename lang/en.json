@@ -393,5 +393,9 @@
     "CYBERPUNK.ConformanceCorebook": "Corebook",
     "CYBERPUNK.ConformanceExtended": "Extended",
     "CYBERPUNK.ConformanceUnknown": "Unknown",
-    "CYBERPUNK.TargetNotFiredWeaponJam": "Full-auto attack stopped after a weapon jam before this target was fired on."
+    "CYBERPUNK.TargetNotFiredWeaponJam": "Full-auto attack stopped after a weapon jam before this target was fired on.",
+    "SETTINGS.EnableScanlines": "CRT Scanlines",
+    "SETTINGS.EnableScanlinesHint": "Enable retro CRT scanline overlay effect on character sheets.",
+    "SETTINGS.EnableGlow": "Neon Glow",
+    "SETTINGS.EnableGlowHint": "Enable neon glow effects on key UI elements (stat totals, hit/miss results, headers)."
 }

@@ -1,0 +1,81 @@
+// ============================================
+// DESIGN TOKENS — Cyberpunk 2020 CRT Terminal Theme
+// ============================================
+// Retro terminal aesthetic × neon cyan/magenta palette
+// Inspired by: Cyberpunk 2077 UI, Mothership RPG, Alien RPG
+// ============================================
+
+@use "sass:color";
+
+// ── Backgrounds ──────────────────────────────
+$bg-deep:       #0a0a0f;    // Deepest background (sheet body)
+$bg-surface:    #12121a;    // Cards, sections, panels
+$bg-elevated:   #1a1a28;    // Hover states, raised elements
+$bg-input:      #0e0e18;    // Input fields background
+
+// ── Borders ──────────────────────────────────
+$border-primary:  rgba(0, 229, 255, 0.25);  // Subtle cyan borders
+$border-active:   #00e5ff;                   // Active/focus borders
+$border-dim:      rgba(255, 255, 255, 0.08); // Very subtle dividers
+
+// ── Text ─────────────────────────────────────
+$text-primary:    #e0e0e8;   // Main readable text
+$text-secondary:  #888898;   // Subdued, formulas, hints
+$text-label:      #00e5ff;   // Field labels (cyan)
+$text-dim:        #555568;   // Very dim text (overrides, placeholders)
+
+// ── Accents ──────────────────────────────────
+$accent-cyan:     #00e5ff;   // Primary accent — stats, active elements, borders
+$accent-magenta:  #ff2d7b;   // Secondary accent — section headers, stat abbreviations
+$accent-amber:    #ffaa00;   // Warnings
+$accent-blue:     #3498db;   // Info/preview status
+
+// ── Status colors ────────────────────────────
+$status-hit:      #00ff66;   // Hit result
+$status-miss:     #ff3344;   // Miss result
+$status-crit:     #00ff66;   // Critical success
+$status-fumble:   #ff3344;   // Critical failure
+$status-committed: #2ecc71;  // Committed status
+$status-canceled:  #e74c3c;  // Canceled status
+$status-manual:    #f1c40f;  // Manual resolution
+
+// ── Damage ───────────────────────────────────
+$damage-filled:   #cc1133;
+$damage-will-unfill: color.change($damage-filled, $alpha: 0.5);
+$damage-will-fill:   color.change($damage-filled, $alpha: 0.2);
+$meter-colour:    $accent-cyan;
+$meter-danger-colour: $accent-amber;
+
+// ── Typography ───────────────────────────────
+$font-mono:  'Share Tech Mono', 'Courier New', monospace;
+$font-ui:    'Rajdhani', 'Noto Sans', sans-serif;
+
+// ── Spacing ──────────────────────────────────
+$spacing-xs:  2px;
+$spacing-sm:  4px;
+$spacing-md:  8px;
+$spacing-lg:  12px;
+$spacing-xl:  16px;
+
+// ── Borders ──────────────────────────────────
+$border-width: 1px;
+$field-border-width: 1px;
+
+// ── Transitions ──────────────────────────────
+$transition-fast:   0.15s;
+$transition-period: 0.25s;
+
+// ── Glow Effects ─────────────────────────────
+// These are applied when .fx-glow is on body
+$glow-cyan:    0 0 8px rgba(0, 229, 255, 0.6), 0 0 20px rgba(0, 229, 255, 0.2);
+$glow-magenta: 0 0 8px rgba(255, 45, 123, 0.6), 0 0 20px rgba(255, 45, 123, 0.2);
+$glow-hit:     0 0 8px rgba(0, 255, 102, 0.6);
+$glow-miss:    0 0 8px rgba(255, 51, 68, 0.6);
+$glow-subtle:  0 0 4px rgba(0, 229, 255, 0.3);
+
+// ── Legacy compatibility aliases ─────────────
+// These map old variable names to new tokens so we don't break anything
+$text-colour:          $text-primary;
+$text-colour-inverted: $bg-deep;
+$inactive-colour:      $text-secondary;
+$fa-colour:            rgba(0, 229, 255, 0.7);

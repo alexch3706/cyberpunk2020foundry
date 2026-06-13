@@ -1,53 +1,79 @@
-// A block of information on the sheet, consisting of a label and something to edit, sometimes with more info.
+// ============================================
+// FIELDS — Core visual component
+// ============================================
+// A block of information: label + editable input.
+// Dark surface bg, cyan labels, mono-font numbers.
+// ============================================
 
 /**
-* A convenience class to prevent boilerplate
-* Best used like so, in its basic form:
-* <div class="field"><label></label><input></div>
-* 
-* Can include a div with a background using .field-image, and the size of the input adjusted with the classes .number, .smallnumber, or .textsize
-* This specifically does not adjust margins - that's up to containers.
-* Adjusting field size is best done by changing the font size and/or the childrens' padding
-*/
+ * A convenience class to prevent boilerplate
+ * Best used like so, in its basic form:
+ * <div class="field"><label></label><input></div>
+ *
+ * Can include a div with a background using .field-image,
+ * and the size of the input adjusted with the classes
+ * .number, .smallnumber, or .textsize
+ *
+ * This specifically does not adjust margins — that's up to containers.
+ * Adjusting field size is best done by changing the font size
+ * and/or the children's padding.
+ */
 
 .cyberpunk .field {
     display: flex;
     flex-direction: row;
     align-items: stretch;
 
+    // ── Border ──
     border-width: $field-border-width;
     border-style: solid;
-    border-color: $text-colour;
-    
+    border-color: $border-primary;
+    background-color: $bg-surface;
 
-    // Only apply padding to direct children. Padding isn't on field itself, as it's the children that have the background color
-    // (If the field itself had the bg-color, we'd never be able to have transparent input fields)
-    // IF we cease wanting transparent background, I'll happily make the background solid - it'll solve a fair few problems
-    >* {
+    // ── Direct-child padding ──
+    // Padding lives on children, not the field itself,
+    // so we can have transparent input backgrounds if needed.
+    > * {
         padding: 2px 3px 2px 0px;
     }
-    // If we need to wrap anything (eg selects, inactives) to get them to display properly, ensure they get styled right too
-    >*, >span>*, >div>* {
-        background-color: $text-colour;
-        color: $text-colour-inverted;
-        font-weight: bold;
-        font-variant: small-caps;
-        padding-left: calc(5px - #{$field-border-width});
-        padding-right: 5px;
 
+    // ── Labels ──
+    // Cyan accent, UI font, no background
+    > label {
+        color: $accent-cyan;
+        font-family: $font-ui;
+        font-weight: 600;
+        font-variant: small-caps;
+        background-color: transparent;
+        padding: 2px 6px;
+
+        // If a label wraps a nested .field or .field-list, reset
         .field, &.field-list {
             background-color: unset;
-            color: $text-colour;
+            color: $text-primary;
             padding: unset;
         }
     }
 
-    // If we go into another field or field list, reset backgrounds
-    // >.field, >.field-list {
-    //     background-color: unset;
-    //     padding: unset;
-    // }
-    // I'd have this as an img, but it turns out changing an img tag's source on rollover can't be done in CSS, sooo...
+    // ── Wrapped children (spans/divs around selects, inactives) ──
+    // Give them the same label treatment so wrapped elements fit in
+    > span > label,
+    > div > label {
+        color: $accent-cyan;
+        font-family: $font-ui;
+        font-weight: 600;
+        font-variant: small-caps;
+        background-color: transparent;
+        padding: 2px 6px;
+
+        .field, &.field-list {
+            background-color: unset;
+            color: $text-primary;
+            padding: unset;
+        }
+    }
+
+    // ── Field image (portrait / icon) ──
     .field-image {
         background-position: center;
         background-repeat: no-repeat;
@@ -55,66 +81,79 @@
         max-width: 32px;
         width: 32px;
         padding: 0px 3px 0px 0px;
+        background-color: transparent;
     }
 
+    // Roll dice icon on hover
     &:hover > .field-image.roll {
         background-image: url("../../../icons/svg/d10-grey.svg") !important;
     }
 
-    >input {
+    // ── Inputs ──
+    > input {
         @include reset-input;
-        background-color: unset;
-        color: $text-colour;
-        font-family: $font-secondary;
+        background-color: $bg-input;
+        color: $text-primary;
+        font-family: $font-ui;
         padding-left: 5px;
         padding-right: 0px;
         flex-grow: 1;
         flex-shrink: 1;
+        border: none;
 
         &[type=checkbox] {
-            // This is apparently non-standard. I'd like to find an alternate method
             -webkit-appearance: checkbox;
         }
 
+        // Number inputs — mono font, centered
         &[type=number] {
+            font-family: $font-mono;
             width: 2.5em;
-            // With center text, no padding needed
             padding-left: 0px;
             text-align: center;
         }
         &[type=number].smallnumber {
             width: 1.5em;
         }
+
+        // Text inputs
         &[type=text] {
             width: 6em;
             min-width: 2em;
         }
     }
-    // Apparently selects don't stretch in a flexbox, so best bet is to wrap child selects in a span
-    // Trouble is, that means it doesn't get the >* rule, so we add that here.
+
+    // ── Selects ──
+    // Selects don't stretch in flexbox; wrap in a <span> if needed
     select {
         border-radius: 0px;
-        border: 1px solid $inactive-colour;
+        border: 1px solid $border-primary;
+        background-color: $bg-input;
+        color: $text-primary;
         width: 50%;
     }
+
+    // ── Paragraphs ──
     p {
-        margin:0px 3px 0px 3px;
+        margin: 0px 3px 0px 3px;
+        color: $text-primary;
     }
 
+    // ── FontAwesome icons ──
     i.fas {
         padding-left: 0;
         padding-right: 0;
         font-size: small;
         color: $fa-colour;
 
-        +.fas {
+        + .fas {
             padding-left: 2px;
         }
     }
 
+    // ── Larger label variant ──
     label.larger {
         font-size: larger;
         font-style: italic;
     }
-    // Do I do a thing for divs here? when it's just displaying and isn't visible
 }

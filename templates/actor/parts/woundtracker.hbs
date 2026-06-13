@@ -1,15 +1,28 @@
-<div class="wound-tracker">
+<div class="wound-tracker" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
     {{!-- 10 wound states - Light, Serious, Critical, Mortal0-6 --}}
     {{#each woundStates as |stateName stateNo|}}
-    <div class="wound-state">
-        <div class="wound-state-label" title="{{stateName.hint}}">{{stateName.label}}</div>
-        <div class="damageholder">
+    <div class="wound-state" style="flex-direction: column; align-items: flex-start;">
+        <div class="wound-state-label" title="{{stateName.hint}}" style="font-size: 10px; padding: 0;{{#if (contains stateName.label "Mortal")}} color: #ff2d7b;{{/if}}">{{stateName.label}}</div>
+        <div class="damageholder" style="gap: 2px;">
             {{!-- damageBoxes gives context. WoundNo is which wound, classes dictate which are filled and which have left/right borders --}}
             {{#damageBoxes stateNo ../system.damage}}
                 {{!-- span instead of radio, because radio doesn't allow clicking of current wound to toggle --}}
-                <span data-damage={{woundNo}} class="damage {{classes}}"></span>
+                <span data-damage={{woundNo}} class="damage {{classes}}" style="width:12px;height:12px;"></span>
             {{/damageBoxes}}
         </div>
     </div>
     {{/each}}
+
+    {{!-- Save and BTM (Moved from statsrow) --}}
+    <div class="wound-state" style="grid-column: span 2; display: flex; flex-direction: row; justify-content: space-between; margin-top: 5px; gap: 10px;">
+        <div class="field" style="flex-grow: 1;">
+            <label title="{{CPLocal "Save"}}">{{CPLocal "Save"}}</label>
+            <input class="stat-total" value="{{system.stats.save.total}}" readonly style="width: 100%; text-align: center;">
+        </div>
+        <div class="field" style="flex-grow: 1;">
+            <label title="{{CPLocal "BTM"}}">{{CPLocal 'BTMShort'}}</label>
+            <input class="value not-editable" value="{{system.stats.bt.modifier}}" readonly style="width: 100%; text-align: center;">
+            <input class="derived-override" name="system.stats.bt.modifierOverride" type="number" value="{{system.stats.bt.modifierOverride}}" title="{{CPLocal "Override"}}" placeholder="{{CPLocal "OverrideShort"}}" style="width: 30px;">
+        </div>
+    </div>
 </div>

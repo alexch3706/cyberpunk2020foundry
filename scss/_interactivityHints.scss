@@ -1,23 +1,46 @@
+// ============================================
+// INTERACTIVITY HINTS — Cursor & state indicators
+// ============================================
+// Cyan hover glow on actions, dim not-editable,
+// smooth transitions for interactive elements.
+// ============================================
+
+// ── Inactive (greyed-out, e.g. unchipped skills) ──
 .inactive {
-    filter: opacity(0.45);
+    filter: opacity(0.5);
 }
-// This element DOES something when clicked
-// Note: There are a few X-roll classes. Roll them into one, add this little thing?
+
+// ── Clickable action elements ──
 .action {
     cursor: pointer;
+    transition: color $transition-fast, text-shadow $transition-fast;
+
     > * {
         cursor: pointer;
     }
+
+    // Hover — cyan highlight + optional glow
+    &:hover {
+        color: $accent-cyan;
+
+        .fx-glow & {
+            text-shadow: $glow-subtle;
+        }
+    }
 }
-// For items within action that won't fire
+
+// ── Non-firing children within an action ──
 .no-action {
     cursor: default;
 }
-// Not-editable
+
+// ── Not editable — locked fields ──
 .not-editable {
     cursor: not-allowed;
+    color: $text-dim;
 }
 
+// ── Hidden elements ──
 .invisible {
     display: none;
 }

@@ -1,69 +1,91 @@
+// ============================================
+// ITEM SHEETS — Cyberpunk CRT Terminal Theme
+// ============================================
+// Flavor textarea, item images, conformance badges,
+// and summary text for item detail views.
+// Tokens imported globally — no local @import needed.
+// ============================================
+
+// ── Flavor text area ─────────────────────────
 .cyberpunk textarea.flavor {
-    font-family: $font-primary;
+    font-family: $font-ui;
     font-weight: bold;
     font-style: italic;
     align-self: stretch;
-    border: 2px solid $text-colour;
+    border: $border-width solid $border-primary;
     border-radius: 0px;
     min-height: 5em;
+    background: $bg-input;
+    color: $text-primary;
 }
 
+// ── Item info column ─────────────────────────
 .item-info {
     width: 80%;
 }
 
+// ── Item image — preserves original sizing ───
 .item-img {
     max-height: 150px;
     max-width: 20%;
     flex-shrink: 2;
     flex-grow: 0;
     min-width: 7.5em;
-    width:20%;
+    width: 20%;
     margin-left: 4px;
 }
 
+// ── Info line layout ─────────────────────────
 .infoline {
     display: flex;
     flex-direction: row;
     align-items: baseline;
 }
 
-// Conformance badge shown in item sheet header
+// ── Conformance badge (corebook / extended / unknown) ──
+// Shown in item sheet header to indicate source compliance.
 .conformance-badge {
     display: inline-block;
-    font-family: $font-primary;
+    font-family: $font-mono;
     font-weight: bold;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     padding: 2px 6px;
-    border-radius: 3px;
+    border-radius: 0px;
     white-space: nowrap;
     margin-left: 4px;
     vertical-align: middle;
     line-height: 1.4;
 
+    // Corebook — green tint with green border
     &.corebook {
-        background-color: #228b22; // forest green
-        color: $text-colour-inverted;
+        background-color: rgba($status-hit, 0.2);
+        color: $status-hit;
+        border: $border-width solid $status-hit;
     }
 
+    // Extended — blue tint with blue border
     &.extended {
-        background-color: #1e3a8a; // deep blue
-        color: $text-colour-inverted;
+        background-color: rgba($accent-blue, 0.2);
+        color: $accent-blue;
+        border: $border-width solid $accent-blue;
     }
 
+    // Unknown — elevated surface, dim text
     &.unknown {
-        background-color: $inactive-colour; // muted charcoal
-        color: $text-colour-inverted;
+        background-color: $bg-elevated;
+        color: $text-secondary;
+        border: $border-width solid $border-primary;
     }
 }
 
-// The text VERY quickly summarising an item - eg "Pistol (flame)"
+// ── Summary text (e.g. "Pistol (flame)") ─────
 .summary {
     flex-grow: 0;
     font-variant: small-caps;
     font-size: 15px;
     white-space: nowrap;
     margin-right: 5px;
+    color: $text-secondary;
 }

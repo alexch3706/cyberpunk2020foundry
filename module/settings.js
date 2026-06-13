@@ -49,4 +49,42 @@ export function registerSystemSettings() {
     },
     default: "previewConfirm"
   });
+
+  // ── Visual Effects Settings ──────────────────
+  game.settings.register(game.system.id, "enableScanlines", {
+    name: "SETTINGS.EnableScanlines",
+    hint: "SETTINGS.EnableScanlinesHint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: (value) => {
+      document.body.classList.toggle("fx-scanlines", value);
+    }
+  });
+
+  game.settings.register(game.system.id, "enableGlow", {
+    name: "SETTINGS.EnableGlow",
+    hint: "SETTINGS.EnableGlowHint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: (value) => {
+      document.body.classList.toggle("fx-glow", value);
+    }
+  });
+}
+
+/**
+ * Apply visual effect classes to document.body based on current settings.
+ * Call this once during system init/ready.
+ */
+export function applyVisualEffectSettings() {
+  if (game.settings.get(game.system.id, "enableScanlines")) {
+    document.body.classList.add("fx-scanlines");
+  }
+  if (game.settings.get(game.system.id, "enableGlow")) {
+    document.body.classList.add("fx-glow");
+  }
 }
