@@ -261,6 +261,7 @@ details[open] summary ~ * {
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  color: #e0e0e8;
   border-width: 1px;
   border-style: solid;
   border-color: rgba(0, 229, 255, 0.25);
@@ -740,6 +741,7 @@ div.statderive .value.rightborder {
 
 .cyberpunk-card {
   background: #12121a;
+  color: #e0e0e8;
 }
 .cyberpunk-card h2 {
   font-family: "Rajdhani", "Noto Sans", sans-serif;

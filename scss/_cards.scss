@@ -13,6 +13,7 @@ $fail-color: rgba($status-fumble, 0.25);
 // ── Main chat card container ─────────────────
 .cyberpunk-card {
     background: $bg-surface;
+    color: $text-primary;
 
     // Card heading — magenta accent, uppercase
     h2 {
