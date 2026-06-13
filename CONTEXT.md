@@ -21,8 +21,28 @@ A full-auto attack against more than one target where every target has enough vi
 _Avoid_: Spray UI, full-auto polish, automatic fire extras
 
 **Tactical Environment Automation**:
-System support for map objects, barriers, zones, and spatial combat context beyond selected actors and manual inputs. It can improve table play, but it is outside the Core Combat Loop for the Trusted MVP.
-_Avoid_: Cover, combat automation, battle map support
+System support for map objects, barriers, zones, and spatial combat context beyond selected actors and manual inputs. It is part of the post-MVP scope, specifically handling AoE templates, automated line-of-effect raycasting, and cover detection to streamline complex calculations like suppressive fire or shotgun cones.
+_Avoid_: XCOM-style 3D bullet tracking, fully automated cover degradation without GM oversight.
+
+**Transient Cover Ablation**:
+A cover state that degrades automatically during a multi-hit attack (like full auto or shotgun blasts) after being initially provided by the GM, without requiring the GM to re-enter the SP for every single bullet. The final state of the cover is applied to the character's context but not persisted to the VTT canvas as a permanent object.
+_Avoid_: Tracking structural damage points (SDP) of background canvas objects permanently across sessions.
+
+**Interactive Template Trigger**:
+An automated map event where moving a token into a hazardous zone (like a suppressive fire MeasuredTemplate) pauses the token's movement and prompts the user to confirm the trigger or dismiss it (e.g., for accidental token drags) before resolving the combat mechanics.
+_Avoid_: Unforgiving instant-damage traps that trigger purely on cursor slips.
+
+**Dynamic Damage Drop-off**:
+Automated calculation where a weapon's damage or area of effect changes based on the exact distance to each target within an attack template, specifically implementing shotgun spread rules.
+_Avoid_: Requiring the GM to manually calculate range brackets and adjust dice pools for every individual target caught in an AoE.
+
+**Partial Cover Resolution**:
+A workflow where the GM uses a visual dialog to define which specific hit locations (e.g., Head, Torso, Arms, Legs) are protected by an intervening cover object. The combat resolver then bypasses the cover's SP entirely if the randomized hit location strikes an exposed area.
+_Avoid_: Automating 3D volumetric occlusion (guessing height and cover protection purely from 2D canvas vectors).
+
+**Single-Target Raycast Bounds**:
+Line-of-effect calculations for targeted attacks stop at the first valid token struck. Overpenetration (blowthrough) into subsequent tokens is handled narratively by the GM or via explicit multi-target attack declarations.
+_Avoid_: Automated kinetic chain-reactions through multiple living tokens.
 
 **Shared Physical Table**:
 A play format where the group is sitting together offline, players may roll physical dice, and the referee controls Foundry as the shared visible table surface. The system should support this format without requiring every player to operate Foundry directly.
