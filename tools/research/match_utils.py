@@ -14,14 +14,14 @@ REF_TYPE_TO_PACK: dict[str, str] = {
     "RIF": "rifles",
     "SMG": "smgs",
     "MEL": "melee",
-    "SHT": "rifles",
-    "HVY": "rifles",
-    "EX": "rifles",
+    "SHT": "shotguns",
+    "HVY": "heavyWeapons",
+    "EX": "exotics",
     "MP": "smgs",
-    "GRN": "rifles",
-    "MLG": "rifles",
-    "BOW": "rifles",
-    "FLM": "rifles",
+    "GRN": "heavyWeapons",
+    "MLG": "heavyWeapons",
+    "BOW": "bows",
+    "FLM": "heavyWeapons",
 }
 
 COMPENDIUM_TYPE_TO_PACK: dict[str, str] = {
@@ -29,9 +29,10 @@ COMPENDIUM_TYPE_TO_PACK: dict[str, str] = {
     "rifle": "rifles",
     "smg": "smgs",
     "melee": "melee",
-    "shotgun": "rifles",
-    "heavy weapon": "rifles",
-    "exotic": "rifles",
+    "shotgun": "shotguns",
+    "heavy weapon": "heavyWeapons",
+    "exotic": "exotics",
+    "bow": "bows",
 }
 
 STOP_TOKENS = frozenset({

@@ -20,7 +20,7 @@ DEFAULT_PDF_DIR = Path.home() / "Downloads" / "Cyberpunk 2020"
 REFERENCE_BOOK_NAME = "Cyberpunk_2020_-_Reference_Book.pdf"
 
 WEAPON_TYPES = frozenset({"P", "RIF", "SMG", "SHT", "HVY", "EX", "MEL", "MP", "GRN", "MLG", "BOW", "FLM"})
-WEAPON_PACKS = ("pistols", "rifles", "smgs", "melee")
+WEAPON_PACKS = ("pistols", "rifles", "smgs", "melee", "shotguns", "heavyWeapons", "bows", "exotics", "weapons_other")
 
 SECTION_HEADERS = re.compile(
     r"^(LIGHT|MEDIUM|HEAVY|VERY|ASSAULT|SNIPER|OTHER|MACHINE|SHOTGUN|EXOTIC|MELEE|GRENADE|"

@@ -105,9 +105,14 @@ def parse_stats_tail(tail: str) -> dict:
     bod_match = re.search(r"\(B(\d+)\)", damage or "")
     if bod_match:
         bod_min = int(bod_match.group(1))
+        damage = damage.replace(bod_match.group(0), "").strip()
 
     ammo_match = re.search(r"\(([^)]+)\)\s*$", damage or "")
-    ammo = ammo_match.group(1) if ammo_match else None
+    if ammo_match:
+        ammo = ammo_match.group(1)
+        damage = damage[:ammo_match.start()].strip()
+    else:
+        ammo = None
 
     return {
         "wa": wa,
