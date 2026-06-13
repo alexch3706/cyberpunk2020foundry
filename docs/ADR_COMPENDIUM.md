@@ -23,5 +23,5 @@ This document records the architectural decisions made during the parsing and cr
 **Consequences:** Zero data loss during VTT migration. All mechanical stats are accessible in the UI.
 
 ## ADR 5: Subdirectory Mapping
-**Context:** The old `packs-src` contained messy, manually created folders (`pistols`, `smgs`, `assault-rifles`, etc.).
-**Decision:** The script automatically routes items into unified directories: `pistols`, `smgs`, `rifles`, `shotguns`, `heavyweapons`, `melee`, `cyberware`, `gear`, `netware`, `vehicles`, `ammo`. The old directories will be systematically wiped and replaced by the script output.
+**Context:** The private compendium source pipeline originally used messy, manually created folders (`pistols`, `smgs`, `assault-rifles`, etc.).
+**Decision:** The private builder routes items into unified directories before producing the checked-in Foundry `packs/` artifacts. The source pipeline and raw JSON inputs are not part of the public repository.

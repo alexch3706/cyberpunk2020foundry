@@ -24,6 +24,8 @@ docs/*core-rules-extracted.md
 # Compendium research pipeline (extracted PDF text, inventories)
 .research/
 .venv-research/
+packs-src/
+tools/research/
 
 # OpenClaw agent workspace (local infra, not part of Foundry system)
 .agents/
