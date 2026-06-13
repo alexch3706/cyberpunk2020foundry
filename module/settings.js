@@ -50,6 +50,19 @@ export function registerSystemSettings() {
     default: "previewConfirm"
   });
 
+  game.settings.register(game.system.id, "attackDieEntryMode", {
+    name: "SETTINGS.AttackDieEntryMode",
+    hint: "SETTINGS.AttackDieEntryModeHint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: {
+      auto: "SETTINGS.AttackDieEntryModeAuto",
+      prompt: "SETTINGS.AttackDieEntryModePrompt"
+    },
+    default: "auto"
+  });
+
   // ── Visual Effects Settings ──────────────────
   game.settings.register(game.system.id, "enableScanlines", {
     name: "SETTINGS.EnableScanlines",

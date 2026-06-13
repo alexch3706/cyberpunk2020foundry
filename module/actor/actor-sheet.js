@@ -3,7 +3,8 @@ import { localize, localizeParam } from "../utils.js"
 import { ModifiersDialog } from "../dialog/modifiers.js"
 import { SortOrders } from "./skill-sort.js";
 import { normalizeSelectedTargets } from "../combat/target-normalizer.js";
-import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
+import { getAttackDieEntryMode, isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
+import { promptAttackDieEntry } from "../combat/attack-die-entry.js";
 import { buildWoundStateHints } from "./wound-hints.js";
 import { buildArmorRepairUpdate, getArmorItemStatus, getCyberwareArmorStatus } from "../combat/armor-maintenance.js";
 
@@ -285,7 +286,14 @@ export class CyberpunkActorSheet extends ActorSheet {
         weapon: item,
         targetTokens: targetTokens,
         modifierGroups: modifierGroups,
-        onConfirm: (fireOptions) => item.__weaponRoll(fireOptions, targetTokens, { structured: !!resolverOptions, ...resolverOptions })
+        onConfirm: async (fireOptions) => {
+          let attackDieOptions = {};
+          if (resolverOptions && getAttackDieEntryMode({ options: resolverOptions }) === "prompt") {
+            attackDieOptions = await promptAttackDieEntry();
+            if (attackDieOptions.canceled) return;
+          }
+          return item.__weaponRoll(fireOptions, targetTokens, { structured: !!resolverOptions, ...resolverOptions, ...attackDieOptions });
+        }
       });
       dialog.render(true);
     });

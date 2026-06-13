@@ -8,7 +8,7 @@ import { isActorDeadForDeathSaves, isActorStabilizedForDeathSaves, requiresRecur
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
-import { isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
+import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
@@ -1648,6 +1648,112 @@ async function assertCombatResolverRouting() {
   assert.equal(noTargetResult.manualResolution.required, true, "missing ranged target should be manual");
   assert.match(noTargetResult.manualResolution.message, /select a target/i, "missing target should explain required target selection");
 
+  const manualAttackDieContext = {
+    ...context,
+    action: {
+      type: "ranged",
+      fireMode: "SemiAuto",
+      range: "close",
+      targetNumber: 15
+    },
+    weapon: {
+      snapshot: {
+        attackSkill: "rifle",
+        shotsLeft: 10,
+        rof: 10,
+        attackType: "Auto"
+      }
+    },
+    targets: [
+      {
+        snapshot: {
+          stats: { bt: { total: 6 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      }
+    ]
+  };
+  const manualAttackDieResult = await resolveCombatAction(manualAttackDieContext, { structured: true, manualAttackDie: "10,7" }, roller);
+  assert.equal(manualAttackDieResult.targets[0].attack.roll.total, 25, "manual ranged attack die applies before stat and skill math");
+  assert.deepEqual(manualAttackDieResult.targets[0].attack.roll.die.results, [10, 7], "manual ranged attack die records the physical dice");
+
+  const manualMeleeResult = await resolveCombatAction({
+    action: { type: "melee" },
+    attacker: {
+      snapshot: {
+        stats: { ref: { total: 9 }, bt: { total: 6 } },
+        skills: { melee: { level: 5 } }
+      }
+    },
+    weapon: {
+      snapshot: {
+        attackSkill: "melee",
+        damage: "1d6",
+        attackType: "Melee"
+      }
+    },
+    targets: [
+      {
+        snapshot: {
+          stats: { ref: { total: 6 }, bt: { total: 8 } },
+          skills: { brawling: { level: 3 }, melee: { level: 4 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      }
+    ],
+    legacy: { fallback: () => "fallback-called" }
+  }, { structured: true, manualAttackDie: "9" }, createScriptedRoller([
+    { id: "defend", total: 30, die: { faces: 10, natural: 10, results: [10], exploded: false } }
+  ]));
+  assert.equal(manualMeleeResult.targets[0].attack.roll.total, 23, "manual melee attack die applies before stat and skill math");
+  assert.deepEqual(manualMeleeResult.targets[0].attack.roll.die.results, [9], "manual melee attack die records the physical die");
+
+  const manualMartialResult = await resolveCombatAction({
+    action: {
+      type: "martial",
+      meleeAction: "Strike",
+      options: { martialArt: "karate" }
+    },
+    attacker: {
+      snapshot: {
+        stats: { ref: { total: 9 }, bt: { total: 6 } },
+        skills: { karate: { level: 5 } }
+      }
+    },
+    weapon: {
+      snapshot: {
+        attackSkill: null,
+        damage: "1d3",
+        attackType: "Martial"
+      }
+    },
+    targets: [
+      {
+        snapshot: {
+          stats: { ref: { total: 6 }, bt: { total: 8 } },
+          skills: { brawling: { level: 3 } },
+          hitLocations: { torso: { label: "Torso" } }
+        }
+      }
+    ],
+    legacy: { fallback: () => "fallback-called" }
+  }, { structured: true, manualAttackDie: "10,10" }, createScriptedRoller([
+    { id: "defend", total: 40, die: { faces: 10, natural: 10, results: [10], exploded: false } }
+  ]));
+  assert.equal(manualMartialResult.targets[0].attack.roll.total, 36, "manual martial attack die applies before stat, skill, and key technique math");
+  assert.deepEqual(manualMartialResult.targets[0].attack.roll.die.results, [10, 10], "manual martial attack die records one explosion pair");
+
+  await assert.rejects(
+    () => resolveCombatAction(manualAttackDieContext, { structured: true, manualAttackDie: "10" }, roller),
+    /explosion/i,
+    "manual attack die 10 requires one explosion follow-up"
+  );
+  await assert.rejects(
+    () => resolveCombatAction(manualAttackDieContext, { structured: true, manualAttackDie: "10,10,4" }, roller),
+    /explosion/i,
+    "manual attack die rejects chained explosions"
+  );
+
   const zeroRofContext = {
     ...context,
     weapon: {
@@ -1710,6 +1816,8 @@ function assertSettingsHelpers() {
     delete global.game;
     assert.equal(isCorebookFidelityEnabled(), true);
     assert.deepEqual(filterSupportedFireModes(["FullAuto", "Suppressive"]), ["FullAuto"]);
+    assert.equal(getAttackDieEntryMode(), "auto");
+    assert.equal(getAttackDieEntryMode({ options: { attackDieEntryMode: "prompt" } }), "prompt");
 
     // 2. Corebook Fidelity ON
     global.game = { system: { id: "cyberpunk2020" }, settings: { get: () => true } };

@@ -44,3 +44,19 @@ export function filterSupportedFireModes(rawFireModes = [], context = {}) {
     return true;
   });
 }
+
+export function getAttackDieEntryMode(context = {}) {
+  const override = context?.options?.attackDieEntryMode ?? context?.action?.options?.attackDieEntryMode;
+  if (override === "prompt" || override === "auto") {
+    return override;
+  }
+  try {
+    if (typeof game?.settings?.get === "function") {
+      const value = game.settings.get(game.system.id, "attackDieEntryMode");
+      return value === "prompt" ? "prompt" : "auto";
+    }
+  } catch {
+    // fall through to default
+  }
+  return "auto";
+}

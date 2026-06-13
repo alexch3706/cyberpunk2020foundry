@@ -3,6 +3,7 @@ import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoSta
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 import { classifyAttackTypeSupport } from "./conformance-helpers.js";
 import { COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
+import { buildAttackDieEntryRoller } from "./attack-die-entry.js";
 
 /**
  * Top-level combat resolver shell.
@@ -59,7 +60,10 @@ async function activeRoller(request = {}) {
  */
 export async function resolveCombatAction(context, options = {}, roller = undefined) {
   // Resolve the roller: use provided roller (tests), or default activeRoller (runtime)
-  const resolvedRoller = roller || (typeof globalThis.Roll === "function" ? activeRoller : undefined);
+  const baseRoller = roller || (typeof globalThis.Roll === "function" ? activeRoller : undefined);
+  const resolvedRoller = typeof baseRoller === "function"
+    ? buildAttackDieEntryRoller(baseRoller, options.manualAttackDie)
+    : baseRoller;
 
   if(options.structured === true) {
     // ---- Exotic attack guard: block before any ranged/enemy routing ----
