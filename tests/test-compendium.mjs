@@ -8,6 +8,7 @@ const VALID_WEAPON_TYPES = ["Pistol", "SMG", "Shotgun", "Rifle", "Heavy", "Melee
 const PACKS_SRC_DIR = path.resolve(process.cwd(), 'packs-src');
 
 const ALL_FOLDERS = fs.readdirSync(PACKS_SRC_DIR).filter(f => fs.statSync(path.join(PACKS_SRC_DIR, f)).isDirectory());
+const NON_ITEM_PACKS = new Set(["roll-tables"]);
 
 let errors = 0;
 let checked = 0;
@@ -21,6 +22,16 @@ for (const folder of ALL_FOLDERS) {
         const filePath = path.join(folderPath, file);
         try {
             const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+            // 0. Foundry compendium indexing requires a non-empty document name.
+            if (typeof data.name !== "string" || data.name.trim().length === 0) {
+                console.error(`[ERROR] File ${folder}/${file}: Missing non-empty document name.`);
+                errors++;
+            }
+
+            if (NON_ITEM_PACKS.has(folder)) {
+                continue;
+            }
             
             // 1. Check root item type
             if (!VALID_ROOT_TYPES.includes(data.type)) {
