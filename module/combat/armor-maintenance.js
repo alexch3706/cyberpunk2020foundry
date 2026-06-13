@@ -6,6 +6,10 @@ import {
 
 export function getCyberwareArmorStatus(item) {
   const system = item?.system || item || {};
+  if(system.coverage) {
+    return getCoverageArmorStatus(system.coverage, true, { requireStoppingPower: true });
+  }
+
   const baseStoppingPower = getCyberwareStoppingPower(item || {}, system);
   const hasExplicitArmorValue = system.stoppingPower !== undefined || system.sp !== undefined || system.coverage !== undefined;
   const isArmor = baseStoppingPower > 0 && (hasExplicitArmorValue || isArmorCyberware(getCyberwareSearchText(item || {}, system)));
@@ -23,7 +27,10 @@ export function getCyberwareArmorStatus(item) {
 
 export function getArmorItemStatus(item) {
   const system = item?.system || item || {};
-  const coverage = system.coverage || {};
+  return getCoverageArmorStatus(system.coverage || {}, item?.type === "armor" || !!system.coverage);
+}
+
+function getCoverageArmorStatus(coverage = {}, isArmorCandidate = false, options = {}) {
   let baseStoppingPower = 0;
   let ablation = 0;
 
@@ -33,7 +40,7 @@ export function getArmorItemStatus(item) {
   }
 
   return {
-    isArmor: item?.type === "armor" || Object.keys(coverage).length > 0,
+    isArmor: isArmorCandidate && (!options.requireStoppingPower || baseStoppingPower > 0),
     baseStoppingPower,
     ablation,
     currentStoppingPower: Math.max(0, baseStoppingPower - ablation),

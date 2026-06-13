@@ -8,7 +8,33 @@
     "notes": "<b>Surgery Code:</b> MA<br><b>Humanity Loss:</b> 2d6<br><p>14 SP, Diff 10 to spot, -1 ATTR, 40% unprotected</p>",
     "source": "Chr2",
     "cost": 1400.0,
-    "weight": 1
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 14,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 0,
+        "ablation": 0
+      }
+    }
   },
   "effects": [],
   "flags": {

@@ -8,7 +8,33 @@
     "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 2d6<br><p>Armors whole body to SP 12. Diff 20 to spot</p>",
     "source": "CP20",
     "cost": 2000.0,
-    "weight": 1
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 12,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 12,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 12,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 12,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 12,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 12,
+        "ablation": 0
+      }
+    }
   },
   "effects": [],
   "flags": {

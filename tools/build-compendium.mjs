@@ -62,13 +62,29 @@ async function buildPack(packName) {
   console.log(`Built ${count} items → ${destDir}`);
 }
 
-const packName = process.argv[2];
-if (!packName) {
-  console.error('Usage: node tools/build-compendium.mjs <pack-name>');
-  process.exit(1);
+const packs = process.argv.slice(2);
+if (packs.length === 0) {
+  // If no arguments, build all packs in packs-src
+  readdir(join(ROOT, 'packs-src'), { withFileTypes: true }).then(dirents => {
+    const allPacks = dirents.filter(d => d.isDirectory()).map(d => d.name);
+    if (allPacks.length === 0) {
+      console.log('No packs found in packs-src/');
+      return;
+    }
+    console.log(`Building ${allPacks.length} packs...`);
+    
+    // Sequential build
+    let promise = Promise.resolve();
+    for (const pack of allPacks) {
+      promise = promise.then(() => buildPack(pack).catch(err => console.error(`Error building ${pack}:`, err)));
+    }
+  }).catch(console.error);
+} else {
+  let promise = Promise.resolve();
+  for (const pack of packs) {
+    promise = promise.then(() => buildPack(pack).catch(err => {
+      console.error(err);
+      process.exit(1);
+    }));
+  }
 }
-
-buildPack(packName).catch(err => {
-  console.error(err);
-  process.exit(1);
-});

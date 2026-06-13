@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compendium Manager</title>
+    <style>
+        :root {
+            --bg: #1e1e2e;
+            --surface: #313244;
+            --text: #cdd6f4;
+            --accent: #89b4fa;
+            --success: #a6e3a1;
+            --warning: #f9e2af;
+            --danger: #f38ba8;
+            --border: #45475a;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            height: 100vh;
+            box-sizing: border-box;
+            gap: 20px;
+        }
+        .panel {
+            background-color: var(--surface);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+        .left-panel {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        h2 { margin-top: 0; }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            background-color: var(--accent);
+            color: #11111b;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.8; }
+        button:disabled { background-color: var(--border); cursor: not-allowed; }
+        
+        .console {
+            flex: 1;
+            background-color: #11111b;
+            color: #a6adc8;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        /* Tree View */
+        .pack {
+            margin-bottom: 10px;
+        }
+        .pack-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .pack-items {
+            margin-left: 20px;
+            border-left: 1px solid var(--border);
+            padding-left: 10px;
+            margin-top: 5px;
+            display: none;
+        }
+        .pack.open .pack-items {
+            display: block;
+        }
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 3px 0;
+            font-size: 0.9em;
+        }
+        .item.modified {
+            color: var(--warning);
+        }
+        .badge-git {
+            background-color: var(--warning);
+            color: #111;
+            font-size: 0.7em;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        select {
+            background-color: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 5px;
+        }
+        .toggle-icon {
+            cursor: pointer;
+            user-select: none;
+            width: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel left-panel">
+    <h2>Packs & Items <button id="btn-save-preserve" style="padding: 4px 8px; font-size: 0.8em; margin-left: 10px;">Save Selections</button></h2>
+    <div style="margin-bottom: 15px; font-size: 0.9em; color: var(--warning);">
+        Note: Items modified in Git are highlighted in yellow and auto-checked to prevent accidental overwrite.
+    </div>
+    <div id="tree">Loading...</div>
+</div>
+
+<div class="panel right-panel">
+    <h2>Execution</h2>
+    <div class="controls">
+        <button id="btn-parse">1. Run Parser (PDF -> JSON)</button>
+        <button id="btn-packs">2. Build Packs (JSON -> packs-src)</button>
+        <button id="btn-compendiums">3. Build Compendiums (packs-src -> LevelDB)</button>
+    </div>
+    <h3>Console Output</h3>
+    <div class="console" id="console"></div>
+</div>
+
+<script>
+    let preserveData = { items: [], packs: {} };
+    let packsData = [];
+
+    async function loadData() {
+        try {
+            const res1 = await fetch('/api/preserve');
+            preserveData = await res1.json();
+            if (!preserveData.items) preserveData.items = [];
+            if (!preserveData.packs) preserveData.packs = {};
+
+            const res2 = await fetch('/api/packs');
+            packsData = await res2.json();
+
+            renderTree();
+        } catch (e) {
+            document.getElementById('tree').innerText = 'Error loading data: ' + e.message;
+        }
+    }
+
+    function renderTree() {
+        const tree = document.getElementById('tree');
+        tree.innerHTML = '';
+
+        packsData.forEach(pack => {
+            const packDiv = document.createElement('div');
+            packDiv.className = 'pack';
+            
+            const packMode = preserveData.packs[pack.name] || 'none';
+
+            const header = document.createElement('div');
+            header.className = 'pack-header';
+            header.innerHTML = `
+                <span class="toggle-icon">▶</span>
+                <select data-pack="${pack.name}">
+                    <option value="none" ${packMode==='none'?'selected':''}>Overwrite All (Default)</option>
+                    <option value="protect" ${packMode==='protect'?'selected':''}>Protect existing, add new</option>
+                    <option value="freeze" ${packMode==='freeze'?'selected':''}>Freeze (Skip pack entirely)</option>
+                </select>
+                <span>${pack.name} (${pack.items.length} items)</span>
+            `;
+
+            header.querySelector('.toggle-icon').onclick = () => {
+                packDiv.classList.toggle('open');
+                header.querySelector('.toggle-icon').innerText = packDiv.classList.contains('open') ? '▼' : '▶';
+            };
+
+            const itemsDiv = document.createElement('div');
+            itemsDiv.className = 'pack-items';
+
+            pack.items.forEach(item => {
+                const isPreserved = preserveData.items.includes(item.id);
+                // Auto-preserve if modified in git and not already preserved
+                const shouldBeChecked = isPreserved || item.isModifiedInGit;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `item ${item.isModifiedInGit ? 'modified' : ''}`;
+                itemDiv.innerHTML = `
+                    <input type="checkbox" data-id="${item.id}" ${shouldBeChecked ? 'checked' : ''}>
+                    <span>${item.name}</span>
+                    <span style="color: #6c7086; font-size: 0.8em;">(${item.filename})</span>
+                    ${item.isModifiedInGit ? '<span class="badge-git">Uncommitted</span>' : ''}
+                `;
+                itemsDiv.appendChild(itemDiv);
+            });
+
+            packDiv.appendChild(header);
+            packDiv.appendChild(itemsDiv);
+            tree.appendChild(packDiv);
+        });
+    }
+
+    document.getElementById('btn-save-preserve').onclick = async () => {
+        const newPreserve = { items: [], packs: {} };
+        
+        document.querySelectorAll('.pack-header select').forEach(select => {
+            if (select.value !== 'none') {
+                newPreserve.packs[select.getAttribute('data-pack')] = select.value;
+            }
+        });
+
+        document.querySelectorAll('.item input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.checked) {
+                newPreserve.items.push(checkbox.getAttribute('data-id'));
+            }
+        });
+
+        preserveData = newPreserve;
+
+        try {
+            await fetch('/api/preserve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newPreserve)
+            });
+            alert('Preservation settings saved!');
+        } catch (e) {
+            alert('Error saving: ' + e.message);
+        }
+    };
+
+    function runScript(scriptName) {
+        const cons = document.getElementById('console');
+        cons.innerHTML += `\n--- Starting ${scriptName} ---\n`;
+        cons.scrollTop = cons.scrollHeight;
+
+        const btns = document.querySelectorAll('button');
+        btns.forEach(b => b.disabled = true);
+
+        fetch('/api/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ script: scriptName })
+        }).then(async res => {
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\\n\\n');
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.substring(6));
+                            if (data.type === 'stdout' || data.type === 'stderr') {
+                                cons.innerHTML += data.msg + '\\n';
+                            } else if (data.type === 'done') {
+                                cons.innerHTML += `--- Process exited with code ${data.code} ---\\n`;
+                                btns.forEach(b => b.disabled = false);
+                                loadData(); // refresh tree in case items changed
+                            }
+                        } catch(e) {}
+                    }
+                }
+                cons.scrollTop = cons.scrollHeight;
+            }
+        }).catch(e => {
+            cons.innerHTML += `Error: ${e.message}\\n`;
+            btns.forEach(b => b.disabled = false);
+        });
+    }
+
+    document.getElementById('btn-parse').onclick = () => runScript('parse');
+    document.getElementById('btn-packs').onclick = () => {
+        // Automatically save preserve settings before running build-packs
+        document.getElementById('btn-save-preserve').click();
+        setTimeout(() => runScript('build-packs'), 500);
+    };
+    document.getElementById('btn-compendiums').onclick = () => runScript('build-compendiums');
+
+    loadData();
+</script>
+</body>
+</html>

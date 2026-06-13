@@ -43,6 +43,33 @@ export function runArmorMaintenanceTests() {
     });
   });
 
+  test("zoned Skinweave repair restores only ablated coverage zones", () => {
+    const skinweave = {
+      id: "zoned-skinweave",
+      name: "Skinweave",
+      type: "cyberware",
+      system: {
+        coverage: {
+          Torso: { stoppingPower: 12, ablation: 2 },
+          lArm: { stoppingPower: 12, ablation: 1 },
+          rArm: { stoppingPower: 12, ablation: 0 }
+        }
+      }
+    };
+
+    assert.deepEqual(getCyberwareArmorStatus(skinweave), {
+      isArmor: true,
+      baseStoppingPower: 36,
+      ablation: 3,
+      currentStoppingPower: 33,
+      repairable: true
+    });
+    assert.deepEqual(buildArmorRepairUpdate(skinweave), {
+      "system.coverage.Torso.ablation": 0,
+      "system.coverage.lArm.ablation": 0
+    });
+  });
+
   test("armor item repair restores ablated coverage zones", () => {
     const jacket = {
       id: "armor-jacket",

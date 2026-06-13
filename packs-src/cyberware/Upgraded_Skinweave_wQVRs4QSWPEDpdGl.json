@@ -8,7 +8,33 @@
     "notes": "<b>Surgery Code:</b> N<br><b>Humanity Loss:</b> 2d6+4<br><p>16 SP, -2 ATTR loss, Diff 15 to spot</p>",
     "source": "Chr2",
     "cost": 2750.0,
-    "weight": 1
+    "weight": 1,
+    "coverage": {
+      "Head": {
+        "stoppingPower": 16,
+        "ablation": 0
+      },
+      "Torso": {
+        "stoppingPower": 16,
+        "ablation": 0
+      },
+      "lArm": {
+        "stoppingPower": 16,
+        "ablation": 0
+      },
+      "rArm": {
+        "stoppingPower": 16,
+        "ablation": 0
+      },
+      "lLeg": {
+        "stoppingPower": 16,
+        "ablation": 0
+      },
+      "rLeg": {
+        "stoppingPower": 16,
+        "ablation": 0
+      }
+    }
   },
   "effects": [],
   "flags": {

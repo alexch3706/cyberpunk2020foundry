@@ -3,7 +3,70 @@ import hashlib
 import string
 import shutil
 import re
+import os
 from pathlib import Path
+
+preserve_data = {"items": [], "packs": {}}
+stats = {"created": 0, "overwritten": 0, "skipped": 0, "deleted_ghosts": 0}
+existing_items = {} # pack_name -> { id -> filepath }
+
+def load_preserve_data():
+    global preserve_data
+    try:
+        with open("tools/compendium-manager/preserve.json", "r") as f:
+            preserve_data = json.load(f)
+            if "items" not in preserve_data: preserve_data["items"] = []
+            if "packs" not in preserve_data: preserve_data["packs"] = {}
+    except:
+        pass
+
+def scan_existing_items(out_dir):
+    global existing_items
+    for d in ["pistols", "smgs", "rifles", "shotguns", "heavyWeapons", "melee", "bows", "exotics", "cyberware", "vehicles", "gear", "netware", "ammo", "armor", "weapons_other"]:
+        pack_path = out_dir / d
+        existing_items[d] = {}
+        if pack_path.exists():
+            for p in pack_path.glob("*.json"):
+                try:
+                    with open(p, "r") as f:
+                        j = json.load(f)
+                        existing_items[d][j.get("_id", "")] = p
+                except:
+                    pass
+
+def save_item(vtt, file_path, pack_name):
+    global stats
+    _id = vtt["_id"]
+    mode = preserve_data["packs"].get(pack_name, "none")
+    
+    is_preserved = _id in preserve_data["items"]
+    is_existing = pack_name in existing_items and _id in existing_items[pack_name]
+    
+    if mode == "freeze":
+        stats["skipped"] += 1
+        return
+        
+    if mode == "protect" and is_existing:
+        stats["skipped"] += 1
+        return
+        
+    if is_preserved:
+        stats["skipped"] += 1
+        return
+
+    # To avoid duplicates with changed filenames, if an old file exists, we delete it first
+    if is_existing and existing_items[pack_name][_id] != file_path:
+        try:
+            existing_items[pack_name][_id].unlink()
+        except: pass
+
+    if is_existing:
+        stats["overwritten"] += 1
+    else:
+        stats["created"] += 1
+        
+    with open(file_path, "w") as f:
+        json.dump(vtt, f, indent=2)
 
 # Base62 encode function to ensure valid 16-char IDs
 BASE62 = string.digits + string.ascii_letters
@@ -133,8 +196,7 @@ def process_weapons(items, out_dir):
         else: vtt["data"]["attackType"] = "Auto"
             
         file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
-        with open(file_path, "w") as f:
-            json.dump(vtt, f, indent=2)
+        save_item(vtt, file_path, target_dir.name)
 
 def process_cyberware(items, out_dir):
     target_dir = out_dir / "cyberware"
@@ -160,8 +222,7 @@ def process_cyberware(items, out_dir):
         vtt["data"]["notes"] = "<br>".join(notes)
         
         file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
-        with open(file_path, "w") as f:
-            json.dump(vtt, f, indent=2)
+        save_item(vtt, file_path, target_dir.name)
 
 def process_vehicles(items, out_dir):
     target_dir = out_dir / "vehicles"
@@ -194,8 +255,7 @@ def process_vehicles(items, out_dir):
         vtt["data"]["notes"] = "<br>".join(notes)
         
         file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
-        with open(file_path, "w") as f:
-            json.dump(vtt, f, indent=2)
+        save_item(vtt, file_path, target_dir.name)
 
 def is_armor(name):
     # Match "(SP 14)", "SP: 10", "SP 10"
@@ -282,8 +342,7 @@ def process_gear(items, out_dir, category_name):
         if item.get("category"):
             vtt["data"]["notes"] = f"<b>Category:</b> {item.get('category')}<br>" + str(vtt["data"]["notes"])
         
-        with open(file_path, "w") as f:
-            json.dump(vtt, f, indent=2)
+        save_item(vtt, file_path, target_dir.name)
 
 def process_armor_list(items, out_dir):
     target_dir = out_dir / "armor"
@@ -314,19 +373,14 @@ def process_armor_list(items, out_dir):
                 except: pass
                 
         file_path = target_dir / f"{clean_filename(name)}_{_id}.json"
-        with open(file_path, "w") as f:
-            json.dump(vtt, f, indent=2)
+        save_item(vtt, file_path, target_dir.name)
 
 def main():
     in_dir = Path(".research/parsed")
     out_dir = Path("packs-src")
     
-    # We will only overwrite directories we are actively processing
-    # Clean up old weapon directories that we are replacing
-    for d in ["pistols", "smgs", "rifles", "shotguns", "heavyWeapons", "melee", "bows", "exotics", "cyberware", "vehicles", "gear", "netware", "ammo", "armor"]:
-        path = out_dir / d
-        if path.exists():
-            shutil.rmtree(path)
+    load_preserve_data()
+    scan_existing_items(out_dir)
             
     print("Converting Weapons...")
     with open(in_dir / "reference-weapons.json", "r") as f:
@@ -356,8 +410,8 @@ def main():
     if (in_dir / "reference-armor.json").exists():
         with open(in_dir / "reference-armor.json", "r") as f:
             process_armor_list(json.load(f), out_dir)
-        
-    print("Conversion complete. Generated packs-src JSON files.")
+            
+    print(f"Conversion complete. Created: {stats['created']}, Overwritten: {stats['overwritten']}, Skipped: {stats['skipped']}")
 
 if __name__ == "__main__":
     main()

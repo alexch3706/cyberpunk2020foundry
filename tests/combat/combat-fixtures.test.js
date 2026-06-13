@@ -29,6 +29,7 @@ export async function runCombatFixtures() {
   assertSavePromptResolution();
   assertDeathSaveStateHelpers();
   assertArmorResolver();
+  await assertZonedCyberwareArmorHitPlanning();
   await assertCombatResolverRouting();
   assertSettingsHelpers();
 
@@ -1217,6 +1218,31 @@ function assertArmorResolver() {
   assert.equal(skinweaveLayer.updatePath, "system.ablation", "skinweave layer exposes cyberware ablation update path");
   assert.ok(!torsoLayers.some(l => l.id === "cyberware-skull"), "skull-only subdermal armor does not cover torso");
 
+  const zonedSkinweaveSnapshot = {
+    equippedCyberware: [
+      {
+        id: "zoned-skinweave",
+        name: "Skinweave SP12",
+        type: "cyberware",
+        system: {
+          equipped: true,
+          cyberwareSubtype: "SKINWEAVE",
+          coverage: {
+            Torso: { stoppingPower: 12, ablation: 2, layer: "soft" },
+            rArm: { stoppingPower: 12, ablation: 0, layer: "soft" }
+          }
+        }
+      }
+    ]
+  };
+  const zonedSkinweaveTorso = getEquippedArmorForLocation(zonedSkinweaveSnapshot, "torso")[0];
+  assert.equal(zonedSkinweaveTorso.stoppingPower, 10, "zoned skinweave torso SP accounts for torso ablation only");
+  assert.equal(zonedSkinweaveTorso.coverageKey, "Torso", "zoned skinweave preserves matched coverage key");
+  assert.equal(zonedSkinweaveTorso.updatePath, "system.coverage.Torso.ablation", "zoned skinweave ablates the hit location");
+  const zonedSkinweaveRarm = getEquippedArmorForLocation(zonedSkinweaveSnapshot, "rarm")[0];
+  assert.equal(zonedSkinweaveRarm.stoppingPower, 12, "zoned skinweave arm SP ignores torso ablation");
+  assert.equal(zonedSkinweaveRarm.updatePath, "system.coverage.rArm.ablation", "zoned skinweave keeps per-location ablation path");
+
   const headLayers = getEquippedArmorForLocation(targetSnapshot, "Head");
   const skullLayer = headLayers.find(l => l.id === "cyberware-skull");
   assert.ok(skullLayer, "skull subdermal armor covers head");
@@ -1389,6 +1415,113 @@ function assertArmorResolver() {
   assert.equal(casePreservingArmor.layers[0].coverageKey, "Torso", "original coverage key case is preserved");
   assert.equal(casePreservingArmor.layers[0].stoppingPower, 7, "existing ablation reduces usable stopping power");
   assert.equal(casePreservingArmor.layers[0].updatePath, "system.coverage.Torso.ablation", "update path preserves original coverage key");
+}
+
+async function assertZonedCyberwareArmorHitPlanning() {
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "semiAuto",
+      range: "medium",
+      targetNumber: 15,
+      options: {
+        targetArea: "torso",
+        stagedPenetration: true
+      }
+    },
+    attacker: {
+      actorUuid: "Actor.attacker",
+      name: "Solo",
+      snapshot: {
+        stats: {
+          ref: { total: 8 }
+        },
+        skills: {
+          handgun: { level: 6 }
+        }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.attacker.Item.heavy-pistol",
+      name: "Heavy Pistol",
+      snapshot: {
+        damage: "4d6",
+        ap: false,
+        shotsLeft: 10,
+        rof: 2,
+        reliability: "standard",
+        attackType: "Auto",
+        attackSkill: "handgun"
+      }
+    },
+    targets: [
+      {
+        actorUuid: "Actor.target",
+        tokenUuid: "Scene.test.Token.target",
+        name: "Target",
+        snapshot: {
+          stats: {
+            bt: { total: 6 }
+          },
+          damage: 0,
+          hitLocations: {
+            torso: { label: "Torso" }
+          },
+          equippedCyberware: [
+            {
+              id: "zoned-skinweave",
+              name: "Skinweave",
+              type: "cyberware",
+              system: {
+                equipped: true,
+                cyberwareSubtype: "SKINWEAVE",
+                coverage: {
+                  Torso: { stoppingPower: 12, ablation: 1, layer: "soft" },
+                  rArm: { stoppingPower: 12, ablation: 0, layer: "soft" }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    legacy: {
+      fallback: () => ({ manualResolution: { required: true }, targets: [] })
+    }
+  };
+  const roller = createScriptedRoller([
+    {
+      id: "attack",
+      total: 21,
+      die: { faces: 10, natural: 9, results: [9], exploded: false }
+    },
+    {
+      id: "damage",
+      formula: "4d6",
+      total: 14,
+      die: { faces: 6, natural: 14, results: [4, 4, 3, 3] }
+    }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+  const hit = outcome.targets[0].hits[0];
+  assert.equal(hit.effectiveStoppingPower, 11, "zoned skinweave hit uses ablated SP for the hit location");
+  assert.equal(hit.stagedPenetration.updatePath, "system.coverage.Torso.ablation", "zoned skinweave hit records a location-specific update path");
+
+  const plannedUpdates = planCombatUpdates(outcome);
+  assert.deepEqual(plannedUpdates.embeddedItemUpdates, [
+    {
+      actorUuid: "Actor.target",
+      type: "Item",
+      updates: [
+        {
+          _id: "zoned-skinweave",
+          "system.coverage.Torso.ablation": 2
+        }
+      ]
+    }
+  ], "zoned skinweave hit plans ablation only for the struck location");
 }
 
 async function assertCombatResolverRouting() {

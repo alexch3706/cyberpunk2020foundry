@@ -63,8 +63,12 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
     if (!cyberwareCoversLocation(item, system, targetKey)) {
       continue;
     }
-    const baseSP = getCyberwareStoppingPower(item, system);
-    const ablation = normalizeAblation(system.ablation);
+    const coverageMatch = getArmorCoverageForLocation(system, targetKey);
+    const coverage = coverageMatch?.value;
+    const baseSP = coverage
+      ? Number(coverage.stoppingPower !== undefined ? coverage.stoppingPower : coverage.sp !== undefined ? coverage.sp : getCyberwareStoppingPower(item, system))
+      : getCyberwareStoppingPower(item, system);
+    const ablation = coverage ? normalizeAblation(coverage.ablation) : normalizeAblation(system.ablation);
     const sp = Math.max(0, baseSP - ablation);
     if (sp > 0) {
       layers.push({
@@ -74,8 +78,9 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
         stoppingPower: sp,
         baseStoppingPower: baseSP,
         ablation,
-        updatePath: "system.ablation",
-        layer: getCyberwareLayer(item, system),
+        coverageKey: coverageMatch?.key,
+        updatePath: coverageMatch ? `system.coverage.${coverageMatch.key}.ablation` : "system.ablation",
+        layer: coverage?.layer || getCyberwareLayer(item, system),
         equipped: true,
         source: system.source || ""
       });
