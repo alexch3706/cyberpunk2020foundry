@@ -1,7 +1,7 @@
 # Fixture Coverage Map
 
 **Generated:** 2026-06-13
-**Total fixture cases:** 98
+**Total fixture cases:** 100
 
 This map documents every rule and audit area covered by the fixture suite.
 Each entry lists the fixture JSON file and case name that verifies that rule.
@@ -31,7 +31,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Save Prompts (Stun/Death) | ✅ 9 | `ranged-single-shot.json` → structured head hit doubles wound damage<br>`ranged-single-shot.json` → structured unarmored hit resolves damage and stun save<br>`ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder<br>`ranged-single-shot.json` → structured mortal 7+ suppresses death save as dead/manual state (9 total, showing 5) |
 | Mortal Wound & Death Saves | ✅ 2 | `ranged-single-shot.json` → structured hit causing Mortal wound state generates stun and death saves<br>`ranged-single-shot.json` → structured mortal 7+ suppresses death save as dead/manual state |
 | Recurring Death Save | ✅ 1 | `ranged-single-shot.json` → structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder |
-| Three-Round Burst | ✅ 8 | `three-round-burst.json` → three-round burst success with 2 hits and progressive ablation<br>`three-round-burst.json` → three-round burst success with 1 bullet remaining in weapon<br>`three-round-burst.json` → three-round burst miss skips location/damage rolls and subtracts 3 ammo<br>`three-round-burst.json` → three-round-burst-close-range-advantage<br>`three-round-burst.json` → three-round-burst-aimed-location (8 total, showing 5) |
+| Three-Round Burst | ✅ 9 | `three-round-burst.json` → three-round burst success with 2 hits and progressive ablation<br>`three-round-burst.json` → three-round burst success with 1 bullet remaining in weapon<br>`three-round-burst.json` → three-round burst miss skips location/damage rolls and subtracts 3 ammo<br>`three-round-burst.json` → three-round-burst-close-range-advantage<br>`three-round-burst.json` → three-round-burst-aimed-location (9 total, showing 5) |
 | Full Auto | ✅ 11 | `ranged-full-auto.json` → full auto success with 3 hits and progressive ablation at close range (+3 mod)<br>`ranged-full-auto.json` → full auto layered armor second hit recalculates degraded effective SP<br>`ranged-full-auto.json` → full auto success at medium range with 10 bullets (-1 mod) and 1 hit<br>`ranged-full-auto.json` → full auto success with 5 bullets left at close range (0 mod) and 5 hits<br>`ranged-full-auto.json` → full auto multi-target later target hit preserves evidence and hit cap (11 total, showing 5) |
 | ROF & Ammo | ✅ 6 | `ranged-full-auto.json` → full auto success at medium range with 10 bullets (-1 mod) and 1 hit<br>`ranged-full-auto.json` → full auto success with 5 bullets left at close range (0 mod) and 5 hits<br>`ranged-full-auto.json` → full auto multi-target success with 25 shots on 2 targets<br>`ranged-full-auto.json` → full auto multi-target later target hit preserves evidence and hit cap<br>`ranged-full-auto.json` → full-auto-single-target-miss (6 total, showing 5) |
 | Suppressive Fire | ✅ 5 | `suppressive-fire.json` → suppressive fire - target 1 passes save, target 2 fails save with 3 hits<br>`suppressive-fire.json` → suppressive fire - missing fireZoneWidth returns manual<br>`suppressive-fire.json` → suppressive fire - missing roundsFired returns manual<br>`suppressive-fire.json` → suppressive-fire-armored-targets<br>`suppressive-fire.json` → suppressive-fire-zero-ammo |
@@ -41,7 +41,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Martial Arts | ✅ 2 | `melee-baseline.json` → martial-action-shell<br>`melee-baseline.json` → martial-unknown-action-fallback |
 | Grapple Family | ✅ 9 | `ranged-single-shot.json` → structured head hit doubles wound damage<br>`melee-baseline.json` → martial-grapple-karate<br>`melee-baseline.json` → martial-choke-requires-hold<br>`melee-baseline.json` → martial-escape-requires-grapple-hold<br>`melee-baseline.json` → martial-throw-requires-grapple-without-state (9 total, showing 5) |
 | Grapple Prerequisites | ✅ 3 | `melee-baseline.json` → martial-disarm-aikido<br>`melee-baseline.json` → martial-choke-requires-hold<br>`melee-baseline.json` → martial-throw-requires-grapple-without-state |
-| Attack Type Classification | ❌ 0 | — |
+| Attack Type Classification | ✅ 1 | `ranged-single-shot.json` → structured PointBlank unsupported damage formula rolls normally |
 | Humanity & EMP | ❌ 0 | — |
 | Edge Case / Manual Resolution | ✅ 30 | `ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured hit without location model is manual<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing (30 total, showing 5) |
 | Ammo State & Updates | ✅ 11 | `ranged-single-shot.json` → structured outcome warns when ammo is insufficient<br>`ranged-single-shot.json` → structured outcome warns when ammo state is missing<br>`ranged-single-shot.json` → structured outcome warns when ammo state is fractional<br>`ranged-single-shot.json` → structured outcome warns when ammo update target is missing<br>`three-round-burst.json` → three-round burst success with 1 bullet remaining in weapon (11 total, showing 5) |
@@ -80,6 +80,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `ranged-single-shot.json` | structured hit causing Mortal wound state generates stun and death saves | CP2020 p.107: Mortal wound state (13+); CP2020 p.108: Death Saves |
 | `ranged-single-shot.json` | structured stopped hit on already Mortal target does not resolve attack-time recurring death save reminder | CP2020 p.108: Recurring Death Saves are turn-start reminders, not attack-time... |
 | `ranged-single-shot.json` | structured PointBlank range hit | CP2020 p.99: Range DC table (PointBlank=10); CP2020 p.99: point-blank always ... |
+| `ranged-single-shot.json` | structured PointBlank unsupported damage formula rolls normally | CP2020 p.99: PointBlank maximum damage; unsupported damage formulas must fall... |
 | `ranged-single-shot.json` | structured Extreme range miss | CP2020 p.99: Range DC table (Extreme=30); CP2020 p.99: miss at DC 30 with 1d1... |
 | `ranged-single-shot.json` | structured weapon conformance label in snapshot | Audit 6.1: source-based conformance — CP2020 Corebook source classifies as co... |
 | `ranged-single-shot.json` | structured mortal 7+ suppresses death save as dead/manual state | CP2020 p.108: Mortal 7+ is treated as dead/manual state; no new Death Save pr... |
@@ -94,6 +95,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `three-round-burst.json` | three-round-burst-fumble-standard-jam | CP2020 p.99: Natural 1 is Fumble; CP2020 p.99: Standard reliability jams on f... |
 | `three-round-burst.json` | three-round-burst-fumble-very-reliable | CP2020 p.99: VeryReliable does not jam on fumble |
 | `three-round-burst.json` | three-round-burst-fumble-unreliable | CP2020 p.99: Unreliable jams and damages on fumble |
+| `three-round-burst.json` | three-round-burst-point-blank-max-damage-per-hit | CP2020 p.99: PointBlank ranged attacks use maximum weapon damage; CP2020 p.99... |
 | `three-round-burst.json` | three-round-burst-zero-ammo | CP2020 p.99: Burst requires ammo; Audit 6.4: Insufficient ammo warning |
 | `ranged-full-auto.json` | full auto success with 3 hits and progressive ablation at close range (+3 mod) | CP2020 p.100: Full Auto; CP2020 p.100: Close range +3; CP2020 p.106: Staged a... |
 | `ranged-full-auto.json` | full auto layered armor second hit recalculates degraded effective SP | CP2020 p.100, p.105-106: Later full-auto hits use degraded layered SP and per... |

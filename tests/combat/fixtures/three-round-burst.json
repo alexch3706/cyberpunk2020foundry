@@ -1148,6 +1148,119 @@
       "ruleReference": "CP2020 p.99: Unreliable jams and damages on fumble"
     },
     {
+      "name": "three-round-burst-point-blank-max-damage-per-hit",
+      "context": {
+        "action": {
+          "fireMode": "ThreeRoundBurst",
+          "range": "RangePointBlank",
+          "targetNumber": "__UNDEFINED__"
+        }
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
+        },
+        {
+          "id": "burst_hits",
+          "total": 2,
+          "die": {
+            "faces": 3,
+            "natural": 2
+          }
+        },
+        {
+          "id": "location",
+          "formula": "1d10 hit location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
+          "location": "torso"
+        },
+        {
+          "id": "location",
+          "formula": "1d10 hit location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          },
+          "location": "torso"
+        }
+      ],
+      "expected": {
+        "action": {
+          "range": "RangePointBlank"
+        },
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 10,
+              "hit": true,
+              "hitCount": 2
+            },
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 24,
+                "effectiveStoppingPower": 12,
+                "armorMitigation": 12,
+                "penetratingDamage": 12,
+                "finalDamage": 10,
+                "damageRoll": {
+                  "formula": "4d6",
+                  "total": 24,
+                  "maximized": true
+                }
+              },
+              {
+                "location": "torso",
+                "rawDamage": 24,
+                "effectiveStoppingPower": 11,
+                "armorMitigation": 11,
+                "penetratingDamage": 13,
+                "finalDamage": 11,
+                "damageRoll": {
+                  "formula": "4d6",
+                  "total": 24,
+                  "maximized": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 21
+            }
+          }
+        ],
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "armor-vest",
+                "system.coverage.torso.ablation": 2
+              }
+            ]
+          }
+        ]
+      },
+      "ruleReference": "CP2020 p.99: PointBlank ranged attacks use maximum weapon damage; CP2020 p.99: Three-Round Burst resolves damage per hit"
+    },
+    {
       "name": "three-round-burst-zero-ammo",
       "context": {
         "action": {

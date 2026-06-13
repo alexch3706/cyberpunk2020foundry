@@ -542,12 +542,8 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
       if(locationResult.hit) {
         const hitDetail = locationResult.hit;
 
-        const weaponDamage = weapon?.snapshot?.damage || "1d6";
-        const damageRequest = {
-          id: "damage",
-          formula: weaponDamage
-        };
-        const damageRoll = await roll(roller, damageRequest);
+        const damageResult = await resolveRangedDamageRoll(action, weapon, roller);
+        const damageRoll = damageResult.damageRoll;
 
         const weaponAP = !!weapon?.snapshot?.ap;
         const coverInput = clonePlainData(action?.cover || action?.options?.cover);
@@ -622,13 +618,17 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         if(stagedPenetration.warning) {
           hitDetail.warnings.push(stagedPenetration.warning);
         }
+        if(damageResult.warning) {
+          hitDetail.warnings.push(damageResult.warning);
+        }
 
         hitDetail.damageRoll = {
           id: damageRoll.id,
-          formula: damageRoll.formula || damageRequest.formula,
+          formula: damageRoll.formula || damageResult.formula,
           total: damageRoll.total,
           die: clonePlainData(damageRoll.die || {}),
-          seed: damageRoll.seed
+          seed: damageRoll.seed,
+          ...(damageRoll.maximized ? { maximized: true } : {})
         };
         hitDetail.rawDamage = rawDamage;
         hitDetail.effectiveStoppingPower = effectiveStoppingPower;
@@ -1296,6 +1296,88 @@ function ammoWarning(code, message) {
   };
 }
 
+async function resolveRangedDamageRoll(action, weapon, roller) {
+  const formula = String(weapon?.snapshot?.damage || "1d6").trim() || "1d6";
+  const range = normalizeRange(action?.range);
+  const damageRequest = {
+    id: "damage",
+    formula
+  };
+
+  if(range !== ranges.pointBlank) {
+    return {
+      formula,
+      damageRoll: await roll(roller, damageRequest)
+    };
+  }
+
+  const maximumDamage = calculateMaximumDamage(formula);
+  if(maximumDamage === null) {
+    return {
+      formula,
+      damageRoll: await roll(roller, damageRequest),
+      warning: {
+        code: "point-blank-max-damage-unsupported-formula",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message: `Point-blank maximum damage could not parse "${formula}"; rolled damage normally.`
+      }
+    };
+  }
+
+  return {
+    formula,
+    damageRoll: {
+      id: "damage",
+      formula,
+      total: maximumDamage.total,
+      die: {
+        results: maximumDamage.results
+      },
+      maximized: true
+    }
+  };
+}
+
+function calculateMaximumDamage(formula) {
+  const compactFormula = String(formula || "").replace(/\s+/g, "");
+  if(!compactFormula || !/^[+-]?(?:\d*d\d+|\d+)(?:[+-](?:\d*d\d+|\d+))*$/i.test(compactFormula)) {
+    return null;
+  }
+
+  const terms = compactFormula.match(/[+-]?(?:\d*d\d+|\d+)/gi) || [];
+  const results = [];
+  let total = 0;
+
+  for(const term of terms) {
+    const sign = term.startsWith("-") ? -1 : 1;
+    const unsignedTerm = term.replace(/^[+-]/, "");
+    const diceMatch = unsignedTerm.match(/^(\d*)d(\d+)$/i);
+    if(diceMatch) {
+      if(sign < 0) {
+        return null;
+      }
+      const count = diceMatch[1] ? Number(diceMatch[1]) : 1;
+      const faces = Number(diceMatch[2]);
+      if(!Number.isInteger(count) || count <= 0 || !Number.isInteger(faces) || faces <= 0) {
+        return null;
+      }
+      for(let i = 0; i < count; i++) {
+        results.push(sign * faces);
+      }
+      total += sign * count * faces;
+      continue;
+    }
+
+    const constant = Number(unsignedTerm);
+    if(!Number.isFinite(constant)) {
+      return null;
+    }
+    total += sign * constant;
+  }
+
+  return { total, results };
+}
+
 async function buildTargetOutcome(target, attackRoll, targetNumber, action, weapon, roller, resolverOptions = {}, roundsFired = 1, attackEvidence = {}) {
   const margin = attackRoll.total - targetNumber;
   const hit = margin >= 0;
@@ -1349,11 +1431,8 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
       if(locationResult.hit) {
         const hitDetail = locationResult.hit;
 
-        const damageRequest = {
-          id: "damage",
-          formula: weapon?.snapshot?.damage || "1d6"
-        };
-        const damageRoll = await roller(damageRequest);
+        const damageResult = await resolveRangedDamageRoll(action, weapon, roller);
+        const damageRoll = damageResult.damageRoll;
 
         const weaponAP = !!weapon?.snapshot?.ap;
         const coverInput = clonePlainData(action.cover || action.options?.cover);
@@ -1428,13 +1507,17 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         if(stagedPenetration.warning) {
           hitDetail.warnings.push(stagedPenetration.warning);
         }
+        if(damageResult.warning) {
+          hitDetail.warnings.push(damageResult.warning);
+        }
 
         hitDetail.damageRoll = {
           id: damageRoll.id,
-          formula: damageRoll.formula || damageRequest.formula,
+          formula: damageRoll.formula || damageResult.formula,
           total: damageRoll.total,
           die: clonePlainData(damageRoll.die || {}),
-          seed: damageRoll.seed
+          seed: damageRoll.seed,
+          ...(damageRoll.maximized ? { maximized: true } : {})
         };
         hitDetail.rawDamage = rawDamage;
         hitDetail.effectiveStoppingPower = effectiveStoppingPower;

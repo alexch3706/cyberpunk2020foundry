@@ -2696,21 +2696,6 @@
               4
             ]
           }
-        },
-        {
-          "id": "damage",
-          "formula": "4d6",
-          "total": 10,
-          "die": {
-            "faces": 6,
-            "natural": 10,
-            "results": [
-              3,
-              3,
-              2,
-              2
-            ]
-          }
         }
       ],
       "expected": {
@@ -2724,19 +2709,146 @@
             "hits": [
               {
                 "location": "torso",
-                "rawDamage": 10,
+                "rawDamage": 24,
                 "effectiveStoppingPower": 12,
-                "armorMitigation": 10,
-                "penetratingDamage": 0,
-                "finalDamage": 0
+                "armorMitigation": 12,
+                "penetratingDamage": 12,
+                "finalDamage": 10,
+                "damageRoll": {
+                  "formula": "4d6",
+                  "total": 24,
+                  "maximized": true
+                }
               }
             ]
           }
         ]
       },
       "expectedPlan": {
-        "actorUpdates": [],
-        "embeddedItemUpdates": [],
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 10
+            }
+          }
+        ],
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "armor-vest",
+                "system.coverage.torso.ablation": 1
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "structured PointBlank unsupported damage formula rolls normally",
+      "ruleReference": "CP2020 p.99: PointBlank maximum damage; unsupported damage formulas must fall back to ordinary rolled damage with warning",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangePointBlank",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "stagedPenetration": false
+          }
+        },
+        "weapon": {
+          "snapshot": {
+            "damage": "3d6x2"
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": []
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 12,
+          "die": {
+            "faces": 10,
+            "natural": 3
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "3d6x2",
+          "total": 11,
+          "die": {
+            "faces": 6,
+            "natural": 11
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "attack": {
+              "targetNumber": 10,
+              "hit": true
+            },
+            "hits": [
+              {
+                "rawDamage": 11,
+                "penetratingDamage": 11,
+                "finalDamage": 9,
+                "damageRoll": {
+                  "formula": "3d6x2",
+                  "total": 11
+                },
+                "warnings": [
+                  {
+                    "code": "point-blank-max-damage-unsupported-formula"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.damage": 9
+            }
+          }
+        ],
         "warnings": []
       }
     },
