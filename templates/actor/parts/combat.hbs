@@ -34,6 +34,12 @@
                 <span>
                     <label class="inactive">{{armorSummary system.coverage}}</label>
                 </span>
+                {{#if armorStatus.isArmor}}
+                <span title="{{CPLocal "ArmorStatus"}}" class="inactive">{{CPLocal "SPFull"}} {{armorStatus.currentStoppingPower}}/{{armorStatus.baseStoppingPower}}</span>
+                {{#if armorStatus.repairable}}
+                    <button type="button" class="repair-armor" data-item-id="{{id}}" title="{{CPLocal "RepairArmor"}}">{{CPLocal "Repair"}}</button>
+                {{/if}}
+                {{/if}}
             </div>
             {{/each}}
         </div>

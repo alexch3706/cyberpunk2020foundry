@@ -233,6 +233,7 @@
     "CYBERPUNK.Ablate": "Asportare",
     "CYBERPUNK.Repair": "Riparare",
     "CYBERPUNK.RepairArmor": "Ripara armatura",
+    "CYBERPUNK.ArmorStatus": "Stato armatura",
     "CYBERPUNK.ArmorCyberwareStatus": "Stato armatura cyberware",
     "CYBERPUNK.Override": "Override manuale",
     "CYBERPUNK.OverrideShort": "Override",

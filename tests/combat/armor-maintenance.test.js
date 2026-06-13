@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 
 import {
   buildArmorRepairUpdate,
+  getArmorItemStatus,
   getCyberwareArmorStatus
 } from "../../module/combat/armor-maintenance.js";
 
@@ -39,6 +40,34 @@ export function runArmorMaintenanceTests() {
     });
     assert.deepEqual(buildArmorRepairUpdate(skinweave), {
       "system.ablation": 0
+    });
+  });
+
+  test("armor item repair restores ablated coverage zones", () => {
+    const jacket = {
+      id: "armor-jacket",
+      name: "Kevlar Jacket",
+      type: "armor",
+      system: {
+        coverage: {
+          Head: { stoppingPower: 0, ablation: 0 },
+          Torso: { stoppingPower: 14, ablation: 2 },
+          lArm: { stoppingPower: 10, ablation: 1 },
+          rArm: { stoppingPower: 10, ablation: 0 }
+        }
+      }
+    };
+
+    assert.deepEqual(getArmorItemStatus(jacket), {
+      isArmor: true,
+      baseStoppingPower: 34,
+      ablation: 3,
+      currentStoppingPower: 31,
+      repairable: true
+    });
+    assert.deepEqual(buildArmorRepairUpdate(jacket), {
+      "system.coverage.Torso.ablation": 0,
+      "system.coverage.lArm.ablation": 0
     });
   });
 

@@ -233,6 +233,7 @@
     "CYBERPUNK.Ablate": "Destruir",
     "CYBERPUNK.Repair": "Reparar",
     "CYBERPUNK.RepairArmor": "Reparar blindaje",
+    "CYBERPUNK.ArmorStatus": "Estado del blindaje",
     "CYBERPUNK.ArmorCyberwareStatus": "Estado del blindaje de ciberimplante",
     "CYBERPUNK.Override": "Anulaci\u00f3n manual",
     "CYBERPUNK.OverrideShort": "Anular",

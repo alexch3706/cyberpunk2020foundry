@@ -5,7 +5,7 @@ import { SortOrders } from "./skill-sort.js";
 import { normalizeSelectedTargets } from "../combat/target-normalizer.js";
 import { isCorebookFidelityEnabled } from "../combat/settings-helpers.js";
 import { buildWoundStateHints } from "./wound-hints.js";
-import { buildArmorRepairUpdate, getCyberwareArmorStatus } from "../combat/armor-maintenance.js";
+import { buildArmorRepairUpdate, getArmorItemStatus, getCyberwareArmorStatus } from "../combat/armor-maintenance.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -123,7 +123,13 @@ export class CyberpunkActorSheet extends ActorSheet {
     // TODO: Does this copy need to be done with itemTypes being a thing?
     sheetData.gear = {
       weapons: sortedItems.weapon,
-      armor: sortedItems.armor,
+      armor: sortedItems.armor.map(armor => ({
+        id: armor.id,
+        name: armor.name,
+        img: armor.img,
+        system: armor.system,
+        armorStatus: getArmorItemStatus(armor)
+      })),
       cyberware: sortedItems.cyberware.map(cyber => ({
         id: cyber.id,
         name: cyber.name,
@@ -218,6 +224,14 @@ export class CyberpunkActorSheet extends ActorSheet {
       this.actor.rollStunDeath();
     });
     html.find(".repair-cyberware-armor").click(async ev => {
+      ev.stopPropagation();
+      const item = getEventItem(this, ev);
+      const update = buildArmorRepairUpdate(item);
+      if(update) {
+        await item.update(update);
+      }
+    });
+    html.find(".repair-armor").click(async ev => {
       ev.stopPropagation();
       const item = getEventItem(this, ev);
       const update = buildArmorRepairUpdate(item);

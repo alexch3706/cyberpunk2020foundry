@@ -233,6 +233,7 @@
     "CYBERPUNK.Ablate": "Ablate",
     "CYBERPUNK.Repair": "Repair",
     "CYBERPUNK.RepairArmor": "Repair armor",
+    "CYBERPUNK.ArmorStatus": "Armor status",
     "CYBERPUNK.ArmorCyberwareStatus": "Armor cyberware status",
     "CYBERPUNK.Override": "Manual override",
     "CYBERPUNK.OverrideShort": "Override",
