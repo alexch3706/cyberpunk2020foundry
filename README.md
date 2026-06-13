@@ -2,7 +2,7 @@
 
 > *R. Talsorian Games' [Cyberpunk 2020](https://talsorianstore.com/products/cyberpunk-2020) for FoundryVTT. Time to get chromed, and frag some slags.*
 
-A FoundryVTT game system package (version **0.3.12**) — not a standalone app. Loaded by Foundry through `system.json`, runs as ES modules in the Foundry client, renders Handlebars sheets, and ships with full item compendia.
+A FoundryVTT game system package (version **1.0.0**) — not a standalone app. Loaded by Foundry through `system.json`, runs as ES modules in the Foundry client, renders Handlebars sheets, and ships with full item compendia.
 
 ---
 
@@ -12,6 +12,7 @@ Everything you need to run Cyberpunk 2020 combat faithfully to the core rules:
 
 ### Characters & Sheets
 
+- **V2 Three-Pane UI Overhaul** — sleek, persistent combat panels and modernized layouts.
 - **Full character sheet** — stats, skills (searchable, sortable), damage tracking, combat tab, gear inventory, cyberware, life notes.
 - **NPCs** share the same data model and sheet.
 - **Skills as items** — each skill is its own item with level, IP, chip level, stat association, and role-skill flag. Rollable from the sheet.
