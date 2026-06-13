@@ -40,17 +40,8 @@ MEMORY.md
 # Memory / daily notes (personal, not system data)
 memory/
 
-# BMad internal scaffolding (subdirectories, not config/manifests)
-_bmad/bmm/1-analysis/
-_bmad/bmm/2-plan-workflows/
-_bmad/bmm/3-solutioning/
-_bmad/bmm/4-implementation/
-_bmad/cis/skills/
-_bmad/scripts/tests/
-_bmad/tea/agents/
-_bmad/wds/agents/
-_bmad/wds/tools/
-_bmad/wds/workflows/
+# BMad artifacts
+_bmad/
 
 # Standalone helper scripts outside module
 scripts/
