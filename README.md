@@ -95,7 +95,7 @@ Full item packs for: default skills, role-specific skills, weapons, armor, cyber
 - **Active Effects for cyberware** — cyberware stats don't auto-modify actor stats.
 - **Full Foundry ApplicationV2** — architecture is v10/v11/v12 compatible (verified up to v12, maximum v13), but a full transition to ApplicationV2 is deferred.
 
-See [`docs/`](./docs/) and [`_bmad-output/implementation-artifacts/deferred-work.md`](./_bmad-output/implementation-artifacts/deferred-work.md) for detailed scope tracking.
+See [`docs/`](./docs/), especially [`docs/combat-mechanics-audit.md`](./docs/combat-mechanics-audit.md), [`docs/deferred-risks-6.4.md`](./docs/deferred-risks-6.4.md), and [`docs/verification-checklist.md`](./docs/verification-checklist.md), for detailed scope tracking.
 
 ---
 

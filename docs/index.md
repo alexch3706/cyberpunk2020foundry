@@ -37,25 +37,20 @@ Last updated: 2026-05-30
 - [Data Models and Assets](./data-models.md)
 - [Development Guide](./development-guide.md)
 - [Refactor Assessment](./refactor-assessment.md)
-- [Project Scan State](./project-scan-report.json)
 - [MVP Verification Checklist](./verification-checklist.md) — readiness review sign-off checklist for Foundry runtime checks
 - [Combat Mechanics Audit](./combat-mechanics-audit.md) — adherence check between Combat Resolver and Corebook rules
 
 ## Existing Documentation
 
 - [README](../README.md) - upstream/user-facing project overview and development note
-- [Project Context for AI Agents](../_bmad-output/project-context.md) - AI implementation rules generated before this scan
-- [Cyberpunk 2020 Core Rules PDF](./Cyberpunk%202020%20-%20Core%20Rules.pdf) - local source PDF for mechanics conformance checks
-- [Cyberpunk 2020 Core Rules Extracted Text](./cyberpunk-2020-core-rules-extracted.md) - searchable extracted text with page separators; verify precision against the PDF
 
 ## Getting Started for AI Agents
 
-1. Read [Project Context for AI Agents](../_bmad-output/project-context.md).
-2. Read [Architecture](./architecture.md) for runtime structure.
-3. Read [Refactor Assessment](./refactor-assessment.md) before proposing broad refactors.
-4. Use [Development Guide](./development-guide.md) for verification expectations.
-5. Use [Data Models and Assets](./data-models.md) before changing `template.json`, packs, actor/item fields, or migrations.
-6. Use [Cyberpunk 2020 Core Rules Extracted Text](./cyberpunk-2020-core-rules-extracted.md) for searchable mechanics discovery, then confirm exact wording/page details in the source PDF.
+1. Read [Architecture](./architecture.md) for runtime structure.
+2. Read [Refactor Assessment](./refactor-assessment.md) before proposing broad refactors.
+3. Use [Development Guide](./development-guide.md) for verification expectations.
+4. Use [Data Models and Assets](./data-models.md) before changing `template.json`, packs, actor/item fields, or migrations.
+5. For mechanics fidelity work, use local rulebook source artifacts outside public version control and cite only paraphrased page references in committed docs.
 
 ## Documentation Purpose
 
