@@ -6,7 +6,7 @@ import { resolveBodyTypeDamage } from "../../module/combat/attack-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
 import { isActorDeadForDeathSaves, isActorStabilizedForDeathSaves, requiresRecurringDeathSave, resolveSavePromptsForTarget } from "../../module/combat/save-resolver.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
-import { normalizeSelectedTargets } from "../../module/combat/target-normalizer.js";
+import { normalizeSelectedTargets, normalizeTacticalTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
 import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
 
@@ -24,6 +24,7 @@ export async function runCombatFixtures() {
   const results = [];
 
   assertTargetNormalization();
+  await assertTacticalTargetNormalization();
   assertBodyTypeDamageResolver();
   assertWoundPlanning();
   assertSavePromptResolution();
@@ -432,6 +433,167 @@ function assertTargetNormalization() {
   }, "plain target normalization");
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), normalized, "normalized targets are JSON-safe");
+}
+
+async function assertTacticalTargetNormalization() {
+  const targets = normalizeTacticalTargets({
+    targets: [
+      {
+        id: "token-actor",
+        selected: true,
+        document: { uuid: "Scene.test.Token.actor", name: "Armored Target" },
+        actor: { uuid: "Actor.target", name: "Target Actor", system: { stats: { body: { total: 6 } } } }
+      }
+    ],
+    template: {
+      templateUuid: "Scene.test.MeasuredTemplate.1",
+      templateId: "template-1",
+      type: "cone",
+      origin: { x: 100, y: 100 },
+      direction: 45,
+      angle: 30,
+      distance: 10,
+      inclusion: "intersected"
+    },
+    raycast: {
+      origin: { x: 50, y: 50 },
+      destination: { x: 150, y: 150 },
+      firstTarget: true,
+      requiresGmDecision: false
+    },
+    distance: {
+      value: 8,
+      units: "m",
+      source: "measured"
+    }
+  });
+
+  assert.equal(targets.length, 1);
+  assert.equal(targets[0].tokenUuid, "Scene.test.Token.actor");
+  assert.deepEqual(targets[0].distance, { value: 8, units: "m", source: "measured" });
+  assert.deepEqual(JSON.parse(JSON.stringify(targets)), targets, "tactical targets are JSON-safe");
+  assert.deepEqual(targets[0].tactical, {
+    selected: true,
+    template: {
+      templateUuid: "Scene.test.MeasuredTemplate.1",
+      templateId: "template-1",
+      type: "cone",
+      origin: { x: 100, y: 100 },
+      direction: 45,
+      angle: 30,
+      distance: 10,
+      inclusion: "intersected"
+    },
+    raycast: {
+      origin: { x: 50, y: 50 },
+      destination: { x: 150, y: 150 },
+      firstTarget: true,
+      requiresGmDecision: false
+    }
+  });
+
+  const multiTargets = normalizeTacticalTargets({
+    targets: [
+      { id: "token-near", selected: false, actorUuid: "Actor.near", name: "Near Target", snapshot: {} },
+      { id: "token-far", selected: false, actorUuid: "Actor.far", name: "Far Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-2",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected"
+    },
+    distance: {
+      byTarget: {
+        "token-near": { value: 3, units: "m", source: "template" },
+        "token-far": { value: 9, units: "m", source: "template" }
+      }
+    }
+  });
+
+  assert.equal(multiTargets[0].tactical.selected, false);
+  assert.equal(multiTargets[1].tactical.selected, false);
+  assert.deepEqual(multiTargets[0].distance, { value: 3, units: "m", source: "template" });
+  assert.deepEqual(multiTargets[1].distance, { value: 9, units: "m", source: "template" });
+  
+  // Test manual fallback for missing target context
+  const manualTargets = normalizeTacticalTargets({
+    targets: [{ id: "token-actorless" }],
+    template: { type: "cone" }, // Missing origin, inclusion, etc.
+    raycast: { origin: { x: 0, y: 0 } } // Missing destination
+  });
+  
+  assert.equal(manualTargets[0].manualResolution.required, true);
+  assert.equal(manualTargets[0].manualResolution.reason, "missing-target-actor");
+  assert.deepEqual(manualTargets[0].manualResolution.blockedUpdateCategories, ["target-damage", "target-armor", "target-saves"]);
+  assert.ok(manualTargets[0].warnings.some(w => w.code === "missing-target-actor"));
+  assert.ok(manualTargets[0].warnings.some(w => w.code === "missing-tactical-template"));
+  assert.ok(manualTargets[0].warnings.some(w => w.code === "missing-tactical-raycast"));
+
+  const missingRequestedContext = normalizeTacticalTargets({
+    targets: [{ id: "token-requested", actorUuid: "Actor.requested", name: "Requested Target", snapshot: {} }],
+    templateRequired: true,
+    raycastRequired: true
+  });
+
+  assert.equal(missingRequestedContext[0].manualResolution.required, true);
+  assert.deepEqual(missingRequestedContext[0].manualResolution.blockedUpdateCategories, ["target-damage", "target-armor", "target-saves"]);
+  assert.ok(missingRequestedContext[0].warnings.some(w => w.code === "missing-tactical-template"));
+  assert.ok(missingRequestedContext[0].warnings.some(w => w.code === "missing-tactical-raycast"));
+
+  const gmDecisionTargets = normalizeTacticalTargets({
+    targets: [{ id: "token-gm", actorUuid: "Actor.gm", name: "GM Target", snapshot: {} }],
+    template: {
+      templateId: "template-manual",
+      type: "cone",
+      origin: { x: 0, y: 0 },
+      inclusion: "manual_decision"
+    },
+    raycast: {
+      origin: { x: 0, y: 0 },
+      destination: { x: 5, y: 5 },
+      requiresGmDecision: true
+    }
+  });
+
+  assert.equal(gmDecisionTargets[0].manualResolution.required, true);
+  assert.ok(gmDecisionTargets[0].warnings.some(w => w.code === "manual-tactical-template"));
+  assert.ok(gmDecisionTargets[0].warnings.some(w => w.code === "manual-tactical-raycast"));
+  assert.deepEqual(normalizeTacticalTargets(null), []);
+  
+  // Prove resolveCombatAction() remains the public seam for tactical flows
+  // and accepts tactical context without breaking
+  const tacticalContext = {
+    action: {
+      type: "ranged",
+      fireMode: "semiauto",
+      targetNumber: 15,
+      options: {}
+    },
+    attacker: {
+      actorUuid: "Actor.attacker",
+      snapshot: { stats: { ref: { total: 10 } } }
+    },
+    weapon: {
+      itemUuid: "Item.weapon",
+      snapshot: { damage: "2d6", type: "P", accuracy: 0, attackSkill: "Handgun", attackType: "auto", rof: 2 }
+    },
+    targets: targets,
+    legacy: {
+      mode: "fallback",
+      fallback: () => ({ targets: [{ target: targets[0] }] })
+    }
+  };
+  
+  // Stub a roller that guarantees a miss to just check routing
+  const staticRoller = () => ({ id: "attack", total: 10, die: { result: 1 } });
+  
+  const outcome = await resolveCombatAction(tacticalContext, { structured: true }, staticRoller);
+  assert.equal(outcome.targets.length, 1);
+  assert.equal(outcome.targets[0].target.tactical.template.inclusion, "intersected");
 }
 
 function assertBodyTypeDamageResolver() {

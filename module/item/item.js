@@ -386,6 +386,9 @@ export class CyberpunkItem extends Item {
       actorUuid: target.actorUuid,
       name: target.name,
       snapshot: clonePlainData(target.snapshot),
+      distance: clonePlainData(target.distance),
+      tactical: clonePlainData(target.tactical),
+      pendingDecisions: clonePlainData(target.pendingDecisions),
       manualResolution: clonePlainData(target.manualResolution),
       warnings: clonePlainData(target.warnings)
     });

@@ -34,7 +34,13 @@ flowchart TD
 
 ### `CombatActorRef` & `CombatTargetRef`
 * **Defined In**: `combat-outcome.js`
-* **Purpose**: UUID-aware references for actors/tokens. Captures display names and optional structural snapshots (`ActorCombatSnapshot`).
+* **Purpose**: UUID-aware references for combat actors/tokens inside a combat action context. Captures display names and optional structural snapshots (`ActorCombatSnapshot`).
+* **Tactical Context (`target.tactical`)**: An optional sub-object present during tactical targeting containing:
+  * `selected` (boolean): `true` if this target was acquired via traditional token selection.
+  * `template`: When intersected by an AoE, contains `templateUuid`, `templateId`, `type`, `origin`, `direction`, `angle`, `width`, `distance`, `targetDistance`, and `inclusion` ("intersected" or "manual_decision").
+  * `raycast`: When acquired via sightline/raycast, contains `origin`, `destination`, optional obstruction evidence, `obstructionDistance`, `firstTarget`, and `requiresGmDecision`.
+* **Distance (`target.distance`)**: Optional measured distance data (`value`, `units`, `source`).
+* **Manual Tactical Decisions**: Missing requested template/raycast context, `manual_decision` template inclusion, or `requiresGmDecision` raycast evidence must set `target.manualResolution.required` and block automated target damage, armor, and save updates.
 
 ### `WeaponCombatSnapshot` & `ActorCombatSnapshot`
 * **Defined In**: `combat-outcome.js`

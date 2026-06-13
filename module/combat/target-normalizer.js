@@ -73,3 +73,220 @@ function buildMissingActorWarning() {
     message: MISSING_TARGET_ACTOR_MESSAGE
   };
 }
+
+/**
+ * Normalizes targets along with tactical context like templates and raycasts.
+ * @param {Object} options Options containing targets, template, raycast, distance
+ * @returns {Array<Object>} Normalized targets
+ */
+export function normalizeTacticalTargets(options = {}) {
+  const {
+    targets = [],
+    template,
+    raycast,
+    distance,
+    templateRequired = false,
+    raycastRequired = false
+  } = options || {};
+  const sourceTargets = Array.from(targets || []);
+  const normalizedTargets = normalizeSelectedTargets(sourceTargets);
+  const hasTemplateContext = template !== undefined && template !== null;
+  const hasRaycastContext = raycast !== undefined && raycast !== null;
+  const shouldValidateTemplate = templateRequired === true || hasTemplateContext;
+  const shouldValidateRaycast = raycastRequired === true || hasRaycastContext;
+
+  return normalizedTargets.map((target, index) => {
+    const sourceTarget = sourceTargets[index] || {};
+    const tactical = compactPlainObject({
+      selected: resolveSelectedFlag(sourceTarget, {
+        hasTemplateContext,
+        hasRaycastContext
+      })
+    });
+    const normalizedTarget = {
+      ...target,
+      tactical
+    };
+
+    const targetDistance = resolveTargetDistance({
+      target: normalizedTarget,
+      sourceTarget,
+      distance,
+      targetCount: normalizedTargets.length
+    });
+    if(targetDistance) {
+      normalizedTarget.distance = targetDistance;
+    }
+
+    if(hasTemplateContext) {
+      normalizedTarget.tactical.template = buildTemplateContext(template);
+    }
+    if(shouldValidateTemplate) {
+      const templateIssue = getTemplateManualIssue(template);
+      if(templateIssue) {
+        requireTacticalManualResolution(normalizedTarget, templateIssue);
+      }
+    }
+
+    if(hasRaycastContext) {
+      normalizedTarget.tactical.raycast = buildRaycastContext(raycast);
+    }
+    if(shouldValidateRaycast) {
+      const raycastIssue = getRaycastManualIssue(raycast);
+      if(raycastIssue) {
+        requireTacticalManualResolution(normalizedTarget, raycastIssue);
+      }
+    }
+
+    return compactPlainObject(normalizedTarget);
+  });
+}
+
+function resolveSelectedFlag(sourceTarget, context) {
+  if(typeof sourceTarget?.tactical?.selected === "boolean") {
+    return sourceTarget.tactical.selected;
+  }
+  if(typeof sourceTarget?.selected === "boolean") {
+    return sourceTarget.selected;
+  }
+  return !(context.hasTemplateContext || context.hasRaycastContext);
+}
+
+function resolveTargetDistance({ target, sourceTarget, distance, targetCount }) {
+  const distanceCandidates = [
+    sourceTarget.distance,
+    sourceTarget.tactical?.distance,
+    findDistanceByTarget(distance, target),
+    targetCount === 1 ? distance : undefined
+  ];
+  for(const candidate of distanceCandidates) {
+    const normalized = normalizeDistance(candidate);
+    if(normalized) {
+      return normalized;
+    }
+  }
+  return undefined;
+}
+
+function findDistanceByTarget(distance, target) {
+  const keyedDistances = distance?.byTarget || distance?.targets;
+  if(!keyedDistances || typeof keyedDistances !== "object" || Array.isArray(keyedDistances)) {
+    return undefined;
+  }
+  return keyedDistances[target.id] || keyedDistances[target.tokenUuid] || keyedDistances[target.actorUuid];
+}
+
+function normalizeDistance(distance) {
+  if(!distance || typeof distance !== "object") {
+    return undefined;
+  }
+  return compactPlainObject({
+    value: distance.value,
+    units: distance.units,
+    source: distance.source
+  });
+}
+
+function buildTemplateContext(template) {
+  return compactPlainObject({
+    templateUuid: template.templateUuid,
+    templateId: template.templateId,
+    type: template.type,
+    origin: clonePlainData(template.origin),
+    direction: template.direction,
+    angle: template.angle,
+    width: template.width,
+    distance: template.distance,
+    targetDistance: template.targetDistance,
+    inclusion: template.inclusion
+  });
+}
+
+function buildRaycastContext(raycast) {
+  return compactPlainObject({
+    origin: clonePlainData(raycast.origin),
+    destination: clonePlainData(raycast.destination),
+    obstruction: clonePlainData(raycast.obstruction),
+    obstructionDistance: raycast.obstructionDistance,
+    firstTarget: raycast.firstTarget,
+    requiresGmDecision: raycast.requiresGmDecision
+  });
+}
+
+function getTemplateManualIssue(template) {
+  if(!template) {
+    return buildTacticalIssue(
+      "missing-tactical-template",
+      "Template mode requested but tactical data is incomplete."
+    );
+  }
+  const inclusion = template.inclusion;
+  if(!template.type || !template.origin || !inclusion) {
+    return buildTacticalIssue(
+      "missing-tactical-template",
+      "Template mode requested but tactical data is incomplete."
+    );
+  }
+  if(inclusion === "manual_decision") {
+    return buildTacticalIssue(
+      "manual-tactical-template",
+      "Template inclusion requires GM decision before automated updates."
+    );
+  }
+  return undefined;
+}
+
+function getRaycastManualIssue(raycast) {
+  if(!raycast) {
+    return buildTacticalIssue(
+      "missing-tactical-raycast",
+      "Raycast mode requested but tactical data is incomplete."
+    );
+  }
+  if(!raycast.origin || !raycast.destination) {
+    return buildTacticalIssue(
+      "missing-tactical-raycast",
+      "Raycast mode requested but tactical data is incomplete."
+    );
+  }
+  if(raycast.requiresGmDecision === true) {
+    return buildTacticalIssue(
+      "manual-tactical-raycast",
+      "Raycast result requires GM decision before automated updates."
+    );
+  }
+  return undefined;
+}
+
+function buildTacticalIssue(code, message) {
+  return {
+    code,
+    message
+  };
+}
+
+function requireTacticalManualResolution(target, issue) {
+  target.manualResolution = {
+    ...(target.manualResolution || {}),
+    required: true,
+    reason: target.manualResolution?.reason || MANUAL_RESOLUTION_REASON.pendingUserDecision,
+    message: target.manualResolution?.message || issue.message,
+    blockedUpdateCategories: mergeBlockedUpdateCategories(target.manualResolution?.blockedUpdateCategories)
+  };
+  target.warnings = appendWarning(target.warnings, {
+    code: issue.code,
+    severity: COMBAT_WARNING_SEVERITY.warning,
+    message: issue.message
+  });
+}
+
+function mergeBlockedUpdateCategories(existing = []) {
+  return Array.from(new Set([...(existing || []), ...TARGET_UPDATE_BLOCKS]));
+}
+
+function appendWarning(warnings = [], warning) {
+  if(warnings.some(existing => existing?.code === warning.code)) {
+    return warnings;
+  }
+  return [...warnings, warning];
+}
