@@ -1193,8 +1193,8 @@ function buildOutcomeManualResolution(manualResolutions) {
 
   return {
     required: true,
-    reason: MANUAL_RESOLUTION_REASON.missingRuleData,
-    message: "One or more targets require manual resolution before this outcome can be committed.",
+    reason: manualResolutions[0].reason || MANUAL_RESOLUTION_REASON.missingRuleData,
+    message: manualResolutions.length === 1 ? manualResolutions[0].message : "One or more targets require manual resolution before this outcome can be committed.",
     blockedUpdateCategories: [...blockedUpdateCategories]
   };
 }
