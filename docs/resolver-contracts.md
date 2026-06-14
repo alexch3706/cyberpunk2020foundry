@@ -39,6 +39,7 @@ flowchart TD
   * `selected` (boolean): `true` if this target was acquired via traditional token selection.
   * `template`: When intersected by an AoE, contains `templateUuid`, `templateId`, `type`, `origin`, `direction`, `angle`, `width`, `distance`, `targetDistance`, and `inclusion` ("intersected" or "manual_decision").
   * `raycast`: When acquired via sightline/raycast, contains `origin`, `destination`, optional obstruction evidence, `obstructionDistance`, `firstTarget`, and `requiresGmDecision`.
+  * `cover`: GM-supplied raycast cover context containing `applies`, `stoppingPower`, `protectedLocations`, `source`, and `transient`. Cover applies only when the resolved hit location matches `protectedLocations`; an empty protected-location list means no hit locations are protected.
 * **Distance (`target.distance`)**: Optional measured distance data (`value`, `units`, `source`).
 * **Manual Tactical Decisions**: Missing requested template/raycast context, `manual_decision` template inclusion, or `requiresGmDecision` raycast evidence must set `target.manualResolution.required` and block automated target damage, armor, and save updates.
 

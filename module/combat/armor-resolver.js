@@ -102,7 +102,8 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
  */
 export function resolveArmor(weaponAP, targetSnapshot, location, options = {}) {
   const personalLayers = orderArmorLayers(getEquippedArmorForLocation(targetSnapshot, location));
-  const coverLayer = getManualCoverLayer(options.cover);
+  const coverCandidate = getManualCoverLayer(options.cover, location);
+  const coverLayer = coverCandidate?.applied ? coverCandidate.layer : null;
   const warnings = buildArmorWarnings(personalLayers);
   const personalRawSP = calculateProportionalStoppingPower(personalLayers);
   const coverRawSP = coverLayer ? normalizeStoppingPower(coverLayer.stoppingPower) : 0;
@@ -123,6 +124,7 @@ export function resolveArmor(weaponAP, targetSnapshot, location, options = {}) {
     },
     cover: {
       present: !!coverLayer,
+      ...(coverCandidate?.evidence || {}),
       ...(coverLayer || {}),
       rawStoppingPower: coverRawSP,
       effectiveStoppingPower: coverEffectiveSP
@@ -199,22 +201,102 @@ function orderArmorLayers(layers) {
     .map(entry => entry.layer);
 }
 
-function getManualCoverLayer(cover) {
-  const coverSP = normalizeStoppingPower(cover?.stoppingPower ?? cover?.sp);
-  if(coverSP <= 0) {
+function getManualCoverLayer(cover, location) {
+  if(!cover) {
     return null;
   }
-  return {
-    id: cover.id || "cover",
-    name: cover.name || "Cover",
-    type: "cover",
-    stoppingPower: coverSP,
-    ablation: Number(cover.ablation || 0),
-    layer: cover.layer || "hard",
-    equipped: true,
+  const protectedLocations = Array.isArray(cover.protectedLocations)
+    ? cover.protectedLocations.map(location => String(location))
+    : undefined;
+  const baseStoppingPower = normalizeStoppingPower(cover.stoppingPower ?? cover.sp);
+  const ablation = normalizeAblation(cover.ablation);
+  const commonEvidence = compactCoverEvidence({
+    provided: true,
+    applies: cover.applies !== false,
+    protectedLocations,
+    baseStoppingPower,
+    ablation,
     source: cover.source || "manual cover",
-    manual: true
+    transient: cover.transient === true
+  });
+  if(cover.applies === false) {
+    return {
+      applied: false,
+      evidence: {
+        ...commonEvidence,
+        bypassed: true,
+        bypassReason: "cover-does-not-apply"
+      }
+    };
+  }
+  if(Array.isArray(protectedLocations) && !protectedLocations.some(protectedLocation => locationsMatch(protectedLocation, location))) {
+    return {
+      applied: false,
+      evidence: {
+        ...commonEvidence,
+        bypassed: true,
+        bypassReason: "hit-location-unprotected"
+      }
+    };
+  }
+
+  const coverSP = Math.max(0, baseStoppingPower - ablation);
+  if(coverSP <= 0) {
+    return {
+      applied: false,
+      evidence: {
+        ...commonEvidence,
+        bypassed: true,
+        bypassReason: "cover-sp-depleted"
+      }
+    };
+  }
+  return {
+    applied: true,
+    evidence: {
+      ...commonEvidence,
+      applied: true,
+      bypassed: false
+    },
+    layer: {
+      id: cover.id || "cover",
+      name: cover.name || "Cover",
+      type: "cover",
+      stoppingPower: coverSP,
+      baseStoppingPower,
+      ablation,
+      protectedLocations,
+      layer: cover.layer || "hard",
+      equipped: true,
+      source: cover.source || "manual cover",
+      transient: cover.transient === true,
+      manual: true
+    }
   };
+}
+
+function compactCoverEvidence(evidence) {
+  return Object.fromEntries(
+    Object.entries(evidence).filter(([, value]) => value !== undefined)
+  );
+}
+
+function locationsMatch(left, right) {
+  if(!right) {
+    return false;
+  }
+  return normalizeLocationKey(left) === normalizeLocationKey(right);
+}
+
+function normalizeLocationKey(location) {
+  const key = String(location || "").toLowerCase().replace(/[^a-z]/g, "");
+  const aliases = {
+    leftarm: "larm",
+    rightarm: "rarm",
+    leftleg: "lleg",
+    rightleg: "rleg"
+  };
+  return aliases[key] || key;
 }
 
 function buildArmorWarnings(layers) {

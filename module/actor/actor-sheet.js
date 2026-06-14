@@ -262,14 +262,15 @@ export class CyberpunkActorSheet extends ActorSheet {
       return null;
     }
 
-    html.find('.fire-weapon').click(ev => {
+    html.find('.fire-weapon').click(async ev => {
       ev.stopPropagation();
       let item = getEventItem(this, ev);
       let isRanged = item.isRanged();
 
       let modifierGroups = undefined;
       let onConfirm = undefined;
-      let targetTokens = normalizeSelectedTargets(game.users.current.targets.values());
+      const selectedTargets = Array.from(game.users.current.targets.values());
+      let targetTokens = normalizeSelectedTargets(selectedTargets);
       if(isRanged) {
         // We have to get the values as an iterator; else if multiple targets share names, it'd turn a set with size 2 to one with size 1
         modifierGroups = rangedModifiers(item, targetTokens);
@@ -280,8 +281,23 @@ export class CyberpunkActorSheet extends ActorSheet {
       else {
         modifierGroups = meleeBonkOptions();
       }
-      
+
       let resolverOptions = structuredResolverOptions(item);
+
+      // If structured combat is active and weapon is ranged, prompt for raycast GM covers first
+      if (resolverOptions && isRanged) {
+        const attackerToken = this.actor.token || findControlledTokenForActor(this.actor);
+        try {
+          const { detectAndPromptTacticalRaycasts } = await import("../combat/tactical-raycast.js");
+          const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
+          targetTokens = await detectAndPromptTacticalRaycasts(attackerToken, selectedTargets);
+          targetTokens = normalizeTacticalTargets({ targets: targetTokens });
+        } catch (e) {
+          console.warn("Tactical raycast failure:", e);
+          targetTokens = targetTokens.map(target => markRaycastFailureManual(target));
+        }
+      }
+
       let dialog = new ModifiersDialog(this.actor, {
         weapon: item,
         targetTokens: targetTokens,
@@ -297,5 +313,30 @@ export class CyberpunkActorSheet extends ActorSheet {
       });
       dialog.render(true);
     });
+
+    function findControlledTokenForActor(actor) {
+      return globalThis.canvas?.tokens?.controlled?.find(token => token?.actor?.uuid === actor?.uuid);
+    }
+
+    function markRaycastFailureManual(target) {
+      return {
+        ...target,
+        manualResolution: {
+          ...(target.manualResolution || {}),
+          required: true,
+          reason: target.manualResolution?.reason || "pending-user-decision",
+          message: target.manualResolution?.message || "Tactical raycast failed; resolve cover/barrier interaction manually.",
+          blockedUpdateCategories: [...new Set([...(target.manualResolution?.blockedUpdateCategories || []), "target-damage", "target-armor", "target-saves"])]
+        },
+        warnings: [
+          ...(target.warnings || []),
+          {
+            code: "manual-tactical-raycast",
+            severity: "warning",
+            message: "Tactical raycast failed; resolve cover/barrier interaction manually."
+          }
+        ]
+      };
+    }
   }
 }

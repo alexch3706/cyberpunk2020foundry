@@ -127,6 +127,7 @@ function buildHitChatData(hit = {}) {
     penetratingDamage: hit.penetratingDamage,
     armorPiercingEvidence: clonePlainData(hit.armorPiercingEvidence),
     armor: clonePlainData(hit.armor),
+    cover: clonePlainData(hit.cover || hit.armor?.cover),
     stagedPenetration: clonePlainData(hit.stagedPenetration),
     bodyTypeModifier: hit.bodyTypeModifier,
     bodyTypeMitigation: hit.bodyTypeMitigation,

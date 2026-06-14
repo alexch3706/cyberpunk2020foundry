@@ -717,9 +717,21 @@
                       "source": "manual cover"
                     }
                   ],
-                  "warnings": []
+                  "warnings": [
+                    {
+                      "code": "cover-penetrated",
+                      "severity": "warning",
+                      "message": "Cover was penetrated! Remember to manually ablate the cover structure."
+                    }
+                  ]
                 },
-                "warnings": []
+                "warnings": [
+                  {
+                    "code": "cover-penetrated",
+                    "severity": "warning",
+                    "message": "Cover was penetrated! Remember to manually ablate the cover structure."
+                  }
+                ]
               }
             ],
             "manualResolution": {
@@ -1689,7 +1701,13 @@
                     }
                   }
                 },
-                "warnings": []
+                "warnings": [
+                  {
+                    "code": "cover-penetrated",
+                    "severity": "warning",
+                    "message": "Cover was penetrated! Remember to manually ablate the cover structure."
+                  }
+                ]
               }
             ]
           }

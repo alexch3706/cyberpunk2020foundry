@@ -546,7 +546,7 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         const damageRoll = damageResult.damageRoll;
 
         const weaponAP = !!weapon?.snapshot?.ap;
-        const coverInput = clonePlainData(action?.cover || action?.options?.cover);
+        const coverInput = selectRangedCoverInput(action, target);
         if(coverInput && Number.isFinite(Number(coverInput.stoppingPower ?? coverInput.sp))) {
           coverInput.ablation = accumulatedCoverAblation;
         }
@@ -560,6 +560,14 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         const armorMitigation = coverMitigation + personalMitigation;
         const penetratingDamageBeforeAP = rawDamage - armorMitigation;
         let penetratingDamage = penetratingDamageBeforeAP;
+
+        if (armor.cover?.present && rawDamage > armor.cover.effectiveStoppingPower) {
+          armor.warnings.push({
+            code: "cover-penetrated",
+            severity: COMBAT_WARNING_SEVERITY.warning,
+            message: "Cover was penetrated! Remember to manually ablate the cover structure."
+          });
+        }
 
         if(armor.armorPiercing && penetratingDamage > 0) {
           penetratingDamage = Math.floor(penetratingDamage / 2);
@@ -646,6 +654,12 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
         hitDetail.finalDamage = bodyTypeDamage.finalDamage;
         hitDetail.armor = armor;
         hitDetail.stagedPenetration = stagedPenetration.evidence;
+        hitDetail.cover = buildCoverHitEvidence({
+          cover: armor.cover,
+          rawDamage,
+          coverMitigation,
+          stagedPenetration: stagedPenetration.evidence
+        });
         hitDetail.warnings.push(...armor.warnings);
 
         hits.push(hitDetail);
@@ -933,8 +947,9 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
 
   // Armor (same pattern as ranged buildTargetOutcome)
   const weaponAP = !!weapon.ap;
+  const manualActionCover = context.action?.cover || context.action?.options?.cover;
   const armor = resolveArmor(weaponAP, targetSnapshot, hitLocationResult.location, {
-    cover: context.action?.cover || context.action?.options?.cover
+    cover: manualActionCover
   });
   const effectiveStoppingPower = armor.effectiveStoppingPower;
   const coverMitigation = Math.min(rawDamage, armor.cover?.effectiveStoppingPower || 0);
@@ -943,6 +958,15 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
   const armorMitigation = coverMitigation + personalMitigation;
   const penetratingDamageBeforeAP = rawDamage - armorMitigation;
   let penetratingDamage = penetratingDamageBeforeAP;
+
+  if (armor.cover?.present && rawDamage > armor.cover.effectiveStoppingPower) {
+    armor.warnings.push({
+      code: "cover-penetrated",
+      severity: COMBAT_WARNING_SEVERITY.warning,
+      message: "Cover was penetrated! Remember to manually ablate the cover structure."
+    });
+  }
+
   if (armor.armorPiercing && penetratingDamage > 0) {
     penetratingDamage = Math.floor(penetratingDamage / 2);
   }
@@ -1435,7 +1459,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         const damageRoll = damageResult.damageRoll;
 
         const weaponAP = !!weapon?.snapshot?.ap;
-        const coverInput = clonePlainData(action.cover || action.options?.cover);
+        const coverInput = selectRangedCoverInput(action, target);
         if(coverInput && Number.isFinite(Number(coverInput.stoppingPower ?? coverInput.sp))) {
           coverInput.ablation = accumulatedCoverAblation;
         }
@@ -1449,6 +1473,14 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         const armorMitigation = coverMitigation + personalMitigation;
         const penetratingDamageBeforeAP = rawDamage - armorMitigation;
         let penetratingDamage = penetratingDamageBeforeAP;
+
+        if (armor.cover?.present && rawDamage > armor.cover.effectiveStoppingPower) {
+          armor.warnings.push({
+            code: "cover-penetrated",
+            severity: COMBAT_WARNING_SEVERITY.warning,
+            message: "Cover was penetrated! Remember to manually ablate the cover structure."
+          });
+        }
 
         if(armor.armorPiercing && penetratingDamage > 0) {
           penetratingDamage = Math.floor(penetratingDamage / 2);
@@ -1535,6 +1567,12 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
         hitDetail.finalDamage = bodyTypeDamage.finalDamage;
         hitDetail.armor = armor;
         hitDetail.stagedPenetration = stagedPenetration.evidence;
+        hitDetail.cover = buildCoverHitEvidence({
+          cover: armor.cover,
+          rawDamage,
+          coverMitigation,
+          stagedPenetration: stagedPenetration.evidence
+        });
         hitDetail.warnings.push(...armor.warnings);
 
         hits.push(hitDetail);
@@ -1577,6 +1615,38 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
 
 function resolveTargetBodyType(target) {
   return target.snapshot?.stats?.bt?.total ?? target.snapshot?.stats?.body?.total ?? 0;
+}
+
+function selectRangedCoverInput(action, target) {
+  const tacticalCover = target?.tactical?.cover;
+  const manualActionCover = action?.cover || action?.options?.cover;
+  if(tacticalCover && tacticalCover.applies !== false) {
+    return clonePlainData(tacticalCover);
+  }
+  return clonePlainData(manualActionCover);
+}
+
+function buildCoverHitEvidence({ cover, rawDamage, coverMitigation, stagedPenetration }) {
+  if(!cover?.provided && !cover?.present) {
+    return undefined;
+  }
+  const ablation = stagedPenetration?.cover?.ablation;
+  return compactPlainObject({
+    present: !!cover.present,
+    provided: cover.provided === true,
+    applied: cover.applied === true || !!cover.present,
+    bypassed: cover.bypassed === true,
+    bypassReason: cover.bypassReason,
+    protectedLocations: clonePlainData(cover.protectedLocations),
+    baseStoppingPower: cover.baseStoppingPower,
+    rawStoppingPower: cover.rawStoppingPower,
+    effectiveStoppingPower: cover.effectiveStoppingPower,
+    mitigation: coverMitigation,
+    source: cover.source,
+    transient: cover.transient,
+    penetrated: !!cover.present && rawDamage > Number(cover.effectiveStoppingPower || 0),
+    ablation: clonePlainData(ablation)
+  });
 }
 
 function resolveStagedPenetrationEnabled(action, resolverOptions) {
@@ -2010,4 +2080,10 @@ function clonePlainData(data) {
     return undefined;
   }
   return JSON.parse(JSON.stringify(data));
+}
+
+function compactPlainObject(data = {}) {
+  return Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== undefined)
+  );
 }

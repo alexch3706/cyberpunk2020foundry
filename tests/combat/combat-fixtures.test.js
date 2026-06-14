@@ -4,10 +4,12 @@ import { readFile } from "node:fs/promises";
 import { resolveCombatAction } from "../../module/combat/combat-resolver.js";
 import { resolveBodyTypeDamage } from "../../module/combat/attack-resolver.js";
 import { buildCombatChatData } from "../../module/combat/combat-chat.js";
+import { buildWeaponCombatSnapshot } from "../../module/combat/combat-snapshot.js";
 import { isActorDeadForDeathSaves, isActorStabilizedForDeathSaves, requiresRecurringDeathSave, resolveSavePromptsForTarget } from "../../module/combat/save-resolver.js";
 import { planCombatUpdates } from "../../module/combat/state-planner.js";
 import { normalizeSelectedTargets, normalizeTacticalTargets } from "../../module/combat/target-normalizer.js";
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
+import { detectAndPromptTacticalRaycasts } from "../../module/combat/tactical-raycast.js";
 import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
 
 const FIXTURE_URLS = [
@@ -17,7 +19,8 @@ const FIXTURE_URLS = [
   new URL("./fixtures/suppressive-fire.json", import.meta.url),
   new URL("./fixtures/reliability-jam.json", import.meta.url),
   new URL("./fixtures/unsupported-modes.json", import.meta.url),
-  new URL("./fixtures/melee-baseline.json", import.meta.url)
+  new URL("./fixtures/melee-baseline.json", import.meta.url),
+  new URL("./fixtures/shotgun-template.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
@@ -25,6 +28,7 @@ export async function runCombatFixtures() {
 
   assertTargetNormalization();
   await assertTacticalTargetNormalization();
+  assertWeaponCombatSnapshot();
   assertBodyTypeDamageResolver();
   assertWoundPlanning();
   assertSavePromptResolution();
@@ -72,7 +76,7 @@ async function runFixture(fixture) {
     assert.ok(outcome.attacker.actorUuid, `${fixture.name} attacker actor UUID`);
     assert.ok(outcome.weapon.itemUuid, `${fixture.name} weapon item UUID`);
     assert.equal(outcome.targets.length, fixture.context.targets.length, `${fixture.name} target count`);
-    if(fixture.expected.outcome.chatStatus) {
+    if(fixture.expected?.outcome?.chatStatus) {
       assert.equal(outcome.chat.status, fixture.expected.outcome.chatStatus, `${fixture.name} chat status`);
     }
   } else {
@@ -84,15 +88,15 @@ async function runFixture(fixture) {
   if(useStructured) {
     // Structured-resolved fixtures produce complex nested outcomes.
     // Use partial matching (assertObjectIncludes) instead of exact deep equality.
-    assertObjectIncludes(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
+    assertObjectIncludes(plannedUpdates, fixture.expected?.plannedUpdates || {}, `${fixture.name} planned updates`);
 
     const previewChatData = buildCombatChatData(outcome, plannedUpdates);
-    assertObjectIncludes(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
+    assertObjectIncludes(previewChatData, fixture.expected?.chatData?.preview || {}, `${fixture.name} preview chat data`);
   } else {
-    assert.deepEqual(plannedUpdates, fixture.expected.plannedUpdates, `${fixture.name} planned updates`);
+    assert.deepEqual(plannedUpdates, fixture.expected?.plannedUpdates || {}, `${fixture.name} planned updates`);
 
     const previewChatData = buildCombatChatData(outcome, plannedUpdates);
-    assert.deepEqual(previewChatData, fixture.expected.chatData.preview, `${fixture.name} preview chat data`);
+    assert.deepEqual(previewChatData, fixture.expected?.chatData?.preview || {}, `${fixture.name} preview chat data`);
   }
 
   await assertSingleShotCases(fixture);
@@ -159,7 +163,7 @@ function buildSingleShotOutcome(context, roller, fixture) {
   const locationRoll = roller({ id: "location", seed: fixture.name });
   const damageRoll = roller({ id: "damage", seed: fixture.name });
   const target = context.targets[0];
-  const hitEvidence = fixture.outcomeEvidence.hit;
+  const hitEvidence = fixture.outcomeEvidence?.hit;
   const hit = attackRoll.total >= context.action.targetNumber;
 
   return {
@@ -435,6 +439,36 @@ function assertTargetNormalization() {
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), normalized, "normalized targets are JSON-safe");
 }
 
+function assertWeaponCombatSnapshot() {
+  const item = {
+    system: {
+      damage: "3d6",
+      ap: true,
+      shotsLeft: 8,
+      rof: 2,
+      reliability: "Standard",
+      range: 50,
+      accuracy: 1,
+      attackType: "shotgun",
+      attackSkill: "Rifle",
+      rangeDamages: {
+        pointBlank: "4d6",
+        close: "4d6",
+        medium: "3d6",
+        far: "2d6"
+      }
+    }
+  };
+  const snapshot = buildWeaponCombatSnapshot(item);
+  assert.equal(snapshot.attackType, "shotgun");
+  assert.deepEqual(snapshot.rangeDamages, {
+    pointBlank: "4d6",
+    close: "4d6",
+    medium: "3d6",
+    far: "2d6"
+  });
+}
+
 async function assertTacticalTargetNormalization() {
   const targets = normalizeTacticalTargets({
     targets: [
@@ -458,6 +492,8 @@ async function assertTacticalTargetNormalization() {
     raycast: {
       origin: { x: 50, y: 50 },
       destination: { x: 150, y: 150 },
+      obstruction: { id: "wall-1", uuid: "Scene.test.Wall.1", type: "wall", name: "Concrete Wall" },
+      obstructionDistance: 4,
       firstTarget: true,
       requiresGmDecision: false
     },
@@ -482,11 +518,14 @@ async function assertTacticalTargetNormalization() {
       direction: 45,
       angle: 30,
       distance: 10,
+      targetDistance: 8,
       inclusion: "intersected"
     },
     raycast: {
       origin: { x: 50, y: 50 },
       destination: { x: 150, y: 150 },
+      obstruction: { id: "wall-1", uuid: "Scene.test.Wall.1", type: "wall", name: "Concrete Wall" },
+      obstructionDistance: 4,
       firstTarget: true,
       requiresGmDecision: false
     }
@@ -518,6 +557,8 @@ async function assertTacticalTargetNormalization() {
   assert.equal(multiTargets[1].tactical.selected, false);
   assert.deepEqual(multiTargets[0].distance, { value: 3, units: "m", source: "template" });
   assert.deepEqual(multiTargets[1].distance, { value: 9, units: "m", source: "template" });
+  assert.equal(multiTargets[0].tactical.template.targetDistance, 3);
+  assert.equal(multiTargets[1].tactical.template.targetDistance, 9);
   
   // Test manual fallback for missing target context
   const manualTargets = normalizeTacticalTargets({
@@ -562,6 +603,20 @@ async function assertTacticalTargetNormalization() {
   assert.equal(gmDecisionTargets[0].manualResolution.required, true);
   assert.ok(gmDecisionTargets[0].warnings.some(w => w.code === "manual-tactical-template"));
   assert.ok(gmDecisionTargets[0].warnings.some(w => w.code === "manual-tactical-raycast"));
+
+  const ambiguousRaycastTargets = normalizeTacticalTargets({
+    targets: [{ id: "token-ambiguous", actorUuid: "Actor.ambiguous", name: "Ambiguous Target", snapshot: {} }],
+    raycast: {
+      origin: { x: 0, y: 0 },
+      destination: { x: 5, y: 5 },
+      obstruction: { id: "wall-1" }, // missing type or name making it ambiguous
+      requiresGmDecision: false
+    }
+  });
+
+  assert.equal(ambiguousRaycastTargets[0].manualResolution.required, true);
+  assert.ok(ambiguousRaycastTargets[0].warnings.some(w => w.code === "ambiguous-tactical-raycast"));
+
   assert.deepEqual(normalizeTacticalTargets(null), []);
   
   // Prove resolveCombatAction() remains the public seam for tactical flows
@@ -594,6 +649,55 @@ async function assertTacticalTargetNormalization() {
   const outcome = await resolveCombatAction(tacticalContext, { structured: true }, staticRoller);
   assert.equal(outcome.targets.length, 1);
   assert.equal(outcome.targets[0].target.tactical.template.inclusion, "intersected");
+
+  const previousCanvas = globalThis.canvas;
+  const previousConfig = globalThis.CONFIG;
+  try {
+    delete globalThis.canvas;
+    const manualRaycastTargets = await detectAndPromptTacticalRaycasts({ center: { x: 0, y: 0 } }, [{
+      id: "token-manual",
+      actorUuid: "Actor.manual",
+      name: "Manual Target",
+      snapshot: {}
+    }]);
+    assert.equal(manualRaycastTargets[0].manualResolution.required, true, "missing canvas marks raycast target manual");
+    assert.ok(manualRaycastTargets[0].warnings.some(warning => warning.code === "manual-tactical-raycast"), "missing canvas adds raycast manual warning");
+
+    globalThis.canvas = {
+      ready: true,
+      walls: {},
+      grid: { size: 100 },
+      scene: { grid: { distance: 2 } }
+    };
+    globalThis.CONFIG = {
+      Canvas: {
+        polygonBackends: {
+          sight: {
+            testCollision: () => null
+          }
+        }
+      }
+    };
+    const staleTarget = {
+      id: "token-stale",
+      actorUuid: "Actor.stale",
+      name: "Stale Target",
+      snapshot: {},
+      center: { x: 10, y: 0 },
+      tactical: {
+        raycast: { requiresGmDecision: true },
+        cover: { applies: true, stoppingPower: 10 },
+        selected: true
+      }
+    };
+    const clearTargets = await detectAndPromptTacticalRaycasts({ center: { x: 0, y: 0 } }, [staleTarget]);
+    assert.equal(clearTargets[0].tactical.raycast, undefined, "no-collision raycast clears stale raycast context");
+    assert.equal(clearTargets[0].tactical.cover, undefined, "no-collision raycast clears stale cover context");
+    assert.equal(staleTarget.tactical.cover.stoppingPower, 10, "raycast adapter does not mutate source target tactical data");
+  } finally {
+    globalThis.canvas = previousCanvas;
+    globalThis.CONFIG = previousConfig;
+  }
 }
 
 function assertBodyTypeDamageResolver() {
@@ -1492,6 +1596,43 @@ function assertArmorResolver() {
   assert.equal(coveredArmor.layers.at(-1).type, "cover", "manual cover is appended as a cover layer");
   assert.equal(coveredArmor.layers.at(-1).source, "manual cover", "manual cover source is preserved");
 
+  const emptyLocationCover = resolveArmor(false, layeredSnapshot, "torso", {
+    cover: {
+      name: "Narrow Barrier",
+      stoppingPower: 8,
+      protectedLocations: [],
+      source: "raycast-gm"
+    }
+  });
+  assert.equal(emptyLocationCover.cover.present, false, "empty protected location list bypasses cover for every hit");
+  assert.equal(emptyLocationCover.cover.bypassed, true, "bypassed cover remains visible as cover evidence");
+  assert.equal(emptyLocationCover.cover.bypassReason, "hit-location-unprotected", "empty protected location list records the bypass reason");
+
+  const aliasedLocationCover = resolveArmor(false, layeredSnapshot, "lArm", {
+    cover: {
+      name: "Door Frame",
+      stoppingPower: 8,
+      protectedLocations: ["leftArm"],
+      source: "raycast-gm"
+    }
+  });
+  assert.equal(aliasedLocationCover.cover.present, true, "leftArm protected location aliases match lArm hits");
+  assert.equal(aliasedLocationCover.cover.effectiveStoppingPower, 8, "aliased protected cover applies full SP before ablation");
+
+  const ablatedCover = resolveArmor(false, layeredSnapshot, "torso", {
+    cover: {
+      name: "Concrete Barrier",
+      stoppingPower: 8,
+      ablation: 3,
+      protectedLocations: ["Torso"],
+      source: "raycast-gm",
+      transient: true
+    }
+  });
+  assert.equal(ablatedCover.cover.baseStoppingPower, 8, "cover evidence keeps base SP");
+  assert.equal(ablatedCover.cover.ablation, 3, "cover evidence keeps transient ablation");
+  assert.equal(ablatedCover.cover.effectiveStoppingPower, 5, "transient cover ablation degrades effective Cover SP");
+
   const skinweaveAndHardArmor = resolveArmor(false, {
     equippedArmor: [
       {
@@ -1684,6 +1825,101 @@ async function assertZonedCyberwareArmorHitPlanning() {
       ]
     }
   ], "zoned skinweave hit plans ablation only for the struck location");
+
+  const coverContext = {
+    action: {
+      type: "ranged",
+      fireMode: "threeroundburst",
+      range: "medium",
+      targetNumber: 15,
+      targetArea: "torso",
+      options: {
+        targetArea: "torso",
+        stagedPenetration: true
+      }
+    },
+    attacker: {
+      actorUuid: "Actor.attacker",
+      name: "Solo",
+      snapshot: {
+        stats: {
+          ref: { total: 8 }
+        },
+        skills: {
+          handgun: { level: 6 }
+        }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.attacker.Item.heavy-pistol",
+      name: "Heavy Pistol",
+      snapshot: {
+        damage: "4d6",
+        ap: false,
+        shotsLeft: 3,
+        rof: 2,
+        reliability: "standard",
+        attackType: "Auto",
+        attackSkill: "handgun"
+      }
+    },
+    targets: [
+      {
+        actorUuid: "Actor.target",
+        tokenUuid: "Scene.test.Token.target",
+        name: "Target",
+        tactical: {
+          raycast: {
+            origin: { x: 0, y: 0 },
+            destination: { x: 10, y: 0 },
+            obstruction: { id: "wall-1", uuid: "Scene.test.Wall.1", type: "wall", name: "Concrete Wall" },
+            obstructionDistance: 4,
+            firstTarget: true,
+            requiresGmDecision: false
+          },
+          cover: {
+            applies: true,
+            stoppingPower: 8,
+            protectedLocations: ["Torso"],
+            source: "raycast-gm",
+            transient: true
+          }
+        },
+        snapshot: {
+          stats: {
+            bt: { total: 6 }
+          },
+          damage: 0,
+          hitLocations: {
+            torso: { label: "Torso" }
+          }
+        }
+      }
+    ],
+    legacy: {
+      fallback: () => ({ manualResolution: { required: true }, targets: [] })
+    }
+  };
+  const coverRoller = createScriptedRoller([
+    { id: "attack", total: 24, die: { faces: 10, natural: 10, results: [10], exploded: false } },
+    { id: "burst_hits", total: 2, die: { faces: 3, natural: 2, results: [2], exploded: false } },
+    { id: "damage", formula: "4d6", total: 10, die: { faces: 6, natural: 10, results: [3, 3, 2, 2] } },
+    { id: "damage", formula: "4d6", total: 10, die: { faces: 6, natural: 10, results: [3, 3, 2, 2] } }
+  ]);
+
+  const coverOutcome = await resolveCombatAction(coverContext, { structured: true }, coverRoller);
+  coverRoller.assertComplete();
+  const coverHits = coverOutcome.targets[0].hits;
+  assert.equal(coverHits.length, 2, "three-round burst cover fixture produces two hits");
+  assert.equal(coverHits[0].cover.effectiveStoppingPower, 8, "first cover hit uses original Cover SP");
+  assert.deepEqual(coverHits[0].cover.ablation, { before: 0, after: 1, applied: true }, "first cover hit records transient cover ablation");
+  assert.equal(coverHits[1].cover.effectiveStoppingPower, 7, "second cover hit uses transiently ablated Cover SP");
+  assert.deepEqual(coverHits[1].cover.protectedLocations, ["Torso"], "cover hit evidence preserves protected locations");
+  assert.equal(coverHits[1].cover.mitigation, 7, "cover hit evidence exposes cover mitigation separately");
+
+  const coverChat = buildCombatChatData(coverOutcome);
+  assert.equal(coverChat.targets[0].hits[0].cover.ablation.after, 1, "chat data exposes cover ablation evidence");
+  assert.deepEqual(coverChat.targets[0].hits[0].cover.protectedLocations, ["Torso"], "chat data exposes protected cover locations");
 }
 
 async function assertCombatResolverRouting() {

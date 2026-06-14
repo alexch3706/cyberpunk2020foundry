@@ -132,6 +132,46 @@
                             <span class="flex-pad">{{hit.rawDamage}}</span>
                         </div>
                         {{/if}}
+                        {{#if hit.cover.provided}}
+                        <div class="field">
+                            <span>{{CPLocal "HitCover"}} ({{hit.cover.effectiveStoppingPower}} SP): </span>
+                            <span class="flex-pad">
+                                {{#if hit.cover.bypassed}}
+                                    <strong class="outcome-miss">{{CPLocal "CoverBypassed"}}</strong>
+                                {{else}}
+                                    {{#if hit.cover.penetrated}}
+                                        <strong class="outcome-hit">{{CPLocal "CoverPenetrated"}}</strong> ({{hit.rawDamage}} {{CPLocal "vs"}} {{hit.cover.effectiveStoppingPower}} SP)
+                                    {{else}}
+                                        <strong class="outcome-miss">{{CPLocal "CoverStoppedAttack"}}</strong>
+                                    {{/if}}
+                                {{/if}}
+                            </span>
+                        </div>
+                        {{#if hit.cover.protectedLocations}}
+                        <div class="field">
+                            <span>{{CPLocal "CoverProtectedLocations"}}: </span>
+                            <span class="flex-pad">
+                                {{#each hit.cover.protectedLocations as |location|}}{{#unless @first}}, {{/unless}}{{CPLocal location}}{{/each}}
+                            </span>
+                        </div>
+                        {{/if}}
+                        <div class="field">
+                            <span>{{CPLocal "CoverMitigation"}}: </span>
+                            <span class="flex-pad">{{hit.cover.mitigation}}</span>
+                        </div>
+                        {{#if hit.cover.ablation}}
+                        <div class="field">
+                            <span>{{CPLocal "CoverAblation"}}: </span>
+                            <span class="flex-pad">
+                                {{#if hit.cover.ablation.applied}}
+                                    {{hit.cover.ablation.before}} -> {{hit.cover.ablation.after}}
+                                {{else}}
+                                    {{hit.cover.ablation.before}}
+                                {{/if}}
+                            </span>
+                        </div>
+                        {{/if}}
+                        {{/if}}
                         {{#if (hasProperty hit "armorMitigation")}}
                         <div class="field">
                             <span>{{CPLocal "Armor"}}: </span>

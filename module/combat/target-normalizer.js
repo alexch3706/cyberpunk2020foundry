@@ -103,6 +103,14 @@ export function normalizeTacticalTargets(options = {}) {
         hasRaycastContext
       })
     });
+
+    // Preserve existing tactical data from source target
+    if (sourceTarget.tactical) {
+      if (sourceTarget.tactical.cover) tactical.cover = clonePlainData(sourceTarget.tactical.cover);
+      if (sourceTarget.tactical.raycast) tactical.raycast = clonePlainData(sourceTarget.tactical.raycast);
+      if (sourceTarget.tactical.template) tactical.template = clonePlainData(sourceTarget.tactical.template);
+    }
+
     const normalizedTarget = {
       ...target,
       tactical
@@ -119,10 +127,10 @@ export function normalizeTacticalTargets(options = {}) {
     }
 
     if(hasTemplateContext) {
-      normalizedTarget.tactical.template = buildTemplateContext(template);
+      normalizedTarget.tactical.template = buildTemplateContext(template, targetDistance);
     }
-    if(shouldValidateTemplate) {
-      const templateIssue = getTemplateManualIssue(template);
+    if(shouldValidateTemplate || normalizedTarget.tactical.template) {
+      const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
       if(templateIssue) {
         requireTacticalManualResolution(normalizedTarget, templateIssue);
       }
@@ -131,8 +139,8 @@ export function normalizeTacticalTargets(options = {}) {
     if(hasRaycastContext) {
       normalizedTarget.tactical.raycast = buildRaycastContext(raycast);
     }
-    if(shouldValidateRaycast) {
-      const raycastIssue = getRaycastManualIssue(raycast);
+    if(shouldValidateRaycast || normalizedTarget.tactical.raycast) {
+      const raycastIssue = getRaycastManualIssue(normalizedTarget.tactical.raycast || raycast);
       if(raycastIssue) {
         requireTacticalManualResolution(normalizedTarget, raycastIssue);
       }
@@ -187,7 +195,7 @@ function normalizeDistance(distance) {
   });
 }
 
-function buildTemplateContext(template) {
+function buildTemplateContext(template, targetDistance = undefined) {
   return compactPlainObject({
     templateUuid: template.templateUuid,
     templateId: template.templateId,
@@ -197,7 +205,7 @@ function buildTemplateContext(template) {
     angle: template.angle,
     width: template.width,
     distance: template.distance,
-    targetDistance: template.targetDistance,
+    targetDistance: targetDistance?.value ?? template.targetDistance,
     inclusion: template.inclusion
   });
 }
@@ -248,6 +256,14 @@ function getRaycastManualIssue(raycast) {
       "missing-tactical-raycast",
       "Raycast mode requested but tactical data is incomplete."
     );
+  }
+  if(raycast.obstruction) {
+    if(!raycast.obstruction.type || (!raycast.obstruction.name && !raycast.obstruction.id && !raycast.obstruction.uuid)) {
+      return buildTacticalIssue(
+        "ambiguous-tactical-raycast",
+        "Raycast obstruction is missing required identity fields."
+      );
+    }
   }
   if(raycast.requiresGmDecision === true) {
     return buildTacticalIssue(
