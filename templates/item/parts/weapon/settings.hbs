@@ -5,8 +5,8 @@
     {{> (template "fields/boolean") label="AP" edit="system.ap"}}
     {{> (template "fields/number") label="Range" edit="system.range"}}
 
-    {{!-- Something like this will end up being in there, but it's not currently ready for release --}}
-    {{!-- <details class="field span-two-cells">
+    {{!-- Un-commented to support shotgun range damage resolution --}}
+    <details class="field span-two-cells">
         <summary>{{localize "Advanced"}}</summary>
         <div class="field-list">
             {{> (template "fields/string") label=(concat (localize "DamageShort") "(" (localize "PointBlank") ")")  edit="system.rangeDamages.pointBlank"}}
@@ -15,7 +15,7 @@
             {{> (template "fields/string") label=(concat (localize "DamageShort") "(" (localize "Far") ")")  edit="system.rangeDamages.far"}}
             {{> (template "fields/string") label=(concat (localize "DamageShort") "(" (localize "Extreme") ")")  edit="system.rangeDamages.extreme"}}
         </div>
-    </details> --}}
+    </details>
 </div>
 
 {{!-- Stuff that affects how many shots the weapon can pump out --}}

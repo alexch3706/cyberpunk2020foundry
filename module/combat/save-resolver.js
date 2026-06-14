@@ -16,6 +16,10 @@ export function resolveSavePromptsForTarget(targetOutcome = {}) {
     return emptyResult();
   }
 
+  if(targetOutcome?.target?.snapshot?.isFBC === true) {
+    return emptyResult();
+  }
+
   if(targetOutcome?.attack && targetOutcome.attack.hit === false) {
     return emptyResult();
   }

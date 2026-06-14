@@ -97,10 +97,21 @@ export class CyberpunkActor extends Actor {
       equippedCyberware: equippedItems.filter(i => i.type === "cyberware")
     };
 
+    // FBC check
+    const fbcItem = targetSnapshot.equippedCyberware.find(c => c.system.isFBC);
+    system.isFBC = !!fbcItem;
+
     for(const locName in system.hitLocations) {
       let location = system.hitLocations[locName];
       const resolution = resolveArmor(false, targetSnapshot, locName);
       location.stoppingPower = resolution.effectiveStoppingPower;
+
+      if(system.isFBC && fbcItem && fbcItem.system.fbcHitLocations) {
+        let fbcLoc = fbcItem.system.fbcHitLocations[locName];
+        if(fbcLoc && location.sdp) {
+          location.sdp.max = fbcLoc.sdp || 0;
+        }
+      }
     }
     stats.ref.total = stats.ref.base + stats.ref.tempMod + stats.ref.armorMod;
 
@@ -111,7 +122,7 @@ export class CyberpunkActor extends Actor {
     const body = stats.bt;
     body.carry = body.total * 10;
     body.lift = body.total * 40;
-    body.modifier = btmFromBT(body.total);
+    body.modifier = system.isFBC ? 0 : btmFromBT(body.total);
     system.carryWeight = 0;
     equippedItems.forEach(item => {
       let weight = item.system.weight || 0;
@@ -175,8 +186,11 @@ export class CyberpunkActor extends Actor {
    * Get a body type modifier from the body type stat (body)
    * I couldn't figure out a single formula that'd work for it (cos of the weird widths of BT values)
    */
-  static btm(body) {
-    
+  static btm(body, isFBC = false) {
+    if (isFBC) return 0;
+    if(body < 2)
+      return 0;
+    return btmFromBT(body);
   }
 
   // Current wound state. 0 for uninjured, going up by 1 for each new one. 1 for Light, 2 Serious, 3 Critical etc.
@@ -271,6 +285,10 @@ export class CyberpunkActor extends Actor {
   }
 
   rollStunDeath() {
+    if (this.system.isFBC) {
+      ui.notifications.info(game.i18n.localize("Full Body Conversions do not make Stun or Death saves."));
+      return;
+    }
     let rolls = new Multiroll(localize("StunDeathSave"), localize("UnderThresholdMessage"));
     rolls.addRoll(new Roll("1d10"), {
       name: localize("Save")

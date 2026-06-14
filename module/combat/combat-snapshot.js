@@ -21,6 +21,7 @@ export function buildActorCombatSnapshot(actor, options = {}) {
     stats: clonePlainData(actor.system.stats),
     skills,
     damage: clonePlainData(actor.system.damage),
+    isFBC: actor.system.isFBC === true,
     hitLocations: clonePlainData(actor.system.hitLocations),
     ...(options.includeEquipment === true ? {
       equippedArmor: normalizeEquippedItemSnapshots(actor.itemTypes?.armor || []),

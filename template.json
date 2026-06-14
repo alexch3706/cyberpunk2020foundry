@@ -709,35 +709,41 @@
 					"Head": {
 						"location": [
 							1
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					},
 					"Torso": {
 						"location": [
 							2,
 							4
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					},
 					"lArm": {
 						"location": [
 							6
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					},
 					"rArm": {
 						"location": [
 							5
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					},
 					"lLeg": {
 						"location": [
 							7,
 							8
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					},
 					"rLeg": {
 						"location": [
 							9,
 							10
-						]
+						],
+						"sdp": { "value": 0, "max": 0 }
 					}
 				}
 			},
@@ -853,7 +859,16 @@
 			"slots": 0,
 			"spaces": 0,
 			"abbrev": "",
-			"humanityLoss": 0
+			"humanityLoss": 0,
+			"isFBC": false,
+			"fbcHitLocations": {
+				"Head": { "sdp": 0 },
+				"Torso": { "sdp": 0 },
+				"lArm": { "sdp": 0 },
+				"rArm": { "sdp": 0 },
+				"lLeg": { "sdp": 0 },
+				"rLeg": { "sdp": 0 }
+			}
 		},
 		"vehicle": {
 			"templates": ["common"],

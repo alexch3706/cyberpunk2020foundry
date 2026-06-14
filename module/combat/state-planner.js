@@ -57,8 +57,78 @@ function collectWoundUpdates(plan, targetOutcome) {
   }
 
   const actorUuid = targetOutcome?.target?.actorUuid;
+  if(!actorUuid) {
+    warnForUnplannedWoundHits(plan, targetOutcome?.hits);
+    return;
+  }
+
+  const isFBC = targetOutcome?.target?.snapshot?.isFBC === true;
+
+  if (isFBC) {
+    const sdpUpdates = {};
+    const hitLocations = targetOutcome?.target?.snapshot?.hitLocations || {};
+    let totalDamageDelta = 0;
+
+    for(const hit of targetOutcome?.hits || []) {
+      const finalDamage = readWoundDamage(hit);
+      if(finalDamage.invalid) {
+        addWarning(plan, "invalid-wound-damage", "Wound damage must be a non-negative integer before it can be planned.");
+        continue;
+      }
+      if(!finalDamage.value || finalDamage.value <= 0) {
+        continue;
+      }
+
+      const locKey = hit.location;
+      if (!locKey) {
+        addWarning(plan, "missing-hit-location", "Hit location is missing; cannot apply FBC SDP damage.");
+        continue;
+      }
+
+      if (sdpUpdates[locKey] === undefined) {
+        sdpUpdates[locKey] = hitLocations[locKey]?.sdp?.value || 0;
+      }
+      
+      const damageDelta = finalDamage.value; // No headshot multiplier for FBCs
+      sdpUpdates[locKey] -= damageDelta;
+      hit.woundDamage = damageDelta;
+      totalDamageDelta += damageDelta;
+
+      const maxSdp = hitLocations[locKey]?.sdp?.max || 0;
+      const currentSdp = sdpUpdates[locKey];
+
+      if (maxSdp > 0 && currentSdp <= -maxSdp) {
+        hit.warnings = addUniqueWarning(hit.warnings, {
+          code: "fbc-limb-destroyed",
+          severity: STATE_PLAN_WARNING_SEVERITY.warning,
+          message: `FBC ${locKey} reached ${currentSdp} SDP (Max ${maxSdp}); it is destroyed.`
+        });
+      } else if (maxSdp > 0 && currentSdp <= 10) {
+        hit.warnings = addUniqueWarning(hit.warnings, {
+          code: "fbc-limb-disabled",
+          severity: STATE_PLAN_WARNING_SEVERITY.warning,
+          message: `FBC ${locKey} reached ${currentSdp} SDP (Max ${maxSdp}); it is disabled/useless.`
+        });
+      }
+    }
+
+    if (Object.keys(sdpUpdates).length > 0) {
+      const updatePayload = {};
+      for (const [locKey, newVal] of Object.entries(sdpUpdates)) {
+        updatePayload[`system.hitLocations.${locKey}.sdp.value`] = newVal;
+      }
+      addActorUpdates(plan, [{
+        actorUuid,
+        update: updatePayload
+      }]);
+      // Set a dummy transition so the chat card shows the damage dealt
+      targetOutcome.damage = { damageDelta: totalDamageDelta, previousDamage: 0, nextDamage: 0, previousState: { label: "FBC" }, nextState: { label: "FBC" } };
+    }
+    return;
+  }
+
   const currentDamage = normalizeDamageValue(targetOutcome?.target?.snapshot?.damage);
-  if(!actorUuid || currentDamage === undefined) {
+  if(currentDamage === undefined) {
     warnForUnplannedWoundHits(plan, targetOutcome?.hits);
     return;
   }

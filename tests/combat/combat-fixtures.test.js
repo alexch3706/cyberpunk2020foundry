@@ -262,6 +262,7 @@ function assertTargetNormalization() {
             }
           },
           damage: 2,
+      isFBC: false,
           hitLocations: {
             torso: {
               label: "Torso"
@@ -362,6 +363,7 @@ function assertTargetNormalization() {
         }
       },
       damage: 2,
+      isFBC: false,
       hitLocations: {
         torso: {
           label: "Torso"

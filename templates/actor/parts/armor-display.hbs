@@ -11,6 +11,15 @@
         {{!-- <span class="segment-ablate action inactive" title={{CPLocal "Ablate"}} data-hit-loc="{{name}}">-</span> --}}
         <input type="number" class="segment-sp {{#unless ../edit}}not-editable{{/unless}}" title="{{CPLocal "SPFull"}}" name="system.{{../hitLocsName}}.{{name}}.stoppingPower" value="{{hitLoc.stoppingPower}}" {{#unless ../edit}}readonly{{/unless}}>
         {{!-- <span class="segment-repair action inactive" title="{{CPLocal "Repair"}}" data-hit-loc="{{name}}">+</span> --}}
+        
+        {{#if hitLoc.sdp.max}}
+        <div class="segment-sdp" title="SDP (Value / Max)" style="font-size: 0.8em; margin-top: 2px;">
+            <input type="number" style="width: 30px; height: 16px; font-size: 0.9em; text-align: center; border: 1px solid #000;" name="system.{{../hitLocsName}}.{{name}}.sdp.value" value="{{hitLoc.sdp.value}}">
+            <span>/</span>
+            <span style="font-weight: bold;">{{hitLoc.sdp.max}}</span>
+        </div>
+        {{/if}}
+
         <label class="segment-name">{{shortCPLocal name}}</label>
     </div>
     {{/each}}

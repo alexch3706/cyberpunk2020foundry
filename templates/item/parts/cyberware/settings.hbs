@@ -14,4 +14,20 @@
     {{> (template "fields/string") label="Abbrev" edit="system.abbrev"}}
     {{> (template "fields/number") label="Slots" edit="system.slots"}}
     {{> (template "fields/number") label="Spaces" edit="system.spaces"}}
+    
+    <hr>
+    {{> (template "fields/boolean") label="Is Full Body Conversion" edit="system.isFBC"}}
+    {{#if system.isFBC}}
+    <div class="field">
+        <label>FBC Max SDP per Limb</label>
+    </div>
+    <div class="field-list" style="padding-left: 10px;">
+        {{> (template "fields/number") label="Head SDP" edit="system.fbcHitLocations.Head.sdp"}}
+        {{> (template "fields/number") label="Torso SDP" edit="system.fbcHitLocations.Torso.sdp"}}
+        {{> (template "fields/number") label="R.Arm SDP" edit="system.fbcHitLocations.rArm.sdp"}}
+        {{> (template "fields/number") label="L.Arm SDP" edit="system.fbcHitLocations.lArm.sdp"}}
+        {{> (template "fields/number") label="R.Leg SDP" edit="system.fbcHitLocations.rLeg.sdp"}}
+        {{> (template "fields/number") label="L.Leg SDP" edit="system.fbcHitLocations.lLeg.sdp"}}
+    </div>
+    {{/if}}
 </div>
