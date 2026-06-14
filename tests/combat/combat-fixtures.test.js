@@ -559,6 +559,33 @@ async function assertTacticalTargetNormalization() {
   assert.deepEqual(multiTargets[1].distance, { value: 9, units: "m", source: "template" });
   assert.equal(multiTargets[0].tactical.template.targetDistance, 3);
   assert.equal(multiTargets[1].tactical.template.targetDistance, 9);
+
+  const templateCollectedTargets = normalizeTacticalTargets({
+    template: {
+      templateId: "template-collected",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      targets: [
+        { id: "token-template-near", selected: false, actorUuid: "Actor.templateNear", name: "Template Near", snapshot: {} },
+        { id: "token-template-far", selected: false, actorUuid: "Actor.templateFar", name: "Template Far", snapshot: {} }
+      ]
+    },
+    distance: {
+      byTarget: {
+        "token-template-near": { value: 1, units: "m", source: "template" },
+        "token-template-far": { value: 3, units: "m", source: "template" }
+      }
+    }
+  });
+
+  assert.equal(templateCollectedTargets.length, 2);
+  assert.equal(templateCollectedTargets[0].tactical.template.targetDistance, 1);
+  assert.equal(templateCollectedTargets[1].tactical.template.targetDistance, 3);
+  assert.deepEqual(JSON.parse(JSON.stringify(templateCollectedTargets)), templateCollectedTargets, "template-collected targets are JSON-safe");
   
   // Test manual fallback for missing target context
   const manualTargets = normalizeTacticalTargets({

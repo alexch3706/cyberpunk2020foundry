@@ -138,6 +138,7 @@ function buildHitChatData(hit = {}) {
     specialCases: clonePlainData(hit.specialCases),
     damageRoll: clonePlainData(hit.damageRoll),
     locationRoll: clonePlainData(hit.locationRoll),
+    shotgun: clonePlainData(hit.shotgun),
     warnings: cloneArray(hit.warnings)
   });
 }

@@ -46,6 +46,7 @@ flowchart TD
 ### `WeaponCombatSnapshot` & `ActorCombatSnapshot`
 * **Defined In**: `combat-outcome.js`
 * **Purpose**: Plain data captured from Foundry documents before resolution begins. Isolates resolvers from active Foundry object mutations.
+* **Spread Damage (`weapon.snapshot.rangeDamages`)**: Optional range-bracket damage formulas copied from weapon data for shotgun/spread resolution. Supported keys include persisted `pointBlank`, `close`, `medium`, and `far`; resolver code may normalize local naming aliases but must not mutate item data.
 
 ### `RollMetadata`
 * **Defined In**: `combat-outcome.js`
@@ -61,6 +62,7 @@ flowchart TD
 * **Defined In**: `combat-outcome.js`
 * **Purpose**: Encapsulates damage and armor logic per successful hit.
 * **Key Fields**: `location`, `damageRoll`, `rawDamage`, `effectiveStoppingPower`, `armorPiercing`, `armorMitigation`, `penetratingDamage`, `bodyTypeMitigation`, `finalDamage`, `woundDamage`, `woundTransition`, `specialCases`
+* **Shotgun Evidence (`hit.shotgun`)**: Optional shotgun template/drop-off evidence containing `templateId`/`templateUuid`, `included`, `inclusion`, `measuredDistance`, `bracket`, `damageFormula`, `patternWidthMeters`, and `source`. Chat derivation must copy this from the outcome and must not recalculate it from live documents.
 
 ### `CombatSavePrompt`
 * **Defined In**: `combat-outcome.js`

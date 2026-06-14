@@ -46,8 +46,8 @@ export function runAttackTypeClassificationTests() {
     assert.equal(classifyAttackTypeSupport("Flamethrow"), "manual");
   });
 
-  test('classifies "Shotgun" as manual (non-auto)', () => {
-    assert.equal(classifyAttackTypeSupport("Shotgun"), "manual");
+  test('classifies "Shotgun" as supported (non-auto)', () => {
+    assert.equal(classifyAttackTypeSupport("Shotgun"), "supported");
   });
 
   test('classifies "Grenade" as manual', () => {

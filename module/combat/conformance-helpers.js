@@ -35,7 +35,7 @@ export const knownExtendedPrefixes = [
 ];
 
 /** Attack types with full resolver coverage. */
-export const SUPPORTED_ATTACK_TYPES = Object.freeze(["auto"]);
+export const SUPPORTED_ATTACK_TYPES = Object.freeze(["auto", "shotgun"]);
 
 /** Attack types where a basic resolver path exists but special rules are not applied. */
 export const PARTIAL_ATTACK_TYPES = Object.freeze(["autoshotgun"]);
@@ -43,7 +43,7 @@ export const PARTIAL_ATTACK_TYPES = Object.freeze(["autoshotgun"]);
 /** Attack types whose special rules are not implemented — manual resolution required. */
 export const MANUAL_ATTACK_TYPES = Object.freeze([
   "laser", "microwave", "gas", "grenade", "flamethrow",
-  "shotgun", "landmine", "claymore", "rpg", "missile", "explosivecharge",
+  "landmine", "claymore", "rpg", "missile", "explosivecharge",
   "paint", "drugs", "acid", "taser", "dart", "squirt",
   "archer", "throwable"
 ]);

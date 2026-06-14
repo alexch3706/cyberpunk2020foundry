@@ -1,0 +1,379 @@
+{
+  "name": "shotgun-template-baseline",
+  "useStructured": true,
+  "context": {
+    "action": {
+      "type": "ranged",
+      "fireMode": "semiauto",
+      "targetNumber": 15
+    },
+    "attacker": {
+      "name": "Shotgun Attacker",
+      "actorUuid": "Actor.shotgunattacker",
+      "snapshot": {
+        "stats": {
+          "ref": { "total": 10 }
+        },
+        "skills": {
+          "Rifle": { "level": 6 }
+        }
+      }
+    },
+    "weapon": {
+      "name": "Combat Shotgun",
+      "itemUuid": "Item.combatshotgun",
+      "snapshot": {
+        "damage": "4d6",
+        "attackType": "Shotgun",
+        "attackSkill": "Rifle",
+        "rangeDamages": {
+          "pointBlank": "4d6",
+          "close": "4d6",
+          "medium": "3d6",
+          "far": "2d6"
+        }
+      }
+    },
+    "targets": [
+      {
+        "id": "target-close",
+        "name": "Close Target",
+        "actorUuid": "Actor.close",
+        "distance": { "value": 1, "units": "m", "source": "template" },
+        "tactical": {
+          "selected": true,
+          "template": {
+            "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+            "templateId": "shotgun",
+            "type": "cone",
+            "origin": { "x": 0, "y": 0 },
+            "direction": 0,
+            "angle": 45,
+            "width": 3,
+            "distance": 10,
+            "targetDistance": 1,
+            "inclusion": "intersected"
+          }
+        },
+        "snapshot": {
+          "stats": { "body": { "total": 5 } },
+          "hitLocations": {
+            "Head": { "stoppingPower": 0 },
+            "Torso": { "stoppingPower": 0 },
+            "rArm": { "stoppingPower": 0 },
+            "lArm": { "stoppingPower": 0 },
+            "rLeg": { "stoppingPower": 0 },
+            "lLeg": { "stoppingPower": 0 }
+          }
+        }
+      },
+      {
+        "id": "target-medium",
+        "name": "Medium Target",
+        "actorUuid": "Actor.medium",
+        "distance": { "value": 2, "units": "m", "source": "template" },
+        "tactical": {
+          "selected": true,
+          "template": {
+            "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+            "templateId": "shotgun",
+            "type": "cone",
+            "origin": { "x": 0, "y": 0 },
+            "direction": 0,
+            "angle": 45,
+            "width": 3,
+            "distance": 10,
+            "targetDistance": 2,
+            "inclusion": "intersected"
+          }
+        },
+        "snapshot": {
+          "stats": { "body": { "total": 5 } },
+          "hitLocations": {
+            "Head": { "stoppingPower": 0 },
+            "Torso": { "stoppingPower": 0 },
+            "rArm": { "stoppingPower": 0 },
+            "lArm": { "stoppingPower": 0 },
+            "rLeg": { "stoppingPower": 0 },
+            "lLeg": { "stoppingPower": 0 }
+          }
+        }
+      },
+      {
+        "id": "target-far",
+        "name": "Far Target",
+        "actorUuid": "Actor.far",
+        "distance": { "value": 3, "units": "m", "source": "template" },
+        "tactical": {
+          "selected": true,
+          "template": {
+            "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+            "templateId": "shotgun",
+            "type": "cone",
+            "origin": { "x": 0, "y": 0 },
+            "direction": 0,
+            "angle": 45,
+            "width": 3,
+            "distance": 10,
+            "targetDistance": 3,
+            "inclusion": "intersected"
+          }
+        },
+        "snapshot": {
+          "stats": { "body": { "total": 5 } },
+          "hitLocations": {
+            "Head": { "stoppingPower": 0 },
+            "Torso": { "stoppingPower": 0 },
+            "rArm": { "stoppingPower": 0 },
+            "lArm": { "stoppingPower": 0 },
+            "rLeg": { "stoppingPower": 0 },
+            "lLeg": { "stoppingPower": 0 }
+          }
+        }
+      }
+    ]
+  },
+  "rolls": [
+    { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
+    { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+    { "id": "damage", "formula": "4d6", "total": 14, "die": { "results": [3, 4, 3, 4] } },
+    
+    { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+    { "id": "damage", "formula": "3d6", "total": 10, "die": { "results": [3, 4, 3] } },
+    
+    { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+    { "id": "damage", "formula": "2d6", "total": 7, "die": { "results": [3, 4] } }
+  ],
+  "singleShotCases": [
+    {
+      "name": "Shotgun damages vary by distance",
+      "ruleReference": "FNFF Shotgun Pattern (pg.113)",
+      "rolls": [
+        { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+        { "id": "damage", "formula": "4d6", "total": 14, "die": { "results": [3, 4, 3, 4] } },
+        
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+        { "id": "damage", "formula": "3d6", "total": 10, "die": { "results": [3, 4, 3] } },
+        
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+        { "id": "damage", "formula": "2d6", "total": 7, "die": { "results": [3, 4] } }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "damageRoll": { "formula": "4d6", "total": 14 },
+                "shotgun": {
+                  "bracket": "close",
+                  "damageFormula": "4d6",
+                  "patternWidthMeters": 1,
+                  "templateId": "shotgun",
+                  "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+                  "included": true,
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 1, "units": "m", "source": "template" },
+                  "source": "fnff-shotgun-template"
+                }
+              }
+            ]
+          },
+          {
+            "hits": [
+              {
+                "damageRoll": { "formula": "3d6", "total": 10 },
+                "shotgun": {
+                  "bracket": "medium",
+                  "damageFormula": "3d6",
+                  "patternWidthMeters": 2,
+                  "templateId": "shotgun",
+                  "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+                  "included": true,
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 2, "units": "m", "source": "template" },
+                  "source": "fnff-shotgun-template"
+                }
+              }
+            ]
+          },
+          {
+            "hits": [
+              {
+                "damageRoll": { "formula": "2d6", "total": 7 },
+                "shotgun": {
+                  "bracket": "far",
+                  "damageFormula": "2d6",
+                  "patternWidthMeters": 3,
+                  "templateId": "shotgun",
+                  "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+                  "included": true,
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 3, "units": "m", "source": "template" },
+                  "source": "fnff-shotgun-template"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "shotgun": {
+                  "bracket": "close",
+                  "damageFormula": "4d6",
+                  "patternWidthMeters": 1,
+                  "templateId": "shotgun",
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 1, "units": "m", "source": "template" }
+                }
+              }
+            ]
+          },
+          {
+            "hits": [
+              {
+                "shotgun": {
+                  "bracket": "medium",
+                  "damageFormula": "3d6",
+                  "patternWidthMeters": 2,
+                  "templateId": "shotgun",
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 2, "units": "m", "source": "template" }
+                }
+              }
+            ]
+          },
+          {
+            "hits": [
+              {
+                "shotgun": {
+                  "bracket": "far",
+                  "damageFormula": "2d6",
+                  "patternWidthMeters": 3,
+                  "templateId": "shotgun",
+                  "inclusion": "intersected",
+                  "measuredDistance": { "value": 3, "units": "m", "source": "template" }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shotgun missing template data returns manual resolution",
+      "ruleReference": "FNFF Shotgun Pattern (pg.113) - requires template distances",
+      "context": {
+        "targets": [
+          {
+            "id": "target-no-dist",
+            "name": "No Dist Target",
+            "actorUuid": "Actor.nodist",
+            "distance": { "value": null, "units": "m", "source": "template" },
+            "tactical": {},
+            "snapshot": { 
+              "stats": { "body": { "total": 5 } },
+              "hitLocations": {
+                "Head": { "stoppingPower": 0 },
+                "Torso": { "stoppingPower": 0 },
+                "rArm": { "stoppingPower": 0 },
+                "lArm": { "stoppingPower": 0 },
+                "rLeg": { "stoppingPower": 0 },
+                "lLeg": { "stoppingPower": 0 }
+              }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } }
+      ],
+      "expected": {
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "message": "One or more targets require manual resolution before this outcome can be committed."
+        },
+        "targets": [
+          {
+            "manualResolution": {
+              "required": true,
+              "reason": "missing-rule-data",
+              "message": "Missing template geometry, attacker/template origin, or distance for shotgun spread."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shotgun missing bracket damage returns manual resolution",
+      "ruleReference": "FNFF Shotgun Pattern (pg.113) - requires trusted drop-off data",
+      "context": {
+        "weapon": {
+          "snapshot": {
+            "rangeDamages": {
+              "pointBlank": "",
+              "close": "4d6",
+              "medium": "",
+              "far": ""
+            }
+          }
+        },
+        "targets": [
+          {
+            "id": "target-missing-medium-damage",
+            "name": "Missing Medium Damage Target",
+            "actorUuid": "Actor.missingmedium",
+            "distance": { "value": 2, "units": "m", "source": "template" },
+            "tactical": {
+              "template": {
+                "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
+                "templateId": "shotgun",
+                "type": "cone",
+                "origin": { "x": 0, "y": 0 },
+                "targetDistance": 2,
+                "inclusion": "intersected"
+              }
+            },
+            "snapshot": { 
+              "stats": { "body": { "total": 5 } },
+              "hitLocations": {
+                "Head": { "stoppingPower": 0 },
+                "Torso": { "stoppingPower": 0 },
+                "rArm": { "stoppingPower": 0 },
+                "lArm": { "stoppingPower": 0 },
+                "rLeg": { "stoppingPower": 0 },
+                "lLeg": { "stoppingPower": 0 }
+              }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } }
+      ],
+      "expected": {
+        "manualResolution": {
+          "required": true,
+          "reason": "missing-rule-data",
+          "message": "One or more targets require manual resolution before this outcome can be committed."
+        },
+        "targets": [
+          {
+            "manualResolution": {
+              "required": true,
+              "reason": "missing-rule-data",
+              "message": "Missing shotgun damage formula for medium range."
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

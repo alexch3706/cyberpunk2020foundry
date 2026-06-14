@@ -189,7 +189,10 @@ function validateSupportedRangedContext(context, roller) {
   }
 
   if(fireMode === "semiauto" && targets.length !== 1) {
-    return buildManualRangedOutcome(context, "Semi-auto attacks require exactly one target; resolve multiple targets as separate attacks.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
+    const isShotgun = String(context.weapon?.snapshot?.attackType || "").toLowerCase().trim() === "shotgun";
+    if (!isShotgun) {
+      return buildManualRangedOutcome(context, "Semi-auto attacks require exactly one target; resolve multiple targets as separate attacks.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
+    }
   }
 
   if(fireMode === "threeroundburst" && targets.length !== 1) {

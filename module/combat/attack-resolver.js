@@ -22,6 +22,13 @@ const RANGED_MODIFIERS = Object.freeze([
 
 const MISSING_LOCATION_BLOCKS = Object.freeze(["hit-location", "target-damage", "target-armor", "target-saves"]);
 const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
+const TARGET_UPDATE_BLOCKS = Object.freeze(["target-damage", "target-armor", "target-saves"]);
+const SHOTGUN_ATTACK_TYPES = Object.freeze(["shotgun"]);
+const SHOTGUN_BRACKETS = Object.freeze({
+  close: Object.freeze({ maxDistance: 1, patternWidthMeters: 1, damageKeys: Object.freeze(["close", "pointBlank"]) }),
+  medium: Object.freeze({ maxDistance: 2, patternWidthMeters: 2, damageKeys: Object.freeze(["medium"]) }),
+  far: Object.freeze({ maxDistance: Infinity, patternWidthMeters: 3, damageKeys: Object.freeze(["far", "long"]) })
+});
 
 /**
  * Martial action classification.
@@ -1320,17 +1327,46 @@ function ammoWarning(code, message) {
   };
 }
 
-async function resolveRangedDamageRoll(action, weapon, roller) {
-  const formula = String(weapon?.snapshot?.damage || "1d6").trim() || "1d6";
+async function resolveRangedDamageRoll(action, weapon, roller, target = null) {
+  const attackType = normalizeAttackType(weapon?.snapshot?.attackType);
+  const isShotgun = SHOTGUN_ATTACK_TYPES.includes(attackType);
+  let formula = String(weapon?.snapshot?.damage || "1d6").trim() || "1d6";
+  let shotgunEvidence = undefined;
+  let manualResolution = undefined;
+
+  if (isShotgun) {
+    const shotgunContext = resolveShotgunDamageContext(weapon, target);
+    manualResolution = shotgunContext.manualResolution;
+    if(!manualResolution) {
+      formula = shotgunContext.formula;
+      shotgunEvidence = {
+        templateId: shotgunContext.template?.templateId,
+        templateUuid: shotgunContext.template?.templateUuid,
+        included: shotgunContext.template?.inclusion === "intersected",
+        inclusion: shotgunContext.template?.inclusion,
+        measuredDistance: shotgunContext.measuredDistance,
+        bracket: shotgunContext.bracket,
+        damageFormula: formula,
+        patternWidthMeters: shotgunContext.patternWidthMeters,
+        source: "fnff-shotgun-template"
+      };
+    }
+  }
+
   const range = normalizeRange(action?.range);
   const damageRequest = {
     id: "damage",
     formula
   };
 
-  if(range !== ranges.pointBlank) {
+  if (manualResolution) {
+    return { formula, manualResolution };
+  }
+
+  if(isShotgun || range !== ranges.pointBlank) {
     return {
       formula,
+      shotgun: shotgunEvidence,
       damageRoll: await roll(roller, damageRequest)
     };
   }
@@ -1344,7 +1380,8 @@ async function resolveRangedDamageRoll(action, weapon, roller) {
         code: "point-blank-max-damage-unsupported-formula",
         severity: COMBAT_WARNING_SEVERITY.warning,
         message: `Point-blank maximum damage could not parse "${formula}"; rolled damage normally.`
-      }
+      },
+      shotgun: shotgunEvidence
     };
   }
 
@@ -1358,7 +1395,97 @@ async function resolveRangedDamageRoll(action, weapon, roller) {
         results: maximumDamage.results
       },
       maximized: true
+    },
+    shotgun: shotgunEvidence
+  };
+}
+
+function normalizeAttackType(attackType) {
+  return String(attackType || "").toLowerCase().trim();
+}
+
+function resolveShotgunDamageContext(weapon, target) {
+  const template = target?.tactical?.template;
+  const measuredDistance = resolveShotgunMeasuredDistance(target);
+  const templateIssue = getShotgunTemplateIssue(template);
+  if(templateIssue) {
+    return { manualResolution: shotgunManualResolution(templateIssue) };
+  }
+  if(!measuredDistance || !Number.isFinite(Number(measuredDistance.value))) {
+    return { manualResolution: shotgunManualResolution("Missing finite measured distance for shotgun spread.") };
+  }
+  if(measuredDistance.units && measuredDistance.units !== "m") {
+    return { manualResolution: shotgunManualResolution("Shotgun spread distance must be normalized to meters before resolution.") };
+  }
+
+  const distanceValue = Number(measuredDistance.value);
+  const bracket = distanceValue <= SHOTGUN_BRACKETS.close.maxDistance
+    ? "close"
+    : distanceValue <= SHOTGUN_BRACKETS.medium.maxDistance
+      ? "medium"
+      : "far";
+  const bracketConfig = SHOTGUN_BRACKETS[bracket];
+  const formula = selectShotgunDamageFormula(weapon?.snapshot?.rangeDamages, bracketConfig.damageKeys);
+  if(!formula) {
+    return { manualResolution: shotgunManualResolution(`Missing shotgun damage formula for ${bracket} range.`) };
+  }
+
+  return {
+    template,
+    measuredDistance,
+    bracket,
+    patternWidthMeters: bracketConfig.patternWidthMeters,
+    formula
+  };
+}
+
+function resolveShotgunMeasuredDistance(target) {
+  const templateDistance = target?.tactical?.template?.targetDistance;
+  if(templateDistance !== undefined && templateDistance !== null) {
+    return compactPlainObject({
+      value: templateDistance,
+      units: target?.distance?.units || "m",
+      source: target?.distance?.source || "template"
+    });
+  }
+  if(target?.distance?.value !== undefined && target?.distance?.value !== null) {
+    return clonePlainData(target.distance);
+  }
+  return undefined;
+}
+
+function getShotgunTemplateIssue(template) {
+  if(!template) {
+    return "Missing template geometry, attacker/template origin, or distance for shotgun spread.";
+  }
+  if(!template.type || !template.origin || !template.inclusion) {
+    return "Missing template geometry, attacker/template origin, or inclusion evidence for shotgun spread.";
+  }
+  if(template.inclusion !== "intersected") {
+    return "Shotgun template inclusion is ambiguous and requires manual resolution.";
+  }
+  return undefined;
+}
+
+function selectShotgunDamageFormula(rangeDamages, damageKeys) {
+  if(!rangeDamages || typeof rangeDamages !== "object") {
+    return undefined;
+  }
+  for(const key of damageKeys) {
+    const formula = String(rangeDamages[key] || "").trim();
+    if(formula) {
+      return formula;
     }
+  }
+  return undefined;
+}
+
+function shotgunManualResolution(message) {
+  return {
+    required: true,
+    reason: MANUAL_RESOLUTION_REASON.missingRuleData,
+    message,
+    blockedUpdateCategories: [...TARGET_UPDATE_BLOCKS]
   };
 }
 
@@ -1455,8 +1582,15 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
       if(locationResult.hit) {
         const hitDetail = locationResult.hit;
 
-        const damageResult = await resolveRangedDamageRoll(action, weapon, roller);
+        const damageResult = await resolveRangedDamageRoll(action, weapon, roller, target);
+        if (damageResult.manualResolution) {
+          manualResolution = clonePlainData(damageResult.manualResolution);
+          hits.push(hitDetail);
+          break;
+        }
+
         const damageRoll = damageResult.damageRoll;
+        hitDetail.shotgun = damageResult.shotgun;
 
         const weaponAP = !!weapon?.snapshot?.ap;
         const coverInput = selectRangedCoverInput(action, target);

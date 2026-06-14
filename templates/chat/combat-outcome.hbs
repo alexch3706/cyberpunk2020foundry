@@ -126,6 +126,22 @@
                             <span class="flex-pad"></span>
                         </div>
                         {{/if}}
+                        {{#if hit.shotgun}}
+                        <div class="field">
+                            <span>Shotgun Spread: </span>
+                            <span class="flex-pad">{{hit.shotgun.bracket}} / {{hit.shotgun.damageFormula}} / {{hit.shotgun.patternWidthMeters}}m</span>
+                        </div>
+                        <div class="field">
+                            <span>Template: </span>
+                            <span class="flex-pad">{{hit.shotgun.inclusion}} {{#if hit.shotgun.templateId}}({{hit.shotgun.templateId}}){{/if}}</span>
+                        </div>
+                        {{#if hit.shotgun.measuredDistance}}
+                        <div class="field">
+                            <span>Distance: </span>
+                            <span class="flex-pad">{{hit.shotgun.measuredDistance.value}}{{hit.shotgun.measuredDistance.units}}</span>
+                        </div>
+                        {{/if}}
+                        {{/if}}
                         {{#if (hasProperty hit "rawDamage")}}
                         <div class="field">
                             <span>{{CPLocal "RawDamage"}}: </span>

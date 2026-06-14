@@ -88,7 +88,7 @@ export function normalizeTacticalTargets(options = {}) {
     templateRequired = false,
     raycastRequired = false
   } = options || {};
-  const sourceTargets = Array.from(targets || []);
+  const sourceTargets = mergeTemplateTargets(Array.from(targets || []), template);
   const normalizedTargets = normalizeSelectedTargets(sourceTargets);
   const hasTemplateContext = template !== undefined && template !== null;
   const hasRaycastContext = raycast !== undefined && raycast !== null;
@@ -148,6 +148,38 @@ export function normalizeTacticalTargets(options = {}) {
 
     return compactPlainObject(normalizedTarget);
   });
+}
+
+function mergeTemplateTargets(targets, template) {
+  const templateTargets = getTemplateTargets(template);
+  if(templateTargets.length === 0) {
+    return targets;
+  }
+  const mergedTargets = [...targets];
+  const seen = new Set(targets.map(target => targetKey(target)).filter(Boolean));
+  for(const target of templateTargets) {
+    const key = targetKey(target);
+    if(key && seen.has(key)) {
+      continue;
+    }
+    if(key) {
+      seen.add(key);
+    }
+    mergedTargets.push(target);
+  }
+  return mergedTargets;
+}
+
+function getTemplateTargets(template) {
+  if(!template || typeof template !== "object") {
+    return [];
+  }
+  const targetCandidates = template.targets || template.intersectedTargets || template.affectedTargets;
+  return Array.isArray(targetCandidates) ? targetCandidates : [];
+}
+
+function targetKey(target = {}) {
+  return target.id || target.tokenUuid || target.actorUuid || target.uuid || target.document?.uuid || target.actor?.uuid;
 }
 
 function resolveSelectedFlag(sourceTarget, context) {

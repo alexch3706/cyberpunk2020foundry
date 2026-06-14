@@ -40,7 +40,8 @@ export function buildWeaponCombatSnapshot(item) {
     range: system.range,
     accuracy: system.accuracy,
     attackType: system.attackType,
-    attackSkill: system.attackSkill
+    attackSkill: system.attackSkill,
+    rangeDamages: system.rangeDamages ? clonePlainData(system.rangeDamages) : undefined
   };
 }
 

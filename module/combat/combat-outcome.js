@@ -66,6 +66,7 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
  * @property {number=} accuracy Weapon accuracy modifier.
  * @property {string=} attackType Weapon attack type from item data.
  * @property {string=} attackSkill Skill name or key used for the attack roll.
+ * @property {Object<string, string>=} rangeDamages Range-bracket damage formulas for spread weapons.
  */
 
 /**
@@ -81,6 +82,8 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
  * @property {string=} actorUuid Stable Foundry actor UUID for the target.
  * @property {string} name Target display name.
  * @property {ActorCombatSnapshot=} snapshot Plain target data captured before resolution.
+ * @property {Object<string, *>=} tactical Tactical targeting evidence copied by adapter code.
+ * @property {Object<string, *>=} distance Measured target distance evidence, typically `{ value, units, source }`.
  */
 
 /**
@@ -144,6 +147,7 @@ export const MANUAL_RESOLUTION_REASON = Object.freeze({
  * @property {Object<string, *>=} armorPiercingEvidence AP armor and penetrating-damage evidence.
  * @property {Object<string, *>=} armor Armor resolver evidence including layers and warnings.
  * @property {Object<string, *>=} stagedPenetration Staged penetration evidence and planned ablation outcome.
+ * @property {Object<string, *>=} shotgun Shotgun template/drop-off evidence including template id, inclusion, distance, bracket, pattern width, and selected damage formula.
  * @property {number=} bodyTypeModifier Table-derived BTM reducer magnitude.
  * @property {number=} bodyTypeMitigation Damage removed by BTM.
  * @property {boolean=} minimumDamageApplied Whether BTM minimum damage enforcement forced final damage to 1.
