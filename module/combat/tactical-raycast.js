@@ -129,7 +129,21 @@ function calculateObstructionDistance(collision, attackerOrigin, canvasRef) {
 }
 
 function withoutStaleRaycastCover(target) {
-  const nextTarget = { ...(target || {}) };
+  const nextTarget = { 
+    document: target?.document,
+    actor: target?.actor,
+    actorUuid: target?.actorUuid || target?.actor?.uuid,
+    tokenUuid: target?.tokenUuid || target?.document?.uuid,
+    id: target?.id,
+    uuid: target?.uuid,
+    name: target?.name,
+    center: target?.center,
+    bounds: target?.bounds,
+    snapshot: target?.snapshot,
+    manualResolution: target?.manualResolution,
+    warnings: target?.warnings,
+    ...(target || {}) 
+  };
   const tactical = clonePlainData(target?.tactical) || {};
   delete tactical.raycast;
   delete tactical.cover;
