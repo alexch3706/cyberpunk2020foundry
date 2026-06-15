@@ -21,8 +21,8 @@ export class CyberpunkActorSheet extends ActorSheet {
       classes: ["cyberpunk", "sheet", "actor"],
       template: "systems/cyberpunk2020-rilerena/templates/actor/actor-sheet.hbs",
       // Default window dimensions
-      width: 590,
-      height: 600,
+      width: 900,
+      height: 900,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
   }

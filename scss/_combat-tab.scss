@@ -92,7 +92,7 @@
 // ── Armor display (used in combat tab & elsewhere) ──
 .cyberpunk .armor-display {
     max-height: 200px;
-    max-width: 25em;
+    max-width: 35em;
     padding-left: 10%;
     padding-right: 10%;
     margin-bottom: 10px;
@@ -115,11 +115,12 @@
         border: solid $border-primary;
         border-width: $field-border-width $field-border-width 0px $field-border-width;
         display: grid;
-        grid-template-rows: auto auto 1fr;
+        grid-template-rows: auto auto auto 1fr;
         grid-template-columns: 1fr 2fr 1fr;
         grid-template-areas:
             "loc loc loc"
             "ablate sp repair"
+            "sdp sdp sdp"
             "name name name";
 
         // SP value — cyan mono, bold
@@ -159,6 +160,33 @@
             padding: 0px;
             color: $text-secondary;
             font-size: small;
+        }
+
+        // SDP display for FBC
+        .segment-sdp {
+            grid-area: sdp;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+            margin-top: 2px;
+            color: $text-primary;
+
+            input {
+                width: 35px;
+                height: 16px;
+                font-size: 1.1em;
+                text-align: center;
+                border: 1px solid $border-primary;
+                background: transparent;
+                color: $text-primary;
+                padding: 0;
+            }
+            span {
+                font-weight: bold;
+                margin-left: 3px;
+                margin-right: 3px;
+            }
         }
 
         // Location label — magenta on elevated bg
