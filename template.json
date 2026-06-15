@@ -705,44 +705,46 @@
 				"notes": ""
 			},
 			"hitLocations": {
-				"Head": {
-					"location": [
-						1
-					],
-					"sdp": { "value": 0, "max": 0 }
-				},
-				"Torso": {
-					"location": [
-						2,
-						4
-					],
-					"sdp": { "value": 0, "max": 0 }
-				},
-				"lArm": {
-					"location": [
-						6
-					],
-					"sdp": { "value": 0, "max": 0 }
-				},
-				"rArm": {
-					"location": [
-						5
-					],
-					"sdp": { "value": 0, "max": 0 }
-				},
-				"lLeg": {
-					"location": [
-						7,
-						8
-					],
-					"sdp": { "value": 0, "max": 0 }
-				},
-				"rLeg": {
-					"location": [
-						9,
-						10
-					],
-					"sdp": { "value": 0, "max": 0 }
+				"hitLocations": {
+					"Head": {
+						"location": [
+							1
+						],
+						"sdp": { "value": 0, "max": 0 }
+					},
+					"Torso": {
+						"location": [
+							2,
+							4
+						],
+						"sdp": { "value": 0, "max": 0 }
+					},
+					"lArm": {
+						"location": [
+							6
+						],
+						"sdp": { "value": 0, "max": 0 }
+					},
+					"rArm": {
+						"location": [
+							5
+						],
+						"sdp": { "value": 0, "max": 0 }
+					},
+					"lLeg": {
+						"location": [
+							7,
+							8
+						],
+						"sdp": { "value": 0, "max": 0 }
+					},
+					"rLeg": {
+						"location": [
+							9,
+							10
+						],
+						"sdp": { "value": 0, "max": 0 }
+					}
 				}
 			},
 			"gear": {

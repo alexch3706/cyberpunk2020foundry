@@ -114,6 +114,11 @@ export class CyberpunkActor extends Actor {
           }
           const maxSdp = fbcLoc.sdp || 0;
           location.sdp.max = maxSdp;
+          
+          if (Array.isArray(location.sdp.value)) {
+            location.sdp.value = location.sdp.value.find(v => v !== "" && v != null) || maxSdp;
+          }
+          
           if (location.sdp.value == null || location.sdp.value === "") {
             location.sdp.value = maxSdp;
           }
