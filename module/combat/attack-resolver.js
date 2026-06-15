@@ -1850,16 +1850,6 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
     };
   }
 
-  if(!penetrated) {
-    return {
-      evidence: {
-        enabled: true,
-        applied: false,
-        reason: "no-penetration"
-      }
-    };
-  }
-
   const coverEffective = Number(armor.cover?.effectiveStoppingPower || 0);
   const parsedCoverAblation = Number(armor.cover?.ablation);
   const rawCoverAblation = Number.isFinite(parsedCoverAblation) ? parsedCoverAblation : 0;
@@ -1881,6 +1871,39 @@ function buildStagedPenetrationEvidence({ enabled, penetrated, rawDamage, armor,
   });
 
   if(!penetratedPersonalArmor) {
+    if (affectedLayers.length > 0) {
+      const outerLayer = affectedLayers[affectedLayers.length - 1];
+      const outerSP = Number(outerLayer.stoppingPower || 0);
+      if (remainingAfterCover > outerSP) {
+        const currentAblation = Number(outerLayer.ablation) || 0;
+        return {
+          evidence: {
+            enabled: true,
+            applied: true,
+            reason: "stress",
+            layer: {
+              id: outerLayer.id,
+              name: outerLayer.name,
+              ablation: {
+                before: currentAblation,
+                after: currentAblation + 1,
+                applied: true
+              }
+            }
+          },
+          plannedUpdate: {
+            actorUuid: target.actorUuid || target.snapshot?.actorUuid,
+            updates: [
+              {
+                _id: outerLayer.id,
+                [outerLayer.updatePath]: currentAblation + 1
+              }
+            ]
+          }
+        };
+      }
+    }
+
     if(coverEvidence) {
       return {
         evidence: {

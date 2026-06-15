@@ -24,6 +24,8 @@ const ANNOTATIONS = {
         "Audit: stagedPenetration setting disabled; CP2020 p.106: AP halving without ablation",
       "structured layered armor ablates outer item-backed layer":
         "CP2020 p.105: Proportional Armor Layering; CP2020 p.106: Staged Penetration on outer layer",
+      "structured stopped hit with damage exceeding outer layer plans outer layer ablation":
+        "Epic 9: Outer layer armor stress",
       "structured stopped hit does not plan staged armor ablation":
         "CP2020 p.106: No penetration = no staged ablation",
       "structured penetrating hit applies minimum damage after BTM":

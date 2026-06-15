@@ -188,6 +188,13 @@
                         </div>
                         {{/if}}
                         {{/if}}
+                        {{#if hit.stagedPenetration}}
+                        {{#if (compare hit.stagedPenetration.reason "===" "stress")}}
+                        <div class="field warning-text" style="color: darkred; font-style: italic;">
+                            <span>Outer Layer Stressed! {{hit.stagedPenetration.layer.name}} takes 1 Ablation (Damage exceeded raw SP).</span>
+                        </div>
+                        {{/if}}
+                        {{/if}}
                         {{#if (hasProperty hit "armorMitigation")}}
                         <div class="field">
                             <span>{{CPLocal "Armor"}}: </span>

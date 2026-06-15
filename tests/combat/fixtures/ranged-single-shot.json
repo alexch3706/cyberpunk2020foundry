@@ -1172,6 +1172,142 @@
       "ruleReference": "CP2020 p.105: Proportional Armor Layering; CP2020 p.106: Staged Penetration on outer layer"
     },
     {
+      "name": "structured stopped hit with damage exceeding outer layer plans outer layer ablation",
+      "context": {
+        "action": {
+          "fireMode": "SemiAuto",
+          "range": "RangeClose",
+          "targetNumber": "__UNDEFINED__",
+          "options": {
+            "targetArea": "torso",
+            "stagedPenetration": true
+          }
+        },
+        "targets": [
+          {
+            "actorUuid": "Actor.target",
+            "tokenUuid": "Scene.test.Token.target",
+            "name": "Target",
+            "snapshot": {
+              "stats": {
+                "bt": {
+                  "total": 6
+                }
+              },
+              "damage": 0,
+              "hitLocations": {
+                "torso": {
+                  "label": "Torso"
+                }
+              },
+              "equippedArmor": [
+                {
+                  "id": "inner-vest",
+                  "name": "Inner Vest",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "stoppingPower": 8,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                },
+                {
+                  "id": "outer-jacket",
+                  "name": "Outer Jacket",
+                  "equipped": true,
+                  "coverage": {
+                    "torso": {
+                      "stoppingPower": 12,
+                      "ablation": 0,
+                      "layer": "soft"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 18,
+          "die": {
+            "faces": 10,
+            "natural": 6,
+            "results": [
+              6
+            ],
+            "exploded": false
+          }
+        },
+        {
+          "id": "damage",
+          "formula": "3d6",
+          "total": 14,
+          "die": {
+            "faces": 6,
+            "natural": 14,
+            "results": [
+              5,
+              5,
+              4
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 14,
+                "effectiveStoppingPower": 17,
+                "penetratingDamage": 0,
+                "bodyTypeModifier": 2,
+                "bodyTypeMitigation": 0,
+                "minimumDamageApplied": false,
+                "finalDamage": 0,
+                "stagedPenetration": {
+                  "enabled": true,
+                  "applied": true,
+                  "reason": "stress",
+                  "layer": {
+                    "id": "outer-jacket",
+                    "name": "Outer Jacket",
+                    "ablation": {
+                      "before": 0,
+                      "after": 1,
+                      "applied": true
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedPlan": {
+        "embeddedItemUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "type": "Item",
+            "updates": [
+              {
+                "_id": "outer-jacket",
+                "system.coverage.torso.ablation": 1
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      },
+      "ruleReference": "Epic 9: Outer layer armor stress"
+    },
+    {
       "name": "structured stopped hit does not plan staged armor ablation",
       "context": {
         "action": {

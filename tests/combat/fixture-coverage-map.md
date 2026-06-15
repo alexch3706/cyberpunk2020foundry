@@ -1,7 +1,7 @@
 # Fixture Coverage Map
 
 **Generated:** 2026-06-15
-**Total fixture cases:** 101
+**Total fixture cases:** 102
 
 This map documents every rule and audit area covered by the fixture suite.
 Each entry lists the fixture JSON file and case name that verifies that rule.
@@ -20,7 +20,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | Weapon Accuracy | ✅ 1 | `ranged-single-shot.json` → structured hit with ranged modifier evidence |
 | Hit Location | ✅ 1 | `ranged-single-shot.json` → structured hit uses options-only aimed location |
 | Cover Stopping Power | ✅ 5 | `ranged-single-shot.json` → structured hit applies manual cover before personal armor<br>`ranged-single-shot.json` → structured manual cover penetration emits cover ablation evidence<br>`ranged-single-shot.json` → structured cover penetration can continue into personal armor<br>`ranged-single-shot.json` → structured cover stop does not stage-ablate personal armor<br>`ranged-single-shot.json` → structured cover and layered armor penetration ablates personal layers only |
-| Armor & AP | ✅ 13 | `ranged-single-shot.json` → structured cyberware staged penetration uses system-ablation update path<br>`ranged-single-shot.json` → structured outer armor stop does not prematurely ablate cyberware<br>`ranged-single-shot.json` → structured hit applies manual cover before personal armor<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured layered armor ablates all participating layers (13 total, showing 5) |
+| Armor & AP | ✅ 14 | `ranged-single-shot.json` → structured cyberware staged penetration uses system-ablation update path<br>`ranged-single-shot.json` → structured outer armor stop does not prematurely ablate cyberware<br>`ranged-single-shot.json` → structured hit applies manual cover before personal armor<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured layered armor ablates all participating layers (14 total, showing 5) |
 | Staged Penetration | ✅ 8 | `ranged-single-shot.json` → structured outer armor stop does not prematurely ablate cyberware<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured layered armor ablates all participating layers<br>`ranged-single-shot.json` → structured stopped hit does not plan staged armor ablation (8 total, showing 5) |
 | Progressive Ablation | ✅ 14 | `ranged-single-shot.json` → structured cyberware staged penetration uses system-ablation update path<br>`ranged-single-shot.json` → structured outer armor stop does not prematurely ablate cyberware<br>`ranged-single-shot.json` → structured AP penetration plans staged armor ablation<br>`ranged-single-shot.json` → structured AP penetration respects staged penetration disabled<br>`ranged-single-shot.json` → structured stopped hit does not plan staged armor ablation (14 total, showing 5) |
 | Body Type Modifier | ✅ 5 | `ranged-single-shot.json` → structured penetrating hit applies minimum damage after BTM<br>`melee-baseline.json` → melee-bt13-vs-bt14<br>`melee-baseline.json` → melee-bt15-vs-bt15<br>`melee-baseline.json` → melee-bt10-vs-bt10<br>`melee-baseline.json` → melee-bt11-vs-bt11 |
@@ -62,6 +62,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `ranged-single-shot.json` | structured AP penetration plans staged armor ablation | CP2020 p.106: Armor Piercing halving; CP2020 p.106: Staged Penetration; Audit... |
 | `ranged-single-shot.json` | structured AP penetration respects staged penetration disabled | Audit 6.4: stagedPenetration setting disabled; CP2020 p.106: AP halving witho... |
 | `ranged-single-shot.json` | structured layered armor ablates all participating layers | CP2020 p.105: Proportional Armor Layering; CP2020 p.106: Staged Penetration o... |
+| `ranged-single-shot.json` | structured stopped hit with damage exceeding outer layer plans outer layer ablation | Epic 9: Outer layer armor stress |
 | `ranged-single-shot.json` | structured stopped hit does not plan staged armor ablation | CP2020 p.106: No penetration = no staged ablation |
 | `ranged-single-shot.json` | structured penetrating hit applies minimum damage after BTM | CP2020 p.106: Minimum 1 damage after BTM |
 | `ranged-single-shot.json` | structured head hit doubles wound damage | CP2020 p.102: Head hit doubles damage; CP2020 p.108: Head hit > 8 damage = sp... |
