@@ -407,12 +407,23 @@ export async function resolveSuppressiveFire(context, options = {}, roller = und
   }
   finalRoundsFired = Math.max(0, finalRoundsFired);
 
-  // Save DC: Math.max(2, Math.floor(finalRoundsFired / fireZoneWidth))
   const saveDC = Math.max(2, Math.floor(finalRoundsFired / zoneWidth));
 
+  const sortedTargets = [...(context.targets || [])].sort((a, b) => {
+    const distA = a?.tactical?.template?.targetDistance ?? a?.distance?.value ?? Infinity;
+    const distB = b?.tactical?.template?.targetDistance ?? b?.distance?.value ?? Infinity;
+    return distA - distB;
+  });
+
   const targets = [];
-  for(const target of (context.targets || [])) {
-    targets.push(await resolveSuppressiveFireTarget(target, saveDC, roller, context.weapon, action, options));
+  let remainingHits = finalRoundsFired;
+
+  for(const target of sortedTargets) {
+    const result = await resolveSuppressiveFireTarget(target, saveDC, remainingHits, roller, context.weapon, action, options);
+    targets.push(result);
+    if(result.hits) {
+      remainingHits -= result.hits.length;
+    }
   }
 
   const manualTargets = targets.filter(t => t.manualResolution?.required);
@@ -468,7 +479,7 @@ function buildSuppressiveFireManual(message) {
   };
 }
 
-async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, action, resolverOptions = {}) {
+async function resolveSuppressiveFireTarget(target, saveDC, remainingHitCap, roller, weapon, action, resolverOptions = {}) {
   const targetWarnings = cloneArray(target.warnings);
   let manualResolution = target.manualResolution
     ? clonePlainData(target.manualResolution)
@@ -525,7 +536,8 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
       formula: "1d6"
     };
     const hitCountRoll = await roll(roller, hitCountRequest);
-    const numHits = Math.ceil(hitCountRoll.total / 2);
+    const rolledHits = Math.ceil(hitCountRoll.total / 2);
+    const numHits = Math.min(rolledHits, remainingHitCap);
 
     const targetSnapshotCopy = clonePlainData(target.snapshot || {});
     const accumulatedAblations = {};

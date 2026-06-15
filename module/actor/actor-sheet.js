@@ -291,11 +291,27 @@ export class CyberpunkActorSheet extends ActorSheet {
           const { detectAndPromptTacticalRaycasts } = await import("../combat/tactical-raycast.js");
           const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
           
+          let suppressiveFireOptions = null;
           let targetsToRaycast = selectedTargets;
+          
           if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
             const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets } = await import("../combat/template-placement.js");
             if (await promptUseShotgunTemplate()) {
               targetsToRaycast = await drawShotgunTemplateAndGetTargets(attackerToken);
+            }
+          } else if (item.system?.fireModes?.includes("Suppressive") || item.system?.fireModes?.includes("Auto") || item.system?.weaponType?.toLowerCase()?.includes("auto")) {
+            const shotsLeft = Number(item.system?.shotsLeft) || 0;
+            if (shotsLeft > 0) {
+              const { promptUseSuppressiveFireTemplate, drawSuppressiveFireTemplateAndGetTargets } = await import("../combat/template-placement.js");
+              suppressiveFireOptions = await promptUseSuppressiveFireTemplate(item, Math.min(shotsLeft, item.system?.rof || 999));
+              if (suppressiveFireOptions) {
+                const maxDistance = (item.system?.range || 50) / 4;
+                targetsToRaycast = await drawSuppressiveFireTemplateAndGetTargets(attackerToken, suppressiveFireOptions.zoneWidth, maxDistance);
+                const fireModeMod = modifierGroups?.[0]?.find(m => m.localKey === "FireMode");
+                if (fireModeMod && fireModeMod.choices?.includes("Suppressive")) {
+                   fireModeMod.defaultValue = "Suppressive";
+                }
+              }
             }
           }
 
@@ -312,6 +328,10 @@ export class CyberpunkActorSheet extends ActorSheet {
         targetTokens: targetTokens,
         modifierGroups: modifierGroups,
         onConfirm: async (fireOptions) => {
+          if (suppressiveFireOptions && fireOptions.fireMode === "Suppressive") {
+            fireOptions.roundsFired = suppressiveFireOptions.roundsFired;
+            fireOptions.fireZoneWidth = suppressiveFireOptions.zoneWidth;
+          }
           let attackDieOptions = {};
           if (resolverOptions && getAttackDieEntryMode({ options: resolverOptions }) === "prompt") {
             attackDieOptions = await promptAttackDieEntry();
