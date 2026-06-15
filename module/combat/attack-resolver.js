@@ -385,7 +385,7 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
   return {
     action: {
       ...action,
-      range,
+      range: rawRange,
       modifiers: modifierEvidence
     },
     attacker: clonePlainData(context.attacker || {}),
