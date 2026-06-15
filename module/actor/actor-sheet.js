@@ -290,7 +290,16 @@ export class CyberpunkActorSheet extends ActorSheet {
         try {
           const { detectAndPromptTacticalRaycasts } = await import("../combat/tactical-raycast.js");
           const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
-          targetTokens = await detectAndPromptTacticalRaycasts(attackerToken, selectedTargets);
+          
+          let targetsToRaycast = selectedTargets;
+          if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
+            const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets } = await import("../combat/template-placement.js");
+            if (await promptUseShotgunTemplate()) {
+              targetsToRaycast = await drawShotgunTemplateAndGetTargets(attackerToken);
+            }
+          }
+
+          targetTokens = await detectAndPromptTacticalRaycasts(attackerToken, targetsToRaycast);
           targetTokens = normalizeTacticalTargets({ targets: targetTokens });
         } catch (e) {
           console.warn("Tactical raycast failure:", e);
