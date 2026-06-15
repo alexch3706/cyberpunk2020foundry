@@ -108,8 +108,15 @@ export class CyberpunkActor extends Actor {
 
       if(system.isFBC && fbcItem && fbcItem.system.fbcHitLocations) {
         let fbcLoc = fbcItem.system.fbcHitLocations[locName];
-        if(fbcLoc && location.sdp) {
-          location.sdp.max = fbcLoc.sdp || 0;
+        if(fbcLoc) {
+          if (!location.sdp) {
+            location.sdp = { value: fbcLoc.sdp || 0, max: 0 };
+          }
+          const maxSdp = fbcLoc.sdp || 0;
+          location.sdp.max = maxSdp;
+          if (location.sdp.value == null || location.sdp.value === "") {
+            location.sdp.value = maxSdp;
+          }
         }
       }
     }

@@ -173,7 +173,7 @@ export let defaultAreaLookup = {
 }
 export function defaultHitLocations() {
     const actorModel = game.model?.Actor || game.system?.template?.Actor;
-    const hitLocs = actorModel?.templates?.hitLocations?.hitLocations || actorModel?.character?.hitLocations;
+    const hitLocs = actorModel?.templates?.hitLocations || actorModel?.character?.hitLocations;
     if (hitLocs) return hitLocs;
     
     // Default fallback
