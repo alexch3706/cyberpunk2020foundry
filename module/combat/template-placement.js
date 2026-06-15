@@ -172,31 +172,46 @@ export async function promptUseSuppressiveFireTemplate(weapon, maxRounds) {
   });
 }
 
-export async function drawSuppressiveFireTemplateAndGetTargets(attackerToken, zoneWidth, maxDistance) {
+export async function placePersistentSuppressiveFireTemplate(attackerToken, weaponItem, bulletsFired, zoneWidth, maxDistance) {
   return new Promise(async (resolve) => {
     if (!globalThis.canvas?.ready) {
       ui.notifications?.warn("Canvas is not ready. Cannot place template.");
-      return resolve([]);
+      return resolve(false);
     }
 
     const origin = attackerToken?.center || attackerToken?.object?.center || attackerToken?.bounds?.center;
     if (!origin) {
       ui.notifications?.warn("Attacker token origin not found.");
-      return resolve([]);
+      return resolve(false);
     }
 
     const gridDistance = canvas.scene.grid.distance;
 
-    const templateData = {
-      t: "ray",
-      user: game.user.id,
-      distance: maxDistance || 10,
-      width: zoneWidth,
-      direction: 0,
-      x: origin.x,
-      y: origin.y,
-      fillColor: game.user.color || "#ff0000"
-    };
+    // Use the builder from suppressive-fire-tracker
+    const { buildSuppressiveFireTemplateData } = await import("./suppressive-fire-tracker.js");
+    
+    let damageFormula = weaponItem.system?.damage || "1d6";
+    // Usually suppressive fire deals 1D6 hits per failed save, and the damage of the weapon is per hit.
+    // The tracker will handle rolling hits vs weapon damage.
+
+    const templateData = buildSuppressiveFireTemplateData({
+        attackerTokenId: attackerToken.id,
+        attackerActorId: attackerToken.actor?.id,
+        weaponItemId: weaponItem.id,
+        damageFormula: damageFormula,
+        bulletsFired: bulletsFired,
+        zoneWidth: zoneWidth,
+        maxDistance: maxDistance,
+        origin: origin,
+        combatRound: game.combat?.round || 0,
+        combatTurn: game.combat?.turn || 0,
+        combatId: game.combat?.id || ""
+    });
+
+    // Add UI fields
+    templateData.user = game.user.id;
+    templateData.direction = 0;
+    templateData.fillColor = game.user.color || "#ff0000";
 
     const doc = new CONFIG.MeasuredTemplate.documentClass(templateData, { parent: canvas.scene });
     let template = new CONFIG.MeasuredTemplate.objectClass(doc);
@@ -223,11 +238,8 @@ export async function drawSuppressiveFireTemplateAndGetTargets(attackerToken, zo
       event.stopPropagation();
       const pos = event.data.getLocalPosition(canvas.tokens);
       const ray = new Ray(origin, pos);
-      let dist = (ray.distance / canvas.grid.size) * gridDistance;
-      dist = Math.min(dist, maxDistance);
       template.document.updateSource({ 
-        direction: Math.normalizeDegrees(Math.toDegrees(ray.angle)),
-        distance: dist
+        direction: Math.normalizeDegrees(Math.toDegrees(ray.angle))
       });
       template.refresh();
     };
@@ -236,7 +248,7 @@ export async function drawSuppressiveFireTemplateAndGetTargets(attackerToken, zo
       event.preventDefault();
       event.stopPropagation();
       cleanup();
-      resolve([]);
+      resolve(false);
     };
 
     const onConfirm = async (event) => {
@@ -244,44 +256,9 @@ export async function drawSuppressiveFireTemplateAndGetTargets(attackerToken, zo
       cleanup();
       
       const createdDocs = await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [template.document.toObject()]);
-      if (!createdDocs || createdDocs.length === 0) return resolve([]);
+      if (!createdDocs || createdDocs.length === 0) return resolve(false);
       
-      const createdDoc = createdDocs[0];
-      
-      setTimeout(() => {
-        const templateObj = createdDoc.object;
-        if (!templateObj) return resolve([]);
-
-        const tokens = canvas.tokens.placeables.filter(t => {
-          if (t.id === attackerToken?.id || t.id === attackerToken?.object?.id) return false;
-          const tCenter = t.center || { x: t.x + (t.w/2), y: t.y + (t.h/2) };
-          return templateObj.shape.contains(tCenter.x - templateObj.document.x, tCenter.y - templateObj.document.y);
-        });
-        
-        const augmentedTokens = tokens.map(t => {
-          const tCenter = t.center || { x: t.x + (t.w/2), y: t.y + (t.h/2) };
-          const ray = new Ray(origin, tCenter);
-          const distancePx = ray.distance;
-          const distanceMeters = (distancePx / canvas.grid.size) * gridDistance;
-
-          t.tactical = t.tactical || {};
-          t.tactical.template = {
-            templateUuid: createdDoc.uuid,
-            templateId: createdDoc.id,
-            type: "ray",
-            origin: { x: createdDoc.x, y: createdDoc.y },
-            direction: createdDoc.direction,
-            angle: createdDoc.angle,
-            width: createdDoc.width,
-            distance: createdDoc.distance,
-            targetDistance: distanceMeters,
-            inclusion: "intersected"
-          };
-          return t;
-        });
-
-        resolve(augmentedTokens);
-      }, 100);
+      resolve(true);
     };
 
     canvas.stage.on("pointermove", onMove);

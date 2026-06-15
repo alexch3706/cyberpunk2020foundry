@@ -14,7 +14,7 @@ import { runRangeDcTests } from "./combat/range-dcs.test.js";
 import { runArmorMaintenanceTests } from "./combat/armor-maintenance.test.js";
 import { runDerivedStatOverrideTests } from "./combat/derived-stat-overrides.test.js";
 import { runWoundHintTests } from "./combat/wound-hints.test.js";
-
+import { runSuppressiveFireTests } from "./combat/suppressive-fire.test.js";
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
@@ -27,7 +27,8 @@ const results = [
   ...await runRangeDcTests(),
   ...runArmorMaintenanceTests(),
   ...runDerivedStatOverrideTests(),
-  ...runWoundHintTests()
+  ...runWoundHintTests(),
+  ...await runSuppressiveFireTests()
 ];
 
 for(const result of results) {

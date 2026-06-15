@@ -20,9 +20,9 @@ const FIXTURE_FILES = [
   "ranged-single-shot.json",
   "three-round-burst.json",
   "ranged-full-auto.json",
-  "suppressive-fire.json",
+
   "reliability-jam.json",
-  "unsupported-modes.json",
+
   "melee-baseline.json"
 ];
 

@@ -307,12 +307,16 @@ export class CyberpunkActorSheet extends ActorSheet {
             if (isAutoWeapon) {
               const shotsLeft = Number(item.system?.shotsLeft) || 0;
               if (shotsLeft > 0) {
-                const { promptUseSuppressiveFireTemplate, drawSuppressiveFireTemplateAndGetTargets } = await import("../combat/template-placement.js");
+                const { promptUseSuppressiveFireTemplate, placePersistentSuppressiveFireTemplate } = await import("../combat/template-placement.js");
                 suppressiveFireOptions = await promptUseSuppressiveFireTemplate(item, Math.min(shotsLeft, item.system?.rof || 999));
                 if (suppressiveFireOptions) {
                   const { getMaxRangeBracketDistance } = await import("../lookups.js");
                   const maxDistance = getMaxRangeBracketDistance(item.system?.range || 50, 'RangeClose');
-                  targetsToRaycast = await drawSuppressiveFireTemplateAndGetTargets(attackerToken, suppressiveFireOptions.zoneWidth, maxDistance);
+                  const isPlaced = await placePersistentSuppressiveFireTemplate(attackerToken, item, suppressiveFireOptions.roundsFired, suppressiveFireOptions.zoneWidth, maxDistance);
+                  if (isPlaced) {
+                    await item.update({ "system.shotsLeft": shotsLeft - suppressiveFireOptions.roundsFired });
+                    return; // Exit, because it's a persistent hazard now, no immediate attack roll needed
+                  }
                 }
               }
             }

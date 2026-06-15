@@ -1,5 +1,5 @@
 import { rangeDCs, ranges } from "../lookups.js";
-import { resolveSingleShotRangedAttack, resolveSuppressiveFire, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
+import { resolveSingleShotRangedAttack, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 import { classifyAttackTypeSupport } from "./conformance-helpers.js";
 import { COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
@@ -75,9 +75,9 @@ export async function resolveCombatAction(context, options = {}, roller = undefi
       }
     }
 
-    if(canResolveSuppressiveFireContext(context, resolvedRoller)) {
-      return await resolveSuppressiveFire(context, options, resolvedRoller);
-    }
+    // Suppressive Fire is no longer resolved here. It is handled by the persistent hazard tracker
+    // when tokens intersect the MeasuredTemplate.
+
     const rangedManualOutcome = validateSupportedRangedContext(context, resolvedRoller);
     if(rangedManualOutcome) {
       return rangedManualOutcome;
@@ -107,26 +107,6 @@ function isSupportedSingleShotRangedContext(context) {
     && (fireMode === "semiauto" || fireMode === "threeroundburst" || fireMode === "fullauto");
 }
 
-function canResolveSuppressiveFireContext(context, roller) {
-  const fireMode = String(context?.action?.fireMode || "").toLowerCase();
-  const isValidMode = context?.action?.type === "ranged"
-    && (fireMode === "suppressive" || fireMode === "suppressivefire")
-    && Array.isArray(context.targets)
-    && typeof roller === "function";
-
-  if (!isValidMode) return false;
-
-  if (isCorebookFidelityEnabled(context)) {
-    const fireZoneWidth = context.action?.fireZoneWidth ?? context.action?.options?.fireZoneWidth;
-    const roundsFired = context.action?.roundsFired ?? context.action?.options?.roundsFired;
-
-    if (fireZoneWidth === undefined || fireZoneWidth === null || roundsFired === undefined || roundsFired === null) {
-      return false;
-    }
-  }
-
-  return true;
-}
 
 function canResolveMeleeContext(context, roller) {
   const actionType = context?.action?.type || "";

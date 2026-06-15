@@ -3,7 +3,7 @@
   "context": {
     "action": {
       "type": "ranged",
-      "fireMode": "SuppressiveFire",
+      "fireMode": "UnknownMode",
       "fireZoneWidth": 3,
       "roundsFired": 30,
       "source": "tests/combat/fixtures/unsupported-modes.json"
@@ -87,16 +87,29 @@
   },
   "rolls": [
     {
-      "id": "save",
-      "expectedRequest": {
-        "id": "save"
-      },
+      "id": "attack",
       "total": 10,
-      "die": [
-        {
-          "result": 10
-        }
-      ]
+      "die": {
+        "faces": 10,
+        "natural": 10
+      }
+    },
+    {
+      "id": "location",
+      "total": 5,
+      "die": {
+        "faces": 10,
+        "natural": 5
+      },
+      "location": "torso"
+    },
+    {
+      "id": "damage",
+      "total": 6,
+      "die": {
+        "faces": 6,
+        "natural": 6
+      }
     }
   ],
   "expected": {
@@ -111,55 +124,6 @@
   "chatStatusCases": [],
   "invalidPlanCases": [],
   "singleShotCases": [
-    {
-      "name": "suppressive-no-inputs-fidelity - reject to legacy warning",
-      "context": {
-        "action": {
-          "type": "ranged",
-          "fireMode": "SuppressiveFire",
-          "fireZoneWidth": "__UNDEFINED__",
-          "roundsFired": "__UNDEFINED__",
-          "source": "__UNDEFINED__"
-        },
-        "options": {
-          "corebookFidelityMode": true
-        }
-      },
-      "rolls": [],
-      "legacyExpected": {
-        "manualResolution": true,
-        "warning": "Suppressive fire not supported without zone width and rounds fired inputs."
-      },
-      "expected": {
-        "manualResolution": true,
-        "warning": "Suppressive fire not supported without zone width and rounds fired inputs."
-      },
-      "ruleReference": "Audit 6.2: Corebook Fidelity mode rejects missing inputs"
-    },
-    {
-      "name": "suppressive-no-inputs-relaxed - routes to resolver, returns resolver manual outcome",
-      "context": {
-        "action": {
-          "type": "ranged",
-          "fireMode": "SuppressiveFire",
-          "fireZoneWidth": "__UNDEFINED__",
-          "roundsFired": "__UNDEFINED__",
-          "source": "__UNDEFINED__"
-        },
-        "options": {
-          "corebookFidelityMode": false
-        }
-      },
-      "rolls": [],
-      "expected": {
-        "manualResolution": {
-          "required": true,
-          "reason": "missing-rule-data",
-          "message": "Suppressive fire requires fireZoneWidth and roundsFired; resolve manually."
-        }
-      },
-      "ruleReference": "Audit 6.2: Relaxed mode routes to resolver which returns manual outcome"
-    },
     {
       "name": "full-auto-fidelity-supported",
       "context": {
@@ -280,5 +244,13 @@
       },
       "ruleReference": "Audit 6.2: ThreeRoundBurst is supported in Corebook Fidelity mode"
     }
-  ]
+  ],
+  "outcomeEvidence": {
+    "plannedUpdates": {},
+    "ammo": {
+      "shotsLeft": 30,
+      "bulletsFired": 1
+    },
+    "itemUpdates": []
+  }
 }

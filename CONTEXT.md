@@ -63,3 +63,20 @@ _Avoid_: Open-ended exploding die, recursive crit, exploding chain
 **Attack Luck Spend**:
 Luck points declared before an attack roll and added to that attack's total. In the Trusted MVP, Luck is referee-managed at the table rather than tracked as a separate system resource.
 _Avoid_: After-roll bonus, reroll, automatic Luck pool
+
+**Target**:
+A token explicitly clicked or selected by the user to be the direct recipient of an attack (e.g., a single-shot pistol attack).
+_Avoid_: Using "Target" to describe the map area or the tokens accidentally caught in an area of effect.
+
+**Hazard Zone**:
+A spatial area on the canvas (like a MeasuredTemplate or Raycast line) that represents an area of effect attack such as a shotgun blast, suppressive fire, or an explosion. The zone itself is not a target.
+_Avoid_: Treating the map template itself as a combat target.
+
+**Affected Token**:
+A token that is caught inside a Hazard Zone and must resolve damage or saving throws, despite not being explicitly selected as a Target by the attacker.
+_Avoid_: Calling these "Targets", which confuses explicit selection with area intersection.
+
+**Attack Resolution**:
+The complete life-cycle of a combat action, from the initiation of the attack (e.g. attack roll) through hit locations, armor ablation, damage application, and state changes.
+_Avoid_: "Combat Resolution" (too broad, implies resolving the whole fight), "Attack Roll" (only refers to the dice throw).
+

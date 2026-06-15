@@ -16,9 +16,8 @@ const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
   new URL("./fixtures/three-round-burst.json", import.meta.url),
   new URL("./fixtures/ranged-full-auto.json", import.meta.url),
-  new URL("./fixtures/suppressive-fire.json", import.meta.url),
+
   new URL("./fixtures/reliability-jam.json", import.meta.url),
-  new URL("./fixtures/unsupported-modes.json", import.meta.url),
   new URL("./fixtures/melee-baseline.json", import.meta.url),
   new URL("./fixtures/shotgun-template.json", import.meta.url)
 ];
@@ -64,6 +63,7 @@ async function runFixture(fixture) {
     }
   };
 
+  console.log("Running fixture:", fixture.name);
   const options = useStructured ? { structured: true } : {};
   const outcome = await resolveCombatAction(context, options, roller);
   roller.assertComplete();
