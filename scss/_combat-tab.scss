@@ -91,11 +91,10 @@
 
 // ── Armor display (used in combat tab & elsewhere) ──
 .cyberpunk .armor-display {
-    max-height: 200px;
-    max-width: 35em;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-bottom: 10px;
+    max-width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-bottom: 15px;
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
