@@ -100,6 +100,14 @@
         padding: $spacing-md;
         gap: 20px;
         overflow-y: auto;
+
+        .combat-tab {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "rolls"
+                "weapons"
+                "armor";
+        }
     }
 
     /* Center Pane */
