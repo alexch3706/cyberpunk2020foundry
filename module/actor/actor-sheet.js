@@ -300,15 +300,20 @@ export class CyberpunkActorSheet extends ActorSheet {
             if (await promptUseShotgunTemplate()) {
               targetsToRaycast = await drawShotgunTemplateAndGetTargets(attackerToken);
             }
-          } else if (item.system?.fireModes?.includes("Suppressive") || item.system?.fireModes?.includes("Auto") || item.system?.weaponType?.toLowerCase()?.includes("auto")) {
-            const shotsLeft = Number(item.system?.shotsLeft) || 0;
-            if (shotsLeft > 0) {
-              const { promptUseSuppressiveFireTemplate, drawSuppressiveFireTemplateAndGetTargets } = await import("../combat/template-placement.js");
-              suppressiveFireOptions = await promptUseSuppressiveFireTemplate(item, Math.min(shotsLeft, item.system?.rof || 999));
-              if (suppressiveFireOptions) {
-                const { getMaxRangeBracketDistance } = await import("../lookups.js");
-                const maxDistance = getMaxRangeBracketDistance(item.system?.range || 50, 'RangeClose');
-                targetsToRaycast = await drawSuppressiveFireTemplateAndGetTargets(attackerToken, suppressiveFireOptions.zoneWidth, maxDistance);
+          } else {
+            const fireModes = typeof item.__getFireModes === "function" ? item.__getFireModes() : [];
+            const isAutoWeapon = fireModes.includes("Suppressive") || fireModes.includes("FullAuto") || String(item.system?.attackType).toLowerCase() === "auto" || String(item.system?.weaponType).toLowerCase().includes("auto");
+
+            if (isAutoWeapon) {
+              const shotsLeft = Number(item.system?.shotsLeft) || 0;
+              if (shotsLeft > 0) {
+                const { promptUseSuppressiveFireTemplate, drawSuppressiveFireTemplateAndGetTargets } = await import("../combat/template-placement.js");
+                suppressiveFireOptions = await promptUseSuppressiveFireTemplate(item, Math.min(shotsLeft, item.system?.rof || 999));
+                if (suppressiveFireOptions) {
+                  const { getMaxRangeBracketDistance } = await import("../lookups.js");
+                  const maxDistance = getMaxRangeBracketDistance(item.system?.range || 50, 'RangeClose');
+                  targetsToRaycast = await drawSuppressiveFireTemplateAndGetTargets(attackerToken, suppressiveFireOptions.zoneWidth, maxDistance);
+                }
               }
             }
           }
