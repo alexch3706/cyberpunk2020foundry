@@ -449,7 +449,14 @@ function addEmbeddedItemUpdates(plan, batches = []) {
       continue;
     }
     if(existing) {
-      existing.updates.push(...clonedUpdates);
+      for(const clonedUpdate of clonedUpdates) {
+        const target = existing.updates.find(u => u._id === clonedUpdate._id);
+        if(target) {
+          Object.assign(target, clonedUpdate);
+        } else {
+          existing.updates.push(clonedUpdate);
+        }
+      }
     }
     else {
       plan.embeddedItemUpdates.push({
