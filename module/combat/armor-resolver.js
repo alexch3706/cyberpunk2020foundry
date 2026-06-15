@@ -79,7 +79,7 @@ export function getEquippedArmorForLocation(targetSnapshot, location) {
         baseStoppingPower: baseSP,
         ablation,
         coverageKey: coverageMatch?.key,
-        updatePath: coverageMatch ? `system.coverage.${coverageMatch.key}.ablation` : "system.ablation",
+        updatePath: coverageMatch ? `system.${coverageMatch.pathPrefix}.${coverageMatch.key}.ablation` : "system.ablation",
         layer: coverage?.layer || getCyberwareLayer(item, system),
         equipped: true,
         source: system.source || ""
@@ -343,11 +343,22 @@ function normalizeAblation(value) {
  * Find the coverage entry in the armor's system block matching the target location case-insensitively.
  */
 function getArmorCoverageForLocation(armorSystem, targetKey) {
-  if (!armorSystem || !armorSystem.coverage) {
+  if (!armorSystem) return null;
+  
+  let coverageObj = armorSystem.coverage;
+  let coveragePath = "coverage";
+
+  if (!coverageObj && armorSystem.isFBC) {
+    coverageObj = armorSystem.fbcHitLocations;
+    coveragePath = "fbcHitLocations";
+  }
+
+  if (!coverageObj) {
     return null;
   }
-  const entry = Object.entries(armorSystem.coverage).find(([key]) => key.toLowerCase() === targetKey);
-  return entry ? { key: entry[0], value: entry[1] } : null;
+
+  const entry = Object.entries(coverageObj).find(([key]) => key.toLowerCase() === targetKey);
+  return entry ? { key: entry[0], value: entry[1], pathPrefix: coveragePath } : null;
 }
 
 export function getCyberwareStoppingPower(item, system) {
@@ -373,7 +384,7 @@ function getCyberwareLayer(item, system) {
 }
 
 export function cyberwareCoversLocation(item, system, targetKey) {
-  if (system.coverage) {
+  if (system.coverage || system.isFBC) {
     return !!getArmorCoverageForLocation(system, targetKey);
   }
 

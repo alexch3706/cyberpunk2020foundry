@@ -624,7 +624,25 @@ async function resolveSuppressiveFireTarget(target, saveDC, roller, weapon, acti
               const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
               if(cyberwareItem) {
                 const cyberwareSystem = cyberwareItem.system || cyberwareItem;
-                cyberwareSystem.ablation = update[updatePath];
+                if (updatePath.startsWith("system.fbcHitLocations.")) {
+                  const pathParts = updatePath.split('.');
+                  if (pathParts.length >= 4) {
+                    const key = pathParts[2];
+                    if (cyberwareSystem.fbcHitLocations && cyberwareSystem.fbcHitLocations[key]) {
+                      cyberwareSystem.fbcHitLocations[key].ablation = update[updatePath];
+                    }
+                  }
+                } else if (updatePath.startsWith("system.coverage.")) {
+                  const pathParts = updatePath.split('.');
+                  if (pathParts.length >= 4) {
+                    const key = pathParts[2];
+                    if (cyberwareSystem.coverage && cyberwareSystem.coverage[key]) {
+                      cyberwareSystem.coverage[key].ablation = update[updatePath];
+                    }
+                  }
+                } else {
+                  cyberwareSystem.ablation = update[updatePath];
+                }
               }
             }
           }
@@ -1664,7 +1682,25 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
               const cyberwareItem = targetSnapshotCopy.equippedCyberware?.find(c => c.id === armorId);
               if(cyberwareItem) {
                 const cyberwareSystem = cyberwareItem.system || cyberwareItem;
-                cyberwareSystem.ablation = update[updatePath];
+                if (updatePath.startsWith("system.fbcHitLocations.")) {
+                  const pathParts = updatePath.split('.');
+                  if (pathParts.length >= 4) {
+                    const key = pathParts[2];
+                    if (cyberwareSystem.fbcHitLocations && cyberwareSystem.fbcHitLocations[key]) {
+                      cyberwareSystem.fbcHitLocations[key].ablation = update[updatePath];
+                    }
+                  }
+                } else if (updatePath.startsWith("system.coverage.")) {
+                  const pathParts = updatePath.split('.');
+                  if (pathParts.length >= 4) {
+                    const key = pathParts[2];
+                    if (cyberwareSystem.coverage && cyberwareSystem.coverage[key]) {
+                      cyberwareSystem.coverage[key].ablation = update[updatePath];
+                    }
+                  }
+                } else {
+                  cyberwareSystem.ablation = update[updatePath];
+                }
               }
             }
           }

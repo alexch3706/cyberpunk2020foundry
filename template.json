@@ -860,14 +860,15 @@
 			"spaces": 0,
 			"abbrev": "",
 			"humanityLoss": 0,
+			"layer": "",
 			"isFBC": false,
 			"fbcHitLocations": {
-				"Head": { "sdp": 0 },
-				"Torso": { "sdp": 0 },
-				"lArm": { "sdp": 0 },
-				"rArm": { "sdp": 0 },
-				"lLeg": { "sdp": 0 },
-				"rLeg": { "sdp": 0 }
+				"Head": { "sdp": 0, "sp": 0, "ablation": 0 },
+				"Torso": { "sdp": 0, "sp": 0, "ablation": 0 },
+				"lArm": { "sdp": 0, "sp": 0, "ablation": 0 },
+				"rArm": { "sdp": 0, "sp": 0, "ablation": 0 },
+				"lLeg": { "sdp": 0, "sp": 0, "ablation": 0 },
+				"rLeg": { "sdp": 0, "sp": 0, "ablation": 0 }
 			}
 		},
 		"vehicle": {

@@ -15,19 +15,55 @@
     {{> (template "fields/number") label="Slots" edit="system.slots"}}
     {{> (template "fields/number") label="Spaces" edit="system.spaces"}}
     
+    <div class="field">
+        <label>Layer (Hard/Soft)</label>
+        <span class="flex-pad"></span>
+        <select name="system.layer" style="width: 120px;">
+            <option value="" {{#if (eq system.layer "")}}selected{{/if}}>Auto</option>
+            <option value="hard" {{#if (eq system.layer "hard")}}selected{{/if}}>Hard</option>
+            <option value="soft" {{#if (eq system.layer "soft")}}selected{{/if}}>Soft</option>
+        </select>
+    </div>
+    
     <hr>
     {{> (template "fields/boolean") label="Is Full Body Conversion" edit="system.isFBC"}}
     {{#if system.isFBC}}
     <div class="field">
-        <label>FBC Max SDP per Limb</label>
+        <label style="flex: 2;">Limb</label>
+        <label style="flex: 1; text-align: center;">Max SDP</label>
+        <label style="flex: 1; text-align: center;">Base SP</label>
     </div>
     <div class="field-list" style="padding-left: 10px;">
-        {{> (template "fields/number") label="Head SDP" edit="system.fbcHitLocations.Head.sdp"}}
-        {{> (template "fields/number") label="Torso SDP" edit="system.fbcHitLocations.Torso.sdp"}}
-        {{> (template "fields/number") label="R.Arm SDP" edit="system.fbcHitLocations.rArm.sdp"}}
-        {{> (template "fields/number") label="L.Arm SDP" edit="system.fbcHitLocations.lArm.sdp"}}
-        {{> (template "fields/number") label="R.Leg SDP" edit="system.fbcHitLocations.rLeg.sdp"}}
-        {{> (template "fields/number") label="L.Leg SDP" edit="system.fbcHitLocations.lLeg.sdp"}}
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">Head</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.Head.sdp" value="{{system.fbcHitLocations.Head.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.Head.sp" value="{{system.fbcHitLocations.Head.sp}}" title="Base SP">
+        </div>
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">Torso</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.Torso.sdp" value="{{system.fbcHitLocations.Torso.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.Torso.sp" value="{{system.fbcHitLocations.Torso.sp}}" title="Base SP">
+        </div>
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">R.Arm</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.rArm.sdp" value="{{system.fbcHitLocations.rArm.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.rArm.sp" value="{{system.fbcHitLocations.rArm.sp}}" title="Base SP">
+        </div>
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">L.Arm</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.lArm.sdp" value="{{system.fbcHitLocations.lArm.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.lArm.sp" value="{{system.fbcHitLocations.lArm.sp}}" title="Base SP">
+        </div>
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">R.Leg</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.rLeg.sdp" value="{{system.fbcHitLocations.rLeg.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.rLeg.sp" value="{{system.fbcHitLocations.rLeg.sp}}" title="Base SP">
+        </div>
+        <div class="field" style="display: flex;">
+            <label style="flex: 2;">L.Leg</label>
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.lLeg.sdp" value="{{system.fbcHitLocations.lLeg.sdp}}" title="Max SDP">
+            <input type="number" style="flex: 1; text-align: center;" name="system.fbcHitLocations.lLeg.sp" value="{{system.fbcHitLocations.lLeg.sp}}" title="Base SP">
+        </div>
     </div>
     {{/if}}
 </div>

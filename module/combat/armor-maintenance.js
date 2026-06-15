@@ -6,8 +6,8 @@ import {
 
 export function getCyberwareArmorStatus(item) {
   const system = item?.system || item || {};
-  if(system.coverage) {
-    return getCoverageArmorStatus(system.coverage, true, { requireStoppingPower: true });
+  if(system.coverage || system.fbcHitLocations) {
+    return getCoverageArmorStatus(system.coverage || system.fbcHitLocations, true, { requireStoppingPower: true });
   }
 
   const baseStoppingPower = getCyberwareStoppingPower(item || {}, system);
@@ -49,7 +49,7 @@ function getCoverageArmorStatus(coverage = {}, isArmorCandidate = false, options
 }
 
 export function buildArmorRepairUpdate(item) {
-  if(item?.type === "armor" || item?.system?.coverage) {
+  if(item?.type === "armor" || item?.system?.coverage || item?.system?.fbcHitLocations) {
     return buildArmorItemRepairUpdate(item);
   }
 
@@ -63,13 +63,22 @@ export function buildArmorRepairUpdate(item) {
 }
 
 function buildArmorItemRepairUpdate(item) {
-  const coverage = item?.system?.coverage || {};
   const update = {};
+
+  const coverage = item?.system?.coverage || {};
   for(const [coverageKey, segment] of Object.entries(coverage)) {
     if(normalizeAblation(segment?.ablation) > 0) {
       update[`system.coverage.${coverageKey}.ablation`] = 0;
     }
   }
+
+  const fbcLocations = item?.system?.fbcHitLocations || {};
+  for(const [coverageKey, segment] of Object.entries(fbcLocations)) {
+    if(normalizeAblation(segment?.ablation) > 0) {
+      update[`system.fbcHitLocations.${coverageKey}.ablation`] = 0;
+    }
+  }
+
   return Object.keys(update).length > 0 ? update : undefined;
 }
 
