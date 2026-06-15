@@ -1,4 +1,4 @@
-import { defaultAreaLookup, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
+import { defaultAreaLookup, getRangeBracketForDistance, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
 import { getKeyTechniqueBonus, getRequiresPrerequisite } from "./martial-arts-data.js";
@@ -155,8 +155,20 @@ export function resolveJamOutcome(isFumble, fireMode, reliability, weaponName = 
 export async function resolveSingleShotRangedAttack(context, options = {}, roller = undefined) {
   const action = clonePlainData(context.action || {});
   action.targetArea = action.targetArea || action.options?.targetArea;
-  const range = normalizeRange(action.range);
-  const targetNumber = rangeDCs[range] || action.targetNumber;
+  const rawRange = normalizeRange(action.range);
+  
+  let baseRange = rawRange;
+  if (baseRange === ranges.auto && context.targets?.length > 0) {
+    const firstTargetDist = context.targets[0]?.distance?.value;
+    if (firstTargetDist !== undefined && Number.isFinite(Number(firstTargetDist))) {
+      const weaponRange = Number(context.weapon?.snapshot?.system?.range || context.weapon?.system?.range || 50);
+      baseRange = getRangeBracketForDistance(Number(firstTargetDist), weaponRange);
+    } else {
+      baseRange = ranges.close;
+    }
+  }
+  
+  const targetNumber = rangeDCs[baseRange] || action.targetNumber;
 
   const fireMode = String(action.fireMode || "").toLowerCase();
   const targetCount = Array.isArray(context.targets) ? context.targets.length : 0;
@@ -219,6 +231,11 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
       }
 
       const targetAction = buildFullAutoTargetAction(action, idx, roundsFiredPerTarget);
+      if (rawRange === ranges.auto && target?.distance?.value !== undefined && Number.isFinite(Number(target.distance.value))) {
+        const weaponRange = Number(context.weapon?.snapshot?.system?.range || context.weapon?.system?.range || 50);
+        targetAction.range = getRangeBracketForDistance(Number(target.distance.value), weaponRange);
+        targetAction.targetNumber = rangeDCs[targetAction.range] || targetAction.targetNumber;
+      }
       const targetModifierEvidence = buildModifierEvidence(targetAction, context.weapon);
       const baseTargetAttackEvidence = buildFullAutoAttackEvidence({
         modifiers: targetModifierEvidence,
@@ -266,7 +283,7 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
           target: clonePlainData(target),
           attack: {
             roll: clonePlainData(targetAttackRoll),
-            targetNumber,
+            targetNumber: targetAction.targetNumber || targetNumber,
             hit: false,
             margin: 0,
             warnings: [],
@@ -284,7 +301,7 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
       targets.push(await buildTargetOutcome(
         target,
         targetAttackRoll,
-        targetNumber,
+        targetAction.targetNumber || targetNumber,
         targetAction,
         context.weapon,
         roller,
@@ -294,7 +311,10 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
       ));
     }
   } else {
-    modifierEvidence = buildModifierEvidence(action, context.weapon);
+    // Single roll for all targets, using baseRange for the roll modifiers
+    const baseAction = clonePlainData(action);
+    if (rawRange === ranges.auto) baseAction.range = baseRange;
+    modifierEvidence = buildModifierEvidence(baseAction, context.weapon);
     const attackRequest = buildAttackRollRequest(context, modifierEvidence);
     attackRoll = normalizeAttackRoll(await roll(roller, attackRequest), attackRequest);
 
@@ -320,12 +340,19 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
     }
 
     for (const target of (context.targets || [])) {
+      let targetSpecificNumber = targetNumber;
+      if (rawRange === ranges.auto && target?.distance?.value !== undefined && Number.isFinite(Number(target.distance.value))) {
+        const weaponRange = Number(context.weapon?.snapshot?.system?.range || context.weapon?.system?.range || 50);
+        const bracket = getRangeBracketForDistance(Number(target.distance.value), weaponRange);
+        targetSpecificNumber = rangeDCs[bracket] || targetNumber;
+      }
+
       if (forceMiss) {
         targets.push({
           target: clonePlainData(target),
           attack: {
             roll: clonePlainData(attackRoll),
-            targetNumber,
+            targetNumber: targetSpecificNumber,
             hit: false,
             margin: 0,
             warnings: []
@@ -341,7 +368,7 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
       targets.push(await buildTargetOutcome(
         target,
         attackRoll,
-        targetNumber,
+        targetSpecificNumber,
         action,
         context.weapon,
         roller,
@@ -2172,10 +2199,8 @@ function buildModifierEvidence(action, weapon) {
     const bullets = action.roundsFiredPerTarget !== undefined ? action.roundsFiredPerTarget : Math.max(0, Math.min(shotsLeft, rof));
 
     let multiplier = 0;
-    if (range === ranges.close) {
+    if (range === ranges.close || range === ranges.pointBlank) {
       multiplier = 1;
-    } else if (range === ranges.pointBlank) {
-      multiplier = 0;
     } else {
       multiplier = -1;
     }

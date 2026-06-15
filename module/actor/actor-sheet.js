@@ -267,31 +267,21 @@ export class CyberpunkActorSheet extends ActorSheet {
       let item = getEventItem(this, ev);
       let isRanged = item.isRanged();
 
-      let modifierGroups = undefined;
       let onConfirm = undefined;
       const selectedTargets = Array.from(game.users.current.targets.values());
       let targetTokens = normalizeSelectedTargets(selectedTargets);
-      if(isRanged) {
-        // We have to get the values as an iterator; else if multiple targets share names, it'd turn a set with size 2 to one with size 1
-        modifierGroups = rangedModifiers(item, targetTokens);
-      }
-      else if (item.system.attackType === meleeAttackTypes.martial){
-        modifierGroups = martialOptions(this.actor);
-      }
-      else {
-        modifierGroups = meleeBonkOptions();
-      }
-
+      
       let resolverOptions = structuredResolverOptions(item);
+      let suppressiveFireOptions = null;
+
+      const attackerToken = this.actor.token || findControlledTokenForActor(this.actor);
 
       // If structured combat is active and weapon is ranged, prompt for raycast GM covers first
       if (resolverOptions && isRanged) {
-        const attackerToken = this.actor.token || findControlledTokenForActor(this.actor);
         try {
           const { detectAndPromptTacticalRaycasts } = await import("../combat/tactical-raycast.js");
           const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
           
-          let suppressiveFireOptions = null;
           let targetsToRaycast = selectedTargets;
           
           if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
@@ -305,12 +295,9 @@ export class CyberpunkActorSheet extends ActorSheet {
               const { promptUseSuppressiveFireTemplate, drawSuppressiveFireTemplateAndGetTargets } = await import("../combat/template-placement.js");
               suppressiveFireOptions = await promptUseSuppressiveFireTemplate(item, Math.min(shotsLeft, item.system?.rof || 999));
               if (suppressiveFireOptions) {
-                const maxDistance = (item.system?.range || 50) / 4;
+                const { getMaxRangeBracketDistance } = await import("../lookups.js");
+                const maxDistance = getMaxRangeBracketDistance(item.system?.range || 50, 'RangeClose');
                 targetsToRaycast = await drawSuppressiveFireTemplateAndGetTargets(attackerToken, suppressiveFireOptions.zoneWidth, maxDistance);
-                const fireModeMod = modifierGroups?.[0]?.find(m => m.localKey === "FireMode");
-                if (fireModeMod && fireModeMod.choices?.includes("Suppressive")) {
-                   fireModeMod.defaultValue = "Suppressive";
-                }
               }
             }
           }
@@ -321,6 +308,32 @@ export class CyberpunkActorSheet extends ActorSheet {
           console.warn("Tactical raycast failure:", e);
           targetTokens = targetTokens.map(target => markRaycastFailureManual(target));
         }
+      } else if (attackerToken) {
+        // Fallback distance calculation for standard targets when tactical rules are disabled
+        targetTokens.forEach((tt, idx) => {
+          const rawTarget = selectedTargets[idx];
+          if (rawTarget && globalThis.canvas?.grid?.measureDistance) {
+            const dist = globalThis.canvas.grid.measureDistance(attackerToken, rawTarget);
+            tt.distance = { value: dist, units: globalThis.canvas.grid.units || "m", source: "standard-grid" };
+          }
+        });
+      }
+
+      let modifierGroups = undefined;
+      if(isRanged) {
+        modifierGroups = rangedModifiers(item, targetTokens);
+        if (suppressiveFireOptions) {
+          const fireModeMod = modifierGroups?.[0]?.find(m => m.localKey === "FireMode");
+          if (fireModeMod && fireModeMod.choices?.includes("Suppressive")) {
+             fireModeMod.defaultValue = "Suppressive";
+          }
+        }
+      }
+      else if (item.system.attackType === meleeAttackTypes.martial){
+        modifierGroups = martialOptions(this.actor);
+      }
+      else {
+        modifierGroups = meleeBonkOptions();
       }
 
       let dialog = new ModifiersDialog(this.actor, {

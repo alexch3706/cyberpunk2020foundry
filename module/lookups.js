@@ -127,7 +127,8 @@ export let ranges = {
     close: "RangeClose",
     medium: "RangeMedium",
     long: "RangeLong",
-    extreme: "RangeExtreme"
+    extreme: "RangeExtreme",
+    auto: "RangeAuto"
 }
 let rangeDCs = {}
 rangeDCs[ranges.pointBlank] = 10;
@@ -142,6 +143,20 @@ rangeResolve[ranges.medium] = range => range/2;
 rangeResolve[ranges.long] = range => range;
 rangeResolve[ranges.extreme] = range => range*2;
 export { rangeDCs, rangeResolve }
+
+export function getMaxRangeBracketDistance(weaponRange, bracketName) {
+    if (bracketName === ranges.pointBlank) return 2; // Fixed 2 meters for Point Blank based on discussion
+    if (!rangeResolve[bracketName]) return Infinity;
+    return rangeResolve[bracketName](weaponRange);
+}
+
+export function getRangeBracketForDistance(distance, weaponRange) {
+    if (distance <= getMaxRangeBracketDistance(weaponRange, ranges.pointBlank)) return ranges.pointBlank;
+    if (distance <= getMaxRangeBracketDistance(weaponRange, ranges.close)) return ranges.close;
+    if (distance <= getMaxRangeBracketDistance(weaponRange, ranges.medium)) return ranges.medium;
+    if (distance <= getMaxRangeBracketDistance(weaponRange, ranges.long)) return ranges.long;
+    return ranges.extreme;
+}
 
 export let defaultTargetLocations = ["Head", "Torso", "lArm", "rArm", "lLeg", "rLeg"]
 export let defaultAreaLookup = {
@@ -178,6 +193,25 @@ export function rangedModifiers(weapon, targetTokens=[]) {
     let range = weapon.system.range || 50;
     let rawFireModes = weapon.__getFireModes() || [];
     let fireModes = filterSupportedFireModes(rawFireModes);
+
+    let defaultRange = "RangeClose";
+    let rangeChoices = [
+        {value:"RangePointBlank", localData: {range: 1}},
+        {value:"RangeClose", localData: {range: range/4}},
+        {value:"RangeMedium", localData: {range: range/2}},
+        {value:"RangeLong", localData: {range: range}},
+        {value:"RangeExtreme", localData: {range: range*2}}
+    ];
+
+    const targetsWithDistance = targetTokens.filter(t => t.distance?.value !== undefined && Number.isFinite(Number(t.distance.value)));
+    
+    if (targetsWithDistance.length > 1) {
+        defaultRange = ranges.auto;
+        rangeChoices.unshift({ value: ranges.auto });
+    } else if (targetsWithDistance.length === 1) {
+        defaultRange = getRangeBracketForDistance(Number(targetsWithDistance[0].distance.value), range);
+    }
+
     return [
         [{
             localKey: "FireMode",
@@ -188,14 +222,8 @@ export function rangedModifiers(weapon, targetTokens=[]) {
         {
             localKey: "Range", 
             dataPath: "range", 
-            defaultValue: "RangeClose",
-            choices: [
-                {value:"RangePointBlank", localData: {range: 1}},
-                {value:"RangeClose", localData: {range: range/4}},
-                {value:"RangeMedium", localData: {range: range/2}},
-                {value:"RangeLong", localData: {range: range}},
-                {value:"RangeExtreme", localData: {range: range*2}}
-            ]
+            defaultValue: defaultRange,
+            choices: rangeChoices
          }],
 
          [{
