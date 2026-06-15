@@ -98,7 +98,7 @@
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
            ". Head ."
         "lArm Torso rArm"
@@ -114,7 +114,7 @@
         border: solid $border-primary;
         border-width: $field-border-width $field-border-width 0px $field-border-width;
         display: grid;
-        grid-template-rows: auto auto auto 1fr;
+        grid-template-rows: auto auto auto auto;
         grid-template-columns: 1fr 2fr 1fr;
         grid-template-areas:
             "loc loc loc"
@@ -167,24 +167,27 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.8em;
+            font-size: 0.85em;
             margin-top: 2px;
+            margin-bottom: 2px;
             color: $text-primary;
+            white-space: nowrap;
 
             input {
                 width: 35px;
-                height: 16px;
+                height: 20px;
                 font-size: 1.1em;
                 text-align: center;
                 border: 1px solid $border-primary;
                 background: transparent;
                 color: $text-primary;
                 padding: 0;
+                box-sizing: border-box;
             }
             span {
                 font-weight: bold;
-                margin-left: 3px;
-                margin-right: 3px;
+                margin-left: 2px;
+                margin-right: 2px;
             }
         }
 
