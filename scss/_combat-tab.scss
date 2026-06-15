@@ -106,7 +106,7 @@
         "lLeg . rLeg";
     column-gap: 3px;
     row-gap: 3px;
-    justify-items: center;
+    justify-items: stretch;
 
     // ── Individual armor segment (head, torso, etc.) ──
     .armor-segment {

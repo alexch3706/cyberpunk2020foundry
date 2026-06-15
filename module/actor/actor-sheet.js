@@ -30,6 +30,17 @@ export class CyberpunkActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
+  async _render(force=false, options={}) {
+    let isFirstRender = !this.rendered;
+    await super._render(force, options);
+    if (isFirstRender && !this._minimized && typeof this.maximize === "function") {
+      this.maximize();
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
   async getData(options) {
     // the data THIS returns is only available in this class and the template
     const sheetData = await super.getData(options);
