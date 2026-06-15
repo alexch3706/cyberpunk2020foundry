@@ -308,10 +308,12 @@ export class CyberpunkActorSheet extends ActorSheet {
           console.warn("Tactical raycast failure:", e);
           targetTokens = targetTokens.map(target => markRaycastFailureManual(target));
         }
-      } else if (attackerToken) {
-        // Fallback distance calculation for standard targets when tactical rules are disabled
+      }
+      
+      if (attackerToken) {
+        // Distance calculation for all targets
         targetTokens.forEach((tt, idx) => {
-          const rawTarget = selectedTargets[idx];
+          const rawTarget = selectedTargets.find(t => t.id === tt.id || t.document?.uuid === tt.tokenUuid) || selectedTargets[idx];
           if (rawTarget && globalThis.canvas?.grid?.measureDistance) {
             const dist = globalThis.canvas.grid.measureDistance(attackerToken, rawTarget);
             tt.distance = { value: dist, units: globalThis.canvas.grid.units || "m", source: "standard-grid" };
