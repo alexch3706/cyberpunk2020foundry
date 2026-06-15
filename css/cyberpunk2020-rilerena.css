@@ -911,18 +911,17 @@ div.statderive .value.rightborder {
 }
 
 .cyberpunk .armor-display {
-  max-height: 200px;
-  max-width: 25em;
-  padding-left: 10%;
-  padding-right: 10%;
-  margin-bottom: 10px;
+  max-width: 100%;
+  padding-left: 2%;
+  padding-right: 2%;
+  margin-bottom: 15px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
   grid-template-areas: ". Head ." "lArm Torso rArm" "lLeg . rLeg";
   column-gap: 3px;
   row-gap: 3px;
-  justify-items: center;
+  justify-items: stretch;
 }
 .cyberpunk .armor-display .armor-segment {
   width: 100%;
@@ -930,9 +929,9 @@ div.statderive .value.rightborder {
   border: solid rgba(0, 229, 255, 0.25);
   border-width: 1px 1px 0px 1px;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto auto;
   grid-template-columns: 1fr 2fr 1fr;
-  grid-template-areas: "loc loc loc" "ablate sp repair" "name name name";
+  grid-template-areas: "loc loc loc" "ablate sp repair" "sdp sdp sdp" "name name name";
 }
 .cyberpunk .armor-display .armor-segment .segment-sp {
   grid-area: sp;
@@ -971,6 +970,33 @@ div.statderive .value.rightborder {
   color: #888898;
   font-size: small;
 }
+.cyberpunk .armor-display .armor-segment .segment-sdp {
+  grid-area: sdp;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85em;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  color: #e0e0e8;
+  white-space: nowrap;
+}
+.cyberpunk .armor-display .armor-segment .segment-sdp input {
+  width: 35px;
+  height: 20px;
+  font-size: 1.1em;
+  text-align: center;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: transparent;
+  color: #e0e0e8;
+  padding: 0;
+  box-sizing: border-box;
+}
+.cyberpunk .armor-display .armor-segment .segment-sdp span {
+  font-weight: bold;
+  margin-left: 2px;
+  margin-right: 2px;
+}
 .cyberpunk .armor-display .armor-segment .segment-loc {
   grid-area: loc;
   text-align: center;
@@ -987,7 +1013,7 @@ div.statderive .value.rightborder {
 
 .cyberpunk.sheet-terminal {
   display: grid;
-  grid-template-columns: 260px 1fr 340px;
+  grid-template-columns: 260px 1fr 420px;
   grid-template-rows: 1fr auto;
   grid-template-areas: "left center right" "footer footer footer";
   height: 100%;
@@ -1076,6 +1102,10 @@ div.statderive .value.rightborder {
   padding: 8px;
   gap: 20px;
   overflow-y: auto;
+}
+.cyberpunk.sheet-terminal .pane-right .combat-tab {
+  grid-template-columns: 1fr;
+  grid-template-areas: "rolls" "weapons" "armor";
 }
 .cyberpunk.sheet-terminal {
   /* Center Pane */
