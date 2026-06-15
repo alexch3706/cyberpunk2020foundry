@@ -166,7 +166,9 @@ function canResolveSingleShotRangedContext(context, roller) {
 
   const range = normalizeRange(context.action?.range);
   const targetNumber = rangeDCs[range] || context.action?.targetNumber;
-  return Number.isFinite(Number(targetNumber))
+  const hasValidTargetNumber = range === ranges.auto || Number.isFinite(Number(targetNumber));
+  
+  return hasValidTargetNumber
     && !!context.attacker?.snapshot?.stats
     && !!context.weapon?.snapshot?.attackSkill
     && Array.isArray(context.targets)
