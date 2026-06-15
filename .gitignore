@@ -8,6 +8,7 @@ package-lock.json
 .idea/
 .vs/
 .vscode/
+tmp/
 
 # Node Modules
 node_modules/

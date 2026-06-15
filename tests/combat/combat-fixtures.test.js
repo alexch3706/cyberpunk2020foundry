@@ -130,6 +130,7 @@ function createScriptedRoller(rolls = []) {
     if(!scriptedRoll) {
       throw new Error(`No scripted roll available for ${request.id || "unidentified roll"}.`);
     }
+    console.log(`Roller requested: ${request.id}. Next scripted roll is: ${scriptedRoll.id}`);
     if(request.id && scriptedRoll.id !== request.id) {
       throw new Error(`Expected scripted roll ${scriptedRoll.id}, received ${request.id}.`);
     }

@@ -1,7 +1,7 @@
 # Fixture Coverage Map
 
-**Generated:** 2026-06-14
-**Total fixture cases:** 100
+**Generated:** 2026-06-15
+**Total fixture cases:** 101
 
 This map documents every rule and audit area covered by the fixture suite.
 Each entry lists the fixture JSON file and case name that verifies that rule.
@@ -119,6 +119,7 @@ Each entry lists the fixture JSON file and case name that verifies that rule.
 | `suppressive-fire.json` | suppressive-fire-armored-targets | CP2020 p.100: Suppressive hits resolved through armor pipeline |
 | `suppressive-fire.json` | suppressive-fire-zero-ammo | CP2020 p.100: Suppressive fire consumes all remaining ammo; Audit 6.4: missin... |
 | `suppressive-fire.json` | suppressive-fire-wide-zone | CP2020 p.100: Wide zone = lower DC (30 / 30 = 1), capped at minimum 2 |
+| `suppressive-fire.json` | suppressive-fire-hit-cap-enforced | Hit Cap: actual hits cannot exceed bullets fired, allocating to closest targe... |
 | `reliability-jam.json` | full-auto-fumble-standard | CP2020 p.99: Standard reliability jams on Natural 1; CP2020 p.99: clear stopp... |
 | `reliability-jam.json` | full-auto-fumble-unreliable | CP2020 p.99: Unreliable jams and damages on Natural 1; CP2020 p.99: repair re... |
 | `reliability-jam.json` | full-auto-fumble-very-reliable | CP2020 p.99: VeryReliable does not jam on Natural 1 |
@@ -179,4 +180,4 @@ by JSON fixture files:
 
 ---
 
-*Last updated: 2026-06-14*
+*Last updated: 2026-06-15*
