@@ -1155,7 +1155,7 @@ function resolveShotgunMeasuredDistance(target) {
 
 function getShotgunTemplateIssue(template) {
   if(!template) {
-    return "Missing template geometry, attacker/template origin, or distance for shotgun spread.";
+    return undefined; // Allows fallback to target.distance
   }
   if(!template.type || !template.origin || !template.inclusion) {
     return "Missing template geometry, attacker/template origin, or inclusion evidence for shotgun spread.";

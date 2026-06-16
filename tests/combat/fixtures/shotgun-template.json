@@ -303,8 +303,72 @@
             "manualResolution": {
               "required": true,
               "reason": "missing-rule-data",
-              "message": "Missing template geometry, attacker/template origin, or distance for shotgun spread."
+              "message": "Missing finite measured distance for shotgun spread."
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shotgun without template calculates range using target distance",
+      "ruleReference": "Skip template UX fallback",
+      "context": {
+        "targets": [
+          {
+            "id": "target-no-template-has-dist",
+            "name": "No Template Target",
+            "actorUuid": "Actor.notemplate",
+            "distance": { "value": 15, "units": "m", "source": "ruler" },
+            "tactical": {},
+            "snapshot": { 
+              "stats": { "body": { "total": 5 } },
+              "hitLocations": {
+                "Head": { "stoppingPower": 0 },
+                "Torso": { "stoppingPower": 0 },
+                "rArm": { "stoppingPower": 0 },
+                "lArm": { "stoppingPower": 0 },
+                "rLeg": { "stoppingPower": 0 },
+                "lLeg": { "stoppingPower": 0 }
+              }
+            }
+          }
+        ]
+      },
+      "rolls": [
+        { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
+        { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
+        { "id": "damage", "formula": "3d6", "total": 10, "die": { "results": [3, 4, 3] } }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "damageRoll": { "formula": "3d6", "total": 10 },
+                "shotgun": {
+                  "bracket": "medium",
+                  "damageFormula": "3d6",
+                  "patternWidthMeters": 2,
+                  "measuredDistance": { "value": 15, "units": "m", "source": "ruler" }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expectedChat": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "shotgun": {
+                  "bracket": "medium",
+                  "damageFormula": "3d6",
+                  "patternWidthMeters": 2,
+                  "measuredDistance": { "value": 15, "units": "m", "source": "ruler" }
+                }
+              }
+            ]
           }
         ]
       }
