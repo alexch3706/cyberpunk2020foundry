@@ -27,6 +27,7 @@ export async function runCombatFixtures() {
   const results = [];
 
   assertTargetNormalization();
+  assertShotgunTargetSelectionPreservesGetters();
   await assertTacticalTargetNormalization();
   assertWeaponCombatSnapshot();
   assertBodyTypeDamageResolver();
@@ -471,6 +472,32 @@ function assertWeaponCombatSnapshot() {
     medium: "3d6",
     far: "2d6"
   });
+}
+
+function assertShotgunTargetSelectionPreservesGetters() {
+  class DummyDocument { constructor(uuid) { this.uuid = uuid; } }
+  class DummyActor { constructor(uuid) { this.uuid = uuid; } }
+  class DummyToken {
+    constructor(docUuid, actorUuid) {
+      this.docUuid = docUuid;
+      this.actUuid = actorUuid;
+    }
+    get document() { return new DummyDocument(this.docUuid); }
+    get actor() { return new DummyActor(this.actUuid); }
+  }
+
+  const selectedToken = new DummyToken("Scene.test.Token.1", "Actor.1");
+  const affectedToken = new DummyToken("Scene.test.Token.2", "Actor.2");
+
+  const targeting = buildShotgunTemplateTargetingOptions({
+    selectedTargets: [selectedToken],
+    affectedTargets: [affectedToken]
+  });
+
+  assert.equal(targeting.targets[0].document?.uuid, "Scene.test.Token.1");
+  assert.equal(targeting.targets[0].actor?.uuid, "Actor.1");
+  assert.equal(targeting.raycastTargets[1].document?.uuid, "Scene.test.Token.2");
+  assert.equal(targeting.raycastTargets[1].actor?.uuid, "Actor.2");
 }
 
 async function assertTacticalTargetNormalization() {

@@ -34,6 +34,16 @@ export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], aff
 
 function markShotgunTargetSelection(target, selected) {
   return {
+    document: target?.document,
+    actor: target?.actor,
+    actorUuid: target?.actorUuid || target?.actor?.uuid,
+    tokenUuid: target?.tokenUuid || target?.document?.uuid,
+    id: target?.id,
+    uuid: target?.uuid,
+    name: target?.name,
+    center: target?.center,
+    bounds: target?.bounds,
+    snapshot: target?.snapshot,
     ...(target || {}),
     selected,
     tactical: {

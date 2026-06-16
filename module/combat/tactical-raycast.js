@@ -27,10 +27,16 @@ export async function detectAndPromptTacticalRaycasts(attackerToken, targetToken
 
     let collision = null;
     const sightBackend = globalThis.CONFIG?.Canvas?.polygonBackends?.sight;
-    if (typeof sightBackend?.testCollision === "function") {
-      collision = sightBackend.testCollision(attackerOrigin, targetOrigin, { mode: "closest", type: "sight" });
-    } else {
-      augmentedTargets.push(withManualRaycast(target, "Raycast collision backend is unavailable."));
+    try {
+      if (typeof sightBackend?.testCollision === "function") {
+        collision = sightBackend.testCollision(attackerOrigin, targetOrigin, { mode: "closest", type: "sight" });
+      } else {
+        augmentedTargets.push(withManualRaycast(target, "Raycast collision backend is unavailable."));
+        continue;
+      }
+    } catch (e) {
+      console.warn("Tactical raycast sight backend crashed:", e);
+      augmentedTargets.push(withManualRaycast(target, "Raycast collision backend crashed; resolve manually."));
       continue;
     }
 
