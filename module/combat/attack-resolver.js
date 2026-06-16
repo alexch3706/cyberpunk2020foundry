@@ -1,4 +1,4 @@
-import { defaultAreaLookup, getRangeBracketForDistance, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
+import { defaultAreaLookup, getRangeBracketForDistance, getMaxRangeBracketDistance, rangeDCs, ranges, btmFromBT, strengthDamageBonus } from "../lookups.js";
 import { COMBAT_CHAT_STATUS, COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON } from "./combat-outcome.js";
 import { resolveArmor } from "./armor-resolver.js";
 import { getKeyTechniqueBonus, getRequiresPrerequisite } from "./martial-arts-data.js";
@@ -25,9 +25,9 @@ const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
 const TARGET_UPDATE_BLOCKS = Object.freeze(["target-damage", "target-armor", "target-saves"]);
 const SHOTGUN_ATTACK_TYPES = Object.freeze(["shotgun"]);
 const SHOTGUN_BRACKETS = Object.freeze({
-  close: Object.freeze({ maxDistance: 1, patternWidthMeters: 1, damageKeys: Object.freeze(["close", "pointBlank"]) }),
-  medium: Object.freeze({ maxDistance: 2, patternWidthMeters: 2, damageKeys: Object.freeze(["medium"]) }),
-  far: Object.freeze({ maxDistance: Infinity, patternWidthMeters: 3, damageKeys: Object.freeze(["far", "long"]) })
+  close: Object.freeze({ patternWidthMeters: 1, damageKeys: Object.freeze(["close", "pointBlank"]) }),
+  medium: Object.freeze({ patternWidthMeters: 2, damageKeys: Object.freeze(["medium"]) }),
+  far: Object.freeze({ patternWidthMeters: 3, damageKeys: Object.freeze(["far", "long"]) })
 });
 
 /**
@@ -1116,10 +1116,11 @@ function resolveShotgunDamageContext(weapon, target) {
     return { manualResolution: shotgunManualResolution("Shotgun spread distance must be normalized to meters before resolution.") };
   }
 
+  const weaponRange = Number(weapon?.snapshot?.range) || 50;
   const distanceValue = Number(measuredDistance.value);
-  const bracket = distanceValue <= SHOTGUN_BRACKETS.close.maxDistance
+  const bracket = distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.close)
     ? "close"
-    : distanceValue <= SHOTGUN_BRACKETS.medium.maxDistance
+    : distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.medium)
       ? "medium"
       : "far";
   const bracketConfig = SHOTGUN_BRACKETS[bracket];

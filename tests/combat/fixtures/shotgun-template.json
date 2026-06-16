@@ -26,6 +26,7 @@
         "damage": "4d6",
         "attackType": "Shotgun",
         "attackSkill": "Rifle",
+        "range": 50,
         "rangeDamages": {
           "pointBlank": "4d6",
           "close": "4d6",
@@ -71,7 +72,7 @@
         "id": "target-medium",
         "name": "Medium Target",
         "actorUuid": "Actor.medium",
-        "distance": { "value": 2, "units": "m", "source": "template" },
+        "distance": { "value": 15, "units": "m", "source": "template" },
         "tactical": {
           "selected": true,
           "template": {
@@ -83,7 +84,7 @@
             "angle": 45,
             "width": 3,
             "distance": 10,
-            "targetDistance": 2,
+            "targetDistance": 15,
             "inclusion": "intersected"
           }
         },
@@ -103,7 +104,7 @@
         "id": "target-far",
         "name": "Far Target",
         "actorUuid": "Actor.far",
-        "distance": { "value": 3, "units": "m", "source": "template" },
+        "distance": { "value": 30, "units": "m", "source": "template" },
         "tactical": {
           "selected": true,
           "template": {
@@ -115,7 +116,7 @@
             "angle": 45,
             "width": 3,
             "distance": 10,
-            "targetDistance": 3,
+            "targetDistance": 30,
             "inclusion": "intersected"
           }
         },
@@ -189,7 +190,7 @@
                   "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
                   "included": true,
                   "inclusion": "intersected",
-                  "measuredDistance": { "value": 2, "units": "m", "source": "template" },
+                  "measuredDistance": { "value": 15, "units": "m", "source": "template" },
                   "source": "fnff-shotgun-template"
                 }
               }
@@ -207,7 +208,7 @@
                   "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
                   "included": true,
                   "inclusion": "intersected",
-                  "measuredDistance": { "value": 3, "units": "m", "source": "template" },
+                  "measuredDistance": { "value": 30, "units": "m", "source": "template" },
                   "source": "fnff-shotgun-template"
                 }
               }
@@ -240,7 +241,7 @@
                   "patternWidthMeters": 2,
                   "templateId": "shotgun",
                   "inclusion": "intersected",
-                  "measuredDistance": { "value": 2, "units": "m", "source": "template" }
+                  "measuredDistance": { "value": 15, "units": "m", "source": "template" }
                 }
               }
             ]
@@ -254,7 +255,7 @@
                   "patternWidthMeters": 3,
                   "templateId": "shotgun",
                   "inclusion": "intersected",
-                  "measuredDistance": { "value": 3, "units": "m", "source": "template" }
+                  "measuredDistance": { "value": 30, "units": "m", "source": "template" }
                 }
               }
             ]
@@ -327,14 +328,14 @@
             "id": "target-missing-medium-damage",
             "name": "Missing Medium Damage Target",
             "actorUuid": "Actor.missingmedium",
-            "distance": { "value": 2, "units": "m", "source": "template" },
+            "distance": { "value": 15, "units": "m", "source": "template" },
             "tactical": {
               "template": {
                 "templateUuid": "Scene.test.MeasuredTemplate.shotgun",
                 "templateId": "shotgun",
                 "type": "cone",
                 "origin": { "x": 0, "y": 0 },
-                "targetDistance": 2,
+                "targetDistance": 15,
                 "inclusion": "intersected"
               }
             },
