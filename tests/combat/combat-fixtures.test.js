@@ -705,6 +705,27 @@ async function assertTacticalTargetNormalization() {
   assert.equal(zoneOnlyAffectedTokens[0].tactical.template.templateId, "template-zone-only");
   assert.equal(zoneOnlyAffectedTokens[1].tactical.template.templateId, "template-zone-only");
 
+  const templateWithEmptyTargetsAndAffectedTokens = normalizeTacticalTargets({
+    template: {
+      templateId: "template-empty-targets",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      targets: [],
+      affectedTargets: [
+        { id: "token-empty-fallback", actorUuid: "Actor.emptyFallback", name: "Empty Fallback", snapshot: {} }
+      ]
+    }
+  });
+
+  assert.equal(templateWithEmptyTargetsAndAffectedTokens.length, 1);
+  assert.equal(templateWithEmptyTargetsAndAffectedTokens[0].id, "token-empty-fallback");
+  assert.equal(templateWithEmptyTargetsAndAffectedTokens[0].tactical.selected, false);
+  assert.equal(templateWithEmptyTargetsAndAffectedTokens[0].tactical.template.templateId, "template-empty-targets");
+
   const templateCollectedTargets = normalizeTacticalTargets({
     template: {
       templateId: "template-collected",

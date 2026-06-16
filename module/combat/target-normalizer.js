@@ -268,8 +268,8 @@ function getTemplateTargets(template) {
   if(!template || typeof template !== "object") {
     return [];
   }
-  const targetCandidates = template.targets || template.intersectedTargets || template.affectedTargets;
-  return Array.isArray(targetCandidates) ? targetCandidates : [];
+  const targetLists = [template.targets, template.intersectedTargets, template.affectedTargets];
+  return targetLists.find(targets => Array.isArray(targets) && targets.length > 0) || [];
 }
 
 function getTemplateTargetKeys(template) {
