@@ -19,6 +19,115 @@ export async function promptUseShotgunTemplate() {
   });
 }
 
+export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], affectedTargets = [] } = {}) {
+  const selected = Array.from(selectedTargets || []).map(target => markShotgunTargetSelection(target, true));
+  const affected = Array.from(affectedTargets || []).map(target => markShotgunAffectedToken(target));
+  const template = buildShotgunTemplateContext(affected, selected);
+  const raycastTargets = mergeShotgunRaycastTargets(selected, affected);
+
+  return {
+    targets: selected,
+    template,
+    raycastTargets
+  };
+}
+
+function markShotgunTargetSelection(target, selected) {
+  return {
+    ...(target || {}),
+    selected,
+    tactical: {
+      ...(target?.tactical || {}),
+      selected
+    }
+  };
+}
+
+function markShotgunAffectedToken(target) {
+  const affected = markShotgunTargetSelection(target, false);
+  const templateDistance = target?.tactical?.template?.targetDistance;
+  if(Number.isFinite(Number(templateDistance)) && !affected.distance) {
+    affected.distance = {
+      value: Number(templateDistance),
+      units: "m",
+      source: "template"
+    };
+  }
+  return affected;
+}
+
+function buildShotgunTemplateContext(affectedTargets, selectedTargets = []) {
+  const templateEvidence = affectedTargets.find(target => target?.tactical?.template)?.tactical?.template;
+  if(!templateEvidence) {
+    return undefined;
+  }
+  const {
+    targetDistance,
+    ...template
+  } = templateEvidence;
+  return {
+    ...template,
+    affectedTargets: affectedTargets.map(target => stripSelectedOverlapDistance(target, selectedTargets))
+  };
+}
+
+function stripSelectedOverlapDistance(target, selectedTargets) {
+  const key = shotgunTargetKey(target);
+  if(!key || !target?.distance || !selectedTargets.some(selected => shotgunTargetKey(selected) === key)) {
+    return target;
+  }
+  const {
+    distance,
+    ...targetWithoutDistance
+  } = target;
+  return {
+    ...targetWithoutDistance,
+    tactical: {
+      ...(targetWithoutDistance.tactical || {}),
+      templateDistance: distance
+    }
+  };
+}
+
+function mergeShotgunRaycastTargets(selectedTargets, affectedTargets) {
+  const merged = [];
+  const seen = new Set();
+  for(const target of [...selectedTargets, ...affectedTargets]) {
+    const key = shotgunTargetKey(target);
+    if(key && seen.has(key)) {
+      const existingIndex = merged.findIndex(existing => shotgunTargetKey(existing) === key);
+      if(existingIndex >= 0) {
+        merged[existingIndex] = mergeShotgunTargetEvidence(merged[existingIndex], target);
+      }
+      continue;
+    }
+    if(key) {
+      seen.add(key);
+    }
+    merged.push(target);
+  }
+  return merged;
+}
+
+function mergeShotgunTargetEvidence(selectedTarget, affectedTarget) {
+  const affectedTemplate = affectedTarget?.tactical?.template;
+  if(!affectedTemplate) {
+    return selectedTarget;
+  }
+  return {
+    ...selectedTarget,
+    tactical: {
+      ...(selectedTarget?.tactical || {}),
+      template: affectedTemplate,
+      selected: true
+    }
+  };
+}
+
+function shotgunTargetKey(target = {}) {
+  return target.id || target.tokenUuid || target.actorUuid || target.uuid || target.document?.uuid || target.actor?.uuid;
+}
+
 export async function drawShotgunTemplateAndGetTargets(attackerToken) {
   return new Promise(async (resolve) => {
     if (!globalThis.canvas?.ready) {

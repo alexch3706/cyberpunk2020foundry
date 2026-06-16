@@ -284,6 +284,9 @@ export class CyberpunkActorSheet extends ActorSheet {
       
       let resolverOptions = structuredResolverOptions(item);
       let suppressiveFireOptions = null;
+      let shotgunTemplateTargeting = null;
+      let targetsToRaycast = selectedTargets;
+      let normalizeTacticalTargetsFn = null;
 
       const attackerToken = this.actor.token || findControlledTokenForActor(this.actor);
 
@@ -292,13 +295,17 @@ export class CyberpunkActorSheet extends ActorSheet {
         try {
           const { detectAndPromptTacticalRaycasts } = await import("../combat/tactical-raycast.js");
           const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
-          
-          let targetsToRaycast = selectedTargets;
-          
+          normalizeTacticalTargetsFn = normalizeTacticalTargets;
+
           if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
-            const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets } = await import("../combat/template-placement.js");
+            const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets, buildShotgunTemplateTargetingOptions } = await import("../combat/template-placement.js");
             if (await promptUseShotgunTemplate()) {
-              targetsToRaycast = await drawShotgunTemplateAndGetTargets(attackerToken);
+              const affectedTargets = await drawShotgunTemplateAndGetTargets(attackerToken);
+              shotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
+                selectedTargets,
+                affectedTargets
+              });
+              targetsToRaycast = shotgunTemplateTargeting.raycastTargets;
             }
           } else {
             const fireModes = typeof item.__getFireModes === "function" ? item.__getFireModes() : [];
@@ -323,16 +330,27 @@ export class CyberpunkActorSheet extends ActorSheet {
           }
 
           targetTokens = await detectAndPromptTacticalRaycasts(attackerToken, targetsToRaycast);
-          targetTokens = normalizeTacticalTargets({ targets: targetTokens });
+          targetTokens = normalizeTacticalTargetsFn({
+            targets: targetTokens,
+            ...(shotgunTemplateTargeting?.template ? { template: shotgunTemplateTargeting.template } : {})
+          });
         } catch (e) {
           console.warn("Tactical raycast failure:", e);
-          targetTokens = targetTokens.map(target => markRaycastFailureManual(target));
+          targetTokens = normalizeTacticalTargetsFn
+            ? normalizeTacticalTargetsFn({
+                targets: targetsToRaycast.map(target => markRaycastFailureManual(target)),
+                ...(shotgunTemplateTargeting?.template ? { template: shotgunTemplateTargeting.template } : {})
+              })
+            : targetTokens.map(target => markRaycastFailureManual(target));
         }
       }
       
       if (attackerToken) {
         // Distance calculation for all targets
         targetTokens.forEach((tt, idx) => {
+          if (tt.distance?.source === "template") {
+            return;
+          }
           const rawTarget = selectedTargets.find(t => t.id === tt.id || t.document?.uuid === tt.tokenUuid) || selectedTargets[idx];
           if (rawTarget && globalThis.canvas?.grid?.measureDistance) {
             const dist = globalThis.canvas.grid.measureDistance(attackerToken, rawTarget);

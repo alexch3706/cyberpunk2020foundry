@@ -11,6 +11,7 @@ import { normalizeSelectedTargets, normalizeTacticalTargets } from "../../module
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
 import { detectAndPromptTacticalRaycasts } from "../../module/combat/tactical-raycast.js";
 import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
+import { buildShotgunTemplateTargetingOptions } from "../../module/combat/template-placement.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
@@ -473,6 +474,101 @@ function assertWeaponCombatSnapshot() {
 }
 
 async function assertTacticalTargetNormalization() {
+  const shotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
+    selectedTargets: [
+      {
+        id: "token-selected-shotgun",
+        selected: true,
+        actorUuid: "Actor.selectedShotgun",
+        name: "Selected Shotgun Target",
+        snapshot: {}
+      }
+    ],
+    affectedTargets: [
+      {
+        id: "token-shotgun-affected",
+        actorUuid: "Actor.shotgunAffected",
+        name: "Shotgun Affected Token",
+        snapshot: {},
+        tactical: {
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.shotgun-adapter",
+            templateId: "shotgun-adapter",
+            type: "cone",
+            origin: { x: 10, y: 20 },
+            direction: 0,
+            angle: 45,
+            distance: 12,
+            targetDistance: 3,
+            inclusion: "intersected"
+          }
+        }
+      }
+    ]
+  });
+
+  assert.equal(shotgunTemplateTargeting.raycastTargets.length, 2);
+  const shotgunTargets = normalizeTacticalTargets({
+    targets: shotgunTemplateTargeting.raycastTargets,
+    template: shotgunTemplateTargeting.template
+  });
+
+  assert.equal(shotgunTargets.length, 2);
+  assert.equal(shotgunTargets[0].id, "token-selected-shotgun");
+  assert.equal(shotgunTargets[0].tactical.selected, true);
+  assert.equal(shotgunTargets[0].tactical.template, undefined);
+  assert.equal(shotgunTargets[1].id, "token-shotgun-affected");
+  assert.equal(shotgunTargets[1].tactical.selected, false);
+  assert.equal(shotgunTargets[1].tactical.template.templateId, "shotgun-adapter");
+  assert.deepEqual(shotgunTargets[1].distance, { value: 3, units: "m", source: "template" });
+  assert.equal(shotgunTargets[1].tactical.template.targetDistance, 3);
+
+  const overlappingShotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
+    selectedTargets: [
+      {
+        id: "token-overlap-shotgun",
+        selected: true,
+        actorUuid: "Actor.overlapShotgun",
+        name: "Overlapping Shotgun Target",
+        snapshot: {}
+      }
+    ],
+    affectedTargets: [
+      {
+        id: "token-overlap-shotgun",
+        actorUuid: "Actor.overlapShotgun",
+        name: "Overlapping Shotgun Target",
+        snapshot: {},
+        tactical: {
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.shotgun-overlap",
+            templateId: "shotgun-overlap",
+            type: "cone",
+            origin: { x: 10, y: 20 },
+            direction: 0,
+            angle: 45,
+            distance: 12,
+            targetDistance: 4,
+            inclusion: "intersected"
+          }
+        }
+      }
+    ]
+  });
+
+  assert.equal(overlappingShotgunTemplateTargeting.raycastTargets.length, 1);
+  const overlappingShotgunTargets = normalizeTacticalTargets({
+    targets: overlappingShotgunTemplateTargeting.raycastTargets,
+    template: overlappingShotgunTemplateTargeting.template
+  });
+
+  assert.equal(overlappingShotgunTargets.length, 1);
+  assert.equal(overlappingShotgunTargets[0].id, "token-overlap-shotgun");
+  assert.equal(overlappingShotgunTargets[0].tactical.selected, true);
+  assert.equal(overlappingShotgunTargets[0].tactical.template.templateId, "shotgun-overlap");
+  assert.equal(overlappingShotgunTargets[0].distance, undefined);
+  assert.equal(overlappingShotgunTargets[0].tactical.template.targetDistance, 4);
+
   const targets = normalizeTacticalTargets({
     targets: [
       {
