@@ -37,7 +37,7 @@ Automated calculation where a weapon's damage or area of effect changes based on
 _Avoid_: Requiring the GM to manually calculate range brackets and adjust dice pools for every individual target caught in an AoE.
 
 **Partial Cover Resolution**:
-A workflow where the GM uses a visual dialog to define which specific hit locations (e.g., Head, Torso, Arms, Legs) are protected by an intervening cover object. The combat resolver then bypasses the cover's SP entirely if the randomized hit location strikes an exposed area.
+A workflow where the GM uses a visual dialog to define which specific hit locations (e.g., Head, Torso, Arms, Legs) are protected by an intervening cover object. The combat resolver then bypasses the cover's SP entirely if the randomized hit location strikes an exposed area. Automated cover evidence considers only the first relevant obstruction; layered or multiple cover objects are referee judgement.
 _Avoid_: Automating 3D volumetric occlusion (guessing height and cover protection purely from 2D canvas vectors).
 
 **Single-Target Raycast Bounds**:
@@ -69,14 +69,49 @@ A token explicitly clicked or selected by the user to be the direct recipient of
 _Avoid_: Using "Target" to describe the map area or the tokens accidentally caught in an area of effect.
 
 **Hazard Zone**:
-A spatial area on the canvas (like a MeasuredTemplate or Raycast line) that represents an area of effect attack such as a shotgun blast, suppressive fire, or an explosion. The zone itself is not a target.
+A spatial area on the canvas (like a MeasuredTemplate or Raycast line) that represents an area of effect attack such as a shotgun blast, suppressive fire, or an explosion. The zone itself is not a target. Hazard Zone evidence belongs only to tokens actually caught inside the zone or explicitly confirmed by the referee as affected by it.
 _Avoid_: Treating the map template itself as a combat target.
 
 **Affected Token**:
-A token that is caught inside a Hazard Zone and must resolve damage or saving throws, despite not being explicitly selected as a Target by the attacker.
+A token that is caught inside a Hazard Zone and must resolve damage or saving throws, despite not being explicitly selected as a Target by the attacker. A token awaiting referee confirmation is not yet an Affected Token for automated state changes; if the same token is explicitly selected as a Target and also caught inside a Hazard Zone, it remains a Target with Hazard Zone evidence rather than becoming a separate Affected Token.
 _Avoid_: Calling these "Targets", which confuses explicit selection with area intersection.
+
+**Zone-Only Attack**:
+An attack flow where the referee places or confirms a Hazard Zone without explicitly selecting a Target first. Confirmed tokens caught inside the zone are Affected Tokens, and the Hazard Zone itself is not a Target. If no tokens are confirmed inside the zone, the attack still resolves as a zone placement with no automated target state changes rather than as a missing-target error.
+_Avoid_: Primary target, template target, targetless attack.
 
 **Attack Resolution**:
 The complete life-cycle of a combat action, from the initiation of the attack (e.g. attack roll) through hit locations, armor ablation, damage application, and state changes.
 _Avoid_: "Combat Resolution" (too broad, implies resolving the whole fight), "Attack Roll" (only refers to the dice throw).
 
+**Stopping Power (SP)**:
+The armor value on a specific hit location or cover object that reduces incoming damage before it reaches the target.
+_Avoid_: Armor rating, defense value.
+
+**Armor Piercing (AP)**:
+A weapon or ammunition trait that modifies how armor mitigates its damage, typically by halving the effective SP.
+_Avoid_: Penetration (when referring to the weapon trait), AP damage.
+
+**Penetrating Damage**:
+The final damage amount that successfully bypasses SP (and any AP modifiers) to affect the target's Wounds or SDP.
+_Avoid_: Raw damage, total damage, penetration armor.
+
+**Armor Ablation**:
+The permanent reduction of SP on a target's armor or body part as a result of taking damage.
+_Avoid_: Armor degradation, SP damage (use Ablation).
+
+**Wound State**:
+The health state of a biological character on the Wound Track (e.g., Light, Serious, Mortal) which applies stat penalties and triggers saving throws.
+_Avoid_: Health points, HP, SDP (when referring to biological bodies).
+
+**SDP (Structural Damage Points)**:
+The structural integrity of non-biological entities (cover, vehicles) or cybernetic body parts (FBC limbs). Damage to SDP does not directly progress the Wound Track unless specified.
+_Avoid_: Wounds, HP, structural HP.
+
+**Destroyed Part**:
+The state of an FBC hit location, cover object, or vehicle part when its SDP reaches zero or below, rendering it inoperable or destroyed.
+_Avoid_: Dismemberment (which applies to meat), disabled (use Destroyed for clarity on 0 SDP).
+
+**Dismemberment**:
+The loss of a biological limb due to receiving more than 8 points of Penetrating Damage to a specific limb in a single attack.
+_Avoid_: Destroyed (which applies to SDP/cybernetics).

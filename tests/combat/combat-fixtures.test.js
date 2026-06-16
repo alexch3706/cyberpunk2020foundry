@@ -563,6 +563,148 @@ async function assertTacticalTargetNormalization() {
   assert.equal(multiTargets[0].tactical.template.targetDistance, 3);
   assert.equal(multiTargets[1].tactical.template.targetDistance, 9);
 
+  const selectedTargetWithSeparateAffectedToken = normalizeTacticalTargets({
+    targets: [
+      { id: "token-selected", selected: true, actorUuid: "Actor.selected", name: "Selected Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-affected",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        { id: "token-affected", actorUuid: "Actor.affected", name: "Affected Token", snapshot: {} }
+      ]
+    }
+  });
+
+  assert.equal(selectedTargetWithSeparateAffectedToken.length, 2);
+  assert.equal(selectedTargetWithSeparateAffectedToken[0].id, "token-selected");
+  assert.equal(selectedTargetWithSeparateAffectedToken[0].tactical.selected, true);
+  assert.equal(selectedTargetWithSeparateAffectedToken[0].tactical.template, undefined);
+  assert.equal(selectedTargetWithSeparateAffectedToken[1].id, "token-affected");
+  assert.equal(selectedTargetWithSeparateAffectedToken[1].tactical.selected, false);
+  assert.equal(selectedTargetWithSeparateAffectedToken[1].tactical.template.templateId, "template-affected");
+
+  const selectedTargetAlsoCaughtInHazardZone = normalizeTacticalTargets({
+    targets: [
+      { id: "token-overlap", selected: true, actorUuid: "Actor.overlap", name: "Overlapping Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-overlap",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        { id: "token-overlap", actorUuid: "Actor.overlap", name: "Overlapping Target", snapshot: {} }
+      ]
+    }
+  });
+
+  assert.equal(selectedTargetAlsoCaughtInHazardZone.length, 1);
+  assert.equal(selectedTargetAlsoCaughtInHazardZone[0].id, "token-overlap");
+  assert.equal(selectedTargetAlsoCaughtInHazardZone[0].tactical.selected, true);
+  assert.equal(selectedTargetAlsoCaughtInHazardZone[0].tactical.template.templateId, "template-overlap");
+
+  const selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence = normalizeTacticalTargets({
+    targets: [
+      { id: "token-overlap-evidence", selected: true, actorUuid: "Actor.overlapEvidence", name: "Overlapping Evidence Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-overlap-evidence",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        {
+          id: "token-overlap-evidence",
+          actorUuid: "Actor.overlapEvidence",
+          name: "Overlapping Evidence Target",
+          snapshot: {},
+          distance: { value: 4, units: "m", source: "template" }
+        }
+      ]
+    }
+  });
+
+  assert.equal(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence.length, 1);
+  assert.equal(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence[0].id, "token-overlap-evidence");
+  assert.equal(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence[0].tactical.selected, true);
+  assert.equal(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence[0].tactical.template.templateId, "template-overlap-evidence");
+  assert.deepEqual(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence[0].distance, { value: 4, units: "m", source: "template" });
+  assert.equal(selectedTargetAlsoCaughtWithPerTargetHazardZoneEvidence[0].tactical.template.targetDistance, 4);
+
+  const selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances = normalizeTacticalTargets({
+    targets: [
+      {
+        id: "token-overlap-distance",
+        selected: true,
+        actorUuid: "Actor.overlapDistance",
+        name: "Overlapping Distance Target",
+        snapshot: {},
+        distance: { value: 8, units: "m", source: "grid" }
+      }
+    ],
+    template: {
+      templateId: "template-overlap-distance",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        {
+          id: "token-overlap-distance",
+          actorUuid: "Actor.overlapDistance",
+          name: "Overlapping Distance Target",
+          snapshot: {},
+          distance: { value: 3, units: "m", source: "template" }
+        }
+      ]
+    }
+  });
+
+  assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances.length, 1);
+  assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].id, "token-overlap-distance");
+  assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].tactical.selected, true);
+  assert.deepEqual(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].distance, { value: 8, units: "m", source: "grid" });
+  assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].tactical.template.templateId, "template-overlap-distance");
+  assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].tactical.template.targetDistance, 3);
+
+  const zoneOnlyAffectedTokens = normalizeTacticalTargets({
+    template: {
+      templateId: "template-zone-only",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        { id: "token-zone-left", actorUuid: "Actor.zoneLeft", name: "Zone Left", snapshot: {} },
+        { id: "token-zone-right", actorUuid: "Actor.zoneRight", name: "Zone Right", snapshot: {} }
+      ]
+    }
+  });
+
+  assert.equal(zoneOnlyAffectedTokens.length, 2);
+  assert.equal(zoneOnlyAffectedTokens[0].id, "token-zone-left");
+  assert.equal(zoneOnlyAffectedTokens[1].id, "token-zone-right");
+  assert.equal(zoneOnlyAffectedTokens[0].tactical.selected, false);
+  assert.equal(zoneOnlyAffectedTokens[1].tactical.selected, false);
+  assert.equal(zoneOnlyAffectedTokens[0].tactical.template.templateId, "template-zone-only");
+  assert.equal(zoneOnlyAffectedTokens[1].tactical.template.templateId, "template-zone-only");
+
   const templateCollectedTargets = normalizeTacticalTargets({
     template: {
       templateId: "template-collected",

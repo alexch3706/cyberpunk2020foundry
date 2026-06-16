@@ -92,62 +92,116 @@ export function normalizeTacticalTargets(options = {}) {
   const normalizedTargets = normalizeSelectedTargets(sourceTargets);
   const hasTemplateContext = template !== undefined && template !== null;
   const hasRaycastContext = raycast !== undefined && raycast !== null;
-  const shouldValidateTemplate = templateRequired === true || hasTemplateContext;
   const shouldValidateRaycast = raycastRequired === true || hasRaycastContext;
+  const templateTargetKeys = getTemplateTargetKeys(template);
+  const targetCount = normalizedTargets.length;
 
   return normalizedTargets.map((target, index) => {
     const sourceTarget = sourceTargets[index] || {};
-    const tactical = compactPlainObject({
-      selected: resolveSelectedFlag(sourceTarget, {
+    const normalizedTarget = {
+      ...target,
+      tactical: buildTargetTacticalContext(sourceTarget, {
         hasTemplateContext,
         hasRaycastContext
       })
-    });
-
-    // Preserve existing tactical data from source target
-    if (sourceTarget.tactical) {
-      if (sourceTarget.tactical.cover) tactical.cover = clonePlainData(sourceTarget.tactical.cover);
-      if (sourceTarget.tactical.raycast) tactical.raycast = clonePlainData(sourceTarget.tactical.raycast);
-      if (sourceTarget.tactical.template) tactical.template = clonePlainData(sourceTarget.tactical.template);
-    }
-
-    const normalizedTarget = {
-      ...target,
-      tactical
     };
 
     const targetDistance = resolveTargetDistance({
       target: normalizedTarget,
       sourceTarget,
       distance,
-      targetCount: normalizedTargets.length
+      targetCount
     });
     if(targetDistance) {
       normalizedTarget.distance = targetDistance;
     }
 
-    if(hasTemplateContext) {
-      normalizedTarget.tactical.template = buildTemplateContext(template, targetDistance);
-    }
-    if(shouldValidateTemplate || normalizedTarget.tactical.template) {
-      const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
-      if(templateIssue) {
-        requireTacticalManualResolution(normalizedTarget, templateIssue);
-      }
-    }
-
-    if(hasRaycastContext) {
-      normalizedTarget.tactical.raycast = buildRaycastContext(raycast);
-    }
-    if(shouldValidateRaycast || normalizedTarget.tactical.raycast) {
-      const raycastIssue = getRaycastManualIssue(normalizedTarget.tactical.raycast || raycast);
-      if(raycastIssue) {
-        requireTacticalManualResolution(normalizedTarget, raycastIssue);
-      }
-    }
+    applyTemplateEvidence(normalizedTarget, {
+      sourceTarget,
+      template,
+      templateRequired,
+      templateTargetKeys,
+      hasTemplateContext,
+      distance,
+      targetCount,
+      targetDistance
+    });
+    applyRaycastEvidence(normalizedTarget, {
+      raycast,
+      hasRaycastContext,
+      shouldValidateRaycast
+    });
 
     return compactPlainObject(normalizedTarget);
   });
+}
+
+function buildTargetTacticalContext(sourceTarget, context) {
+  const tactical = compactPlainObject({
+    selected: resolveSelectedFlag(sourceTarget, context)
+  });
+
+  if(sourceTarget.tactical) {
+    if(sourceTarget.tactical.cover) tactical.cover = clonePlainData(sourceTarget.tactical.cover);
+    if(sourceTarget.tactical.raycast) tactical.raycast = clonePlainData(sourceTarget.tactical.raycast);
+    if(sourceTarget.tactical.template) tactical.template = clonePlainData(sourceTarget.tactical.template);
+  }
+
+  return tactical;
+}
+
+function applyTemplateEvidence(normalizedTarget, context) {
+  const {
+    sourceTarget,
+    template,
+    templateRequired,
+    templateTargetKeys,
+    hasTemplateContext,
+    distance,
+    targetCount,
+    targetDistance
+  } = context;
+
+  if(shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext)) {
+    const templateTargetDistance = resolveTemplateTargetDistance({
+      target: normalizedTarget,
+      sourceTarget,
+      distance,
+      targetCount,
+      targetDistance
+    });
+    normalizedTarget.tactical.template = buildTemplateContext(template, templateTargetDistance);
+  }
+
+  if(templateRequired !== true && !normalizedTarget.tactical.template) {
+    return;
+  }
+
+  const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
+  if(templateIssue) {
+    requireTacticalManualResolution(normalizedTarget, templateIssue);
+  }
+}
+
+function applyRaycastEvidence(normalizedTarget, context) {
+  const {
+    raycast,
+    hasRaycastContext,
+    shouldValidateRaycast
+  } = context;
+
+  if(hasRaycastContext) {
+    normalizedTarget.tactical.raycast = buildRaycastContext(raycast);
+  }
+
+  if(!shouldValidateRaycast && !normalizedTarget.tactical.raycast) {
+    return;
+  }
+
+  const raycastIssue = getRaycastManualIssue(normalizedTarget.tactical.raycast || raycast);
+  if(raycastIssue) {
+    requireTacticalManualResolution(normalizedTarget, raycastIssue);
+  }
 }
 
 function mergeTemplateTargets(targets, template) {
@@ -156,18 +210,58 @@ function mergeTemplateTargets(targets, template) {
     return targets;
   }
   const mergedTargets = [...targets];
-  const seen = new Set(targets.map(target => targetKey(target)).filter(Boolean));
+  const seen = new Map();
+  targets.forEach((target, index) => {
+    const key = targetKey(target);
+    if(key) {
+      seen.set(key, index);
+    }
+  });
   for(const target of templateTargets) {
     const key = targetKey(target);
     if(key && seen.has(key)) {
+      const existingIndex = seen.get(key);
+      mergedTargets[existingIndex] = mergeTemplateTargetEvidence(mergedTargets[existingIndex], target);
       continue;
     }
     if(key) {
-      seen.add(key);
+      seen.set(key, mergedTargets.length);
     }
     mergedTargets.push(target);
   }
   return mergedTargets;
+}
+
+function mergeTemplateTargetEvidence(existingTarget = {}, templateTarget = {}) {
+  const merged = {
+    ...templateTarget,
+    ...existingTarget
+  };
+  const tactical = mergeTemplateTacticalEvidence(existingTarget, templateTarget);
+  if(tactical) {
+    merged.tactical = tactical;
+  }
+  return merged;
+}
+
+function mergeTemplateTacticalEvidence(existingTarget = {}, templateTarget = {}) {
+  const templateTactical = templateTarget.tactical;
+  const existingTactical = existingTarget.tactical;
+  const templateDistance = normalizeDistance(templateTarget.distance || templateTactical?.distance);
+  if(!templateTactical && !existingTactical && !templateDistance) {
+    return undefined;
+  }
+  const tactical = {
+    ...(templateTactical ? clonePlainData(templateTactical) : {}),
+    ...(existingTactical ? clonePlainData(existingTactical) : {})
+  };
+  if(templateDistance) {
+    tactical.templateDistance = templateDistance;
+  }
+  if(typeof existingTarget.selected === "boolean" && typeof existingTactical?.selected !== "boolean") {
+    tactical.selected = existingTarget.selected;
+  }
+  return tactical;
 }
 
 function getTemplateTargets(template) {
@@ -176,6 +270,25 @@ function getTemplateTargets(template) {
   }
   const targetCandidates = template.targets || template.intersectedTargets || template.affectedTargets;
   return Array.isArray(targetCandidates) ? targetCandidates : [];
+}
+
+function getTemplateTargetKeys(template) {
+  const templateTargets = getTemplateTargets(template);
+  if(templateTargets.length === 0) {
+    return undefined;
+  }
+  return new Set(templateTargets.map(target => targetKey(target)).filter(Boolean));
+}
+
+function shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext) {
+  if(!hasTemplateContext) {
+    return false;
+  }
+  if(!templateTargetKeys) {
+    return true;
+  }
+  const key = targetKey(sourceTarget);
+  return Boolean(key && templateTargetKeys.has(key));
 }
 
 function targetKey(target = {}) {
@@ -206,6 +319,28 @@ function resolveTargetDistance({ target, sourceTarget, distance, targetCount }) 
     }
   }
   return undefined;
+}
+
+function resolveTemplateTargetDistance({ target, sourceTarget, distance, targetCount, targetDistance }) {
+  const distanceCandidates = [
+    sourceTarget.tactical?.templateDistance,
+    isTemplateDistance(sourceTarget.distance) ? sourceTarget.distance : undefined,
+    isTemplateDistance(sourceTarget.tactical?.distance) ? sourceTarget.tactical.distance : undefined,
+    findDistanceByTarget(distance, target),
+    targetCount === 1 && isTemplateDistance(distance) ? distance : undefined,
+    targetDistance
+  ];
+  for(const candidate of distanceCandidates) {
+    const normalized = normalizeDistance(candidate);
+    if(normalized) {
+      return normalized;
+    }
+  }
+  return undefined;
+}
+
+function isTemplateDistance(distance) {
+  return distance?.source === "template";
 }
 
 function findDistanceByTarget(distance, target) {
