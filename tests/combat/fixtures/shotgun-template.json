@@ -136,7 +136,6 @@
   "rolls": [
     { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
     { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
-    { "id": "damage", "formula": "4d6", "total": 14, "die": { "results": [3, 4, 3, 4] } },
     
     { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
     { "id": "damage", "formula": "3d6", "total": 10, "die": { "results": [3, 4, 3] } },
@@ -151,7 +150,6 @@
       "rolls": [
         { "id": "attack", "formula": "1d10", "total": 20, "die": { "result": 10 } },
         { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
-        { "id": "damage", "formula": "4d6", "total": 14, "die": { "results": [3, 4, 3, 4] } },
         
         { "id": "location", "formula": "1d10", "total": 2, "die": { "result": 2 } },
         { "id": "damage", "formula": "3d6", "total": 10, "die": { "results": [3, 4, 3] } },
@@ -164,7 +162,7 @@
           {
             "hits": [
               {
-                "damageRoll": { "formula": "4d6", "total": 14 },
+                "damageRoll": { "formula": "4d6", "total": 24, "maximized": true },
                 "shotgun": {
                   "bracket": "close",
                   "damageFormula": "4d6",
