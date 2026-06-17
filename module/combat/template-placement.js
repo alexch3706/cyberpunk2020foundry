@@ -1,11 +1,14 @@
-export async function promptUseShotgunTemplate() {
+export async function promptUseAoETemplate(item) {
+  const aoeType = item?.system?.aoe?.type;
+  const name = aoeType ? `${aoeType} Template` : "Cone Template";
+
   return new Promise((resolve) => {
     new Dialog({
-      title: "Shotgun Attack",
-      content: "<p>Do you want to draw a cone template for this shotgun attack or roll normally against selected targets?</p>",
+      title: "Area of Effect Attack",
+      content: `<p>Do you want to draw a ${name.toLowerCase()} for this attack or roll normally against selected targets?</p>`,
       buttons: {
         template: {
-          label: "Draw Cone Template",
+          label: `Draw ${name}`,
           callback: () => resolve(true)
         },
         normal: {
@@ -19,7 +22,9 @@ export async function promptUseShotgunTemplate() {
   });
 }
 
-export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], affectedTargets = [], hazardZone = undefined } = {}) {
+export const promptUseShotgunTemplate = promptUseAoETemplate;
+
+export function buildAoETemplateTargetingOptions({ selectedTargets = [], affectedTargets = [], hazardZone = undefined } = {}) {
   const selected = Array.from(selectedTargets || []).map(target => markShotgunTargetSelection(target, true));
   const affected = Array.from(affectedTargets || []).map(target => markShotgunAffectedToken(target));
   const template = buildShotgunTemplateContext(affected, selected);
@@ -28,10 +33,13 @@ export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], aff
   return {
     targets: selected,
     template,
-    hazardZone: buildShotgunHazardZone(hazardZone || template, affected.length),
+    hazardZone: buildAoEHazardZone(hazardZone || template, affected.length),
     raycastTargets
   };
 }
+
+export const buildShotgunTemplateTargetingOptions = buildAoETemplateTargetingOptions;
+
 
 function markShotgunTargetSelection(target, selected) {
   return {
@@ -82,12 +90,12 @@ function buildShotgunTemplateContext(affectedTargets, selectedTargets = []) {
   };
 }
 
-function buildShotgunHazardZone(template, affectedTokenCount = 0) {
+function buildAoEHazardZone(template, affectedTokenCount = 0) {
   if(!template) {
     return undefined;
   }
   return {
-    kind: "shotgun-cone",
+    kind: template.type === "cone" ? "shotgun-cone" : template.type,
     templateUuid: template.templateUuid,
     templateId: template.templateId,
     type: template.type,
@@ -166,7 +174,7 @@ function shotgunTargetKey(target = {}) {
   return target.id || target.tokenUuid || target.actorUuid || target.uuid || target.document?.uuid || target.actor?.uuid;
 }
 
-export async function drawShotgunTemplateAndGetTargets(attackerToken) {
+export async function drawAoETemplateAndGetTargets(item, attackerToken) {
   return new Promise(async (resolve) => {
     if (!globalThis.canvas?.ready) {
       ui.notifications?.warn("Canvas is not ready. Cannot place template.");
@@ -182,16 +190,22 @@ export async function drawShotgunTemplateAndGetTargets(attackerToken) {
 
     const gridDistance = canvas.scene.grid.distance;
 
+    const aoeType = item?.system?.aoe?.type || "cone";
+    const aoeDistance = Number(item?.system?.aoe?.value) || 10;
+
     const templateData = {
-      t: "cone",
+      t: aoeType,
       user: game.user.id,
-      distance: 10,
+      distance: aoeDistance,
       direction: 0,
       x: origin.x,
       y: origin.y,
-      angle: 45,
       fillColor: game.user.color || "#ff0000"
     };
+
+    if (aoeType === "cone") {
+      templateData.angle = 45;
+    }
 
     const doc = new CONFIG.MeasuredTemplate.documentClass(templateData, { parent: canvas.scene });
     let template = new CONFIG.MeasuredTemplate.objectClass(doc);
@@ -238,10 +252,10 @@ export async function drawShotgunTemplateAndGetTargets(attackerToken) {
       if (!createdDocs || createdDocs.length === 0) return resolve([]);
       
       const createdDoc = createdDocs[0];
-      const hazardZone = buildShotgunHazardZone({
+      const hazardZone = buildAoEHazardZone({
         templateUuid: createdDoc.uuid,
         templateId: createdDoc.id,
-        type: "cone",
+        type: aoeType,
         origin: { x: createdDoc.x, y: createdDoc.y },
         direction: createdDoc.direction,
         angle: createdDoc.angle,
@@ -270,7 +284,7 @@ export async function drawShotgunTemplateAndGetTargets(attackerToken) {
           t.tactical.template = {
             templateUuid: createdDoc.uuid,
             templateId: createdDoc.id,
-            type: "cone",
+            type: aoeType,
             origin: { x: createdDoc.x, y: createdDoc.y },
             direction: createdDoc.direction,
             angle: createdDoc.angle,

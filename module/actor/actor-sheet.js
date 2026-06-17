@@ -297,14 +297,17 @@ export class CyberpunkActorSheet extends ActorSheet {
           const { normalizeTacticalTargets } = await import("../combat/target-normalizer.js");
           normalizeTacticalTargetsFn = normalizeTacticalTargets;
 
-          if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
-            const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets, buildShotgunTemplateTargetingOptions } = await import("../combat/template-placement.js");
-            if (await promptUseShotgunTemplate()) {
-              const shotgunTemplateResult = await drawShotgunTemplateAndGetTargets(attackerToken);
+          const isLegacyShotgun = item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ";
+          const hasAoE = !!item.system?.aoe?.type;
+
+          if (hasAoE || isLegacyShotgun) {
+            const { promptUseAoETemplate, drawAoETemplateAndGetTargets, buildAoETemplateTargetingOptions } = await import("../combat/template-placement.js");
+            if (await promptUseAoETemplate(item)) {
+              const shotgunTemplateResult = await drawAoETemplateAndGetTargets(item, attackerToken);
               const affectedTargets = Array.isArray(shotgunTemplateResult)
                 ? shotgunTemplateResult
                 : shotgunTemplateResult?.affectedTargets || [];
-              shotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
+              shotgunTemplateTargeting = buildAoETemplateTargetingOptions({
                 selectedTargets,
                 affectedTargets,
                 hazardZone: shotgunTemplateResult?.hazardZone

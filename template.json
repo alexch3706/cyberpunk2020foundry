@@ -818,7 +818,12 @@
 			"reliability": "ST",
 			"range": 50,
 			"attackType": "",
-			"attackSkill": "ref"
+			"attackSkill": "ref",
+			"aoe": {
+				"type": "",
+				"value": 0,
+				"width": 0
+			}
 		},
 		"armor": {
 			"templates": ["common"],

@@ -11,7 +11,7 @@ import { normalizeSelectedTargets, normalizeTacticalTargets } from "../../module
 import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/armor-resolver.js";
 import { detectAndPromptTacticalRaycasts } from "../../module/combat/tactical-raycast.js";
 import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
-import { buildShotgunTemplateTargetingOptions } from "../../module/combat/template-placement.js";
+import { buildShotgunTemplateTargetingOptions, buildAoETemplateTargetingOptions } from "../../module/combat/template-placement.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
@@ -572,6 +572,22 @@ async function assertTacticalTargetNormalization() {
   assert.equal(emptyShotgunTemplateTargeting.hazardZone.kind, "shotgun-cone");
   assert.equal(emptyShotgunTemplateTargeting.hazardZone.templateId, "empty-shotgun");
   assert.equal(emptyShotgunTemplateTargeting.hazardZone.affectedTokenCount, 0);
+
+  const circleTemplateTargeting = buildAoETemplateTargetingOptions({
+    selectedTargets: [],
+    affectedTargets: [],
+    hazardZone: {
+      templateUuid: "Scene.test.MeasuredTemplate.circle",
+      templateId: "circle-template",
+      type: "circle",
+      origin: { x: 10, y: 20 },
+      distance: 5,
+      inclusion: "intersected",
+      lifecycle: "transient"
+    }
+  });
+
+  assert.equal(circleTemplateTargeting.hazardZone.kind, "circle", "circle template adapter sets hazard zone kind to circle");
 
   const overlappingShotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
     selectedTargets: [
@@ -1305,11 +1321,15 @@ async function assertTacticalTargetNormalization() {
       grid: { size: 100 },
       scene: { grid: { distance: 2 } }
     };
+    let lastRaycastOrigin = null;
     globalThis.CONFIG = {
       Canvas: {
         polygonBackends: {
           sight: {
-            testCollision: () => null
+            testCollision: (origin, dest, options) => {
+              lastRaycastOrigin = origin;
+              return null;
+            }
           }
         }
       }
@@ -1330,6 +1350,21 @@ async function assertTacticalTargetNormalization() {
     assert.equal(clearTargets[0].tactical.raycast, undefined, "no-collision raycast clears stale raycast context");
     assert.equal(clearTargets[0].tactical.cover, undefined, "no-collision raycast clears stale cover context");
     assert.equal(staleTarget.tactical.cover.stoppingPower, 10, "raycast adapter does not mutate source target tactical data");
+
+    await detectAndPromptTacticalRaycasts({ center: { x: 0, y: 0 } }, [{
+      id: "token-circle-target",
+      actorUuid: "Actor.circle",
+      name: "Circle Target",
+      snapshot: {},
+      center: { x: 100, y: 100 },
+      tactical: {
+        template: {
+          type: "circle",
+          origin: { x: 50, y: 50 }
+        }
+      }
+    }]);
+    assert.deepEqual(lastRaycastOrigin, { x: 50, y: 50 }, "circle template uses template origin for raycasts instead of attacker origin");
   } finally {
     globalThis.canvas = previousCanvas;
     globalThis.CONFIG = previousConfig;

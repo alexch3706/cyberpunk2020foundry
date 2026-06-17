@@ -25,11 +25,16 @@ export async function detectAndPromptTacticalRaycasts(attackerToken, targetToken
       continue;
     }
 
+    let raycastOrigin = attackerOrigin;
+    if (target.tactical?.template?.type === "circle" && target.tactical?.template?.origin) {
+      raycastOrigin = target.tactical.template.origin;
+    }
+
     let collision = null;
     const sightBackend = globalThis.CONFIG?.Canvas?.polygonBackends?.sight;
     try {
       if (typeof sightBackend?.testCollision === "function") {
-        collision = sightBackend.testCollision(attackerOrigin, targetOrigin, { mode: "closest", type: "sight" });
+        collision = sightBackend.testCollision(raycastOrigin, targetOrigin, { mode: "closest", type: "sight" });
       } else {
         augmentedTargets.push(withManualRaycast(target, "Raycast collision backend is unavailable."));
         continue;
@@ -53,10 +58,10 @@ export async function detectAndPromptTacticalRaycasts(attackerToken, targetToken
       name: wallDocument?.name || "Wall"
     };
 
-    const distanceInMeters = calculateObstructionDistance(collision, attackerOrigin, canvasRef);
+    const distanceInMeters = calculateObstructionDistance(collision, raycastOrigin, canvasRef);
     if(!Number.isFinite(distanceInMeters)) {
       augmentedTargets.push(withManualRaycast(target, "Raycast obstruction distance is unavailable.", {
-        origin: attackerOrigin,
+        origin: raycastOrigin,
         destination: targetOrigin,
         obstruction
       }));
@@ -66,7 +71,7 @@ export async function detectAndPromptTacticalRaycasts(attackerToken, targetToken
     const decision = await promptCoverDecision(obstruction, target.name || "Target");
     if (decision.canceled) {
       augmentedTargets.push(withManualRaycast(target, "Raycast result requires GM decision before automated updates.", {
-        origin: attackerOrigin,
+        origin: raycastOrigin,
         destination: targetOrigin,
         obstruction,
         obstructionDistance: distanceInMeters,
@@ -77,7 +82,7 @@ export async function detectAndPromptTacticalRaycasts(attackerToken, targetToken
     }
 
     augmentedTargets.push(withTacticalRaycast(target, {
-      origin: attackerOrigin,
+      origin: raycastOrigin,
       destination: targetOrigin,
       obstruction,
       obstructionDistance: distanceInMeters,
