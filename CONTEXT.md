@@ -69,7 +69,7 @@ A token explicitly clicked or selected by the user to be the direct recipient of
 _Avoid_: Using "Target" to describe the map area or the tokens accidentally caught in an area of effect.
 
 **Hazard Zone**:
-A spatial area on the canvas (like a MeasuredTemplate or Raycast line) that represents an area of effect attack such as a shotgun blast, suppressive fire, or an explosion. The zone itself is not a target. Hazard Zone evidence belongs only to tokens actually caught inside the zone or explicitly confirmed by the referee as affected by it.
+A spatial area on the canvas (like a MeasuredTemplate or Raycast line) that represents an area of effect attack such as a shotgun blast, suppressive fire, or an explosion. The zone itself is not a target. Hazard Zone evidence belongs only to tokens actually caught inside the zone or explicitly confirmed by the referee as affected by it. Whether the zone is transient or persistent is lifecycle evidence on the Hazard Zone, not a separate glossary concept.
 _Avoid_: Treating the map template itself as a combat target.
 
 **Affected Token**:
@@ -77,7 +77,7 @@ A token that is caught inside a Hazard Zone and must resolve damage or saving th
 _Avoid_: Calling these "Targets", which confuses explicit selection with area intersection.
 
 **Zone-Only Attack**:
-An attack flow where the referee places or confirms a Hazard Zone without explicitly selecting a Target first. Confirmed tokens caught inside the zone are Affected Tokens, and the Hazard Zone itself is not a Target. If no tokens are confirmed inside the zone, the attack still resolves as a zone placement with no automated target state changes rather than as a missing-target error.
+An attack flow where the referee places or confirms a Hazard Zone without explicitly selecting a Target first. Confirmed tokens caught inside the zone are Affected Tokens, and the Hazard Zone itself is not a Target. If no tokens are confirmed inside the zone, the attack still resolves as a zone placement with no automated target state changes rather than as a missing-target error. Suppressive fire uses this language for its fire corridor while keeping suppressive-fire-specific save, ammo, hit cap, overlap, and duration mechanics.
 _Avoid_: Primary target, template target, targetless attack.
 
 **Attack Resolution**:
