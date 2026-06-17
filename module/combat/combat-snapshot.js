@@ -17,15 +17,40 @@ export function buildActorCombatSnapshot(actor, options = {}) {
     includeEmpty: options.includeEmptySkills === true
   });
 
+  const hitLocations = clonePlainData(actor.system.hitLocations) || {};
+  let equippedArmor;
+  let equippedCyberware;
+
+  if (options.includeEquipment === true) {
+    equippedArmor = normalizeEquippedItemSnapshots(actor.itemTypes?.armor || []);
+    equippedCyberware = normalizeEquippedItemSnapshots(actor.itemTypes?.cyberware || []);
+
+    const specificSdpOverlays = {};
+    for (const cw of equippedCyberware) {
+      const loc = cw.system?.location;
+      const sdp = Number(cw.system?.sdp);
+      if (loc && hitLocations[loc] && sdp > 0) {
+        specificSdpOverlays[loc] = Math.max(specificSdpOverlays[loc] || 0, sdp);
+      }
+    }
+
+    for (const loc in specificSdpOverlays) {
+      hitLocations[loc].type = "cybernetic";
+      hitLocations[loc].sdp = {
+        value: specificSdpOverlays[loc]
+      };
+    }
+  }
+
   return compactPlainObject({
     stats: clonePlainData(actor.system.stats),
     skills,
     damage: clonePlainData(actor.system.damage),
     isFBC: actor.system.isFBC === true,
-    hitLocations: clonePlainData(actor.system.hitLocations),
+    hitLocations,
     ...(options.includeEquipment === true ? {
-      equippedArmor: normalizeEquippedItemSnapshots(actor.itemTypes?.armor || []),
-      equippedCyberware: normalizeEquippedItemSnapshots(actor.itemTypes?.cyberware || [])
+      equippedArmor,
+      equippedCyberware
     } : {})
   });
 }
