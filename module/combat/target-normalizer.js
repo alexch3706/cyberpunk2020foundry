@@ -86,7 +86,8 @@ export function normalizeTacticalTargets(options = {}) {
     raycast,
     distance,
     templateRequired = false,
-    raycastRequired = false
+    raycastRequired = false,
+    legacyBareTemplateAttachToAll = false
   } = options || {};
   const sourceTargets = mergeTemplateTargets(Array.from(targets || []), template);
   const normalizedTargets = normalizeSelectedTargets(sourceTargets);
@@ -122,6 +123,7 @@ export function normalizeTacticalTargets(options = {}) {
       templateRequired,
       templateTargetKeys,
       hasTemplateContext,
+      legacyBareTemplateAttachToAll,
       distance,
       targetCount,
       targetDistance
@@ -157,12 +159,13 @@ function applyTemplateEvidence(normalizedTarget, context) {
     templateRequired,
     templateTargetKeys,
     hasTemplateContext,
+    legacyBareTemplateAttachToAll,
     distance,
     targetCount,
     targetDistance
   } = context;
 
-  if(shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext)) {
+  if(shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext, legacyBareTemplateAttachToAll)) {
     const templateTargetDistance = resolveTemplateTargetDistance({
       target: normalizedTarget,
       sourceTarget,
@@ -173,11 +176,11 @@ function applyTemplateEvidence(normalizedTarget, context) {
     normalizedTarget.tactical.template = buildTemplateContext(template, templateTargetDistance);
   }
 
-  if(templateRequired !== true && !normalizedTarget.tactical.template) {
+  const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
+  if(templateRequired !== true && !normalizedTarget.tactical.template && !templateIssue) {
     return;
   }
 
-  const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
   if(templateIssue) {
     requireTacticalManualResolution(normalizedTarget, templateIssue);
   }
@@ -280,12 +283,12 @@ function getTemplateTargetKeys(template) {
   return new Set(templateTargets.map(target => targetKey(target)).filter(Boolean));
 }
 
-function shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext) {
+function shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext, legacyBareTemplateAttachToAll = false) {
   if(!hasTemplateContext) {
     return false;
   }
   if(!templateTargetKeys) {
-    return true;
+    return legacyBareTemplateAttachToAll === true;
   }
   const key = targetKey(sourceTarget);
   return Boolean(key && templateTargetKeys.has(key));

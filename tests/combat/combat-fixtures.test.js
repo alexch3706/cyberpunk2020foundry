@@ -613,7 +613,15 @@ async function assertTacticalTargetNormalization() {
       direction: 45,
       angle: 30,
       distance: 10,
-      inclusion: "intersected"
+      inclusion: "intersected",
+      affectedTargets: [
+        {
+          id: "token-actor",
+          selected: true,
+          document: { uuid: "Scene.test.Token.actor", name: "Armored Target" },
+          actor: { uuid: "Actor.target", name: "Target Actor", system: { stats: { body: { total: 6 } } } }
+        }
+      ]
     },
     raycast: {
       origin: { x: 50, y: 50 },
@@ -669,7 +677,11 @@ async function assertTacticalTargetNormalization() {
       direction: 0,
       angle: 45,
       distance: 12,
-      inclusion: "intersected"
+      inclusion: "intersected",
+      affectedTargets: [
+        { id: "token-near", selected: false, actorUuid: "Actor.near", name: "Near Target", snapshot: {} },
+        { id: "token-far", selected: false, actorUuid: "Actor.far", name: "Far Target", snapshot: {} }
+      ]
     },
     distance: {
       byTarget: {
@@ -685,6 +697,43 @@ async function assertTacticalTargetNormalization() {
   assert.deepEqual(multiTargets[1].distance, { value: 9, units: "m", source: "template" });
   assert.equal(multiTargets[0].tactical.template.targetDistance, 3);
   assert.equal(multiTargets[1].tactical.template.targetDistance, 9);
+
+  const selectedTargetOutsideBareTemplate = normalizeTacticalTargets({
+    targets: [
+      { id: "token-outside-zone", selected: true, actorUuid: "Actor.outsideZone", name: "Outside Zone Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-bare",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected"
+    }
+  });
+
+  assert.equal(selectedTargetOutsideBareTemplate.length, 1);
+  assert.equal(selectedTargetOutsideBareTemplate[0].tactical.selected, true);
+  assert.equal(selectedTargetOutsideBareTemplate[0].tactical.template, undefined);
+
+  const legacyBareTemplateTargets = normalizeTacticalTargets({
+    targets: [
+      { id: "token-legacy-bare", selected: false, actorUuid: "Actor.legacyBare", name: "Legacy Bare Template Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-legacy-bare",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected"
+    },
+    legacyBareTemplateAttachToAll: true
+  });
+
+  assert.equal(legacyBareTemplateTargets[0].tactical.template.templateId, "template-legacy-bare", "legacy bare-template attach-to-all remains opt-in compatibility");
 
   const selectedTargetWithSeparateAffectedToken = normalizeTacticalTargets({
     targets: [
