@@ -1,0 +1,258 @@
+{
+  "name": "fbc-baseline",
+  "useStructured": true,
+  "context": {
+    "action": {
+      "type": "ranged",
+      "fireMode": "semiAuto",
+      "range": "medium",
+      "targetNumber": 15,
+      "source": "tests/combat/fixtures/fbc-baseline.json"
+    },
+    "attacker": {
+      "actorUuid": "Actor.attacker",
+      "name": "Solo",
+      "snapshot": {
+        "stats": {
+          "ref": { "total": 8 }
+        },
+        "skills": {
+          "handgun": { "level": 6 }
+        },
+        "damage": 0,
+        "hitLocations": {
+          "torso": { "label": "Torso" }
+        }
+      }
+    },
+    "weapon": {
+      "itemUuid": "Actor.attacker.Item.heavy-pistol",
+      "name": "Heavy Pistol",
+      "snapshot": {
+        "damage": "4d6",
+        "ap": false,
+        "shotsLeft": 10,
+        "rof": 2,
+        "reliability": "standard",
+        "range": 50,
+        "accuracy": 0,
+        "attackType": "Auto",
+        "attackSkill": "handgun"
+      }
+    },
+    "targets": [
+      {
+        "actorUuid": "Actor.target",
+        "tokenUuid": "Scene.test.Token.target",
+        "name": "Target",
+        "snapshot": {
+          "isFBC": true,
+          "stats": {
+            "bt": { "total": 6, "modifier": 0 },
+            "body": { "total": 6, "modifier": 0 }
+          },
+          "damage": 0,
+          "hitLocations": {
+            "torso": { "label": "Torso", "sdp": { "value": 20 } },
+            "head": { "label": "Head", "sdp": { "value": 20 } }
+          },
+          "equippedArmor": []
+        }
+      }
+    ]
+  },
+  "rolls": [
+    {
+      "id": "attack",
+      "total": 21,
+      "die": {
+        "faces": 10,
+        "natural": 7,
+        "results": [7]
+      }
+    },
+    {
+      "id": "location",
+      "total": 4,
+      "die": {
+        "faces": 10,
+        "natural": 4,
+        "results": [4]
+      },
+      "location": "torso"
+    },
+    {
+      "id": "damage",
+      "formula": "4d6",
+      "total": 15,
+      "die": {
+        "faces": 6,
+        "natural": 15,
+        "results": [4, 4, 4, 3]
+      }
+    }
+  ],
+  "expected": {
+    "targets": [
+      {
+        "hits": [
+          {
+            "location": "torso",
+            "rawDamage": 15,
+            "finalDamage": 13
+          }
+        ],
+        "damage": {
+          "damageDelta": 13,
+          "previousDamage": 0,
+          "nextDamage": 0,
+          "previousState": { "label": "FBC" },
+          "nextState": { "label": "FBC" }
+        }
+      }
+    ],
+    "plannedUpdates": {
+      "actorUpdates": [
+        {
+          "actorUuid": "Actor.target",
+          "update": {
+            "system.hitLocations.torso.sdp.value": 7
+          }
+        }
+      ]
+    }
+  },
+  "singleShotCases": [
+    {
+      "name": "headshot ignores multiplier",
+      "ruleReference": "Story 10.6: Hitting an FBC in the head does not apply the headshot multiplier.",
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "faces": 10,
+            "natural": 7,
+            "results": [7]
+          }
+        },
+        {
+          "id": "location",
+          "total": 1,
+          "die": {
+            "faces": 10,
+            "natural": 1,
+            "results": [1]
+          },
+          "location": "head"
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 15,
+          "die": {
+            "faces": 6,
+            "natural": 15,
+            "results": [4, 4, 4, 3]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "head",
+                "rawDamage": 15,
+                "finalDamage": 13
+              }
+            ],
+            "damage": {
+              "damageDelta": 13,
+              "previousDamage": 0,
+              "nextDamage": 0,
+              "previousState": { "label": "FBC" },
+              "nextState": { "label": "FBC" }
+            }
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.hitLocations.head.sdp.value": 7
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "biological saves bypassed",
+      "ruleReference": "Story 10.6: Hitting an FBC does not trigger biological Stun/Shock or Death saves.",
+      "rolls": [
+        {
+          "id": "attack",
+          "total": 21,
+          "die": {
+            "faces": 10,
+            "natural": 7,
+            "results": [7]
+          }
+        },
+        {
+          "id": "location",
+          "total": 4,
+          "die": {
+            "faces": 10,
+            "natural": 4,
+            "results": [4]
+          },
+          "location": "torso"
+        },
+        {
+          "id": "damage",
+          "formula": "4d6",
+          "total": 20,
+          "die": {
+            "faces": 6,
+            "natural": 20,
+            "results": [5, 5, 5, 5]
+          }
+        }
+      ],
+      "expected": {
+        "targets": [
+          {
+            "hits": [
+              {
+                "location": "torso",
+                "rawDamage": 20,
+                "finalDamage": 18
+              }
+            ],
+            "damage": {
+              "damageDelta": 18,
+              "previousDamage": 0,
+              "nextDamage": 0,
+              "previousState": { "label": "FBC" },
+              "nextState": { "label": "FBC" }
+            },
+            "saves": []
+          }
+        ]
+      },
+      "expectedPlan": {
+        "actorUpdates": [
+          {
+            "actorUuid": "Actor.target",
+            "update": {
+              "system.hitLocations.torso.sdp.value": 2
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

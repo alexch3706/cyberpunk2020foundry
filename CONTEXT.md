@@ -115,3 +115,11 @@ _Avoid_: Dismemberment (which applies to meat), disabled (use Destroyed for clar
 **Dismemberment**:
 The loss of a biological limb due to receiving more than 8 points of Penetrating Damage to a specific limb in a single attack.
 _Avoid_: Destroyed (which applies to SDP/cybernetics).
+
+**Cybernetic Location**:
+A hit location composed of machinery, such as a cyberlimb or an FBC body part. Damage to this location reduces SDP, ignores BTM, and does not trigger biological Stun/Shock or Death saves.
+_Avoid_: Robot limb, metal part.
+
+**Biological Location**:
+A hit location composed of flesh and bone. Damage to this location is mitigated by BTM, recorded on the Wound Track, and triggers necessary biological saves.
+_Avoid_: Meat location, normal limb.

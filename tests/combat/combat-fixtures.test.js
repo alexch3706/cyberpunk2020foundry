@@ -20,7 +20,8 @@ const FIXTURE_URLS = [
 
   new URL("./fixtures/reliability-jam.json", import.meta.url),
   new URL("./fixtures/melee-baseline.json", import.meta.url),
-  new URL("./fixtures/shotgun-template.json", import.meta.url)
+  new URL("./fixtures/shotgun-template.json", import.meta.url),
+  new URL("./fixtures/fbc-baseline.json", import.meta.url)
 ];
 
 export async function runCombatFixtures() {
