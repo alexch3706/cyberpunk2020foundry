@@ -101,30 +101,52 @@ export class CyberpunkActor extends Actor {
     const fbcItem = targetSnapshot.equippedCyberware.find(c => c.system.isFBC);
     system.isFBC = !!fbcItem;
 
+    // Calculate specific SDP overlays from equipped cyberware
+    const specificSdpOverlays = {};
+    for (const cw of targetSnapshot.equippedCyberware) {
+      const loc = cw.system?.location;
+      const sdp = Number(cw.system?.sdp);
+      if (loc && system.hitLocations[loc] && sdp > 0) {
+        specificSdpOverlays[loc] = Math.max(specificSdpOverlays[loc] || 0, sdp);
+      }
+    }
+
     for(const locName in system.hitLocations) {
       let location = system.hitLocations[locName];
       location.type = "flesh";
       const resolution = resolveArmor(false, targetSnapshot, locName);
       location.stoppingPower = resolution.effectiveStoppingPower;
 
-      if(system.isFBC && fbcItem && fbcItem.system.fbcHitLocations) {
-        let fbcLoc = fbcItem.system.fbcHitLocations[locName];
-        if(fbcLoc) {
-          location.type = "cybernetic";
-          if (!location.sdp) {
-            location.sdp = { value: fbcLoc.sdp || 0, max: 0 };
-          }
-          const maxSdp = fbcLoc.sdp || 0;
-          location.sdp.max = maxSdp;
-          
-          if (Array.isArray(location.sdp.value)) {
-            location.sdp.value = location.sdp.value.find(v => v !== "" && v != null) || maxSdp;
-          }
-          
-          if (location.sdp.value == null || location.sdp.value === "") {
-            location.sdp.value = maxSdp;
-          }
+      // Determine the Max SDP for this location (Specific Cyberware takes precedence over FBC)
+      let maxSdp = 0;
+      let isCybernetic = false;
+
+      if (specificSdpOverlays[locName]) {
+        maxSdp = specificSdpOverlays[locName];
+        isCybernetic = true;
+      } else if (system.isFBC && fbcItem && fbcItem.system.fbcHitLocations && fbcItem.system.fbcHitLocations[locName]?.sdp) {
+        maxSdp = fbcItem.system.fbcHitLocations[locName].sdp;
+        isCybernetic = true;
+      }
+
+      if (isCybernetic) {
+        location.type = "cybernetic";
+        if (!location.sdp) {
+          location.sdp = { value: maxSdp, max: 0 };
         }
+        location.sdp.max = maxSdp;
+        
+        // Handle Foundry array edge cases
+        if (Array.isArray(location.sdp.value)) {
+          location.sdp.value = location.sdp.value.find(v => v !== "" && v != null) || maxSdp;
+        }
+        // Auto-heal on first initialization
+        if (location.sdp.value == null || location.sdp.value === "") {
+          location.sdp.value = maxSdp;
+        }
+      } else {
+        // If it's flesh, we ensure sdp isn't populated to prevent UI rendering
+        delete location.sdp;
       }
     }
     stats.ref.total = stats.ref.base + stats.ref.tempMod + stats.ref.armorMod;

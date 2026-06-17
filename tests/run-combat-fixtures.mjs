@@ -1,3 +1,4 @@
+import "./mock-globals.mjs";
 // Regenerate coverage map before running tests
 await import("./combat/generate-coverage-map.mjs");
 
@@ -17,6 +18,7 @@ import { runWoundHintTests } from "./combat/wound-hints.test.js";
 import { runSuppressiveFireTests } from "./combat/suppressive-fire.test.js";
 import { runCyberlimbSchemaTests } from "./combat/cyberlimb-schema.test.js";
 import { runCombatSnapshotTests } from "./combat/combat-snapshot.test.js";
+import { runActorDataTests } from "./actor/actor-data.test.js";
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
@@ -32,7 +34,8 @@ const results = [
   ...runWoundHintTests(),
   ...await runSuppressiveFireTests(),
   ...runCyberlimbSchemaTests(),
-  ...runCombatSnapshotTests()
+  ...runCombatSnapshotTests(),
+  ...runActorDataTests()
 ];
 
 for(const result of results) {
