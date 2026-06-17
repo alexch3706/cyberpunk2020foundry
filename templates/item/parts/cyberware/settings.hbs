@@ -25,6 +25,21 @@
         </select>
     </div>
     
+    <div class="field">
+        <label>{{CPLocal "Location"}}</label>
+        <span class="flex-pad"></span>
+        <select name="system.location" style="width: 120px;">
+            <option value="" {{#if (eq system.location "")}}selected{{/if}}>None / Global</option>
+            <option value="Head" {{#if (eq system.location "Head")}}selected{{/if}}>Head</option>
+            <option value="Torso" {{#if (eq system.location "Torso")}}selected{{/if}}>Torso</option>
+            <option value="rArm" {{#if (eq system.location "rArm")}}selected{{/if}}>R.Arm</option>
+            <option value="lArm" {{#if (eq system.location "lArm")}}selected{{/if}}>L.Arm</option>
+            <option value="rLeg" {{#if (eq system.location "rLeg")}}selected{{/if}}>R.Leg</option>
+            <option value="lLeg" {{#if (eq system.location "lLeg")}}selected{{/if}}>L.Leg</option>
+        </select>
+    </div>
+    {{> (template "fields/number") label="SDP" edit="system.sdp"}}
+    
     <hr>
     {{> (template "fields/boolean") label="Is Full Body Conversion" edit="system.isFBC"}}
     {{#if system.isFBC}}

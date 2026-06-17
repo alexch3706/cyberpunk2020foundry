@@ -15,6 +15,7 @@ import { runArmorMaintenanceTests } from "./combat/armor-maintenance.test.js";
 import { runDerivedStatOverrideTests } from "./combat/derived-stat-overrides.test.js";
 import { runWoundHintTests } from "./combat/wound-hints.test.js";
 import { runSuppressiveFireTests } from "./combat/suppressive-fire.test.js";
+import { runCyberlimbSchemaTests } from "./combat/cyberlimb-schema.test.js";
 const results = [
   ...await runCombatFixtures(),
   await runCombatCommitTests(),
@@ -28,7 +29,8 @@ const results = [
   ...runArmorMaintenanceTests(),
   ...runDerivedStatOverrideTests(),
   ...runWoundHintTests(),
-  ...await runSuppressiveFireTests()
+  ...await runSuppressiveFireTests(),
+  ...runCyberlimbSchemaTests()
 ];
 
 for(const result of results) {

@@ -861,6 +861,8 @@
 			"humanityCost": "1d6",
 			"cyberwareType": "",
 			"cyberwareSubtype": "",
+			"location": "",
+			"sdp": 0,
 			"slots": 0,
 			"spaces": 0,
 			"abbrev": "",
