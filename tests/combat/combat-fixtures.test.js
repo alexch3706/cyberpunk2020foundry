@@ -717,6 +717,28 @@ async function assertTacticalTargetNormalization() {
   assert.equal(selectedTargetOutsideBareTemplate[0].tactical.selected, true);
   assert.equal(selectedTargetOutsideBareTemplate[0].tactical.template, undefined);
 
+  const selectedTargetMissingRequiredTemplateEvidence = normalizeTacticalTargets({
+    targets: [
+      { id: "token-required-template-missing", selected: true, actorUuid: "Actor.requiredTemplateMissing", name: "Required Template Missing", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-required-missing-evidence",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected"
+    },
+    templateRequired: true
+  });
+
+  assert.equal(selectedTargetMissingRequiredTemplateEvidence[0].manualResolution.required, true);
+  assert.equal(selectedTargetMissingRequiredTemplateEvidence[0].manualResolution.message, "Template mode requested but tactical data is incomplete.");
+  assert.deepEqual(selectedTargetMissingRequiredTemplateEvidence[0].manualResolution.blockedUpdateCategories, ["target-damage", "target-armor", "target-saves"]);
+  assert.equal(selectedTargetMissingRequiredTemplateEvidence[0].tactical.template, undefined);
+  assert.ok(selectedTargetMissingRequiredTemplateEvidence[0].warnings.some(w => w.code === "missing-tactical-template"));
+
   const legacyBareTemplateTargets = normalizeTacticalTargets({
     targets: [
       { id: "token-legacy-bare", selected: false, actorUuid: "Actor.legacyBare", name: "Legacy Bare Template Target", snapshot: {} }
@@ -1009,6 +1031,19 @@ async function assertTacticalTargetNormalization() {
   assert.ok(manualTargets[0].warnings.some(w => w.code === "missing-tactical-template"));
   assert.ok(manualTargets[0].warnings.some(w => w.code === "missing-tactical-raycast"));
 
+  const missingRequiredRaycastEvidence = normalizeTacticalTargets({
+    targets: [{ id: "token-required-raycast-missing", actorUuid: "Actor.requiredRaycastMissing", name: "Required Raycast Missing", snapshot: {} }],
+    raycast: {
+      origin: { x: 0, y: 0 }
+    },
+    raycastRequired: true
+  });
+
+  assert.equal(missingRequiredRaycastEvidence[0].manualResolution.required, true);
+  assert.equal(missingRequiredRaycastEvidence[0].manualResolution.message, "Raycast mode requested but tactical data is incomplete.");
+  assert.deepEqual(missingRequiredRaycastEvidence[0].manualResolution.blockedUpdateCategories, ["target-damage", "target-armor", "target-saves"]);
+  assert.ok(missingRequiredRaycastEvidence[0].warnings.some(w => w.code === "missing-tactical-raycast"));
+
   const missingRequestedContext = normalizeTacticalTargets({
     targets: [{ id: "token-requested", actorUuid: "Actor.requested", name: "Requested Target", snapshot: {} }],
     templateRequired: true,
@@ -1051,6 +1086,14 @@ async function assertTacticalTargetNormalization() {
 
   assert.equal(ambiguousRaycastTargets[0].manualResolution.required, true);
   assert.ok(ambiguousRaycastTargets[0].warnings.some(w => w.code === "ambiguous-tactical-raycast"));
+
+  const nonTacticalTargets = normalizeTacticalTargets({
+    targets: [{ id: "token-non-tactical", actorUuid: "Actor.nonTactical", name: "Non Tactical Target", snapshot: {} }]
+  });
+
+  assert.equal(nonTacticalTargets[0].tactical.selected, true);
+  assert.equal(nonTacticalTargets[0].manualResolution, undefined);
+  assert.equal(nonTacticalTargets[0].warnings, undefined);
 
   assert.deepEqual(normalizeTacticalTargets(null), []);
   

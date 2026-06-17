@@ -176,7 +176,13 @@ function applyTemplateEvidence(normalizedTarget, context) {
     normalizedTarget.tactical.template = buildTemplateContext(template, templateTargetDistance);
   }
 
-  const templateIssue = getTemplateManualIssue(normalizedTarget.tactical.template || template);
+  const shouldValidateTemplate = templateRequired === true || normalizedTarget.tactical.template || hasTemplateContext;
+  const templateEvidence = templateRequired === true
+    ? normalizedTarget.tactical.template
+    : normalizedTarget.tactical.template || template;
+  const templateIssue = shouldValidateTemplate
+    ? getTemplateManualIssue(templateEvidence)
+    : undefined;
   if(templateRequired !== true && !normalizedTarget.tactical.template && !templateIssue) {
     return;
   }
