@@ -761,6 +761,76 @@ async function assertTacticalTargetNormalization() {
   assert.equal(selectedTargetWithSeparateAffectedToken[1].tactical.selected, false);
   assert.equal(selectedTargetWithSeparateAffectedToken[1].tactical.template.templateId, "template-affected");
 
+  const templateWithSelectedAndAffectedLists = normalizeTacticalTargets({
+    template: {
+      templateId: "template-selected-and-affected",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      targets: [
+        { id: "token-template-selected", selected: true, actorUuid: "Actor.templateSelected", name: "Template Selected", snapshot: {} }
+      ],
+      affectedTargets: [
+        { id: "token-template-affected", actorUuid: "Actor.templateAffected", name: "Template Affected", snapshot: {} }
+      ]
+    }
+  });
+
+  assert.equal(templateWithSelectedAndAffectedLists.length, 2);
+  assert.equal(templateWithSelectedAndAffectedLists[0].id, "token-template-selected");
+  assert.equal(templateWithSelectedAndAffectedLists[0].tactical.selected, true);
+  assert.equal(templateWithSelectedAndAffectedLists[1].id, "token-template-affected");
+  assert.equal(templateWithSelectedAndAffectedLists[1].tactical.selected, false);
+  assert.equal(templateWithSelectedAndAffectedLists[1].tactical.template.templateId, "template-selected-and-affected");
+
+  const affectedTokenWithGmJudgementEvidence = normalizeTacticalTargets({
+    template: {
+      templateId: "template-gm-judgement",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        {
+          id: "token-gm-judgement-affected",
+          actorUuid: "Actor.gmJudgementAffected",
+          name: "GM Judgement Affected",
+          snapshot: {},
+          tactical: {
+            raycast: {
+              origin: { x: 0, y: 0 },
+              destination: { x: 5, y: 5 },
+              obstruction: { id: "wall-gm", uuid: "Scene.test.Wall.gm", type: "wall", name: "GM Wall" },
+              obstructionDistance: 2,
+              firstTarget: false,
+              requiresGmDecision: true
+            },
+            cover: {
+              applies: true,
+              stoppingPower: 10,
+              source: "raycast-gm"
+            }
+          }
+        }
+      ]
+    }
+  });
+
+  assert.equal(affectedTokenWithGmJudgementEvidence.length, 1);
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].id, "token-gm-judgement-affected");
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].tactical.selected, false);
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].tactical.template.templateId, "template-gm-judgement");
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].tactical.raycast.requiresGmDecision, true);
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].tactical.cover.stoppingPower, 10);
+  assert.equal(affectedTokenWithGmJudgementEvidence[0].manualResolution.required, true);
+  assert.deepEqual(affectedTokenWithGmJudgementEvidence[0].manualResolution.blockedUpdateCategories, ["target-damage", "target-armor", "target-saves"]);
+  assert.ok(affectedTokenWithGmJudgementEvidence[0].warnings.some(w => w.code === "manual-tactical-raycast"));
+
   const selectedTargetAlsoCaughtInHazardZone = normalizeTacticalTargets({
     targets: [
       { id: "token-overlap", selected: true, actorUuid: "Actor.overlap", name: "Overlapping Target", snapshot: {} }

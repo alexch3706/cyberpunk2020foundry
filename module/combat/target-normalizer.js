@@ -272,7 +272,24 @@ function getTemplateTargets(template) {
     return [];
   }
   const targetLists = [template.targets, template.intersectedTargets, template.affectedTargets];
-  return targetLists.find(targets => Array.isArray(targets) && targets.length > 0) || [];
+  const mergedTargets = [];
+  const seen = new Set();
+  for(const targets of targetLists) {
+    if(!Array.isArray(targets)) {
+      continue;
+    }
+    for(const target of targets) {
+      const key = targetKey(target);
+      if(key && seen.has(key)) {
+        continue;
+      }
+      if(key) {
+        seen.add(key);
+      }
+      mergedTargets.push(target);
+    }
+  }
+  return mergedTargets;
 }
 
 function getTemplateTargetKeys(template) {
