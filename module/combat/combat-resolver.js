@@ -152,7 +152,7 @@ function canResolveSingleShotRangedContext(context, roller) {
     && !!context.attacker?.snapshot?.stats
     && !!context.weapon?.snapshot?.attackSkill
     && Array.isArray(context.targets)
-    && context.targets.length > 0;
+    && (context.targets.length > 0 || isEmptyShotgunZoneOnlyAttack(context));
 }
 
 function validateSupportedRangedContext(context, roller) {
@@ -167,6 +167,9 @@ function validateSupportedRangedContext(context, roller) {
   const targets = Array.isArray(context.targets) ? context.targets : [];
   const fireMode = String(context.action?.fireMode || "").toLowerCase();
   if(targets.length === 0) {
+    if(isEmptyShotgunZoneOnlyAttack(context)) {
+      return undefined;
+    }
     return buildManualRangedOutcome(context, "Select a target before resolving a ranged attack.", ["target-selection", "target-damage", "target-armor", "target-saves"]);
   }
 
@@ -198,6 +201,34 @@ function validateSupportedRangedContext(context, roller) {
   }
 
   return undefined;
+}
+
+function isEmptyShotgunZoneOnlyAttack(context) {
+  if(!Array.isArray(context?.targets) || context.targets.length !== 0) {
+    return false;
+  }
+  if(String(context?.action?.type || "").toLowerCase() !== "ranged") {
+    return false;
+  }
+  if(String(context?.action?.fireMode || "").toLowerCase() !== "semiauto") {
+    return false;
+  }
+  if(String(context?.weapon?.snapshot?.attackType || "").toLowerCase().trim() !== "shotgun") {
+    return false;
+  }
+
+  const hazardZone = context?.action?.hazardZone;
+  if(!hazardZone || typeof hazardZone !== "object") {
+    return false;
+  }
+  if(String(hazardZone.kind || "") !== "shotgun-cone") {
+    return false;
+  }
+  if(!hazardZone.type || !hazardZone.origin || !hazardZone.inclusion) {
+    return false;
+  }
+
+  return Number(hazardZone.affectedTokenCount || 0) === 0;
 }
 
 function buildManualRangedOutcome(context, message, blockedUpdateCategories) {

@@ -550,6 +550,29 @@ async function assertTacticalTargetNormalization() {
   assert.deepEqual(shotgunTargets[1].distance, { value: 3, units: "m", source: "template" });
   assert.equal(shotgunTargets[1].tactical.template.targetDistance, 3);
 
+  const emptyShotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
+    selectedTargets: [],
+    affectedTargets: [],
+    hazardZone: {
+      templateUuid: "Scene.test.MeasuredTemplate.empty-shotgun",
+      templateId: "empty-shotgun",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 90,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      lifecycle: "transient"
+    }
+  });
+
+  assert.deepEqual(emptyShotgunTemplateTargeting.targets, [], "empty shotgun Zone-Only adapter keeps selected targets empty");
+  assert.deepEqual(emptyShotgunTemplateTargeting.raycastTargets, [], "empty shotgun Zone-Only adapter keeps raycast targets empty");
+  assert.equal(emptyShotgunTemplateTargeting.template, undefined, "empty shotgun Zone-Only adapter does not invent per-target template evidence");
+  assert.equal(emptyShotgunTemplateTargeting.hazardZone.kind, "shotgun-cone");
+  assert.equal(emptyShotgunTemplateTargeting.hazardZone.templateId, "empty-shotgun");
+  assert.equal(emptyShotgunTemplateTargeting.hazardZone.affectedTokenCount, 0);
+
   const overlappingShotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
     selectedTargets: [
       {
@@ -1200,6 +1223,68 @@ async function assertTacticalTargetNormalization() {
   const outcome = await resolveCombatAction(tacticalContext, { structured: true }, staticRoller);
   assert.equal(outcome.targets.length, 1);
   assert.equal(outcome.targets[0].target.tactical.template.inclusion, "intersected");
+
+  const emptyZoneOnlyContext = {
+    action: {
+      type: "ranged",
+      fireMode: "semiAuto",
+      range: "close",
+      hazardZone: {
+        kind: "shotgun-cone",
+        templateId: "template-empty-zone",
+        templateUuid: "Scene.test.MeasuredTemplate.emptyZone",
+        type: "cone",
+        origin: { x: 10, y: 20 },
+        direction: 90,
+        angle: 45,
+        distance: 12,
+        inclusion: "intersected",
+        affectedTokenCount: 0,
+        lifecycle: "transient"
+      }
+    },
+    attacker: {
+      actorUuid: "Actor.emptyZoneAttacker",
+      snapshot: { stats: { ref: { total: 10 } } }
+    },
+    weapon: {
+      itemUuid: "Actor.emptyZoneAttacker.Item.shotgun",
+      snapshot: {
+        damage: "4d6",
+        accuracy: 0,
+        attackSkill: "Shotgun",
+        attackType: "shotgun",
+        shotsLeft: 2
+      }
+    },
+    targets: [],
+    legacy: {
+      mode: "fallback",
+      fallback: () => "fallback-called"
+    }
+  };
+  const emptyZoneOutcome = await resolveCombatAction(emptyZoneOnlyContext, { structured: true }, staticRoller);
+  assert.equal(emptyZoneOutcome.manualResolution.required, false, "empty Zone-Only Attack is valid");
+  assert.equal(emptyZoneOutcome.targets.length, 0, "empty Hazard Zone does not create a target");
+  assert.equal(emptyZoneOutcome.action.hazardZone.templateId, "template-empty-zone", "empty Hazard Zone evidence is preserved");
+  assert.deepEqual(emptyZoneOutcome.ammo, {
+    before: 2,
+    delta: -1,
+    after: 1,
+    source: "weapon.snapshot.shotsLeft"
+  });
+
+  const emptyZonePlan = planCombatUpdates(emptyZoneOutcome);
+  assert.deepEqual(emptyZonePlan.actorUpdates, [], "empty Zone-Only Attack plans no target actor updates");
+  assert.deepEqual(emptyZonePlan.embeddedItemUpdates, [], "empty Zone-Only Attack plans no target embedded item updates");
+  assert.deepEqual(emptyZonePlan.itemUpdates, [{
+    itemUuid: "Actor.emptyZoneAttacker.Item.shotgun",
+    update: { "system.shotsLeft": 1 }
+  }], "empty Zone-Only Attack still plans attacker ammo");
+
+  const emptyZoneChat = buildCombatChatData(emptyZoneOutcome, emptyZonePlan);
+  assert.equal(emptyZoneChat.action.hazardZone.templateId, "template-empty-zone", "chat preserves empty Hazard Zone evidence");
+  assert.equal(emptyZoneChat.targets.length, 0, "chat does not invent a target for an empty Hazard Zone");
 
   const previousCanvas = globalThis.canvas;
   const previousConfig = globalThis.CONFIG;

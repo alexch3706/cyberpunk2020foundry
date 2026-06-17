@@ -19,7 +19,7 @@ export async function promptUseShotgunTemplate() {
   });
 }
 
-export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], affectedTargets = [] } = {}) {
+export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], affectedTargets = [], hazardZone = undefined } = {}) {
   const selected = Array.from(selectedTargets || []).map(target => markShotgunTargetSelection(target, true));
   const affected = Array.from(affectedTargets || []).map(target => markShotgunAffectedToken(target));
   const template = buildShotgunTemplateContext(affected, selected);
@@ -28,6 +28,7 @@ export function buildShotgunTemplateTargetingOptions({ selectedTargets = [], aff
   return {
     targets: selected,
     template,
+    hazardZone: buildShotgunHazardZone(hazardZone || template, affected.length),
     raycastTargets
   };
 }
@@ -79,6 +80,33 @@ function buildShotgunTemplateContext(affectedTargets, selectedTargets = []) {
     ...template,
     affectedTargets: affectedTargets.map(target => stripSelectedOverlapDistance(target, selectedTargets))
   };
+}
+
+function buildShotgunHazardZone(template, affectedTokenCount = 0) {
+  if(!template) {
+    return undefined;
+  }
+  return {
+    kind: "shotgun-cone",
+    templateUuid: template.templateUuid,
+    templateId: template.templateId,
+    type: template.type,
+    origin: clonePlainData(template.origin),
+    direction: template.direction,
+    angle: template.angle,
+    width: template.width,
+    distance: template.distance,
+    inclusion: template.inclusion,
+    affectedTokenCount,
+    lifecycle: template.lifecycle || "transient"
+  };
+}
+
+function clonePlainData(value) {
+  if(value === undefined || value === null) {
+    return value;
+  }
+  return JSON.parse(JSON.stringify(value));
 }
 
 function stripSelectedOverlapDistance(target, selectedTargets) {
@@ -210,11 +238,22 @@ export async function drawShotgunTemplateAndGetTargets(attackerToken) {
       if (!createdDocs || createdDocs.length === 0) return resolve([]);
       
       const createdDoc = createdDocs[0];
+      const hazardZone = buildShotgunHazardZone({
+        templateUuid: createdDoc.uuid,
+        templateId: createdDoc.id,
+        type: "cone",
+        origin: { x: createdDoc.x, y: createdDoc.y },
+        direction: createdDoc.direction,
+        angle: createdDoc.angle,
+        width: createdDoc.distance,
+        distance: createdDoc.distance,
+        inclusion: "intersected"
+      }, 0);
       
       // Wait for object to be instantiated
       setTimeout(() => {
         const templateObj = createdDoc.object;
-        if (!templateObj) return resolve([]);
+        if (!templateObj) return resolve({ affectedTargets: [], hazardZone });
 
         const tokens = canvas.tokens.placeables.filter(t => {
           const tCenter = t.center || { x: t.x + (t.w/2), y: t.y + (t.h/2) };
@@ -243,7 +282,13 @@ export async function drawShotgunTemplateAndGetTargets(attackerToken) {
           return t;
         });
 
-        resolve(augmentedTokens);
+        resolve({
+          affectedTargets: augmentedTokens,
+          hazardZone: {
+            ...hazardZone,
+            affectedTokenCount: augmentedTokens.length
+          }
+        });
       }, 100);
     };
 

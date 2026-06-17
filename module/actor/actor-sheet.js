@@ -300,10 +300,14 @@ export class CyberpunkActorSheet extends ActorSheet {
           if (item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ") {
             const { promptUseShotgunTemplate, drawShotgunTemplateAndGetTargets, buildShotgunTemplateTargetingOptions } = await import("../combat/template-placement.js");
             if (await promptUseShotgunTemplate()) {
-              const affectedTargets = await drawShotgunTemplateAndGetTargets(attackerToken);
+              const shotgunTemplateResult = await drawShotgunTemplateAndGetTargets(attackerToken);
+              const affectedTargets = Array.isArray(shotgunTemplateResult)
+                ? shotgunTemplateResult
+                : shotgunTemplateResult?.affectedTargets || [];
               shotgunTemplateTargeting = buildShotgunTemplateTargetingOptions({
                 selectedTargets,
-                affectedTargets
+                affectedTargets,
+                hazardZone: shotgunTemplateResult?.hazardZone
               });
               targetsToRaycast = shotgunTemplateTargeting.raycastTargets;
             }
@@ -384,6 +388,9 @@ export class CyberpunkActorSheet extends ActorSheet {
           if (suppressiveFireOptions && fireOptions.fireMode === "Suppressive") {
             fireOptions.roundsFired = suppressiveFireOptions.roundsFired;
             fireOptions.fireZoneWidth = suppressiveFireOptions.zoneWidth;
+          }
+          if (shotgunTemplateTargeting?.hazardZone) {
+            fireOptions.hazardZone = shotgunTemplateTargeting.hazardZone;
           }
           let attackDieOptions = {};
           if (resolverOptions && getAttackDieEntryMode({ options: resolverOptions }) === "prompt") {
