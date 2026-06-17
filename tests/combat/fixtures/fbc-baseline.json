@@ -132,20 +132,15 @@
           {
             "location": "torso",
             "rawDamage": 15,
-            "finalDamage": 15
+            "finalDamage": 15,
+            "sdpTransition": {
+              "locationLabel": "Torso",
+              "previousSdp": 20,
+              "nextSdp": 5,
+              "damageDelta": 15
+            }
           }
-        ],
-        "damage": {
-          "damageDelta": 15,
-          "previousDamage": 0,
-          "nextDamage": 0,
-          "previousState": {
-            "label": "FBC"
-          },
-          "nextState": {
-            "label": "FBC"
-          }
-        }
+        ]
       }
     ],
     "plannedUpdates": {
@@ -210,20 +205,15 @@
               {
                 "location": "head",
                 "rawDamage": 15,
-                "finalDamage": 15
+                "finalDamage": 15,
+                "sdpTransition": {
+                  "locationLabel": "Head",
+                  "previousSdp": 20,
+                  "nextSdp": 5,
+                  "damageDelta": 15
+                }
               }
-            ],
-            "damage": {
-              "damageDelta": 15,
-              "previousDamage": 0,
-              "nextDamage": 0,
-              "previousState": {
-                "label": "FBC"
-              },
-              "nextState": {
-                "label": "FBC"
-              }
-            }
+            ]
           }
         ]
       },
@@ -288,20 +278,15 @@
               {
                 "location": "torso",
                 "rawDamage": 20,
-                "finalDamage": 20
+                "finalDamage": 20,
+                "sdpTransition": {
+                  "locationLabel": "Torso",
+                  "previousSdp": 20,
+                  "nextSdp": 0,
+                  "damageDelta": 20
+                }
               }
             ],
-            "damage": {
-              "damageDelta": 20,
-              "previousDamage": 0,
-              "nextDamage": 0,
-              "previousState": {
-                "label": "FBC"
-              },
-              "nextState": {
-                "label": "FBC"
-              }
-            },
             "saves": []
           }
         ]

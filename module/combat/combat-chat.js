@@ -135,6 +135,7 @@ function buildHitChatData(hit = {}) {
     finalDamage: hit.finalDamage,
     woundDamage: hit.woundDamage,
     woundTransition: clonePlainData(hit.woundTransition),
+    sdpTransition: clonePlainData(hit.sdpTransition),
     specialCases: clonePlainData(hit.specialCases),
     damageRoll: clonePlainData(hit.damageRoll),
     locationRoll: clonePlainData(hit.locationRoll),

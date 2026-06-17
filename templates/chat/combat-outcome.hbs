@@ -221,6 +221,12 @@
                             <span class="flex-pad">{{hit.woundDamage}}</span>
                         </div>
                         {{/if}}
+                        {{#if hit.sdpTransition}}
+                        <div class="field">
+                            <span>{{hit.sdpTransition.locationLabel}} SDP: </span>
+                            <span class="flex-pad">{{hit.sdpTransition.previousSdp}} &rarr; {{hit.sdpTransition.nextSdp}}</span>
+                        </div>
+                        {{/if}}
                     {{/each}}
                 {{/if}}
             {{/if}}

@@ -98,9 +98,15 @@ function collectWoundUpdates(plan, targetOutcome) {
         sdpUpdates[locKey] = hitLocations[locKey]?.sdp?.value || 0;
       }
       
+      const previousSdp = sdpUpdates[locKey];
       const damageDelta = finalDamage.value;
       sdpUpdates[locKey] -= damageDelta;
-      hit.woundDamage = damageDelta;
+      hit.sdpTransition = {
+        locationLabel: hitLocations[locKey]?.label || locKey,
+        previousSdp: previousSdp,
+        nextSdp: sdpUpdates[locKey],
+        damageDelta: damageDelta
+      };
       totalSdpDamageDelta += damageDelta;
 
       const maxSdp = hitLocations[locKey]?.sdp?.max || 0;
@@ -160,9 +166,8 @@ function collectWoundUpdates(plan, targetOutcome) {
         }
       }
     ]);
-  } else if (totalSdpDamageDelta > 0 && totalWoundDamageDelta === 0) {
-    targetOutcome.damage = { damageDelta: totalSdpDamageDelta, previousDamage: 0, nextDamage: 0, previousState: { label: "FBC" }, nextState: { label: "FBC" } };
   }
+
 }
 
 function collectSavePrompts(plan, targetOutcome) {
