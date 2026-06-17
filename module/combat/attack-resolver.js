@@ -673,7 +673,7 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
   }
 
   // BTM
-  const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
+  const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitLocationResult.location));
 
   // Staged penetration
   const stagedPenetration = buildStagedPenetrationEvidence({
@@ -1319,7 +1319,7 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
           penetratingDamage = Math.floor(penetratingDamage / 2);
         }
 
-        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target));
+        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitDetail.location));
 
         const stagedPenetration = buildStagedPenetrationEvidence({
           enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
@@ -1464,7 +1464,10 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
   };
 }
 
-function resolveTargetBodyType(target) {
+function resolveTargetBodyType(target, locationKey) {
+  if (locationKey && target?.snapshot?.hitLocations?.[locationKey]?.type === "cybernetic") {
+    return 0;
+  }
   return target.snapshot?.stats?.bt?.total ?? target.snapshot?.stats?.body?.total ?? 0;
 }
 

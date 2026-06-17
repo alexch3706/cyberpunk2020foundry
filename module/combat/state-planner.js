@@ -62,14 +62,24 @@ function collectWoundUpdates(plan, targetOutcome) {
     return;
   }
 
-  const isFBC = targetOutcome?.target?.snapshot?.isFBC === true;
+  const currentDamage = normalizeDamageValue(targetOutcome?.target?.snapshot?.damage);
+  if(currentDamage === undefined) {
+    warnForUnplannedWoundHits(plan, targetOutcome?.hits);
+    return;
+  }
 
-  if (isFBC) {
-    const sdpUpdates = {};
-    const hitLocations = targetOutcome?.target?.snapshot?.hitLocations || {};
-    let totalDamageDelta = 0;
+  let runningDamage = currentDamage;
+  let totalWoundDamageDelta = 0;
+  
+  const sdpUpdates = {};
+  const hitLocations = targetOutcome?.target?.snapshot?.hitLocations || {};
+  let totalSdpDamageDelta = 0;
 
-    for(const hit of targetOutcome?.hits || []) {
+  for(const hit of targetOutcome?.hits || []) {
+    const locKey = hit.location;
+    const locType = hitLocations[locKey]?.type || "flesh";
+
+    if (locType === "cybernetic") {
       const finalDamage = readWoundDamage(hit);
       if(finalDamage.invalid) {
         addWarning(plan, "invalid-wound-damage", "Wound damage must be a non-negative integer before it can be planned.");
@@ -79,7 +89,6 @@ function collectWoundUpdates(plan, targetOutcome) {
         continue;
       }
 
-      const locKey = hit.location;
       if (!locKey) {
         addWarning(plan, "missing-hit-location", "Hit location is missing; cannot apply FBC SDP damage.");
         continue;
@@ -89,10 +98,10 @@ function collectWoundUpdates(plan, targetOutcome) {
         sdpUpdates[locKey] = hitLocations[locKey]?.sdp?.value || 0;
       }
       
-      const damageDelta = finalDamage.value; // No headshot multiplier for FBCs
+      const damageDelta = finalDamage.value;
       sdpUpdates[locKey] -= damageDelta;
       hit.woundDamage = damageDelta;
-      totalDamageDelta += damageDelta;
+      totalSdpDamageDelta += damageDelta;
 
       const maxSdp = hitLocations[locKey]?.sdp?.max || 0;
       const currentSdp = sdpUpdates[locKey];
@@ -110,63 +119,50 @@ function collectWoundUpdates(plan, targetOutcome) {
           message: `FBC ${locKey} reached ${currentSdp} SDP (Max ${maxSdp}); it is disabled/useless.`
         });
       }
-    }
-
-    if (Object.keys(sdpUpdates).length > 0) {
-      const updatePayload = {};
-      for (const [locKey, newVal] of Object.entries(sdpUpdates)) {
-        updatePayload[`system.hitLocations.${locKey}.sdp.value`] = newVal;
+    } else {
+      const woundApplication = buildHitWoundApplication(hit, runningDamage, plan);
+      if(!woundApplication) {
+        continue;
       }
-      addActorUpdates(plan, [{
-        actorUuid,
-        update: updatePayload
-      }]);
-      // Set a dummy transition so the chat card shows the damage dealt
-      targetOutcome.damage = { damageDelta: totalDamageDelta, previousDamage: 0, nextDamage: 0, previousState: { label: "FBC" }, nextState: { label: "FBC" } };
+
+      hit.woundDamage = woundApplication.damageDelta;
+      if(woundApplication.specialCases.length > 0) {
+        hit.specialCases = mergeSpecialCases(hit.specialCases, woundApplication.specialCases);
+      }
+      hit.woundTransition = buildWoundTransition(runningDamage, woundApplication.nextDamage, woundApplication.damageDelta);
+      if(woundApplication.warning) {
+        hit.warnings = addUniqueWarning(hit.warnings, woundApplication.warning);
+      }
+
+      runningDamage = woundApplication.nextDamage;
+      totalWoundDamageDelta += woundApplication.damageDelta;
     }
-    return;
   }
 
-  const currentDamage = normalizeDamageValue(targetOutcome?.target?.snapshot?.damage);
-  if(currentDamage === undefined) {
-    warnForUnplannedWoundHits(plan, targetOutcome?.hits);
-    return;
-  }
-
-  let runningDamage = currentDamage;
-  let totalDamageDelta = 0;
-  for(const hit of targetOutcome?.hits || []) {
-    const woundApplication = buildHitWoundApplication(hit, runningDamage, plan);
-    if(!woundApplication) {
-      continue;
+  if (Object.keys(sdpUpdates).length > 0) {
+    const updatePayload = {};
+    for (const [locKey, newVal] of Object.entries(sdpUpdates)) {
+      updatePayload[`system.hitLocations.${locKey}.sdp.value`] = newVal;
     }
-
-    hit.woundDamage = woundApplication.damageDelta;
-    if(woundApplication.specialCases.length > 0) {
-      hit.specialCases = mergeSpecialCases(hit.specialCases, woundApplication.specialCases);
-    }
-    hit.woundTransition = buildWoundTransition(runningDamage, woundApplication.nextDamage, woundApplication.damageDelta);
-    if(woundApplication.warning) {
-      hit.warnings = addUniqueWarning(hit.warnings, woundApplication.warning);
-    }
-
-    runningDamage = woundApplication.nextDamage;
-    totalDamageDelta += woundApplication.damageDelta;
-  }
-
-  if(totalDamageDelta <= 0) {
-    return;
-  }
-
-  targetOutcome.damage = buildWoundTransition(currentDamage, runningDamage, totalDamageDelta);
-  addActorUpdates(plan, [
-    {
+    addActorUpdates(plan, [{
       actorUuid,
-      update: {
-        "system.damage": runningDamage
+      update: updatePayload
+    }]);
+  }
+
+  if (totalWoundDamageDelta > 0) {
+    targetOutcome.damage = buildWoundTransition(currentDamage, runningDamage, totalWoundDamageDelta);
+    addActorUpdates(plan, [
+      {
+        actorUuid,
+        update: {
+          "system.damage": runningDamage
+        }
       }
-    }
-  ]);
+    ]);
+  } else if (totalSdpDamageDelta > 0 && totalWoundDamageDelta === 0) {
+    targetOutcome.damage = { damageDelta: totalSdpDamageDelta, previousDamage: 0, nextDamage: 0, previousState: { label: "FBC" }, nextState: { label: "FBC" } };
+  }
 }
 
 function collectSavePrompts(plan, targetOutcome) {

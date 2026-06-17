@@ -103,12 +103,14 @@ export class CyberpunkActor extends Actor {
 
     for(const locName in system.hitLocations) {
       let location = system.hitLocations[locName];
+      location.type = "flesh";
       const resolution = resolveArmor(false, targetSnapshot, locName);
       location.stoppingPower = resolution.effectiveStoppingPower;
 
       if(system.isFBC && fbcItem && fbcItem.system.fbcHitLocations) {
         let fbcLoc = fbcItem.system.fbcHitLocations[locName];
         if(fbcLoc) {
+          location.type = "cybernetic";
           if (!location.sdp) {
             location.sdp = { value: fbcLoc.sdp || 0, max: 0 };
           }
