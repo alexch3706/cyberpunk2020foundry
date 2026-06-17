@@ -698,6 +698,40 @@ async function assertTacticalTargetNormalization() {
   assert.equal(multiTargets[0].tactical.template.targetDistance, 3);
   assert.equal(multiTargets[1].tactical.template.targetDistance, 9);
 
+  const multiTargetsByAlternateIdentifiers = normalizeTacticalTargets({
+    targets: [
+      { id: "token-third", tokenUuid: "Scene.test.Token.third", actorUuid: "Actor.third", selected: false, name: "Third Target", snapshot: {} },
+      { id: "token-fourth", tokenUuid: "Scene.test.Token.fourth", actorUuid: "Actor.fourth", selected: false, name: "Fourth Target", snapshot: {} }
+    ],
+    template: {
+      templateId: "template-alternate-distance-keys",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        { tokenUuid: "Scene.test.Token.fourth", actorUuid: "Actor.fourth", name: "Fourth Target", snapshot: {} },
+        { tokenUuid: "Scene.test.Token.third", actorUuid: "Actor.third", name: "Third Target", snapshot: {} }
+      ]
+    },
+    distance: {
+      byTarget: {
+        "Actor.fourth": { value: 10, units: "m", source: "template" },
+        "Scene.test.Token.third": { value: 4, units: "m", source: "template" }
+      }
+    }
+  });
+
+  assert.equal(multiTargetsByAlternateIdentifiers.length, 2);
+  assert.equal(multiTargetsByAlternateIdentifiers[0].id, "token-third");
+  assert.equal(multiTargetsByAlternateIdentifiers[1].id, "token-fourth");
+  assert.deepEqual(multiTargetsByAlternateIdentifiers[0].distance, { value: 4, units: "m", source: "template" });
+  assert.deepEqual(multiTargetsByAlternateIdentifiers[1].distance, { value: 10, units: "m", source: "template" });
+  assert.equal(multiTargetsByAlternateIdentifiers[0].tactical.template.targetDistance, 4);
+  assert.equal(multiTargetsByAlternateIdentifiers[1].tactical.template.targetDistance, 10);
+
   const selectedTargetOutsideBareTemplate = normalizeTacticalTargets({
     targets: [
       { id: "token-outside-zone", selected: true, actorUuid: "Actor.outsideZone", name: "Outside Zone Target", snapshot: {} }
@@ -944,6 +978,45 @@ async function assertTacticalTargetNormalization() {
   assert.deepEqual(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].distance, { value: 8, units: "m", source: "grid" });
   assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].tactical.template.templateId, "template-overlap-distance");
   assert.equal(selectedTargetAlsoCaughtWithSelectedAndHazardZoneDistances[0].tactical.template.targetDistance, 3);
+
+  const selectedTargetMatchedToHazardZoneByAlternateIdentifier = normalizeTacticalTargets({
+    targets: [
+      {
+        id: "token-selected-alternate-id",
+        tokenUuid: "Scene.test.Token.alternate",
+        actorUuid: "Actor.alternate",
+        selected: true,
+        name: "Alternate Identifier Target",
+        snapshot: {},
+        distance: { value: 8, units: "m", source: "grid" }
+      }
+    ],
+    template: {
+      templateId: "template-alternate-identifier",
+      type: "cone",
+      origin: { x: 10, y: 20 },
+      direction: 0,
+      angle: 45,
+      distance: 12,
+      inclusion: "intersected",
+      affectedTargets: [
+        {
+          tokenUuid: "Scene.test.Token.alternate",
+          actorUuid: "Actor.alternate",
+          name: "Alternate Identifier Target",
+          snapshot: {},
+          distance: { value: 3, units: "m", source: "template" }
+        }
+      ]
+    }
+  });
+
+  assert.equal(selectedTargetMatchedToHazardZoneByAlternateIdentifier.length, 1);
+  assert.equal(selectedTargetMatchedToHazardZoneByAlternateIdentifier[0].id, "token-selected-alternate-id");
+  assert.equal(selectedTargetMatchedToHazardZoneByAlternateIdentifier[0].tactical.selected, true);
+  assert.deepEqual(selectedTargetMatchedToHazardZoneByAlternateIdentifier[0].distance, { value: 8, units: "m", source: "grid" });
+  assert.equal(selectedTargetMatchedToHazardZoneByAlternateIdentifier[0].tactical.template.templateId, "template-alternate-identifier");
+  assert.equal(selectedTargetMatchedToHazardZoneByAlternateIdentifier[0].tactical.template.targetDistance, 3);
 
   const zoneOnlyAffectedTokens = normalizeTacticalTargets({
     template: {

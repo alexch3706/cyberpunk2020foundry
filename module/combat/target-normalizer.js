@@ -221,24 +221,34 @@ function mergeTemplateTargets(targets, template) {
   const mergedTargets = [...targets];
   const seen = new Map();
   targets.forEach((target, index) => {
-    const key = targetKey(target);
-    if(key) {
+    for(const key of targetKeys(target)) {
       seen.set(key, index);
     }
   });
   for(const target of templateTargets) {
-    const key = targetKey(target);
-    if(key && seen.has(key)) {
-      const existingIndex = seen.get(key);
+    const existingIndex = findSeenTargetIndex(seen, target);
+    if(existingIndex !== undefined) {
       mergedTargets[existingIndex] = mergeTemplateTargetEvidence(mergedTargets[existingIndex], target);
+      for(const key of targetKeys(mergedTargets[existingIndex])) {
+        seen.set(key, existingIndex);
+      }
       continue;
     }
-    if(key) {
+    for(const key of targetKeys(target)) {
       seen.set(key, mergedTargets.length);
     }
     mergedTargets.push(target);
   }
   return mergedTargets;
+}
+
+function findSeenTargetIndex(seen, target) {
+  for(const key of targetKeys(target)) {
+    if(seen.has(key)) {
+      return seen.get(key);
+    }
+  }
+  return undefined;
 }
 
 function mergeTemplateTargetEvidence(existingTarget = {}, templateTarget = {}) {
@@ -285,11 +295,11 @@ function getTemplateTargets(template) {
       continue;
     }
     for(const target of targets) {
-      const key = targetKey(target);
-      if(key && seen.has(key)) {
+      const keys = targetKeys(target);
+      if(keys.some(key => seen.has(key))) {
         continue;
       }
-      if(key) {
+      for(const key of keys) {
         seen.add(key);
       }
       mergedTargets.push(target);
@@ -303,7 +313,7 @@ function getTemplateTargetKeys(template) {
   if(templateTargets.length === 0) {
     return undefined;
   }
-  return new Set(templateTargets.map(target => targetKey(target)).filter(Boolean));
+  return new Set(templateTargets.flatMap(target => targetKeys(target)));
 }
 
 function shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTemplateContext, legacyBareTemplateAttachToAll = false) {
@@ -313,12 +323,23 @@ function shouldAttachTemplateEvidence(sourceTarget, templateTargetKeys, hasTempl
   if(!templateTargetKeys) {
     return legacyBareTemplateAttachToAll === true;
   }
-  const key = targetKey(sourceTarget);
-  return Boolean(key && templateTargetKeys.has(key));
+  return targetKeys(sourceTarget).some(key => templateTargetKeys.has(key));
 }
 
-function targetKey(target = {}) {
-  return target.id || target.tokenUuid || target.actorUuid || target.uuid || target.document?.uuid || target.actor?.uuid;
+function targetKeys(target = {}) {
+  return uniqueStableKeys([
+    target.id,
+    target.tokenUuid,
+    target.actorUuid,
+    target.uuid,
+    target.document?.id,
+    target.document?.uuid,
+    target.actor?.uuid
+  ]);
+}
+
+function uniqueStableKeys(keys) {
+  return [...new Set(keys.filter(key => typeof key === "string" && key.length > 0))];
 }
 
 function resolveSelectedFlag(sourceTarget, context) {
@@ -374,7 +395,12 @@ function findDistanceByTarget(distance, target) {
   if(!keyedDistances || typeof keyedDistances !== "object" || Array.isArray(keyedDistances)) {
     return undefined;
   }
-  return keyedDistances[target.id] || keyedDistances[target.tokenUuid] || keyedDistances[target.actorUuid];
+  for(const key of targetKeys(target)) {
+    if(keyedDistances[key]) {
+      return keyedDistances[key];
+    }
+  }
+  return undefined;
 }
 
 function normalizeDistance(distance) {
