@@ -9,6 +9,7 @@ import * as migrations from "./migrate.js";
 import { registerSystemSettings, applyVisualEffectSettings } from "./settings.js"
 import { registerCombatTurnDeathSaveHook } from "./combat/death-save-turn.js";
 import { registerSuppressiveFireHooks } from "./combat/suppressive-fire-tracker.js";
+import { registerSaveChatListeners } from "./combat/save-chat-listeners.js";
 
 Hooks.once('init', async function () {
 
@@ -39,6 +40,7 @@ Hooks.once('init', async function () {
     registerHandlebarsHelpers();
     registerCombatTurnDeathSaveHook();
     registerSuppressiveFireHooks();
+    registerSaveChatListeners();
 
     // Register and preload templates with Foundry. See templates.js for usage
     preloadHandlebarsTemplates();

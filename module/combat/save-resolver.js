@@ -56,7 +56,25 @@ export function resolveSavePromptsForTarget(targetOutcome = {}) {
 
   const saves = [];
   if(damageEvidence.damageDelta > 0) {
-    saves.push(buildStunPrompt(bodyType.value, woundState, damageEvidence));
+    const hits = targetOutcome?.hits || [];
+    if (hits.length === 0) {
+      saves.push(buildStunPrompt(bodyType.value, woundState, damageEvidence));
+    } else {
+      let currentDamage = previousDamageVal;
+      for (const hit of hits) {
+        const woundDamage = hit.woundDamage !== undefined ? hit.woundDamage : hit.finalDamage;
+        if (woundDamage > 0) {
+          const hitDamageEvidence = {
+            previousDamage: currentDamage,
+            nextDamage: currentDamage + woundDamage,
+            damageDelta: woundDamage
+          };
+          const hitWoundState = buildWoundState(hitDamageEvidence.nextDamage);
+          saves.push(buildStunPrompt(bodyType.value, hitWoundState, hitDamageEvidence));
+          currentDamage = hitDamageEvidence.nextDamage;
+        }
+      }
+    }
   }
 
   if(shouldBuildAttackDeathPrompt(woundState, damageEvidence, deathSaveState)) {

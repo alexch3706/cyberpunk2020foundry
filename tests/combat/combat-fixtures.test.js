@@ -1903,6 +1903,67 @@ function assertSavePromptResolution() {
     }
   ], "planning attaches Critical Stun/Shock prompt to outcome");
   assert.deepEqual(buildCombatChatData(criticalOutcome, criticalPlan).targets[0].saves, criticalOutcome.targets[0].saves, "chat data exposes save prompts");
+
+  // --- Progressive Saves Test ---
+  const multiHitOutcome = buildMultiHitWoundOutcome({
+    currentDamage: 0,
+    hits: [
+      { location: "torso", finalDamage: 5 }, // 5 dmg -> Serious
+      { location: "torso", finalDamage: 5 }, // 10 dmg -> Critical
+      { location: "torso", finalDamage: 5 }  // 15 dmg -> Mortal 0
+    ],
+    bodyType: 6
+  });
+  assert.deepEqual(resolveSavePromptsForTarget(multiHitOutcome.targets[0]), {
+    saves: [
+      {
+        type: "stun",
+        status: "pending",
+        reason: "damage-taken",
+        bodyType: 6,
+        threshold: 5,
+        targetNumber: 5,
+        penalty: 1,
+        woundState: { level: 2, label: "Serious" },
+        evidence: { previousDamage: 0, nextDamage: 5, damageDelta: 5 }
+      },
+      {
+        type: "stun",
+        status: "pending",
+        reason: "damage-taken",
+        bodyType: 6,
+        threshold: 4,
+        targetNumber: 4,
+        penalty: 2,
+        woundState: { level: 3, label: "Critical" },
+        evidence: { previousDamage: 5, nextDamage: 10, damageDelta: 5 }
+      },
+      {
+        type: "stun",
+        status: "pending",
+        reason: "damage-taken",
+        bodyType: 6,
+        threshold: 3,
+        targetNumber: 3,
+        penalty: 3,
+        woundState: { level: 4, label: "Mortal 0" },
+        evidence: { previousDamage: 10, nextDamage: 15, damageDelta: 5 }
+      },
+      {
+        type: "death",
+        status: "pending",
+        reason: "mortal-wound",
+        bodyType: 6,
+        threshold: 6,
+        targetNumber: 6,
+        penalty: 0,
+        mortalLevel: 0,
+        woundState: { level: 4, label: "Mortal 0" },
+        evidence: { previousDamage: 0, nextDamage: 15, damageDelta: 15 }
+      }
+    ],
+    warnings: []
+  }, "multi-hit attack generates progressive stun saves and one final death save");
 }
 
 function assertDeathSaveStateHelpers() {
@@ -1952,6 +2013,45 @@ function buildWoundOutcome({ currentDamage, location, locationLabel = undefined,
     }
   };
 }
+
+function buildMultiHitWoundOutcome({ currentDamage, hits, bodyType = 6, deathSaveState = undefined }) {
+  const stats = bodyType === undefined
+    ? {}
+    : {
+        bt: {
+          total: bodyType
+        }
+      };
+  return {
+    targets: [
+      {
+        target: {
+          actorUuid: "Actor.target",
+          snapshot: {
+            stats,
+            damage: currentDamage,
+            ...(deathSaveState ? { deathSave: deathSaveState } : {})
+          }
+        },
+        manualResolution: {
+          required: false
+        },
+        hits: hits.map(hit => ({
+          location: hit.location || "torso",
+          locationLabel: hit.locationLabel,
+          finalDamage: hit.finalDamage,
+          woundDamage: hit.woundDamage || hit.finalDamage, // Mocking attack resolver behavior where woundDamage is populated
+          specialCases: hit.specialCases,
+          warnings: []
+        }))
+      }
+    ],
+    plannedUpdates: {
+      chatStatus: "preview"
+    }
+  };
+}
+
 
 function assertOutcomeShape(outcome, expected) {
   assert.equal(outcome.action.type, expected.actionType, "outcome action type");
