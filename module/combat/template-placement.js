@@ -270,6 +270,12 @@ export async function drawAoETemplateAndGetTargets(item, attackerToken) {
         if (!templateObj) return resolve({ affectedTargets: [], hazardZone });
 
         const tokens = canvas.tokens.placeables.filter(t => {
+          // Exclude the attacker from directional AoEs like cones and rays, as they emanate outward.
+          // Circular/rectangular templates like grenades can legitimately hit the attacker if dropped nearby.
+          if ((aoeType === "cone" || aoeType === "ray") && t.id === attackerToken.id) {
+            return false;
+          }
+
           const tCenter = t.center || { x: t.x + (t.w/2), y: t.y + (t.h/2) };
           return templateObj.shape.contains(tCenter.x - templateObj.document.x, tCenter.y - templateObj.document.y);
         });
