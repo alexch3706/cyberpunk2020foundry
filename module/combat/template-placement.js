@@ -265,9 +265,12 @@ export async function drawAoETemplateAndGetTargets(item, attackerToken) {
       }, 0);
       
       // Wait for object to be instantiated
-      setTimeout(() => {
+      setTimeout(async () => {
         const templateObj = createdDoc.object;
-        if (!templateObj) return resolve({ affectedTargets: [], hazardZone });
+        if (!templateObj) {
+          await deleteTransientTemplateDocument(createdDoc);
+          return resolve({ affectedTargets: [], hazardZone });
+        }
 
         const tokens = canvas.tokens.placeables.filter(t => {
           // Exclude the attacker from directional AoEs like cones and rays, as they emanate outward.
@@ -302,6 +305,7 @@ export async function drawAoETemplateAndGetTargets(item, attackerToken) {
           return t;
         });
 
+        await deleteTransientTemplateDocument(createdDoc);
         resolve({
           affectedTargets: augmentedTokens,
           hazardZone: {
@@ -316,6 +320,17 @@ export async function drawAoETemplateAndGetTargets(item, attackerToken) {
     canvas.stage.on("pointerdown", onConfirm);
     canvas.app.view.addEventListener("contextmenu", onCancel, { capture: true, once: true });
   });
+}
+
+async function deleteTransientTemplateDocument(templateDocument) {
+  if (typeof templateDocument?.delete !== "function") {
+    return;
+  }
+  try {
+    await templateDocument.delete();
+  } catch (error) {
+    console.warn("Failed to delete transient AoE template:", error);
+  }
 }
 
 export async function promptUseSuppressiveFireTemplate(weapon, maxRounds) {

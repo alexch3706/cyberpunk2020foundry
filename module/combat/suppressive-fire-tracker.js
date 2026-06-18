@@ -82,7 +82,7 @@ export function registerSuppressiveFireHooks() {
 
     Hooks.on("combatTurn", (combat, updateData, updateOptions) => {
         if (!game.user.isGM) return;
-        handleCombatTurnChange(combat);
+        handleSuppressiveFireCombatTurn(combat, updateData);
     });
 
     Hooks.on("renderChatMessage", (message, html, data) => {
@@ -160,8 +160,8 @@ async function handleTokenMovement(tokenDocument) {
     }
 }
 
-async function handleCombatTurnChange(combat) {
-    const currentCombatant = combat.combatant;
+export async function handleSuppressiveFireCombatTurn(combat, updateData = {}) {
+    const currentCombatant = getUpdatedCombatant(combat, updateData);
     if (!currentCombatant || !currentCombatant.tokenId) return;
 
     const templates = getActiveSuppressiveFireTemplates();
@@ -180,6 +180,14 @@ async function handleCombatTurnChange(combat) {
             await checkAndResolveIntersection(tokenDocument, template);
         }
     }
+}
+
+function getUpdatedCombatant(combat, updateData = {}) {
+    const turn = Number(updateData.turn);
+    if (Number.isInteger(turn) && Array.isArray(combat?.turns)) {
+        return combat.turns[turn] || combat.combatant;
+    }
+    return combat?.combatant;
 }
 
 async function expireSuppressiveFireTemplate(template) {
@@ -254,5 +262,4 @@ export async function promptSuppressiveFireSave(tokenDocument, template) {
         await globalThis.ChatMessage.create(chatData);
     }
 }
-
 

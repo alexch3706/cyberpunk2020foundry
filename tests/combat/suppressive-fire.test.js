@@ -1,5 +1,5 @@
 import assert from "assert";
-import { calculateSuppressiveFireSaveDC, buildSuppressiveFireTemplateData } from "../../module/combat/suppressive-fire-tracker.js";
+import { calculateSuppressiveFireSaveDC, buildSuppressiveFireTemplateData, handleSuppressiveFireCombatTurn } from "../../module/combat/suppressive-fire-tracker.js";
 
 export async function runSuppressiveFireTests() {
   const results = [];
@@ -119,9 +119,99 @@ export async function runSuppressiveFireTests() {
     addResult("suppressive-fire: Intersection logic and deduplication", passed);
   }
 
+  async function testTemplateSurvivesAdvanceAwayFromShooter() {
+    let passed = true;
+    try {
+      let deleted = false;
+      const template = {
+        document: {
+          flags: {
+            cyberpunk2020: {
+              suppressiveFire: {
+                shooterTokenId: "shooter-token",
+                remainingHitCap: 10,
+                resolvedTokenIds: []
+              }
+            }
+          },
+          delete: async () => { deleted = true; }
+        }
+      };
+
+      globalThis.canvas = {
+        templates: { placeables: [template] },
+        tokens: {
+          get: () => undefined
+        }
+      };
+
+      const combat = {
+        combatant: { tokenId: "shooter-token" },
+        turns: [
+          { tokenId: "shooter-token" },
+          { tokenId: "next-token" }
+        ]
+      };
+
+      await handleSuppressiveFireCombatTurn(combat, { turn: 1 });
+
+      assert.strictEqual(deleted, false, "template should survive when turn advances from shooter to next combatant");
+    } catch (e) {
+      console.error(e);
+      passed = false;
+    }
+    addResult("suppressive-fire: template survives turn advance away from shooter", passed);
+  }
+
+  async function testTemplateExpiresWhenShooterTurnStartsAgain() {
+    let passed = true;
+    try {
+      let deleted = false;
+      const template = {
+        document: {
+          flags: {
+            cyberpunk2020: {
+              suppressiveFire: {
+                shooterTokenId: "shooter-token",
+                remainingHitCap: 10,
+                resolvedTokenIds: []
+              }
+            }
+          },
+          delete: async () => { deleted = true; }
+        }
+      };
+
+      globalThis.canvas = {
+        templates: { placeables: [template] },
+        tokens: {
+          get: () => undefined
+        }
+      };
+
+      const combat = {
+        combatant: { tokenId: "previous-token" },
+        turns: [
+          { tokenId: "shooter-token" },
+          { tokenId: "previous-token" }
+        ]
+      };
+
+      await handleSuppressiveFireCombatTurn(combat, { turn: 0 });
+
+      assert.strictEqual(deleted, true, "template should expire when turn advances back to shooter");
+    } catch (e) {
+      console.error(e);
+      passed = false;
+    }
+    addResult("suppressive-fire: template expires when shooter turn starts again", passed);
+  }
+
   testSaveDC();
   testTemplateDataBuilder();
   await testIntersectionLogic();
+  await testTemplateSurvivesAdvanceAwayFromShooter();
+  await testTemplateExpiresWhenShooterTurnStartsAgain();
   
   return results;
 }

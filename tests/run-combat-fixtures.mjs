@@ -16,6 +16,7 @@ import { runArmorMaintenanceTests } from "./combat/armor-maintenance.test.js";
 import { runDerivedStatOverrideTests } from "./combat/derived-stat-overrides.test.js";
 import { runWoundHintTests } from "./combat/wound-hints.test.js";
 import { runSuppressiveFireTests } from "./combat/suppressive-fire.test.js";
+import { runTemplatePlacementTests } from "./combat/template-placement.test.js";
 import { runCyberlimbSchemaTests } from "./combat/cyberlimb-schema.test.js";
 import { runCombatSnapshotTests } from "./combat/combat-snapshot.test.js";
 import { runActorDataTests } from "./actor/actor-data.test.js";
@@ -33,6 +34,7 @@ const results = [
   ...runDerivedStatOverrideTests(),
   ...runWoundHintTests(),
   ...await runSuppressiveFireTests(),
+  ...await runTemplatePlacementTests(),
   ...runCyberlimbSchemaTests(),
   ...runCombatSnapshotTests(),
   ...runActorDataTests()
