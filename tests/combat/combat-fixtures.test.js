@@ -1323,12 +1323,14 @@ async function assertTacticalTargetNormalization() {
       scene: { grid: { distance: 2 } }
     };
     let lastRaycastOrigin = null;
+    let lastRaycastOptions = null;
     globalThis.CONFIG = {
       Canvas: {
         polygonBackends: {
           sight: {
             testCollision: (origin, dest, options) => {
               lastRaycastOrigin = origin;
+              lastRaycastOptions = options;
               return null;
             }
           }
@@ -1366,6 +1368,7 @@ async function assertTacticalTargetNormalization() {
       }
     }]);
     assert.deepEqual(lastRaycastOrigin, { x: 50, y: 50 }, "circle template uses template origin for raycasts instead of attacker origin");
+    assert.equal(lastRaycastOptions?.type, "move", "tactical raycast uses movement collision so Invisible Walls are detected");
   } finally {
     globalThis.canvas = previousCanvas;
     globalThis.CONFIG = previousConfig;
