@@ -2,6 +2,9 @@
  * Suppressive Fire Tracker
  * Implements persistent hazard functionality for suppressive fire templates.
  */
+import { resolveSuppressiveFireDamageOutcome } from "./attack-resolver.js";
+import { buildActorCombatSnapshot, buildWeaponCombatSnapshot } from "./combat-snapshot.js";
+import { buildCombatPreviewData, previewAndApplyCombatOutcome } from "./combat-commit.js";
 
 /**
  * Calculates the Save DC for a Suppressive Fire zone.
@@ -122,7 +125,7 @@ export function registerSuppressiveFireHooks() {
                         <div class="card-content">
                             <p><strong>${actor ? actor.name : 'Target'}</strong> takes <strong>${hits}</strong> hits from the suppressive fire zone!</p>
                             <p>Remaining hits in zone: ${newCap}</p>
-                            <button class="roll-damage" data-formula="${flags.damageFormula}" data-hits="${hits}">Roll Damage</button>
+                            <button class="roll-damage" data-formula="${flags.damageFormula}" data-hits="${hits}" data-template-id="${templateId}" data-actor-id="${actorId}">Roll Damage</button>
                         </div>
                     </div>
                 `
@@ -133,15 +136,193 @@ export function registerSuppressiveFireHooks() {
 
         html.find(".roll-damage").click(async (ev) => {
             ev.preventDefault();
-            const formula = ev.currentTarget.dataset.formula;
             const hits = parseInt(ev.currentTarget.dataset.hits);
-            if (!formula || !hits) return;
+            const templateId = ev.currentTarget.dataset.templateId;
+            const actorId = ev.currentTarget.dataset.actorId;
+            if (!templateId || !actorId || !hits) return;
 
-            // Simple multiple damage rolls or 1 multiplied formula
-            const roll = await new Roll(`${hits} * (${formula})`).evaluate();
-            roll.toMessage({ speaker: ChatMessage.getSpeaker() });
+            await resolveSuppressiveFireDamageFromChat({ templateId, actorId, hits });
         });
     });
+}
+
+export async function resolveSuppressiveFireDamageFromChat({ templateId, actorId, hits }, options = {}) {
+    const templateDoc = canvas.scene.templates.get(templateId);
+    if (!templateDoc) {
+        ui.notifications?.warn("Suppressive fire template no longer exists.");
+        return { status: "missing-template" };
+    }
+
+    const flags = templateDoc.flags.cyberpunk2020?.suppressiveFire;
+    if (!flags) {
+        return { status: "missing-suppressive-fire-flags" };
+    }
+
+    const targetActor = game.actors.get(actorId);
+    const shooterActor = game.actors.get(flags.shooterActorId);
+    const weaponItem = shooterActor?.items?.get(flags.weaponItemId)
+        || shooterActor?.itemTypes?.weapon?.find(item => item.id === flags.weaponItemId);
+
+    if (!targetActor || !shooterActor || !weaponItem) {
+        ui.notifications?.warn("Suppressive fire damage could not resolve actor or weapon data.");
+        return { status: "missing-combat-document" };
+    }
+
+    const outcome = await resolveSuppressiveFireDamageOutcome({
+        action: {
+            type: "ranged",
+            fireMode: "Suppressive",
+            source: "Suppressive Fire Zone",
+            hazardZone: {
+                kind: "suppressive-fire",
+                templateUuid: templateDoc.uuid,
+                templateId: templateDoc.id,
+                type: templateDoc.t,
+                origin: { x: templateDoc.x, y: templateDoc.y },
+                direction: templateDoc.direction,
+                width: flags.zoneWidth,
+                distance: templateDoc.distance,
+                lifecycle: "persistent"
+            }
+        },
+        attacker: {
+            actorUuid: shooterActor.uuid,
+            name: shooterActor.name,
+            snapshot: buildActorCombatSnapshot(shooterActor, { includeEmptySkills: true })
+        },
+        weapon: {
+            itemUuid: weaponItem.uuid,
+            name: weaponItem.name,
+            snapshot: buildWeaponCombatSnapshot(weaponItem)
+        },
+        target: {
+            actorUuid: targetActor.uuid,
+            name: targetActor.name,
+            snapshot: buildActorCombatSnapshot(targetActor, { includeEquipment: true })
+        },
+        hitCount: hits
+    }, options.resolverOptions || {}, options.roller || activeSuppressiveFireRoller);
+
+    const commitKey = options.commitKey || buildSuppressiveFireCommitKey({ templateId, actorId });
+    return await previewAndConfirmSuppressiveFireOutcome(outcome, { ...options, commitKey });
+}
+
+async function previewAndConfirmSuppressiveFireOutcome(outcome, options = {}) {
+    const commitMode = resolveDamageCommitMode();
+    if (commitMode === "direct" || options.decision === "confirm") {
+        return await previewAndApplyCombatOutcome(outcome, { decision: "confirm", adapter: options.adapter, commitKey: options.commitKey });
+    }
+
+    const previewResult = await previewAndApplyCombatOutcome(outcome, { adapter: options.adapter, commitKey: options.commitKey });
+    if (typeof Dialog !== "function") {
+        return previewResult;
+    }
+
+    return new Promise((resolve) => {
+        let resolved = false;
+        const preview = buildCombatPreviewData(outcome);
+        const targetSummary = (preview.targets || []).map(target => {
+            const name = target.target?.name || "Unknown";
+            const hitInfo = target.hits ? `${target.hits.length} hit(s)` : "no hits";
+            return `${name}: ${hitInfo}`;
+        }).join("<br>");
+
+        const dialog = new Dialog({
+            title: "Suppressive Fire Damage",
+            content: `
+              <p><strong>Review suppressive fire damage:</strong></p>
+              <p>${targetSummary}</p>
+              ${preview.warnings.length > 0 ? `<p style="color:#b88a00">${preview.warnings.map(w => w.message).join("; ")}</p>` : ""}
+            `,
+            buttons: {
+                confirm: {
+                    label: "Apply",
+                    callback: async () => {
+                        if (resolved) return;
+                        resolved = true;
+                        resolve(await previewAndApplyCombatOutcome(outcome, {
+                            decision: "confirm",
+                            messageId: previewResult.messageId,
+                            plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates,
+                            adapter: options.adapter,
+                            commitKey: options.commitKey
+                        }));
+                    }
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: async () => {
+                        if (resolved) return;
+                        resolved = true;
+                        resolve(await previewAndApplyCombatOutcome(outcome, {
+                            decision: "cancel",
+                            messageId: previewResult.messageId,
+                            plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates,
+                            adapter: options.adapter,
+                            commitKey: options.commitKey
+                        }));
+                    }
+                }
+            },
+            default: "confirm",
+            close: () => {
+                if (!resolved) {
+                    resolved = true;
+                    previewAndApplyCombatOutcome(outcome, {
+                        decision: "cancel",
+                        messageId: previewResult.messageId,
+                        plannedUpdates: previewResult.preview?.plan || previewResult.preview?.plannedUpdates,
+                        adapter: options.adapter,
+                        commitKey: options.commitKey
+                    }).then(resolve);
+                }
+            }
+        });
+        dialog.render(true);
+    });
+}
+
+function buildSuppressiveFireCommitKey({ templateId, actorId }) {
+    const combat = game?.combat;
+    return [
+        "suppressive-fire",
+        templateId,
+        actorId,
+        combat?.id || "no-combat",
+        combat?.round ?? "no-round",
+        combat?.turn ?? "no-turn"
+    ].join(":");
+}
+
+function resolveDamageCommitMode() {
+    try {
+        if (typeof game?.settings?.get === "function") {
+            return game.settings.get(game.system.id, "combatDamageCommitMode");
+        }
+    } catch {
+        return "previewConfirm";
+    }
+    return "previewConfirm";
+}
+
+async function activeSuppressiveFireRoller(request = {}) {
+    if (typeof Roll !== "function") {
+        throw new Error("Suppressive fire damage resolution requires Foundry Roll.");
+    }
+    const formula = String(request.formula || "1d10").replace(/\s+hit\s+location$/i, "");
+    const roll = await new Roll(formula).evaluate();
+    const firstDie = roll.dice && roll.dice.length > 0 ? roll.dice[0] : null;
+    return {
+        id: request.id,
+        formula: request.formula,
+        total: roll.total,
+        die: {
+            faces: firstDie ? firstDie.faces : 10,
+            natural: firstDie?.results?.[0]?.result ?? roll.total,
+            results: firstDie?.results ? firstDie.results.map(result => result.result) : [roll.total],
+            exploded: firstDie?.results ? firstDie.results.some(result => result.active === false) : false
+        }
+    };
 }
 
 function getActiveSuppressiveFireTemplates() {
@@ -262,4 +443,3 @@ export async function promptSuppressiveFireSave(tokenDocument, template) {
         await globalThis.ChatMessage.create(chatData);
     }
 }
-

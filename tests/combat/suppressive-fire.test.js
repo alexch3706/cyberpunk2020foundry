@@ -1,5 +1,7 @@
 import assert from "assert";
-import { calculateSuppressiveFireSaveDC, buildSuppressiveFireTemplateData, handleSuppressiveFireCombatTurn } from "../../module/combat/suppressive-fire-tracker.js";
+import { calculateSuppressiveFireSaveDC, buildSuppressiveFireTemplateData, handleSuppressiveFireCombatTurn, resolveSuppressiveFireDamageFromChat } from "../../module/combat/suppressive-fire-tracker.js";
+import { resolveSuppressiveFireDamageOutcome } from "../../module/combat/attack-resolver.js";
+import { planCombatUpdates } from "../../module/combat/state-planner.js";
 
 export async function runSuppressiveFireTests() {
   const results = [];
@@ -207,11 +209,241 @@ export async function runSuppressiveFireTests() {
     addResult("suppressive-fire: template expires when shooter turn starts again", passed);
   }
 
+  async function testFailedSaveDamageUsesPerBulletPipeline() {
+    let passed = true;
+    try {
+      const rolls = [
+        { id: "location", formula: "1d10 hit location", total: 4, die: { faces: 10, natural: 4 }, location: "torso" },
+        { id: "damage", formula: "4d6", total: 15, die: { faces: 6, natural: 15 } },
+        { id: "location", formula: "1d10 hit location", total: 4, die: { faces: 10, natural: 4 }, location: "torso" },
+        { id: "damage", formula: "4d6", total: 15, die: { faces: 6, natural: 15 } }
+      ];
+      let rollIndex = 0;
+      const roller = async (request = {}) => {
+        const roll = rolls[rollIndex++];
+        assert.strictEqual(request.id, roll.id);
+        return roll;
+      };
+      const outcome = await resolveSuppressiveFireDamageOutcome({
+        action: {
+          type: "ranged",
+          fireMode: "Suppressive",
+          source: "suppressive-fire-test"
+        },
+        attacker: {
+          actorUuid: "Actor.attacker",
+          name: "Solo"
+        },
+        weapon: {
+          itemUuid: "Actor.attacker.Item.rifle",
+          name: "Assault Rifle",
+          snapshot: {
+            damage: "4d6",
+            ap: false,
+            attackType: "Auto"
+          }
+        },
+        target: {
+          actorUuid: "Actor.target",
+          tokenUuid: "Scene.test.Token.target",
+          name: "Target",
+          snapshot: {
+            stats: {
+              bt: { total: 6 }
+            },
+            damage: 0,
+            hitLocations: {
+              torso: { label: "Torso" }
+            },
+            equippedArmor: [
+              {
+                id: "armor-vest",
+                name: "Kevlar Vest",
+                equipped: true,
+                system: {
+                  coverage: {
+                    torso: {
+                      sp: 12,
+                      ablation: 0,
+                      layer: "soft"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        hitCount: 2
+      }, {}, roller);
+
+      const plan = planCombatUpdates(outcome);
+
+      assert.strictEqual(rollIndex, rolls.length, "each suppressive hit should roll location and damage separately");
+      assert.strictEqual(outcome.targets[0].hits.length, 2, "failed save should produce one hit record per bullet");
+      assert.deepStrictEqual(plan.actorUpdates, [
+        {
+          actorUuid: "Actor.target",
+          update: {
+            "system.damage": 3
+          }
+        }
+      ]);
+      assert.deepStrictEqual(plan.embeddedItemUpdates, [
+        {
+          actorUuid: "Actor.target",
+          type: "Item",
+          updates: [
+            {
+              _id: "armor-vest",
+              "system.coverage.torso.ablation": 2
+            }
+          ]
+        }
+      ]);
+    } catch (e) {
+      console.error(e);
+      passed = false;
+    }
+    addResult("suppressive-fire: failed save damage uses per-bullet pipeline", passed);
+  }
+
+  async function testChatDamageResolutionCommitsActorDamage() {
+    let passed = true;
+    try {
+      const targetState = { system: { damage: 0 } };
+      const targetActor = {
+        id: "target-actor",
+        uuid: "Actor.target",
+        name: "Target",
+        system: {
+          stats: { bt: { total: 6 } },
+          damage: 0,
+          hitLocations: { torso: { label: "Torso" } }
+        },
+        itemTypes: {}
+      };
+      const weaponItem = {
+        id: "weapon-1",
+        uuid: "Actor.shooter.Item.weapon-1",
+        name: "Assault Rifle",
+        system: {
+          damage: "4d6",
+          ap: false,
+          attackType: "Auto"
+        }
+      };
+      const shooterActor = {
+        id: "shooter-actor",
+        uuid: "Actor.shooter",
+        name: "Shooter",
+        system: {
+          stats: {},
+          skills: {},
+          damage: 0,
+          hitLocations: {}
+        },
+        itemTypes: { weapon: [weaponItem] },
+        items: {
+          get: (id) => id === "weapon-1" ? weaponItem : undefined
+        }
+      };
+      const actors = new Map([
+        ["target-actor", targetActor],
+        ["shooter-actor", shooterActor]
+      ]);
+      globalThis.game = {
+        system: { id: "cyberpunk2020-rilerena" },
+        user: { id: "gm", isGM: true },
+        settings: { get: () => "direct" },
+        actors: {
+          get: (id) => actors.get(id)
+        }
+      };
+      globalThis.ui = { notifications: { warn: () => {} } };
+      globalThis.canvas = {
+        scene: {
+          templates: {
+            get: (id) => id === "template-1" ? {
+              id: "template-1",
+              uuid: "Scene.test.MeasuredTemplate.template-1",
+              t: "ray",
+              x: 100,
+              y: 100,
+              direction: 0,
+              distance: 10,
+              flags: {
+                cyberpunk2020: {
+                  suppressiveFire: {
+                    shooterActorId: "shooter-actor",
+                    weaponItemId: "weapon-1",
+                    zoneWidth: 2
+                  }
+                }
+              }
+            } : undefined
+          }
+        }
+      };
+
+      const rolls = [
+        { id: "location", formula: "1d10 hit location", total: 4, die: { faces: 10, natural: 4 }, location: "torso" },
+        { id: "damage", formula: "4d6", total: 8, die: { faces: 6, natural: 8 } }
+      ];
+      let rollIndex = 0;
+      const adapter = {
+        async resolveItem() {
+          return { update: async () => {} };
+        },
+        async resolveActor(actorUuid) {
+          if (actorUuid !== "Actor.target") return undefined;
+          return {
+            system: targetState.system,
+            async update(update) {
+              Object.assign(targetState.system, { damage: update["system.damage"] });
+            },
+            async updateEmbeddedDocuments() {}
+          };
+        },
+        async renderTemplate(templatePath, data) {
+          return `<${data.status}>`;
+        },
+        async createChatMessage() {
+          return "message-1";
+        },
+        async updateChatMessage() {}
+      };
+
+      const result = await resolveSuppressiveFireDamageFromChat({
+        templateId: "template-1",
+        actorId: "target-actor",
+        hits: 1
+      }, {
+        decision: "confirm",
+        adapter,
+        roller: async (request = {}) => {
+          const roll = rolls[rollIndex++];
+          assert.strictEqual(request.id, roll.id);
+          return roll;
+        }
+      });
+
+      assert.strictEqual(result.status, "committed");
+      assert.strictEqual(targetState.system.damage, 6);
+      assert.strictEqual(rollIndex, rolls.length);
+    } catch (e) {
+      console.error(e);
+      passed = false;
+    }
+    addResult("suppressive-fire: chat damage resolution commits actor damage", passed);
+  }
+
   testSaveDC();
   testTemplateDataBuilder();
   await testIntersectionLogic();
   await testTemplateSurvivesAdvanceAwayFromShooter();
   await testTemplateExpiresWhenShooterTurnStartsAgain();
+  await testFailedSaveDamageUsesPerBulletPipeline();
+  await testChatDamageResolutionCommitsActorDamage();
   
   return results;
 }

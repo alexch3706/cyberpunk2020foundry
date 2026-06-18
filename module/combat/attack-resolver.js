@@ -1274,6 +1274,8 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
       };
       burstHitsRoll = await roller(burstHitsRequest);
       numHits = Math.min(burstHitsRoll.total, roundsFired);
+    } else if (fireMode === "suppressive" || fireMode === "suppressivefire") {
+      numHits = Math.max(0, Math.floor(Number(roundsFired) || 0));
     } else if (fireMode === "fullauto") {
       numHits = Number.isFinite(roundsFired) && roundsFired > 0 ? Math.max(1, Math.min(roundsFired, margin)) : 0;
     }
@@ -1967,6 +1969,58 @@ async function roll(roller, request) {
     throw new Error("Structured combat resolution requires a deterministic roller until Foundry rolling is wired.");
   }
   return await roller(request);
+}
+
+export async function resolveSuppressiveFireDamageOutcome(context = {}, options = {}, roller = undefined) {
+  const hitCount = Math.max(0, Math.floor(Number(context.hitCount) || 0));
+  const action = {
+    type: "ranged",
+    fireMode: "Suppressive",
+    ...(clonePlainData(context.action || {}) || {}),
+    roundsFired: hitCount,
+    suppressiveHits: hitCount
+  };
+  const weapon = clonePlainData(context.weapon || {});
+  const target = clonePlainData(context.target || context.targets?.[0] || {});
+  const attackRoll = {
+    id: "suppressive_save",
+    formula: "failed suppressive fire save",
+    total: 0,
+    die: {},
+    isCritical: false,
+    isFumble: false
+  };
+
+  const targetOutcome = await buildTargetOutcome(
+    target,
+    attackRoll,
+    0,
+    action,
+    weapon,
+    roller,
+    options,
+    hitCount,
+    {
+      hitCount,
+      suppressiveHits: hitCount
+    }
+  );
+
+  return {
+    action,
+    attacker: clonePlainData(context.attacker || {}),
+    weapon,
+    targets: [targetOutcome],
+    ammo: clonePlainData(context.ammo || { delta: 0 }),
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.preview
+    },
+    manualResolution: {
+      required: false
+    },
+    warnings: []
+  };
 }
 
 function normalizeRange(range) {
