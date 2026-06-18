@@ -770,8 +770,17 @@ export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus
   const htmlContent = await adapter.renderTemplate(templatePath, chatData);
 
   const messageId = options.messageId;
+  const messageFlags = {
+    [globalThis.game?.system?.id || "cyberpunk2020"]: {
+      combatOutcome: chatData
+    }
+  };
+
   if (messageId) {
-    await adapter.updateChatMessage(messageId, { content: htmlContent });
+    await adapter.updateChatMessage(messageId, { 
+      content: htmlContent,
+      flags: messageFlags
+    });
     return messageId;
   } else {
     let speaker = options.speaker;
@@ -787,7 +796,8 @@ export async function createOrUpdateCombatChatMessage(outcome = {}, resultStatus
       }
     }
     const chatMessageData = {
-      content: htmlContent
+      content: htmlContent,
+      flags: messageFlags
     };
     const userId = options.userId || (typeof globalThis.game?.user?.id === "string" ? globalThis.game.user.id : undefined);
     if (userId) chatMessageData.user = userId;
