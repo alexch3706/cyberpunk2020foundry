@@ -668,12 +668,22 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
     });
   }
 
-  if (armor.armorPiercing && penetratingDamage > 0) {
+  const penetrated = rawDamage > armor.effectiveStoppingPower;
+
+  if(armor.armorPiercing && penetratingDamage > 0) {
     penetratingDamage = Math.floor(penetratingDamage / 2);
   }
 
+  const isHeadHit = String(hitLocationResult.location || "").toLowerCase().replace(/[^a-z]/g, "") === "head" &&
+                    !target?.snapshot?.isFBC;
+  const penetratingDamageBeforeMultiplier = penetratingDamage;
+
+  if(isHeadHit) {
+    penetratingDamage *= 2;
+  }
+
   // BTM
-  const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitLocationResult.location));
+  const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitLocationResult.location), penetrated);
 
   // Staged penetration
   const stagedPenetration = buildStagedPenetrationEvidence({
@@ -748,6 +758,16 @@ async function resolveMeleeHitDamage(hitLocationResult, context, target, options
     stagedPenetration: stagedPenetration.evidence,
     warnings: cloneArray(armor.warnings || [])
   };
+
+  if(isHeadHit) {
+    if(!hitDetail.specialCases) hitDetail.specialCases = [];
+    hitDetail.specialCases.push({
+      code: "head-hit-double-damage",
+      damageMultiplier: 2,
+      damageBeforeMultiplier: penetratingDamageBeforeMultiplier,
+      damageAfterMultiplier: penetratingDamage
+    });
+  }
 
   if (stagedPenetration.warning) {
     hitDetail.warnings.push(stagedPenetration.warning);
@@ -828,10 +848,10 @@ function getSkillValueCaseInsensitive(skills = {}, skillName) {
   return 0;
 }
 
-export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
+export function resolveBodyTypeDamage(penetratingDamage, bodyType, penetrated = false) {
   const normalizedPenetratingDamage = normalizeDamageAmount(penetratingDamage);
   const bodyTypeModifier = btmFromBT(normalizeBodyType(bodyType));
-  if(normalizedPenetratingDamage <= 0) {
+  if(normalizedPenetratingDamage <= 0 && !penetrated) {
     return {
       penetratingDamage: 0,
       bodyTypeModifier,
@@ -842,9 +862,9 @@ export function resolveBodyTypeDamage(penetratingDamage, bodyType) {
   }
 
   const reducedDamage = normalizedPenetratingDamage - bodyTypeModifier;
-  if(reducedDamage <= 0) {
+  if(reducedDamage <= 0 || (penetrated && normalizedPenetratingDamage <= 0)) {
     return {
-      penetratingDamage: normalizedPenetratingDamage,
+      penetratingDamage: Math.max(0, normalizedPenetratingDamage),
       bodyTypeModifier,
       bodyTypeMitigation: Math.max(0, normalizedPenetratingDamage - 1),
       finalDamage: 1,
@@ -1315,11 +1335,21 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
           });
         }
 
+        const penetrated = rawDamage > effectiveStoppingPower;
+
         if(armor.armorPiercing && penetratingDamage > 0) {
           penetratingDamage = Math.floor(penetratingDamage / 2);
         }
 
-        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitDetail.location));
+        const isHeadHit = String(hitDetail.location || "").toLowerCase().replace(/[^a-z]/g, "") === "head" &&
+                          !target?.snapshot?.isFBC;
+        const penetratingDamageBeforeMultiplier = penetratingDamage;
+
+        if(isHeadHit) {
+          penetratingDamage *= 2;
+        }
+
+        const bodyTypeDamage = resolveBodyTypeDamage(penetratingDamage, resolveTargetBodyType(target, hitDetail.location), penetrated);
 
         const stagedPenetration = buildStagedPenetrationEvidence({
           enabled: resolveStagedPenetrationEnabled(action, resolverOptions),
@@ -1425,6 +1455,16 @@ async function buildTargetOutcome(target, attackRoll, targetNumber, action, weap
           stagedPenetration: stagedPenetration.evidence
         });
         hitDetail.warnings.push(...armor.warnings);
+
+        if(isHeadHit) {
+          if(!hitDetail.specialCases) hitDetail.specialCases = [];
+          hitDetail.specialCases.push({
+            code: "head-hit-double-damage",
+            damageMultiplier: 2,
+            damageBeforeMultiplier: penetratingDamageBeforeMultiplier,
+            damageAfterMultiplier: penetratingDamage
+          });
+        }
 
         hits.push(hitDetail);
       }

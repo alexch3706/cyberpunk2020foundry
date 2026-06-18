@@ -1587,12 +1587,20 @@ function assertWoundPlanning() {
   const headOutcome = buildWoundOutcome({
     currentDamage: 0,
     location: "Head",
-    finalDamage: 5
+    finalDamage: 10,
+    specialCases: [
+      {
+        code: "head-hit-double-damage",
+        damageMultiplier: 2,
+        damageBeforeMultiplier: 5,
+        damageAfterMultiplier: 10
+      }
+    ]
   });
   const headPlan = planCombatUpdates(headOutcome);
   assert.deepEqual(headPlan.actorUpdates[0].update, {
     "system.damage": 10
-  }, "head hit doubles wound damage");
+  }, "head hit applies wound damage directly");
   assert.equal(headOutcome.targets[0].hits[0].woundDamage, 10, "head hit exposes wound damage");
   assert.deepEqual(headOutcome.targets[0].hits[0].specialCases, [
     {
@@ -1619,10 +1627,18 @@ function assertWoundPlanning() {
     currentDamage: 0,
     location: "skull",
     locationLabel: "Head",
-    finalDamage: 2
+    finalDamage: 4,
+    specialCases: [
+      {
+        code: "head-hit-double-damage",
+        damageMultiplier: 2,
+        damageBeforeMultiplier: 2,
+        damageAfterMultiplier: 4
+      }
+    ]
   });
   planCombatUpdates(labeledHeadOutcome);
-  assert.equal(labeledHeadOutcome.targets[0].hits[0].woundDamage, 4, "head label doubles wound damage even when key differs");
+  assert.equal(labeledHeadOutcome.targets[0].hits[0].woundDamage, 4, "head label applies wound damage directly");
 
   const limbOutcome = buildWoundOutcome({
     currentDamage: 0,

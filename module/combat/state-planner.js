@@ -14,7 +14,6 @@ const WOUND_STATE_LABELS = Object.freeze([
 ]);
 const LIMB_LOCATION_KEYS = Object.freeze(["larm", "rarm", "lleg", "rleg", "leftarm", "rightarm", "leftleg", "rightleg", "arm", "leg"]);
 const WOUND_SPECIAL_CASE_CODES = Object.freeze([
-  "head-hit-double-damage",
   "head-critical-injury",
   "limb-loss-threshold"
 ]);
@@ -248,16 +247,7 @@ function buildHitWoundApplication(hit, currentDamage, plan) {
   }
 
   const specialCases = [];
-  let damageDelta = finalDamage.value;
-  if(isHeadHit(hit)) {
-    damageDelta = finalDamage.value * 2;
-    specialCases.push({
-      code: "head-hit-double-damage",
-      damageMultiplier: 2,
-      damageBeforeMultiplier: finalDamage.value,
-      damageAfterMultiplier: damageDelta
-    });
-  }
+  const damageDelta = finalDamage.value;
 
   const warning = buildSpecialDamageWarning(hit, damageDelta, specialCases);
   return {
