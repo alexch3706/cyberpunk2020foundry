@@ -150,3 +150,157 @@ $fail-color: rgba($status-fumble, 0.25);
     color: $status-manual;
     border-color: $status-manual;
 }
+
+// ============================================
+// HIT BLOCK — collapsible per-hit container
+// ============================================
+
+.hit-block {
+    margin-top: $spacing-sm;
+    border: $border-width solid $border-dim;
+    padding: $spacing-xs $spacing-sm;
+
+    summary.hit-summary {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        list-style: none;
+        gap: $spacing-sm;
+        font-family: $font-ui;
+        font-weight: 600;
+        padding: 2px 0;
+
+        // Remove default disclosure triangle
+        &::-webkit-details-marker { display: none; }
+        &::marker { display: none; }
+
+        .hit-location-label { color: $accent-cyan; text-transform: uppercase; letter-spacing: 0.04em; }
+        .hit-final-damage    { font-family: $font-mono; color: $text-primary; }
+        .wound-crossed-badge { color: $accent-amber; font-size: 0.82em; font-weight: bold; }
+    }
+}
+
+// ── Damage pipeline ──────────────────────────
+.damage-pipeline {
+    margin: $spacing-xs 0 $spacing-xs $spacing-md;
+
+    .pipeline-row {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        padding: 1px 0;
+        font-size: 0.88em;
+        color: $text-secondary;
+
+        .pipeline-label {
+            min-width: 7em;
+            color: $text-secondary;
+            font-family: $font-ui;
+        }
+
+        .pipeline-value {
+            font-family: $font-mono;
+            color: $text-primary;
+        }
+    }
+
+    // Mitigation rows (armor, BTM, cover) — amber values
+    .pipeline-mitigation {
+        .pipeline-value { color: $accent-amber; }
+    }
+
+    // Cover status row
+    .pipeline-cover {
+        .pipeline-label { color: $text-secondary; }
+    }
+
+    // Staged penetration stress notice
+    .pipeline-stress-warning {
+        color: $accent-amber;
+        font-style: italic;
+        font-size: 0.85em;
+    }
+
+    // Final damage — the most important number, visually dominant
+    .pipeline-final {
+        border-top: $border-width solid $border-dim;
+        margin-top: $spacing-xs;
+        padding-top: $spacing-xs;
+        color: $text-primary;
+        font-weight: bold;
+
+        .pipeline-label {
+            color: $accent-cyan;
+            font-weight: bold;
+        }
+
+        .final-damage-value {
+            font-family: $font-mono;
+            font-size: 1.15em;
+            color: $status-miss;
+
+            .fx-glow & { text-shadow: $glow-miss; }
+        }
+    }
+}
+
+// ── Special case alerts ──────────────────────
+.special-case-alert {
+    margin-top: $spacing-xs;
+    padding: 2px $spacing-sm;
+    font-size: 0.88em;
+    font-weight: bold;
+    color: $accent-amber;
+    border-left: 2px solid $accent-amber;
+
+    // Critical / lethal outcomes — red
+    &.special-case-head-critical-injury,
+    &.special-case-limb-loss-threshold {
+        color: $status-miss;
+        border-left-color: $status-miss;
+    }
+}
+
+// ── Wound state transition ───────────────────
+.wound-transition {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-top: $spacing-xs;
+    padding: 2px $spacing-sm;
+    font-size: 0.88em;
+    color: $text-secondary;
+
+    .wound-label  { color: $text-secondary; }
+    .wound-delta  { font-family: $font-mono; color: $text-primary; }
+    .wound-arrow  { color: $text-dim; }
+    .wound-state-from { color: $text-secondary; }
+    .wound-state-to   { color: $text-primary; }
+
+    // When wound level escalated — highlight destination state
+    &.wound-crossed .wound-state-to.wound-state-escalated {
+        color: $accent-amber;
+        font-weight: bold;
+
+        .fx-glow & { text-shadow: 0 0 6px rgba(255, 170, 0, 0.5); }
+    }
+}
+
+// ── Saves block ──────────────────────────────
+.saves-block {
+    margin-top: $spacing-sm;
+    border-top: $border-width solid $accent-amber;
+    padding-top: $spacing-sm;
+
+    .save-prompt {
+        font-size: 0.9em;
+
+        &.save-stun  {
+            > span:first-child { color: $accent-blue; }
+        }
+        &.save-death {
+            > span:first-child { color: $accent-amber; font-weight: bold; }
+        }
+    }
+}
+

@@ -112,122 +112,183 @@
                     </div>
                     {{/if}}
                     {{#each targetOutcome.hits as |hit|}}
-                        <div class="field">
-                            <span>{{CPLocal "HitLocation"}}: </span>
-                            <span class="flex-pad">{{CPLocal hit.location}}</span>
-                        </div>
-                        {{#if hit.damageRoll}}
-                        <div class="field">
-                            <span>{{CPLocal "Damage"}}: </span>
-                            <span>{{hit.damageRoll.total}}</span>
-                            {{#if hit.damageRoll.formula}}
-                                <span class="formula formula-text">({{hit.damageRoll.formula}})</span>
-                            {{/if}}
+                    <details class="hit-block" {{#if @first}}open{{/if}}>
+                        <summary class="hit-summary">
+                            <span class="hit-location-label">{{CPLocal hit.location}}</span>
                             <span class="flex-pad"></span>
-                        </div>
-                        {{/if}}
-                        {{#if hit.shotgun}}
-                        <div class="field">
-                            <span>Shotgun Spread: </span>
-                            <span class="flex-pad">{{hit.shotgun.bracket}} / {{hit.shotgun.damageFormula}} / {{hit.shotgun.patternWidthMeters}}m</span>
-                        </div>
-                        <div class="field">
-                            <span>Template: </span>
-                            <span class="flex-pad">{{hit.shotgun.inclusion}} {{#if hit.shotgun.templateId}}({{hit.shotgun.templateId}}){{/if}}</span>
-                        </div>
-                        {{#if hit.shotgun.measuredDistance}}
-                        <div class="field">
-                            <span>Distance: </span>
-                            <span class="flex-pad">{{hit.shotgun.measuredDistance.value}}{{hit.shotgun.measuredDistance.units}}</span>
-                        </div>
-                        {{/if}}
-                        {{/if}}
-                        {{#if (hasProperty hit "rawDamage")}}
-                        <div class="field">
-                            <span>{{CPLocal "RawDamage"}}: </span>
-                            <span class="flex-pad">{{hit.rawDamage}}</span>
-                        </div>
-                        {{/if}}
-                        {{#if hit.cover.provided}}
-                        <div class="field">
-                            <span>{{CPLocal "HitCover"}} ({{hit.cover.effectiveStoppingPower}} SP): </span>
-                            <span class="flex-pad">
-                                {{#if hit.cover.bypassed}}
-                                    <strong class="outcome-miss">{{CPLocal "CoverBypassed"}}</strong>
-                                {{else}}
-                                    {{#if hit.cover.penetrated}}
-                                        <strong class="outcome-hit">{{CPLocal "CoverPenetrated"}}</strong> ({{hit.rawDamage}} {{CPLocal "vs"}} {{hit.cover.effectiveStoppingPower}} SP)
+                            {{#if (hasProperty hit "finalDamage")}}
+                            <span class="hit-final-damage">{{hit.finalDamage}} dmg</span>
+                            {{/if}}
+                            {{#if hit.woundTransition.crossedThreshold}}
+                            <span class="wound-crossed-badge">⚠ {{hit.woundTransition.nextWoundState.label}}</span>
+                            {{/if}}
+                        </summary>
+
+                        {{!-- Damage pipeline --}}
+                        <div class="damage-pipeline">
+                            {{#if hit.damageRoll}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">{{CPLocal "Damage"}}</span>
+                                <span class="pipeline-value">{{hit.damageRoll.total}}</span>
+                                {{#if hit.damageRoll.formula}}<span class="formula-text">({{hit.damageRoll.formula}})</span>{{/if}}
+                                <span class="flex-pad"></span>
+                                <span class="roll-results">
+                                    {{#each hit.damageRoll.die.subrolls as |subroll|}}
+                                        <span class="roll-result roll die {{subroll.classes}}">{{subroll.result}}</span>
+                                    {{/each}}
+                                </span>
+                            </div>
+                            {{/if}}
+                            {{#if hit.shotgun}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">{{CPLocal "Shotgun"}}</span>
+                                <span class="pipeline-value">{{hit.shotgun.bracket}} / {{hit.shotgun.damageFormula}} / {{hit.shotgun.patternWidthMeters}}m</span>
+                            </div>
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">Template</span>
+                                <span class="pipeline-value">{{hit.shotgun.inclusion}} {{#if hit.shotgun.templateId}}({{hit.shotgun.templateId}}){{/if}}</span>
+                            </div>
+                            {{#if hit.shotgun.measuredDistance}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">Distance</span>
+                                <span class="pipeline-value">{{hit.shotgun.measuredDistance.value}}{{hit.shotgun.measuredDistance.units}}</span>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                            {{#if (hasProperty hit "rawDamage")}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">{{CPLocal "RawDamage"}}</span>
+                                <span class="pipeline-value">{{hit.rawDamage}}</span>
+                            </div>
+                            {{/if}}
+                            {{#if hit.cover.provided}}
+                            <div class="pipeline-row pipeline-cover">
+                                <span class="pipeline-label">{{CPLocal "HitCover"}} ({{hit.cover.effectiveStoppingPower}} SP)</span>
+                                <span class="pipeline-value flex-pad">
+                                    {{#if hit.cover.bypassed}}
+                                        <strong class="outcome-miss">{{CPLocal "CoverBypassed"}}</strong>
                                     {{else}}
-                                        <strong class="outcome-miss">{{CPLocal "CoverStoppedAttack"}}</strong>
+                                        {{#if hit.cover.penetrated}}
+                                            <strong class="outcome-hit">{{CPLocal "CoverPenetrated"}}</strong> ({{hit.rawDamage}} {{CPLocal "vs"}} {{hit.cover.effectiveStoppingPower}} SP)
+                                        {{else}}
+                                            <strong class="outcome-miss">{{CPLocal "CoverStoppedAttack"}}</strong>
+                                        {{/if}}
                                     {{/if}}
-                                {{/if}}
-                            </span>
+                                </span>
+                            </div>
+                            {{#if hit.cover.protectedLocations}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">{{CPLocal "CoverProtectedLocations"}}</span>
+                                <span class="pipeline-value flex-pad">{{#each hit.cover.protectedLocations as |location|}}{{#unless @first}}, {{/unless}}{{CPLocal location}}{{/each}}</span>
+                            </div>
+                            {{/if}}
+                            <div class="pipeline-row pipeline-mitigation">
+                                <span class="pipeline-label">{{CPLocal "CoverMitigation"}}</span>
+                                <span class="pipeline-value">{{hit.cover.mitigation}}</span>
+                            </div>
+                            {{#if hit.cover.ablation}}
+                            <div class="pipeline-row">
+                                <span class="pipeline-label">{{CPLocal "CoverAblation"}}</span>
+                                <span class="pipeline-value">
+                                    {{#if hit.cover.ablation.applied}}
+                                        {{hit.cover.ablation.before}} → {{hit.cover.ablation.after}}
+                                    {{else}}
+                                        {{hit.cover.ablation.before}}
+                                    {{/if}}
+                                </span>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                            {{#if hit.stagedPenetration}}
+                            {{#if (compare hit.stagedPenetration.reason "===" "stress")}}
+                            <div class="pipeline-row pipeline-stress-warning">
+                                <span>Outer Layer Stressed! {{hit.stagedPenetration.layer.name}} takes 1 Ablation (Damage exceeded raw SP).</span>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                            {{#if (hasProperty hit "armorMitigation")}}
+                            <div class="pipeline-row pipeline-mitigation">
+                                <span class="pipeline-label">{{CPLocal "Armor"}}{{#if hit.armorPiercing}} (AP){{/if}}</span>
+                                <span class="pipeline-value">-{{hit.armorMitigation}}</span>
+                                {{#if (hasProperty hit "effectiveStoppingPower")}}<span class="formula-text">{{hit.effectiveStoppingPower}} SP</span>{{/if}}
+                            </div>
+                            {{/if}}
+                            {{#if (hasProperty hit "bodyTypeMitigation")}}
+                            {{#if (compare hit.bodyTypeMitigation "!==" null)}}
+                            <div class="pipeline-row pipeline-mitigation">
+                                <span class="pipeline-label">{{CPLocal "BTMShort"}}</span>
+                                <span class="pipeline-value">{{hit.bodyTypeMitigation}}</span>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                            {{#if (hasProperty hit "finalDamage")}}
+                            <div class="pipeline-row pipeline-final">
+                                <span class="pipeline-label">{{CPLocal "FinalDamage"}}</span>
+                                <span class="pipeline-value final-damage-value">{{hit.finalDamage}}</span>
+                            </div>
+                            {{/if}}
                         </div>
-                        {{#if hit.cover.protectedLocations}}
-                        <div class="field">
-                            <span>{{CPLocal "CoverProtectedLocations"}}: </span>
-                            <span class="flex-pad">
-                                {{#each hit.cover.protectedLocations as |location|}}{{#unless @first}}, {{/unless}}{{CPLocal location}}{{/each}}
-                            </span>
+
+                        {{!-- Special cases: head doubling, limb loss --}}
+                        {{#each hit.specialCases as |sc|}}
+                        <div class="special-case-alert special-case-{{sc.code}}">
+                            {{#if (compare sc.code "===" "head-hit-double-damage")}}
+                                ⚡ HEAD HIT: {{sc.damageBeforeMultiplier}} × 2 = {{sc.damageAfterMultiplier}}
+                            {{else if (compare sc.code "===" "head-critical-injury")}}
+                                ☠ HEAD CRITICAL: &gt;{{sc.threshold}} dmg — instant kill unless overridden
+                            {{else if (compare sc.code "===" "limb-loss-threshold")}}
+                                ✂ LIMB LOSS THRESHOLD: &gt;{{sc.threshold}} dmg — limb severed or crushed
+                            {{else}}
+                                ⚡ {{sc.code}}
+                            {{/if}}
+                        </div>
+                        {{/each}}
+
+                        {{!-- Wound state transition --}}
+                        {{#if hit.woundTransition}}
+                        <div class="wound-transition {{#if hit.woundTransition.crossedThreshold}}wound-crossed{{/if}}">
+                            <span class="wound-label">{{CPLocal "WoundDamage"}}:</span>
+                            <span class="wound-delta">{{hit.woundDamage}}</span>
+                            <span class="wound-state-from">{{hit.woundTransition.previousWoundState.label}}</span>
+                            <span class="wound-arrow"> → </span>
+                            <span class="wound-state-to {{#if hit.woundTransition.crossedThreshold}}wound-state-escalated{{/if}}">{{hit.woundTransition.nextWoundState.label}}</span>
                         </div>
                         {{/if}}
-                        <div class="field">
-                            <span>{{CPLocal "CoverMitigation"}}: </span>
-                            <span class="flex-pad">{{hit.cover.mitigation}}</span>
-                        </div>
-                        {{#if hit.cover.ablation}}
-                        <div class="field">
-                            <span>{{CPLocal "CoverAblation"}}: </span>
-                            <span class="flex-pad">
-                                {{#if hit.cover.ablation.applied}}
-                                    {{hit.cover.ablation.before}} -> {{hit.cover.ablation.after}}
-                                {{else}}
-                                    {{hit.cover.ablation.before}}
-                                {{/if}}
-                            </span>
-                        </div>
-                        {{/if}}
-                        {{/if}}
-                        {{#if hit.stagedPenetration}}
-                        {{#if (compare hit.stagedPenetration.reason "===" "stress")}}
-                        <div class="field warning-text" style="color: darkred; font-style: italic;">
-                            <span>Outer Layer Stressed! {{hit.stagedPenetration.layer.name}} takes 1 Ablation (Damage exceeded raw SP).</span>
-                        </div>
-                        {{/if}}
-                        {{/if}}
-                        {{#if (hasProperty hit "armorMitigation")}}
-                        <div class="field">
-                            <span>{{CPLocal "Armor"}}: </span>
-                            <span class="flex-pad">{{hit.armorMitigation}}</span>
-                        </div>
-                        {{/if}}
-                        {{#if (hasProperty hit "bodyTypeMitigation")}}
-                        {{#if (compare hit.bodyTypeMitigation "!==" null)}}
-                        <div class="field">
-                            <span>{{CPLocal "BTMShort"}}: </span>
-                            <span class="flex-pad">{{hit.bodyTypeMitigation}}</span>
-                        </div>
-                        {{/if}}
-                        {{/if}}
-                        {{#if (hasProperty hit "finalDamage")}}
-                        <div class="field">
-                            <span>{{CPLocal "FinalDamage"}}: </span>
-                            <span class="flex-pad">{{hit.finalDamage}}</span>
-                        </div>
-                        {{/if}}
-                        {{#if (hasProperty hit "woundDamage")}}
-                        <div class="field">
-                            <span>{{CPLocal "WoundDamage"}}: </span>
-                            <span class="flex-pad">{{hit.woundDamage}}</span>
-                        </div>
-                        {{/if}}
+
+                        {{!-- SDP transition (Full Body Conversion actors) --}}
                         {{#if hit.sdpTransition}}
-                        <div class="field">
-                            <span>{{hit.sdpTransition.locationLabel}} SDP: </span>
-                            <span class="flex-pad">{{hit.sdpTransition.previousSdp}} &rarr; {{hit.sdpTransition.nextSdp}}</span>
+                        <div class="wound-transition">
+                            <span class="wound-label">{{hit.sdpTransition.locationLabel}} SDP:</span>
+                            <span class="wound-state-from">{{hit.sdpTransition.previousSdp}}</span>
+                            <span class="wound-arrow"> → </span>
+                            <span class="wound-state-to">{{hit.sdpTransition.nextSdp}}</span>
                         </div>
                         {{/if}}
+
+                        {{!-- Hit-level warnings --}}
+                        {{#if hit.warnings.length}}
+                        <div class="warnings warning-block">
+                            {{#each hit.warnings as |w|}}<div>{{w.message}}</div>{{/each}}
+                        </div>
+                        {{/if}}
+                    </details>
                     {{/each}}
+
+                    {{!-- Save prompts (Stun / Death) --}}
+                    {{#if targetOutcome.saves.length}}
+                    <div class="saves-block field-list one-col">
+                        <div class="field"><strong>Saves Required:</strong></div>
+                        {{#each targetOutcome.saves as |save|}}
+                        <div class="field save-prompt save-{{save.type}}">
+                            <span>{{save.type}} Save: </span>
+                            <span class="flex-pad">BT{{save.bodyType}} − {{save.penalty}} = {{save.threshold}}+</span>
+                            {{#if (compare save.type "===" "death")}}
+                            <span class="formula-text">(Mortal {{save.mortalLevel}})</span>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
                 {{/if}}
             {{/if}}
         </div>
