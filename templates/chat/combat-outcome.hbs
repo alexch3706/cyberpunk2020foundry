@@ -26,7 +26,7 @@
         </div>
         {{#each action.modifiers as |mod|}}
         <div class="field">
-            <span>{{CPLocal mod.code}}: </span>
+            <span>{{mod.label}}: </span>
             <span class="flex-pad">{{mod.value}}</span>
         </div>
         {{/each}}
@@ -39,18 +39,34 @@
                 <span>{{CPLocal "Target"}}: </span>
                 <span class="flex-pad">{{targetOutcome.target.name}}</span>
             </div>
+            {{#if targetOutcome.damage}}
+            <div class="field target-total-damage">
+                <span>Total: </span>
+                <span class="total-damage-delta flex-pad">{{targetOutcome.damage.damageDelta}} wd</span>
+                <span class="wound-state-from">{{targetOutcome.damage.previousWoundState.label}}</span>
+                <span class="wound-arrow"> → </span>
+                <span class="wound-state-to {{#if targetOutcome.damage.crossedThreshold}}wound-state-escalated{{/if}}">{{targetOutcome.damage.nextWoundState.label}}</span>
+            </div>
+            {{/if}}
             {{#if (hasProperty targetOutcome.attack "total")}}
                 <div class="field">
                     <span>{{CPLocal "Attack"}}: </span>
-                    <span>{{targetOutcome.attack.total}}</span>
-                    {{#if targetOutcome.attack.formula}}
-                        <span class="formula formula-text">({{targetOutcome.attack.formula}})</span>
-                    {{/if}}
+                    <span class="attack-total">{{targetOutcome.attack.total}}</span>
                     <span class="flex-pad"></span>
                     <span class="roll-results">
-                        {{#each targetOutcome.attack.die.subrolls as |subroll|}}
-                            <span class="roll-result roll die {{subroll.classes}}">{{subroll.result}}</span>
-                        {{/each}}
+                        {{#if targetOutcome.attack.die.natural}}
+                            {{#if targetOutcome.attack.die.results}}
+                                {{#each targetOutcome.attack.die.results as |r|}}
+                                    <span class="roll-result roll die">{{r}}</span>
+                                {{/each}}
+                            {{else}}
+                                <span class="roll-result roll die">{{targetOutcome.attack.die.natural}}</span>
+                            {{/if}}
+                        {{else}}
+                            {{#each targetOutcome.attack.die.subrolls as |subroll|}}
+                                <span class="roll-result roll die {{subroll.classes}}">{{subroll.result}}</span>
+                            {{/each}}
+                        {{/if}}
                     </span>
                 </div>
                 {{#if targetOutcome.attack.targetNumber}}
@@ -83,7 +99,7 @@
                 </div>
                     {{#each targetOutcome.attack.modifiers as |mod|}}
                     <div class="field">
-                        <span>{{CPLocal mod.code}}: </span>
+                        <span>{{mod.label}}: </span>
                         <span class="flex-pad">{{mod.value}}</span>
                     </div>
                     {{/each}}
@@ -101,10 +117,6 @@
                     </span>
                 </div>
                 {{#if targetOutcome.attack.hit}}
-                    <div class="field">
-                        <span>{{CPLocal "Hits"}}: </span>
-                        <span class="flex-pad">{{targetOutcome.hits.length}}</span>
-                    </div>
                     {{#if targetOutcome.attack.burstHitsRoll}}
                     <div class="field">
                         <span>{{CPLocal "ThreeRoundBurst"}}: </span>

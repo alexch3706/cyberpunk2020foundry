@@ -23,7 +23,10 @@ export function buildCombatChatData(outcome = {}, plannedUpdates = undefined, op
   return {
     status,
     ...buildStatusFlags(status),
-    action: clonePlainData(outcome.action || {}),
+    action: {
+      ...clonePlainData(outcome.action || {}),
+      modifiers: filterModifiers((outcome.action || {}).modifiers)
+    },
     attacker: extractActorRef(outcome.attacker),
     weapon: extractWeaponRef(outcome.weapon),
     ammo: clonePlainData(outcome.ammo || {}),
@@ -104,7 +107,7 @@ function buildAttackChatData(attack = {}) {
     opposedRoll: clonePlainData(attack?.opposedRoll),
     hit: attack?.hit,
     margin: attack?.margin,
-    modifiers: Array.isArray(attack?.modifiers) ? cloneArray(attack.modifiers) : undefined,
+    modifiers: Array.isArray(attack?.modifiers) ? filterModifiers(attack.modifiers) : undefined,
     roundsFired: attack?.roundsFired,
     roundsFiredPerTarget: attack?.roundsFiredPerTarget,
     hitCount: attack?.hitCount,
@@ -191,6 +194,19 @@ function clonePlainData(data) {
     return undefined;
   }
   return JSON.parse(JSON.stringify(data));
+}
+
+/**
+ * Filter modifier evidence for display: strips redundant/zero-value entries.
+ * - range: already shown as To Hit (DC)
+ * - fireMode: already shown in the card header
+ * - value === 0: no contribution, pure noise
+ */
+function filterModifiers(modifiers) {
+  if(!Array.isArray(modifiers)) return [];
+  return modifiers
+    .filter(m => m?.code !== "fireMode" && m?.code !== "range" && Number(m?.value) !== 0)
+    .map(m => clonePlainData(m));
 }
 
 function compactPlainObject(data) {

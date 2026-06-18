@@ -261,6 +261,20 @@ $fail-color: rgba($status-fumble, 0.25);
     }
 }
 
+// ── Target Total Damage ──────────────────────
+.target-total-damage {
+    font-size: 0.9em;
+    padding: 2px 0;
+    margin-bottom: $spacing-xs;
+    border-bottom: 1px dashed $border-dim;
+
+    .total-damage-delta { font-family: $font-mono; color: $text-primary; font-weight: bold; }
+    .wound-arrow  { color: $text-dim; margin: 0 4px; }
+    .wound-state-from { color: $text-secondary; }
+    .wound-state-to   { color: $text-primary; }
+    .wound-state-escalated { color: $accent-amber; font-weight: bold; }
+}
+
 // ── Wound state transition ───────────────────
 .wound-transition {
     display: flex;
