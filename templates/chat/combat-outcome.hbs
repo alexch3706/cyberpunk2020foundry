@@ -299,7 +299,7 @@
                             {{/if}}
                         </div>
                         {{/each}}
-                        {{#if isCommitted}}
+                        {{#if ../isCommitted}}
                         <div class="save-actions flexrow" style="gap: 5px; margin-top: 5px;">
                             <button class="save-action-autoroll" data-target-uuid="{{targetOutcome.target.actorUuid}}">Auto-roll Saves (NPC)</button>
                             <button class="save-action-manual" data-target-uuid="{{targetOutcome.target.actorUuid}}">Resolve Manually</button>
