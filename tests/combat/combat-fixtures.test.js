@@ -3396,16 +3396,7 @@ async function assertAutoshotgunPointBlankDamageBand() {
   };
   const roller = createScriptedRoller([
     { id: "attack", total: 19, die: { faces: 10, natural: 9, results: [9], exploded: false } },
-    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
-    {
-      id: "damage",
-      formula: "6d6",
-      total: 21,
-      die: { faces: 6, natural: 6, results: [6, 5, 4, 3, 2, 1] },
-      expectedRequest: {
-        formula: "6d6"
-      }
-    }
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } }
   ]);
 
   const outcome = await resolveCombatAction(context, { structured: true }, roller);
@@ -3414,7 +3405,8 @@ async function assertAutoshotgunPointBlankDamageBand() {
   assert.equal(outcome.manualResolution.required, false, "point blank autoshotgun pattern should resolve without manual fallback");
   assert.equal(outcome.targets[0].hits[0].shotgun.bracket, "pointBlank", "1m target uses pointBlank shotgun damage band");
   assert.equal(outcome.targets[0].hits[0].shotgun.damageFormula, "6d6", "pointBlank band uses explicit pointBlank shotgun damage formula");
-  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 21, "pointBlank shotgun damage should still use rolled damage");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 36, "pointBlank shotgun damage should use maximum damage");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.maximized, true, "pointBlank shotgun maximum damage is recorded in roll evidence");
 }
 
 async function assertAutoshotgunPointBlankFallsBackToCloseDamage() {
@@ -3487,16 +3479,7 @@ async function assertAutoshotgunPointBlankFallsBackToCloseDamage() {
   };
   const roller = createScriptedRoller([
     { id: "attack", total: 19, die: { faces: 10, natural: 9, results: [9], exploded: false } },
-    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
-    {
-      id: "damage",
-      formula: "5d6",
-      total: 18,
-      die: { faces: 6, natural: 6, results: [6, 5, 3, 2, 2] },
-      expectedRequest: {
-        formula: "5d6"
-      }
-    }
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } }
   ]);
 
   const outcome = await resolveCombatAction(context, { structured: true }, roller);
@@ -3505,7 +3488,8 @@ async function assertAutoshotgunPointBlankFallsBackToCloseDamage() {
   assert.equal(outcome.manualResolution.required, false, "point blank autoshotgun can fall back to close damage formula");
   assert.equal(outcome.targets[0].hits[0].shotgun.bracket, "pointBlank", "fallback keeps pointBlank distance evidence");
   assert.equal(outcome.targets[0].hits[0].shotgun.damageFormula, "5d6", "pointBlank fallback uses close shotgun damage formula");
-  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 18, "fallback close damage should still be rolled");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 30, "pointBlank fallback close damage should use maximum damage");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.maximized, true, "pointBlank fallback maximum damage is recorded in roll evidence");
 }
 
 async function assertAutoshotgunPatternAdjacencyWarning() {

@@ -1384,7 +1384,9 @@ async function resolveRangedDamageRoll(action, weapon, roller, target = null) {
     return { formula, manualResolution };
   }
 
-  const maximizeDamage = !isShotgun && range === ranges.pointBlank;
+  const maximizeDamage = isShotgun
+    ? shotgunEvidence?.bracket === "pointBlank"
+    : range === ranges.pointBlank;
 
   if(!maximizeDamage) {
     return {
