@@ -24,6 +24,76 @@ export async function promptUseAoETemplate(item) {
 
 export const promptUseShotgunTemplate = promptUseAoETemplate;
 
+export async function promptAutoshotgunShellCount(item, maxShells) {
+  const boundedMax = Math.max(0, Math.floor(Number(maxShells) || 0));
+  if(boundedMax <= 0) {
+    ui.notifications?.warn("Autoshotgun has no available shells to fire.");
+    return null;
+  }
+
+  return new Promise((resolve) => {
+    new Dialog({
+      title: "Autoshotgun Full Auto",
+      content: `
+        <form>
+          <div class="form-group">
+            <label>Shells Fired (Max ${boundedMax}):</label>
+            <input type="number" id="autoshotgunShells" value="${boundedMax}" min="1" max="${boundedMax}" />
+          </div>
+        </form>
+      `,
+      buttons: {
+        confirm: {
+          label: "Place Patterns",
+          callback: (html) => {
+            const rawValue = parseInt(html.find("#autoshotgunShells").val(), 10);
+            const shellCount = Math.max(1, Math.min(boundedMax, Number.isFinite(rawValue) ? rawValue : boundedMax));
+            resolve(shellCount);
+          }
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => resolve(null)
+        }
+      },
+      default: "confirm",
+      close: () => resolve(null)
+    }).render(true);
+  });
+}
+
+export async function drawAutoshotgunPatternsAndGetTargets(item, attackerToken, shellCount, options = {}) {
+  const drawPattern = typeof options.drawPattern === "function"
+    ? options.drawPattern
+    : (patternItem, patternAttackerToken) => drawAoETemplateAndGetTargets(patternItem, patternAttackerToken);
+  const patterns = [];
+  const count = Math.max(0, Math.floor(Number(shellCount) || 0));
+
+  for(let index = 0; index < count; index++) {
+    const shellIndex = index + 1;
+    const placement = await drawPattern(item, attackerToken, shellIndex);
+    const affectedTargets = Array.isArray(placement)
+      ? placement
+      : placement?.affectedTargets || [];
+    const template = extractAutoshotgunTemplateEvidence(placement, affectedTargets);
+
+    patterns.push({
+      shellIndex,
+      template,
+      affectedTargets,
+      ...(!template ? {
+        warnings: [{
+          code: "autoshotgun-pattern-canceled",
+          severity: "warning",
+          message: `Autoshotgun shell ${shellIndex} has no template evidence; resolve this shell manually.`
+        }]
+      } : {})
+    });
+  }
+
+  return { patterns };
+}
+
 export function buildAoETemplateTargetingOptions({ selectedTargets = [], affectedTargets = [], hazardZone = undefined } = {}) {
   const selected = Array.from(selectedTargets || []).map(target => markShotgunTargetSelection(target, true));
   const affected = Array.from(affectedTargets || []).map(target => markShotgunAffectedToken(target));
@@ -40,6 +110,27 @@ export function buildAoETemplateTargetingOptions({ selectedTargets = [], affecte
 
 export const buildShotgunTemplateTargetingOptions = buildAoETemplateTargetingOptions;
 
+function extractAutoshotgunTemplateEvidence(placement, affectedTargets = []) {
+  const affectedTemplate = affectedTargets.find(target => target?.tactical?.template)?.tactical?.template;
+  if(affectedTemplate) {
+    return clonePlainData(affectedTemplate);
+  }
+  const hazardZone = placement?.hazardZone;
+  if(!hazardZone) {
+    return undefined;
+  }
+  return clonePlainData({
+    templateUuid: hazardZone.templateUuid,
+    templateId: hazardZone.templateId,
+    type: hazardZone.type,
+    origin: hazardZone.origin,
+    direction: hazardZone.direction,
+    angle: hazardZone.angle,
+    width: hazardZone.width,
+    distance: hazardZone.distance,
+    inclusion: hazardZone.inclusion
+  });
+}
 
 function markShotgunTargetSelection(target, selected) {
   return {

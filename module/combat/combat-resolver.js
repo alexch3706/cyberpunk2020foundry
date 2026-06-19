@@ -1,5 +1,5 @@
 import { rangeDCs, ranges } from "../lookups.js";
-import { resolveSingleShotRangedAttack, normalizeAmmoState, resolveMeleeAction } from "./attack-resolver.js";
+import { resolveSingleShotRangedAttack, normalizeAmmoState, resolveMeleeAction, resolveAutoshotgunFullAutoAttack } from "./attack-resolver.js";
 import { isCorebookFidelityEnabled } from "./settings-helpers.js";
 import { classifyAttackTypeSupport } from "./conformance-helpers.js";
 import { COMBAT_WARNING_SEVERITY, MANUAL_RESOLUTION_REASON, COMBAT_CHAT_STATUS } from "./combat-outcome.js";
@@ -66,6 +66,10 @@ export async function resolveCombatAction(context, options = {}, roller = undefi
     : baseRoller;
 
   if(options.structured === true) {
+    if(canResolveAutoshotgunFullAutoContext(context, resolvedRoller)) {
+      return await resolveAutoshotgunFullAutoAttack(context, options, resolvedRoller);
+    }
+
     // ---- Exotic attack guard: block before any ranged/enemy routing ----
     if (isCorebookFidelityEnabled(context) && context?.action?.type === "ranged") {
       const rawAttackType = context?.weapon?.snapshot?.attackType;
@@ -99,6 +103,15 @@ export async function resolveCombatAction(context, options = {}, roller = undefi
     options,
     roller
   });
+}
+
+function canResolveAutoshotgunFullAutoContext(context, roller) {
+  return typeof roller === "function"
+    && String(context?.action?.type || "").toLowerCase() === "ranged"
+    && String(context?.action?.fireMode || "").toLowerCase() === "fullauto"
+    && String(context?.weapon?.snapshot?.attackType || "").toLowerCase().trim() === "autoshotgun"
+    && Array.isArray(context?.action?.autoshotgunPatterns)
+    && context.action.autoshotgunPatterns.length > 0;
 }
 
 function isSupportedSingleShotRangedContext(context) {

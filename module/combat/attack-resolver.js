@@ -23,7 +23,7 @@ const RANGED_MODIFIERS = Object.freeze([
 const MISSING_LOCATION_BLOCKS = Object.freeze(["hit-location", "target-damage", "target-armor", "target-saves"]);
 const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
 const TARGET_UPDATE_BLOCKS = Object.freeze(["target-damage", "target-armor", "target-saves"]);
-const SHOTGUN_ATTACK_TYPES = Object.freeze(["shotgun"]);
+const SHOTGUN_ATTACK_TYPES = Object.freeze(["shotgun", "autoshotgun"]);
 const SHOTGUN_BRACKETS = Object.freeze({
   close: Object.freeze({ patternWidthMeters: 1, damageKeys: Object.freeze(["close", "pointBlank"]) }),
   medium: Object.freeze({ patternWidthMeters: 2, damageKeys: Object.freeze(["medium"]) }),
@@ -403,6 +403,312 @@ export async function resolveSingleShotRangedAttack(context, options = {}, rolle
     },
     warnings: [...ammoPlanning.warnings, ...actionWarnings]
   };
+}
+
+export async function resolveAutoshotgunFullAutoAttack(context, options = {}, roller = undefined) {
+  const action = clonePlainData(context.action || {});
+  const patterns = Array.isArray(action.autoshotgunPatterns) ? action.autoshotgunPatterns : [];
+  const shellCount = patterns.length;
+  const shellCountManualOutcome = validateAutoshotgunShellCount(context, shellCount);
+  if(shellCountManualOutcome) {
+    return shellCountManualOutcome;
+  }
+  const patternEvidenceManualOutcome = validateAutoshotgunPatternEvidence(context, patterns);
+  if(patternEvidenceManualOutcome) {
+    return patternEvidenceManualOutcome;
+  }
+  const ammoPlanning = buildAmmoPlanning(context.weapon, shellCount);
+  const targetOutcomesByKey = new Map();
+  const shellEvidence = [];
+  const warnings = [
+    ...(ammoPlanning.warnings || []),
+    ...buildAutoshotgunPatternAdjacencyWarnings(patterns)
+  ];
+  const pendingManualResolutions = [ammoPlanning.manualResolution].filter(Boolean);
+
+  for(const [index, pattern] of patterns.entries()) {
+    const shellIndex = Number(pattern?.shellIndex) || index + 1;
+    const shellPenalty = -2 * index;
+    const shellAction = buildAutoshotgunShellAction(action, pattern, shellIndex, shellPenalty);
+    const modifierEvidence = buildModifierEvidence(shellAction, context.weapon);
+    const attackRequest = buildAttackRollRequest({ ...context, action: shellAction }, modifierEvidence);
+    const attackRoll = normalizeAttackRoll(await roll(roller, attackRequest), attackRequest);
+    const targetNumber = shellAction.targetNumber || rangeDCs[normalizeRange(shellAction.range)] || action.targetNumber;
+    const isFumble = !!attackRoll.isFumble;
+    const isHit = !isFumble && attackRoll.total >= targetNumber;
+    const affectedTargets = Array.isArray(pattern?.affectedTargets) ? pattern.affectedTargets : [];
+
+    const shellRecord = {
+      shellIndex,
+      penalty: shellPenalty,
+      pattern: buildAutoshotgunPatternEvidence(pattern?.template),
+      attack: {
+        roll: clonePlainData(attackRoll),
+        targetNumber,
+        hit: isHit,
+        margin: isHit ? attackRoll.total - targetNumber : 0,
+        modifiers: clonePlainData(modifierEvidence)
+      },
+      affectedTargetCount: affectedTargets.length
+    };
+    shellEvidence.push(shellRecord);
+
+    if(!isHit || affectedTargets.length === 0) {
+      continue;
+    }
+
+    for(const affectedTarget of affectedTargets) {
+      const shellTarget = buildAutoshotgunShellTarget(affectedTarget, pattern?.template);
+      const singleHitOutcome = await buildTargetOutcome(
+        shellTarget,
+        attackRoll,
+        targetNumber,
+        shellAction,
+        context.weapon,
+        roller,
+        options,
+        1,
+        {
+          autoshotgun: {
+            shellIndex,
+            penalty: shellPenalty,
+            pattern: buildAutoshotgunPatternEvidence(pattern?.template)
+          }
+        }
+      );
+      mergeAutoshotgunTargetOutcome(targetOutcomesByKey, singleHitOutcome, {
+        shellIndex,
+        penalty: shellPenalty,
+        pattern: buildAutoshotgunPatternEvidence(pattern?.template)
+      });
+    }
+  }
+
+  const targets = [...targetOutcomesByKey.values()];
+  const manualTargets = targets.filter(target => target.manualResolution?.required);
+
+  return {
+    action: {
+      ...action,
+      roundsFired: shellCount,
+      autoshotgun: {
+        shellCount,
+        shells: shellEvidence
+      }
+    },
+    attacker: clonePlainData(context.attacker || {}),
+    weapon: clonePlainData(context.weapon || {}),
+    targets,
+    pendingDecisions: [],
+    manualResolution: buildOutcomeManualResolution([
+      ...pendingManualResolutions,
+      ...manualTargets.map(target => target.manualResolution)
+    ].filter(Boolean)),
+    ammo: ammoPlanning.ammo,
+    plannedUpdates: ammoPlanning.plannedUpdates,
+    chat: {
+      status: COMBAT_CHAT_STATUS.preview
+    },
+    warnings
+  };
+}
+
+function validateAutoshotgunShellCount(context, shellCount) {
+  const rof = Number(context.weapon?.snapshot?.rof);
+  if(!Number.isFinite(rof) || rof <= 0) {
+    return buildAutoshotgunManualOutcome(context, "Autoshotgun full-auto requires a positive weapon ROF.");
+  }
+  if(shellCount > rof) {
+    return buildAutoshotgunManualOutcome(context, `Autoshotgun declared shell count (${shellCount}) exceeds weapon ROF (${rof}).`);
+  }
+
+  const ammoState = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+  if(!ammoState.valid) {
+    return buildAutoshotgunManualOutcome(context, "Weapon ammo state is unavailable; resolve autoshotgun shell count manually.", ammoState.evidence);
+  }
+  if(shellCount > ammoState.value) {
+    return buildAutoshotgunManualOutcome(context, `Autoshotgun declared shell count (${shellCount}) exceeds available ammo (${ammoState.value}).`);
+  }
+  return undefined;
+}
+
+function validateAutoshotgunPatternEvidence(context, patterns) {
+  const missingPattern = patterns.find(pattern => !pattern?.template);
+  if(!missingPattern) {
+    return undefined;
+  }
+  return buildAutoshotgunManualOutcome(
+    context,
+    `Autoshotgun shell ${missingPattern.shellIndex || patterns.indexOf(missingPattern) + 1} is missing template evidence; resolve this shell manually.`,
+    undefined,
+    patterns.flatMap(pattern => cloneArray(pattern?.warnings))
+  );
+}
+
+function buildAutoshotgunManualOutcome(context, message, ammoEvidence = undefined, additionalWarnings = []) {
+  const ammoState = normalizeAmmoState(context.weapon?.snapshot?.shotsLeft);
+  const before = ammoState.valid ? ammoState.value : ammoEvidence ?? ammoState.evidence;
+  return {
+    action: clonePlainData(context.action || { type: "ranged", fireMode: "FullAuto" }),
+    attacker: clonePlainData(context.attacker || {}),
+    weapon: clonePlainData(context.weapon || {}),
+    targets: [],
+    pendingDecisions: [],
+    manualResolution: {
+      required: true,
+      reason: MANUAL_RESOLUTION_REASON.missingRuleData,
+      message,
+      blockedUpdateCategories: [...AMMO_BLOCKS, ...TARGET_UPDATE_BLOCKS]
+    },
+    ammo: {
+      before,
+      delta: 0,
+      after: before,
+      source: "weapon.snapshot.shotsLeft"
+    },
+    plannedUpdates: {
+      itemUpdates: [],
+      chatStatus: COMBAT_CHAT_STATUS.manual
+    },
+    chat: {
+      status: COMBAT_CHAT_STATUS.manual
+    },
+    warnings: [
+      {
+        code: "autoshotgun-shell-count-invalid",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message
+      },
+      ...cloneArray(additionalWarnings)
+    ]
+  };
+}
+
+function buildAutoshotgunShellAction(action, pattern, shellIndex, shellPenalty) {
+  const options = clonePlainData(action.options || {});
+  const existingExtraMod = Number(options.extraMod || 0);
+  return {
+    ...clonePlainData(action),
+    fireMode: "SemiAuto",
+    roundsFired: 1,
+    autoshotgunShell: {
+      shellIndex,
+      penalty: shellPenalty,
+      pattern: buildAutoshotgunPatternEvidence(pattern?.template)
+    },
+    options: {
+      ...options,
+      extraMod: existingExtraMod + shellPenalty
+    }
+  };
+}
+
+function buildAutoshotgunPatternAdjacencyWarnings(patterns) {
+  const warnings = [];
+  for(let index = 1; index < patterns.length; index++) {
+    const previousOrigin = patterns[index - 1]?.template?.origin;
+    const currentOrigin = patterns[index]?.template?.origin;
+    if(!previousOrigin || !currentOrigin) {
+      continue;
+    }
+    const dx = Number(currentOrigin.x) - Number(previousOrigin.x);
+    const dy = Number(currentOrigin.y) - Number(previousOrigin.y);
+    if(!Number.isFinite(dx) || !Number.isFinite(dy)) {
+      continue;
+    }
+    const distance = Math.hypot(dx, dy);
+    if(distance > 1) {
+      warnings.push({
+        code: "autoshotgun-pattern-adjacency",
+        severity: COMBAT_WARNING_SEVERITY.warning,
+        message: `Autoshotgun shell ${index + 1} pattern origin is ${distance.toFixed(2)}m from the previous shell; rules expect patterns within 1m.`
+      });
+    }
+  }
+  return warnings;
+}
+
+function buildAutoshotgunShellTarget(target, template) {
+  const targetDistance = template?.targetDistance;
+  const distance = Number.isFinite(Number(targetDistance))
+    ? {
+        value: Number(targetDistance),
+        units: target?.distance?.units || "m",
+        source: target?.distance?.source || "template"
+      }
+    : clonePlainData(target?.distance);
+
+  return compactPlainObject({
+    ...clonePlainData(target || {}),
+    distance,
+    tactical: {
+      ...(clonePlainData(target?.tactical || {})),
+      template: buildAutoshotgunTemplateContext(template)
+    }
+  });
+}
+
+function buildAutoshotgunTemplateContext(template) {
+  if(!template) {
+    return undefined;
+  }
+  return compactPlainObject({
+    templateUuid: template.templateUuid,
+    templateId: template.templateId,
+    type: template.type,
+    origin: clonePlainData(template.origin),
+    direction: template.direction,
+    angle: template.angle,
+    width: template.width ?? template.distance,
+    distance: template.distance,
+    targetDistance: template.targetDistance,
+    inclusion: template.inclusion
+  });
+}
+
+function buildAutoshotgunPatternEvidence(template) {
+  return buildAutoshotgunTemplateContext(template);
+}
+
+function mergeAutoshotgunTargetOutcome(targetOutcomesByKey, shellOutcome, shellEvidence) {
+  const key = targetOutcomeKey(shellOutcome?.target);
+  const hits = (shellOutcome.hits || []).map(hit => ({
+    ...hit,
+    autoshotgun: {
+      shellIndex: shellEvidence.shellIndex,
+      penalty: shellEvidence.penalty,
+      pattern: clonePlainData(shellEvidence.pattern)
+    }
+  }));
+
+  if(!targetOutcomesByKey.has(key)) {
+    targetOutcomesByKey.set(key, {
+      ...shellOutcome,
+      hits,
+      attack: {
+        ...shellOutcome.attack,
+        autoshotgun: {
+          shells: [clonePlainData(shellOutcome.attack)]
+        }
+      }
+    });
+    return;
+  }
+
+  const existing = targetOutcomesByKey.get(key);
+  existing.hits.push(...hits);
+  existing.warnings.push(...(shellOutcome.warnings || []));
+  existing.plannedUpdates.embeddedItemUpdates.push(...(shellOutcome.plannedUpdates?.embeddedItemUpdates || []));
+  existing.attack.hit = existing.attack.hit || shellOutcome.attack?.hit === true;
+  existing.attack.hitCount = existing.hits.length;
+  existing.attack.autoshotgun.shells.push(clonePlainData(shellOutcome.attack));
+  if(shellOutcome.manualResolution?.required) {
+    existing.manualResolution = shellOutcome.manualResolution;
+  }
+}
+
+function targetOutcomeKey(target = {}) {
+  return target.id || target.tokenUuid || target.actorUuid || target.uuid || target.name || JSON.stringify(target);
 }
 
 /**
@@ -1138,6 +1444,10 @@ function resolveShotgunDamageContext(weapon, target) {
 
   const weaponRange = Number(weapon?.snapshot?.range) || 50;
   const distanceValue = Number(measuredDistance.value);
+  const attackType = normalizeAttackType(weapon?.snapshot?.attackType);
+  if(attackType === "autoshotgun" && distanceValue > getMaxRangeBracketDistance(weaponRange, ranges.long)) {
+    return { manualResolution: shotgunManualResolution("Extreme-range shotgun pattern damage is not defined; resolve autoshotgun damage manually.") };
+  }
   const bracket = distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.close)
     ? "close"
     : distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.medium)

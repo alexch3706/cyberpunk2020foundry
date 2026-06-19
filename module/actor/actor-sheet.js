@@ -298,9 +298,10 @@ export class CyberpunkActorSheet extends ActorSheet {
           normalizeTacticalTargetsFn = normalizeTacticalTargets;
 
           const isLegacyShotgun = item.system?.weaponType === "Shotgun" || item.system?.weaponType === "Shotgun ";
+          const isAutoshotgun = String(item.system?.attackType || "").toLowerCase().trim() === "autoshotgun";
           const hasAoE = !!item.system?.aoe?.type;
 
-          if (hasAoE || isLegacyShotgun) {
+          if ((hasAoE || isLegacyShotgun) && !isAutoshotgun) {
             const { promptUseAoETemplate, drawAoETemplateAndGetTargets, buildAoETemplateTargetingOptions } = await import("../combat/template-placement.js");
             if (await promptUseAoETemplate(item)) {
               const shotgunTemplateResult = await drawAoETemplateAndGetTargets(item, attackerToken);
@@ -314,7 +315,7 @@ export class CyberpunkActorSheet extends ActorSheet {
               });
               targetsToRaycast = shotgunTemplateTargeting.raycastTargets;
             }
-          } else {
+          } else if (!isAutoshotgun) {
             const fireModes = typeof item.__getFireModes === "function" ? item.__getFireModes() : [];
             const isAutoWeapon = fireModes.includes("Suppressive") || fireModes.includes("FullAuto") || String(item.system?.attackType).toLowerCase() === "auto" || String(item.system?.weaponType).toLowerCase().includes("auto");
 
@@ -391,6 +392,24 @@ export class CyberpunkActorSheet extends ActorSheet {
           if (suppressiveFireOptions && fireOptions.fireMode === "Suppressive") {
             fireOptions.roundsFired = suppressiveFireOptions.roundsFired;
             fireOptions.fireZoneWidth = suppressiveFireOptions.zoneWidth;
+          }
+          const isAutoshotgunFullAuto = String(item.system?.attackType || "").toLowerCase().trim() === "autoshotgun"
+            && String(fireOptions.fireMode || "").toLowerCase() === "fullauto";
+          if (isAutoshotgunFullAuto) {
+            if (!attackerToken) {
+              ui.notifications?.warn("Attacker token is required to place autoshotgun patterns.");
+              return;
+            }
+            const shotsLeft = Number(item.system?.shotsLeft) || 0;
+            const rof = Number(item.system?.rof) || 0;
+            const maxShells = Math.min(shotsLeft, rof);
+            const { promptAutoshotgunShellCount, drawAutoshotgunPatternsAndGetTargets } = await import("../combat/template-placement.js");
+            const shellCount = await promptAutoshotgunShellCount(item, maxShells);
+            if (!shellCount) {
+              return;
+            }
+            const autoshotgunPlacement = await drawAutoshotgunPatternsAndGetTargets(item, attackerToken, shellCount);
+            fireOptions.autoshotgunPatterns = autoshotgunPlacement.patterns;
           }
           if (shotgunTemplateTargeting?.hazardZone) {
             fireOptions.hazardZone = shotgunTemplateTargeting.hazardZone;

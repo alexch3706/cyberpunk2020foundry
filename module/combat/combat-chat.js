@@ -23,10 +23,7 @@ export function buildCombatChatData(outcome = {}, plannedUpdates = undefined, op
   return {
     status,
     ...buildStatusFlags(status),
-    action: {
-      ...clonePlainData(outcome.action || {}),
-      modifiers: filterModifiers((outcome.action || {}).modifiers)
-    },
+    action: buildActionChatData(outcome.action || {}),
     attacker: extractActorRef(outcome.attacker),
     weapon: extractWeaponRef(outcome.weapon),
     ammo: clonePlainData(outcome.ammo || {}),
@@ -39,6 +36,14 @@ export function buildCombatChatData(outcome = {}, plannedUpdates = undefined, op
     pendingDecisions: cloneArray(outcome.pendingDecisions),
     targets: (outcome.targets || []).map(targetOutcome => buildTargetChatData(targetOutcome, status))
   };
+}
+
+function buildActionChatData(action = {}) {
+  const modifiers = filterModifiers(action.modifiers);
+  return compactPlainObject({
+    ...clonePlainData(action),
+    ...(modifiers.length > 0 ? { modifiers } : {})
+  });
 }
 
 function deriveChatStatus(outcome, plannedUpdates, options, warnings) {
@@ -143,6 +148,7 @@ function buildHitChatData(hit = {}) {
     damageRoll: clonePlainData(hit.damageRoll),
     locationRoll: clonePlainData(hit.locationRoll),
     shotgun: clonePlainData(hit.shotgun),
+    autoshotgun: clonePlainData(hit.autoshotgun),
     warnings: cloneArray(hit.warnings)
   });
 }

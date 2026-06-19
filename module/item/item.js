@@ -321,6 +321,7 @@ export class CyberpunkItem extends Item {
         range: attackMods?.range,
         targetArea: attackMods?.targetArea,
         hazardZone: clonePlainData(attackMods?.hazardZone),
+        autoshotgunPatterns: clonePlainData(attackMods?.autoshotgunPatterns),
         options: this.__buildCombatActionOptions(attackMods || {}),
         source: "CyberpunkItem.__weaponRoll"
       },

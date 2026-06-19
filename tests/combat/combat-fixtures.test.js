@@ -12,6 +12,7 @@ import { getEquippedArmorForLocation, resolveArmor } from "../../module/combat/a
 import { detectAndPromptTacticalRaycasts } from "../../module/combat/tactical-raycast.js";
 import { getAttackDieEntryMode, isCorebookFidelityEnabled, filterSupportedFireModes } from "../../module/combat/settings-helpers.js";
 import { buildShotgunTemplateTargetingOptions, buildAoETemplateTargetingOptions } from "../../module/combat/template-placement.js";
+import { CyberpunkItem } from "../../module/item/item.js";
 
 const FIXTURE_URLS = [
   new URL("./fixtures/ranged-single-shot.json", import.meta.url),
@@ -38,6 +39,13 @@ export async function runCombatFixtures() {
   assertArmorResolver();
   await assertZonedCyberwareArmorHitPlanning();
   await assertCombatResolverRouting();
+  await assertAutoshotgunFullAutoOverlapResolution();
+  await assertAutoshotgunMissedShellPreservesEvidence();
+  await assertAutoshotgunPatternAdjacencyWarning();
+  await assertAutoshotgunExtremeRangeRequiresManualResolution();
+  await assertAutoshotgunShellCountBoundedByRofAndAmmo();
+  await assertAutoshotgunMissingPatternRequiresManualResolution();
+  assertCyberpunkItemAdapterPreservesAutoshotgunPatterns();
   assertSettingsHelpers();
 
   for(const fixtureUrl of FIXTURE_URLS) {
@@ -2995,6 +3003,585 @@ async function assertCombatResolverRouting() {
   assert.notEqual(zeroAmmoBurstResult, "fallback-called", "ThreeRoundBurst with zero ammo should stay structured");
   assert.equal(zeroAmmoBurstResult.manualResolution.required, true, "ThreeRoundBurst with zero ammo should be manual");
   assert.equal(zeroAmmoBurstResult.warnings[0].code, "insufficient-ammo", "ThreeRoundBurst with zero ammo should warn about ammo");
+}
+
+async function assertAutoshotgunFullAutoOverlapResolution() {
+  const overlappingTarget = {
+    id: "target-autoshotgun-overlap",
+    tokenUuid: "Scene.test.Token.autoshotgunTarget",
+    actorUuid: "Actor.autoshotgunTarget",
+    name: "Autoshotgun Overlap Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "medium",
+      targetNumber: 20,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-1",
+            templateId: "autoshotgun-1",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [overlappingTarget]
+        },
+        {
+          shellIndex: 2,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-2",
+            templateId: "autoshotgun-2",
+            type: "cone",
+            origin: { x: 0.5, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [overlappingTarget]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [overlappingTarget],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 24, die: { faces: 10, natural: 10, results: [10], exploded: false } },
+    { id: "location", total: 2, die: { faces: 10, natural: 2, results: [2], exploded: false } },
+    { id: "damage", formula: "3d6", total: 11, die: { faces: 6, natural: 5, results: [5, 4, 2] } },
+    {
+      id: "attack",
+      total: 22,
+      die: { faces: 10, natural: 8, results: [8], exploded: false },
+      expectedRequest: {
+        rollData: {
+          modifier: {
+            extraMod: -2
+          }
+        }
+      }
+    },
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
+    { id: "damage", formula: "3d6", total: 9, die: { faces: 6, natural: 4, results: [4, 3, 2] } }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.notEqual(outcome, "fallback-called", "Autoshotgun FullAuto should use structured resolver");
+  assert.equal(outcome.manualResolution.required, false, "overlapping autoshotgun patterns should resolve without manual fallback");
+  assert.equal(outcome.ammo.delta, -2, "autoshotgun spends the declared shell count");
+  assert.equal(outcome.targets.length, 1, "overlapping patterns keep one target outcome per affected token");
+  assert.equal(outcome.targets[0].hits.length, 2, "target caught by two successful patterns receives two hit records");
+  assert.equal(outcome.targets[0].hits[0].autoshotgun.shellIndex, 1, "first hit preserves shell evidence");
+  assert.equal(outcome.targets[0].hits[0].shotgun.templateId, "autoshotgun-1", "first hit preserves pattern evidence");
+  assert.equal(outcome.targets[0].hits[1].autoshotgun.shellIndex, 2, "second hit preserves shell evidence");
+  assert.equal(outcome.targets[0].hits[1].shotgun.templateId, "autoshotgun-2", "second hit preserves pattern evidence");
+
+  const chatData = buildCombatChatData(outcome);
+  assert.equal(chatData.targets[0].hits[0].autoshotgun.shellIndex, 1, "chat data preserves autoshotgun shell evidence");
+}
+
+async function assertAutoshotgunMissedShellPreservesEvidence() {
+  const target = {
+    id: "target-autoshotgun-miss",
+    tokenUuid: "Scene.test.Token.autoshotgunMissTarget",
+    actorUuid: "Actor.autoshotgunMissTarget",
+    name: "Autoshotgun Miss Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "medium",
+      targetNumber: 20,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-hit",
+            templateId: "autoshotgun-hit",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        },
+        {
+          shellIndex: 2,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-miss",
+            templateId: "autoshotgun-miss",
+            type: "cone",
+            origin: { x: 0.5, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 24, die: { faces: 10, natural: 10, results: [10], exploded: false } },
+    { id: "location", total: 2, die: { faces: 10, natural: 2, results: [2], exploded: false } },
+    { id: "damage", formula: "3d6", total: 11, die: { faces: 6, natural: 5, results: [5, 4, 2] } },
+    { id: "attack", total: 19, die: { faces: 10, natural: 5, results: [5], exploded: false } }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.ammo.delta, -2, "missed autoshotgun shell still spends declared ammo");
+  assert.equal(outcome.action.autoshotgun.shells.length, 2, "outcome preserves one evidence record per shell");
+  assert.equal(outcome.action.autoshotgun.shells[0].attack.hit, true, "first shell evidence records hit");
+  assert.equal(outcome.action.autoshotgun.shells[1].attack.hit, false, "missed shell evidence records miss");
+  assert.equal(outcome.action.autoshotgun.shells[1].pattern.templateId, "autoshotgun-miss", "missed shell preserves pattern evidence");
+  assert.equal(outcome.targets.length, 1, "missed shell does not create an extra target outcome");
+  assert.equal(outcome.targets[0].hits.length, 1, "missed shell creates no damage hit");
+}
+
+async function assertAutoshotgunPatternAdjacencyWarning() {
+  const target = {
+    id: "target-autoshotgun-adjacency",
+    tokenUuid: "Scene.test.Token.autoshotgunAdjacencyTarget",
+    actorUuid: "Actor.autoshotgunAdjacencyTarget",
+    name: "Autoshotgun Adjacency Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "medium",
+      targetNumber: 20,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-adjacent-1",
+            templateId: "autoshotgun-adjacent-1",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        },
+        {
+          shellIndex: 2,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-adjacent-2",
+            templateId: "autoshotgun-adjacent-2",
+            type: "cone",
+            origin: { x: 3, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 20,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 24, die: { faces: 10, natural: 10, results: [10], exploded: false } },
+    { id: "location", total: 2, die: { faces: 10, natural: 2, results: [2], exploded: false } },
+    { id: "damage", formula: "3d6", total: 11, die: { faces: 6, natural: 5, results: [5, 4, 2] } },
+    { id: "attack", total: 22, die: { faces: 10, natural: 8, results: [8], exploded: false } },
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
+    { id: "damage", formula: "3d6", total: 9, die: { faces: 6, natural: 4, results: [4, 3, 2] } }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.targets[0].hits.length, 2, "adjacency warning should not hard-block autoshotgun resolution");
+  assert.ok(outcome.warnings.some(warning => warning.code === "autoshotgun-pattern-adjacency"), "autoshotgun warns when consecutive patterns are more than 1m apart");
+}
+
+async function assertAutoshotgunExtremeRangeRequiresManualResolution() {
+  const target = {
+    id: "target-autoshotgun-extreme",
+    tokenUuid: "Scene.test.Token.autoshotgunExtremeTarget",
+    actorUuid: "Actor.autoshotgunExtremeTarget",
+    name: "Autoshotgun Extreme Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "extreme",
+      targetNumber: 30,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-extreme",
+            templateId: "autoshotgun-extreme",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 100,
+            targetDistance: 75,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 32, die: { faces: 10, natural: 10, results: [10], exploded: false } },
+    { id: "location", total: 2, die: { faces: 10, natural: 2, results: [2], exploded: false } }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, true, "extreme-range autoshotgun pattern should require manual resolution");
+  assert.match(outcome.manualResolution.message, /extreme/i, "manual resolution explains undefined extreme-range shotgun damage");
+  assert.equal(outcome.ammo.delta, -1, "manual extreme-range autoshotgun still plans declared ammo spending");
+  assert.equal(outcome.targets[0].hits.length, 1, "extreme-range manual outcome preserves hit location evidence");
+  assert.equal(outcome.targets[0].hits[0].damageRoll, undefined, "extreme-range manual outcome does not roll far damage silently");
+}
+
+async function assertAutoshotgunShellCountBoundedByRofAndAmmo() {
+  const target = {
+    id: "target-autoshotgun-shell-bound",
+    tokenUuid: "Scene.test.Token.autoshotgunShellBoundTarget",
+    actorUuid: "Actor.autoshotgunShellBoundTarget",
+    name: "Autoshotgun Shell Bound Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "medium",
+      targetNumber: 20,
+      autoshotgunPatterns: [
+        { shellIndex: 1, template: { templateId: "shell-1", type: "cone", origin: { x: 0, y: 0 }, targetDistance: 20, inclusion: "intersected" }, affectedTargets: [target] },
+        { shellIndex: 2, template: { templateId: "shell-2", type: "cone", origin: { x: 0.5, y: 0 }, targetDistance: 20, inclusion: "intersected" }, affectedTargets: [target] },
+        { shellIndex: 3, template: { templateId: "shell-3", type: "cone", origin: { x: 1, y: 0 }, targetDistance: 20, inclusion: "intersected" }, affectedTargets: [target] }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, true, "autoshotgun shell count beyond ROF should require manual correction");
+  assert.match(outcome.manualResolution.message, /rof/i, "shell count manual resolution explains ROF bound");
+  assert.equal(outcome.ammo.delta, 0, "invalid autoshotgun shell count should not spend ammo");
+  assert.equal(outcome.targets.length, 0, "invalid autoshotgun shell count should not resolve target damage");
+}
+
+async function assertAutoshotgunMissingPatternRequiresManualResolution() {
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "medium",
+      targetNumber: 20,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          affectedTargets: [],
+          warnings: [{
+            code: "autoshotgun-pattern-canceled",
+            severity: "warning",
+            message: "Autoshotgun shell 1 has no template evidence; resolve this shell manually."
+          }]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "4d6",
+        rangeDamages: {
+          pointBlank: "4d6",
+          close: "4d6",
+          medium: "3d6",
+          far: "2d6"
+        }
+      }
+    },
+    targets: [],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, true, "missing autoshotgun pattern evidence should require manual resolution");
+  assert.match(outcome.manualResolution.message, /template/i, "missing pattern manual resolution explains template evidence");
+  assert.equal(outcome.ammo.delta, 0, "missing autoshotgun pattern evidence should not spend ammo automatically");
+  assert.ok(outcome.warnings.some(warning => warning.code === "autoshotgun-pattern-canceled"), "missing autoshotgun pattern preserves adapter warning");
+}
+
+function assertCyberpunkItemAdapterPreservesAutoshotgunPatterns() {
+  const item = Object.create(CyberpunkItem.prototype);
+  item.uuid = "Actor.autoshotgunAttacker.Item.autoshotgun";
+  item.name = "CAWS";
+  item.actor = {
+    uuid: "Actor.autoshotgunAttacker",
+    name: "Solo",
+    system: {
+      stats: { ref: { total: 8 } },
+      skills: { shotgun: { level: 6 } },
+      hitLocations: {}
+    },
+    itemTypes: {}
+  };
+  item.system = {
+    weaponType: "Shotgun",
+    attackType: "Autoshotgun",
+    attackSkill: "shotgun",
+    shotsLeft: 6,
+    rof: 2,
+    range: 50,
+    rangeDamages: {
+      medium: "3d6"
+    }
+  };
+
+  const autoshotgunPatterns = [
+    {
+      shellIndex: 1,
+      template: { templateId: "autoshotgun-adapter-1", type: "cone", origin: { x: 0, y: 0 }, targetDistance: 20, inclusion: "intersected" },
+      affectedTargets: [{ id: "target-1", actorUuid: "Actor.target" }]
+    }
+  ];
+  const context = item.__buildCombatResolverContext({
+    fireMode: "FullAuto",
+    range: "medium",
+    autoshotgunPatterns
+  }, []);
+
+  assert.deepEqual(context.action.autoshotgunPatterns, autoshotgunPatterns, "CyberpunkItem adapter preserves autoshotgun pattern intent for resolver");
 }
 
 function assertSettingsHelpers() {
