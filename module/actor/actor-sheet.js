@@ -409,19 +409,7 @@ export class CyberpunkActorSheet extends ActorSheet {
               return;
             }
             const autoshotgunPlacement = await drawAutoshotgunPatternsAndGetTargets(item, attackerToken, shellCount);
-            console.log("autoshotgun placement result", {
-              shellCount,
-              autoshotgunPlacement,
-              patternsIsArray: Array.isArray(autoshotgunPlacement?.patterns),
-              patternsLength: autoshotgunPlacement?.patterns?.length,
-              fireOptionsBeforeAssign: foundry.utils.deepClone(fireOptions)
-            });
             fireOptions.autoshotgunPatterns = autoshotgunPlacement.patterns;
-            console.log("autoshotgun fireOptions after assign", {
-              patternsIsArray: Array.isArray(fireOptions.autoshotgunPatterns),
-              patternsLength: fireOptions.autoshotgunPatterns?.length,
-              fireOptions
-            });
           }
           if (shotgunTemplateTargeting?.hazardZone) {
             fireOptions.hazardZone = shotgunTemplateTargeting.hazardZone;

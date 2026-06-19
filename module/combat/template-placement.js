@@ -1,3 +1,5 @@
+import { buildActorCombatSnapshot } from "./combat-snapshot.js";
+
 export async function promptUseAoETemplate(item) {
   const aoeType = item?.system?.aoe?.type;
   const name = aoeType ? `${aoeType} Template` : "Cone Template";
@@ -80,7 +82,7 @@ export async function drawAutoshotgunPatternsAndGetTargets(item, attackerToken, 
     patterns.push({
       shellIndex,
       template,
-      affectedTargets,
+      affectedTargets: affectedTargets.map(target => buildAutoshotgunTargetEvidence(target)),
       ...(!template ? {
         warnings: [{
           code: "autoshotgun-pattern-canceled",
@@ -129,6 +131,31 @@ function extractAutoshotgunTemplateEvidence(placement, affectedTargets = []) {
     width: hazardZone.width,
     distance: hazardZone.distance,
     inclusion: hazardZone.inclusion
+  });
+}
+
+function buildAutoshotgunTargetEvidence(target) {
+  const actor = target?.actor || target?.document?.actor;
+  const tactical = compactPlainObject({
+    template: clonePlainData(target?.tactical?.template),
+    cover: clonePlainData(target?.tactical?.cover),
+    raycast: clonePlainData(target?.tactical?.raycast)
+  });
+
+  return compactPlainObject({
+    id: target?.id,
+    uuid: target?.uuid,
+    tokenUuid: target?.tokenUuid || target?.document?.uuid || target?.uuid,
+    actorUuid: target?.actorUuid || actor?.uuid,
+    name: target?.name,
+    center: clonePlainData(target?.center),
+    bounds: clonePlainData(target?.bounds),
+    snapshot: clonePlainData(target?.snapshot) || buildActorCombatSnapshot(actor, { includeEquipment: true }),
+    distance: clonePlainData(target?.distance),
+    tactical: Object.keys(tactical).length > 0 ? tactical : undefined,
+    pendingDecisions: clonePlainData(target?.pendingDecisions),
+    manualResolution: clonePlainData(target?.manualResolution),
+    warnings: clonePlainData(target?.warnings)
   });
 }
 
@@ -205,7 +232,18 @@ function clonePlainData(value) {
   if(value === undefined || value === null) {
     return value;
   }
-  return JSON.parse(JSON.stringify(value));
+  try {
+    return JSON.parse(JSON.stringify(value));
+  }
+  catch {
+    return undefined;
+  }
+}
+
+function compactPlainObject(data = {}) {
+  return Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== undefined)
+  );
 }
 
 function stripSelectedOverlapDistance(target, selectedTargets) {

@@ -206,6 +206,68 @@ export async function runTemplatePlacementTests() {
     results.push({ name: "template-placement: autoshotgun patterns are collected sequentially", passed });
   }
 
+  async function testAutoshotgunPatternsSanitizeLiveTargets() {
+    let passed = true;
+    try {
+      const liveTarget = {
+        id: "live-target",
+        uuid: "Scene.test.Token.live-target",
+        name: "Live Target",
+        actor: { uuid: "Actor.live-target" },
+        document: { uuid: "Scene.test.Token.live-target" },
+        center: { x: 100, y: 120 },
+        distance: { value: 8, units: "m", source: "template" },
+        tactical: {
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-live",
+            templateId: "autoshotgun-live",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 8,
+            inclusion: "intersected"
+          }
+        }
+      };
+      liveTarget.parent = liveTarget;
+
+      const result = await drawAutoshotgunPatternsAndGetTargets(
+        { name: "CAWS", system: { aoe: { type: "cone", value: 20 } } },
+        { id: "attacker-token" },
+        1,
+        {
+          drawPattern: async () => ({
+            affectedTargets: [liveTarget],
+            hazardZone: {
+              templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-live",
+              templateId: "autoshotgun-live",
+              type: "cone",
+              origin: { x: 0, y: 0 },
+              direction: 0,
+              angle: 45,
+              distance: 20,
+              inclusion: "intersected"
+            }
+          })
+        }
+      );
+
+      assert.doesNotThrow(() => JSON.stringify(result.patterns), "autoshotgun patterns should be JSON-safe after placement");
+      assert.equal(result.patterns[0].affectedTargets[0].id, "live-target");
+      assert.equal(result.patterns[0].affectedTargets[0].actorUuid, "Actor.live-target");
+      assert.equal(result.patterns[0].affectedTargets[0].tokenUuid, "Scene.test.Token.live-target");
+      assert.deepEqual(result.patterns[0].affectedTargets[0].distance, { value: 8, units: "m", source: "template" });
+      assert.equal(result.patterns[0].affectedTargets[0].tactical.template.templateId, "autoshotgun-live");
+      assert.equal(result.patterns[0].affectedTargets[0].parent, undefined, "live token object graph should not leak into pattern evidence");
+    } catch (e) {
+      console.error(e);
+      passed = false;
+    }
+    results.push({ name: "template-placement: autoshotgun patterns sanitize live targets", passed });
+  }
+
   async function testAutoshotgunCanceledPlacementReturnsWarningPattern() {
     let passed = true;
     try {
@@ -248,6 +310,7 @@ export async function runTemplatePlacementTests() {
 
   await testShotgunConeTemplateIsTransient();
   await testAutoshotgunPatternsAreCollectedSequentially();
+  await testAutoshotgunPatternsSanitizeLiveTargets();
   await testAutoshotgunCanceledPlacementReturnsWarningPattern();
 
   return results;
