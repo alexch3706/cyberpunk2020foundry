@@ -25,6 +25,7 @@ const AMMO_BLOCKS = Object.freeze(["attacker-ammo"]);
 const TARGET_UPDATE_BLOCKS = Object.freeze(["target-damage", "target-armor", "target-saves"]);
 const SHOTGUN_ATTACK_TYPES = Object.freeze(["shotgun", "autoshotgun"]);
 const SHOTGUN_BRACKETS = Object.freeze({
+  pointBlank: Object.freeze({ patternWidthMeters: 1, damageKeys: Object.freeze(["pointBlank", "close"]) }),
   close: Object.freeze({ patternWidthMeters: 1, damageKeys: Object.freeze(["close", "pointBlank"]) }),
   medium: Object.freeze({ patternWidthMeters: 2, damageKeys: Object.freeze(["medium"]) }),
   far: Object.freeze({ patternWidthMeters: 3, damageKeys: Object.freeze(["far", "long"]) })
@@ -1383,9 +1384,7 @@ async function resolveRangedDamageRoll(action, weapon, roller, target = null) {
     return { formula, manualResolution };
   }
 
-  const maximizeDamage = isShotgun 
-    ? shotgunEvidence?.bracket === "close"
-    : range === ranges.pointBlank;
+  const maximizeDamage = !isShotgun && range === ranges.pointBlank;
 
   if(!maximizeDamage) {
     return {
@@ -1448,11 +1447,13 @@ function resolveShotgunDamageContext(weapon, target) {
   if(attackType === "autoshotgun" && distanceValue > getMaxRangeBracketDistance(weaponRange, ranges.long)) {
     return { manualResolution: shotgunManualResolution("Extreme-range shotgun pattern damage is not defined; resolve autoshotgun damage manually.") };
   }
-  const bracket = distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.close)
-    ? "close"
-    : distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.medium)
-      ? "medium"
-      : "far";
+  const bracket = distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.pointBlank)
+    ? "pointBlank"
+    : distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.close)
+      ? "close"
+      : distanceValue <= getMaxRangeBracketDistance(weaponRange, ranges.medium)
+        ? "medium"
+        : "far";
   const bracketConfig = SHOTGUN_BRACKETS[bracket];
   const formula = selectShotgunDamageFormula(weapon?.snapshot?.rangeDamages, bracketConfig.damageKeys);
   if(!formula) {

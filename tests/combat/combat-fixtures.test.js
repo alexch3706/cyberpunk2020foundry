@@ -41,6 +41,9 @@ export async function runCombatFixtures() {
   await assertCombatResolverRouting();
   await assertAutoshotgunFullAutoOverlapResolution();
   await assertAutoshotgunMissedShellPreservesEvidence();
+  await assertAutoshotgunCloseRangeDamageIsRolled();
+  await assertAutoshotgunPointBlankDamageBand();
+  await assertAutoshotgunPointBlankFallsBackToCloseDamage();
   await assertAutoshotgunPatternAdjacencyWarning();
   await assertAutoshotgunExtremeRangeRequiresManualResolution();
   await assertAutoshotgunShellCountBoundedByRofAndAmmo();
@@ -3227,6 +3230,282 @@ async function assertAutoshotgunMissedShellPreservesEvidence() {
   assert.equal(outcome.action.autoshotgun.shells[1].pattern.templateId, "autoshotgun-miss", "missed shell preserves pattern evidence");
   assert.equal(outcome.targets.length, 1, "missed shell does not create an extra target outcome");
   assert.equal(outcome.targets[0].hits.length, 1, "missed shell creates no damage hit");
+}
+
+async function assertAutoshotgunCloseRangeDamageIsRolled() {
+  const target = {
+    id: "target-autoshotgun-close",
+    tokenUuid: "Scene.test.Token.autoshotgunCloseTarget",
+    actorUuid: "Actor.autoshotgunCloseTarget",
+    name: "Autoshotgun Close Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "close",
+      targetNumber: 15,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-close",
+            templateId: "autoshotgun-close",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 5,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "5d6",
+        rangeDamages: {
+          pointBlank: "5d6",
+          close: "5d6",
+          medium: "4d6",
+          far: "3d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 19, die: { faces: 10, natural: 9, results: [9], exploded: false } },
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
+    {
+      id: "damage",
+      formula: "5d6",
+      total: 17,
+      die: { faces: 6, natural: 6, results: [6, 4, 3, 2, 2] },
+      expectedRequest: {
+        formula: "5d6"
+      }
+    }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, false, "close autoshotgun pattern should resolve without manual fallback");
+  assert.equal(outcome.targets[0].hits[0].shotgun.bracket, "close", "5m target uses close shotgun damage band for range 50 weapon");
+  assert.equal(outcome.targets[0].hits[0].shotgun.measuredDistance.value, 5, "shotgun evidence preserves measured template distance");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 17, "close shotgun damage should use rolled damage, not maximum damage");
+  assert.equal(outcome.targets[0].hits[0].rawDamage, 17, "raw damage should come from the close damage roll");
+}
+
+async function assertAutoshotgunPointBlankDamageBand() {
+  const target = {
+    id: "target-autoshotgun-pointblank",
+    tokenUuid: "Scene.test.Token.autoshotgunPointBlankTarget",
+    actorUuid: "Actor.autoshotgunPointBlankTarget",
+    name: "Autoshotgun Point Blank Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "close",
+      targetNumber: 15,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-pointblank",
+            templateId: "autoshotgun-pointblank",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 1,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "5d6",
+        rangeDamages: {
+          pointBlank: "6d6",
+          close: "5d6",
+          medium: "4d6",
+          far: "3d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 19, die: { faces: 10, natural: 9, results: [9], exploded: false } },
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
+    {
+      id: "damage",
+      formula: "6d6",
+      total: 21,
+      die: { faces: 6, natural: 6, results: [6, 5, 4, 3, 2, 1] },
+      expectedRequest: {
+        formula: "6d6"
+      }
+    }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, false, "point blank autoshotgun pattern should resolve without manual fallback");
+  assert.equal(outcome.targets[0].hits[0].shotgun.bracket, "pointBlank", "1m target uses pointBlank shotgun damage band");
+  assert.equal(outcome.targets[0].hits[0].shotgun.damageFormula, "6d6", "pointBlank band uses explicit pointBlank shotgun damage formula");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 21, "pointBlank shotgun damage should still use rolled damage");
+}
+
+async function assertAutoshotgunPointBlankFallsBackToCloseDamage() {
+  const target = {
+    id: "target-autoshotgun-pointblank-fallback",
+    tokenUuid: "Scene.test.Token.autoshotgunPointBlankFallbackTarget",
+    actorUuid: "Actor.autoshotgunPointBlankFallbackTarget",
+    name: "Autoshotgun Point Blank Fallback Target",
+    snapshot: {
+      stats: { bt: { total: 6 } },
+      damage: 0,
+      hitLocations: {
+        torso: { label: "Torso" }
+      }
+    }
+  };
+  const context = {
+    action: {
+      type: "ranged",
+      fireMode: "FullAuto",
+      range: "close",
+      targetNumber: 15,
+      autoshotgunPatterns: [
+        {
+          shellIndex: 1,
+          template: {
+            templateUuid: "Scene.test.MeasuredTemplate.autoshotgun-pointblank-fallback",
+            templateId: "autoshotgun-pointblank-fallback",
+            type: "cone",
+            origin: { x: 0, y: 0 },
+            direction: 0,
+            angle: 45,
+            distance: 20,
+            targetDistance: 1,
+            inclusion: "intersected"
+          },
+          affectedTargets: [target]
+        }
+      ]
+    },
+    attacker: {
+      actorUuid: "Actor.autoshotgunAttacker",
+      snapshot: {
+        stats: { ref: { total: 8 } },
+        skills: { shotgun: { level: 6 } }
+      }
+    },
+    weapon: {
+      itemUuid: "Actor.autoshotgunAttacker.Item.autoshotgun",
+      name: "CAWS",
+      snapshot: {
+        attackSkill: "shotgun",
+        attackType: "Autoshotgun",
+        shotsLeft: 6,
+        rof: 2,
+        range: 50,
+        accuracy: 0,
+        damage: "5d6",
+        rangeDamages: {
+          close: "5d6",
+          medium: "4d6",
+          far: "3d6"
+        }
+      }
+    },
+    targets: [target],
+    legacy: {
+      fallback: () => "fallback-called"
+    }
+  };
+  const roller = createScriptedRoller([
+    { id: "attack", total: 19, die: { faces: 10, natural: 9, results: [9], exploded: false } },
+    { id: "location", total: 3, die: { faces: 10, natural: 3, results: [3], exploded: false } },
+    {
+      id: "damage",
+      formula: "5d6",
+      total: 18,
+      die: { faces: 6, natural: 6, results: [6, 5, 3, 2, 2] },
+      expectedRequest: {
+        formula: "5d6"
+      }
+    }
+  ]);
+
+  const outcome = await resolveCombatAction(context, { structured: true }, roller);
+  roller.assertComplete();
+
+  assert.equal(outcome.manualResolution.required, false, "point blank autoshotgun can fall back to close damage formula");
+  assert.equal(outcome.targets[0].hits[0].shotgun.bracket, "pointBlank", "fallback keeps pointBlank distance evidence");
+  assert.equal(outcome.targets[0].hits[0].shotgun.damageFormula, "5d6", "pointBlank fallback uses close shotgun damage formula");
+  assert.equal(outcome.targets[0].hits[0].damageRoll.total, 18, "fallback close damage should still be rolled");
 }
 
 async function assertAutoshotgunPatternAdjacencyWarning() {
